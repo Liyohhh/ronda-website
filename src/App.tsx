@@ -115,10 +115,6 @@ function App() {
 
       <div className="ticks"></div>
       <section id="spacer"></section>
-
-      <div className="text-3xl font-bold text-blue-600">
-        Hello Tailwind
-      </div>
     </>
   )
 }
