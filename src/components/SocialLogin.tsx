@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import type { Provider } from '@supabase/supabase-js'
 import { supabase } from '../services/supabase'
+import { useLanguage } from '../hooks/useLanguage'
 
 // Quick login buttons. Google, Apple and Facebook go through Supabase Auth (each must be enabled
 // in the Supabase dashboard). WeChat and QQ are not Supabase Auth providers, so they only show a
@@ -84,6 +85,9 @@ async function enabledProviders(): Promise<Set<string> | null> {
 }
 
 function SocialLogin() {
+  const { t } = useLanguage()
+  const say = (key: 'socialSoon' | 'socialUnavailable' | 'socialFailed' | 'continueWith', name: string) =>
+    t(key).replace('{name}', name)
   const [busy, setBusy] = useState<string | null>(null)
   const [notice, setNotice] = useState('')
   const [enabled, setEnabled] = useState<Set<string> | null>(null)
@@ -99,12 +103,12 @@ function SocialLogin() {
   const signIn = async (s: Social) => {
     setNotice('')
     if (!s.provider) {
-      setNotice(`${s.label} sign-in is coming soon. Please use another option for now.`)
+      setNotice(say('socialSoon', s.label))
       return
     }
     // A disabled provider would send the user to a raw Supabase error page, so stop here instead
     if (enabled && !enabled.has(s.provider)) {
-      setNotice(`${s.label} sign-in isn't available yet. Please use another option for now.`)
+      setNotice(say('socialUnavailable', s.label))
       return
     }
     setBusy(s.id)
@@ -115,11 +119,7 @@ function SocialLogin() {
     })
     if (error) {
       console.error(`${s.label} sign-in error:`, error)
-      setNotice(
-        /not enabled|unsupported provider/i.test(error.message)
-          ? `${s.label} sign-in isn't available yet. Please use another option for now.`
-          : `Couldn't start ${s.label} sign-in. Please try again.`,
-      )
+      setNotice(say(/not enabled|unsupported provider/i.test(error.message) ? 'socialUnavailable' : 'socialFailed', s.label))
       setBusy(null)
     }
   }
@@ -133,7 +133,7 @@ function SocialLogin() {
             type="button"
             onClick={() => signIn(s)}
             disabled={busy !== null}
-            aria-label={`Continue with ${s.label}`}
+            aria-label={say('continueWith', s.label)}
             title={s.label}
             className="w-12 h-11 border border-gray-300 rounded-lg flex items-center justify-center bg-white hover:bg-gray-50 hover:border-gray-400 transition disabled:opacity-60"
           >

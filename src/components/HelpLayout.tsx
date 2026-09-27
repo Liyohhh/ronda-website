@@ -2,30 +2,28 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import type { HelpCategory } from '../data/helpCategories'
-import BrandLogo from './BrandLogo'
+import SiteLayout from './SiteLayout'
 
+// Help Centre pages: the normal site frame plus a slim Help Centre bar under the header
 export function HelpLayout({ children }: { children: ReactNode }) {
   const { t } = useLanguage()
   return (
-    <div className="min-h-screen bg-white">
-      <header className="border-b border-gray-200">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center" aria-label="RONDA home">
-              <BrandLogo size="sm" />
-            </Link>
-            <span className="w-px h-5 bg-gray-300" />
-            <Link to="/help" className="text-[#002472]">
+    <SiteLayout
+      subheader={
+        <div className="border-b border-gray-200 bg-gray-50">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 h-11 flex items-center justify-between text-sm">
+            <Link to="/help" className="font-semibold text-[#002472]">
               RONDA {t('helpCentre')}
             </Link>
+            <Link to="/help/policies" className="font-medium text-gray-600 hover:text-[#002472]">
+              {t('policies')}
+            </Link>
           </div>
-          <Link to="/help/policies" className="text-sm font-medium text-gray-700 hover:text-[#002472]">
-            {t('policies')}
-          </Link>
         </div>
-      </header>
+      }
+    >
       {children}
-    </div>
+    </SiteLayout>
   )
 }
 

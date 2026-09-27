@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../services/supabase'
-import Header from '../components/Header'
+import SiteLayout from '../components/SiteLayout'
+import BrandLogo from '../components/BrandLogo'
 import JourneyPanel, { type TripOption } from '../components/JourneyPanel'
 import StopIcon from '../components/StopIcon'
 import { stopIconKind, type StopIconKind } from '../data/stopIcon'
 import { useLanguage } from '../hooks/useLanguage'
-
-// Set this to an image path (e.g. '/banner.jpg' in the public folder) when the banner is ready
-const BANNER_IMAGE: string | null = '/Image/Banner.jpg'
 
 type Stop = {
   stop_id: string
@@ -167,28 +165,32 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header />
-
-      {/* Banner (sits behind the search card, RedBus-style) */}
+    <SiteLayout>
+      {/* Hero: KL skyline, darkened so the white headline stands out; the search card overlaps its bottom */}
       <section className="relative">
-        <div
-          className="relative h-[320px] overflow-hidden bg-[#e8edf7] bg-cover bg-center"
-          style={BANNER_IMAGE ? { backgroundImage: `url(${BANNER_IMAGE})` } : undefined}
-        >
-          {!BANNER_IMAGE && (
-            <div className="absolute inset-4 border-2 border-dashed border-[#002472]/20 rounded-2xl flex items-end justify-end p-4">
-              <span className="text-xs text-[#002472]/40">Banner image placeholder · 1920 × 320</span>
-            </div>
-          )}
-          <div className="relative max-w-3xl mx-auto px-4 pt-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#ffffff]">{t('bannerTitle')}</h1>
-            <p className="text-[#ffffff]/70 mt-2">{t('bannerSubtitle')}</p>
+        <div className="relative h-[420px] md:h-[480px] overflow-hidden bg-[#001233]">
+          <picture>
+            <source srcSet="/Image/banner-kl.webp" type="image/webp" />
+            <img
+              src="/Image/banner-kl.jpg"
+              alt=""
+              fetchPriority="high"
+              className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
+            />
+          </picture>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#001233]/85 via-[#001233]/55 to-[#001233]/80" />
+          <div className="relative max-w-4xl mx-auto px-4 pt-14 md:pt-20 text-center">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(0_18_51/0.6)]">
+              {t('bannerTitle')}
+            </h1>
+            <p className="mt-4 text-lg md:text-xl text-white/85 [text-shadow:0_1px_12px_rgb(0_18_51/0.6)]">
+              {t('bannerSubtitle')}
+            </p>
           </div>
         </div>
 
         {/* Search card overlapping the banner */}
-        <div className="relative z-20 -mt-36 px-4 flex justify-center">
+        <div className="relative z-20 -mt-44 md:-mt-40 px-4 flex justify-center">
           <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl px-6 pt-5 pb-6">
             {/* Tab switcher */}
             <div className="flex justify-center">
@@ -388,13 +390,13 @@ function Home() {
         onClose={closePanel}
       />
 
-      {/* Hero section */}
-      <div className="mt-16 bg-[#002472] px-6 py-20">
+      {/* Why ride with us */}
+      <section className="mt-12 bg-[#002472] px-6 py-20">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center">
           <div className="text-white">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-6 h-6 bg-white/20 rounded-full" />
-              <span className="text-white/80 text-sm">{t('heroEyebrow')}</span>
+              <span className="w-2 h-2 rounded-full bg-[#C9A45C]" aria-hidden="true" />
+              <span className="text-white/80 text-sm font-medium uppercase tracking-wider">{t('heroEyebrow')}</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
               {t('heroTitle')}
@@ -402,19 +404,26 @@ function Home() {
             <p className="text-white/70 text-lg mb-6">
               {t('heroText')}
             </p>
-            <button className="bg-white text-[#002472] px-6 py-2 rounded-full font-semibold hover:bg-gray-100">
+            <a
+              href="#download"
+              className="inline-flex items-center h-11 bg-white text-[#002472] px-6 rounded-full font-semibold hover:bg-gray-100 transition-colors"
+            >
               {t('getApp')}
-            </button>
+            </a>
           </div>
 
-          <div className="flex justify-center md:justify-end">
-            <div className="w-64 h-96 bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center text-white/40 text-sm">
-              App screenshot
+          {/* Phone mockup until real app screenshots exist */}
+          <div className="flex justify-center md:justify-end" aria-hidden="true">
+            <div className="w-60 h-[26rem] rounded-[2.5rem] border-[10px] border-[#001233] bg-gradient-to-b from-white to-[#e8edf7] shadow-2xl flex flex-col items-center justify-center gap-4">
+              <BrandLogo size="lg" className="flex-col !gap-4" />
+              <span className="px-4 text-center text-[10px] font-medium tracking-[0.2em] text-[#002472]/60">
+                DISCOVER · EXPLORE · ENJOY
+              </span>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </SiteLayout>
   )
 }
 

@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 import { useSession } from '../hooks/useSession'
 import { useLanguage } from '../hooks/useLanguage'
-import { LANGUAGES, type Lang } from '../i18n/translations'
 import ServiceNav from './ServiceNav'
 import BrandLogo from './BrandLogo'
+import LanguageMenu from './LanguageMenu'
 
 function Header() {
-  const { lang, setLang, t } = useLanguage()
+  const { t } = useLanguage()
   const session = useSession()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -48,24 +48,7 @@ function Header() {
         <ServiceNav className="hidden lg:flex self-stretch" />
 
         <div className="ms-auto flex items-center gap-0.5 sm:gap-1 text-sm font-medium text-[#002472]">
-          {/* Language selector */}
-          <label className={`${PILL} relative cursor-pointer focus-within:outline focus-within:outline-2 focus-within:outline-[#002472]/40`}>
-            <GlobeIcon />
-            <span className="hidden sm:inline">{LANGUAGES.find((l) => l.code === lang)?.label}</span>
-            <ChevronIcon />
-            <select
-              value={lang}
-              onChange={(e) => setLang(e.target.value as Lang)}
-              aria-label="Language"
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            >
-              {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code}>
-                  {l.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <LanguageMenu compact />
 
           {/* Help */}
           <Link to="/help" className={PILL} aria-label={t('help')}>
@@ -138,15 +121,6 @@ const PILL =
 
 // 20px outline icons, 1.75 stroke, so the set looks even
 const ICON = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.75, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const
-
-function GlobeIcon() {
-  return (
-    <svg {...ICON}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M3.6 9h16.8M3.6 15h16.8M12 3c2.3 2.5 3.5 5.5 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.5-3.5-9S9.7 5.5 12 3z" />
-    </svg>
-  )
-}
 
 function HelpIcon() {
   return (
