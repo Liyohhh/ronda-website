@@ -4,7 +4,9 @@ import { SERVICE_OPTIONS, type ServiceOption } from '../data/serviceOptions'
 
 type Key = ServiceOption['key']
 
-function ServiceNav() {
+// Service tabs with hover dropdowns. Sits inside the header row; the dropdown is positioned
+// against the nearest `relative` ancestor (the header row), so it spans the full width.
+function ServiceNav({ className = '' }: { className?: string }) {
   const { t } = useLanguage()
   const [active, setActive] = useState<Key | null>(null)
   // Keeps the last panel's content rendered while it fades out
@@ -26,17 +28,17 @@ function ServiceNav() {
   const isOpen = active !== null
 
   return (
-    <nav className="relative border-b border-gray-200" onMouseLeave={scheduleClose}>
-      <ul className="flex items-center gap-8 px-6 text-sm text-[#002472]">
+    <nav className={className} onMouseLeave={scheduleClose} aria-label="Services">
+      <ul className="flex items-stretch gap-6 text-sm text-[#002472] whitespace-nowrap">
         {SERVICE_OPTIONS.map((o) => (
-          <li key={o.key}>
+          <li key={o.key} className="flex">
             <button
               type="button"
               onMouseEnter={() => open(o.key)}
               onFocus={() => open(o.key)}
               onClick={() => (active === o.key ? setActive(null) : open(o.key))}
               aria-expanded={active === o.key}
-              className={`py-3 border-b-2 -mb-px font-medium transition-colors ${
+              className={`py-3 border-b-2 font-medium transition-colors ${
                 active === o.key ? 'border-[#002472]' : 'border-transparent hover:border-[#002472]/40'
               }`}
             >

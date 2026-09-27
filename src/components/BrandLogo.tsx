@@ -5,6 +5,7 @@ type Props = {
   tone?: 'dark' | 'light'
   size?: 'sm' | 'md' | 'lg' | 'xl'
   wordmark?: boolean
+  wordmarkClassName?: string   // e.g. "hidden sm:block" to show only the mark on phones
   className?: string
 }
 
@@ -16,13 +17,15 @@ const SIZES = {
   xl: [96, 44],
 } as const
 
-function BrandLogo({ tone = 'dark', size = 'sm', wordmark = true, className = '' }: Props) {
+function BrandLogo({ tone = 'dark', size = 'sm', wordmark = true, wordmarkClassName = '', className = '' }: Props) {
   const [markH, wordH] = SIZES[size]
   const suffix = tone === 'light' ? '-light' : ''
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`} role="img" aria-label="RONDA">
+    <span dir="ltr" className={`inline-flex items-center gap-2 ${className}`} role="img" aria-label="RONDA">
       <img src={`/brand/ronda-mark${suffix}.svg`} alt="" style={{ height: markH }} className="w-auto" />
-      {wordmark && <img src={`/brand/ronda-wordmark${suffix}.svg`} alt="" style={{ height: wordH }} className="w-auto" />}
+      {wordmark && (
+        <img src={`/brand/ronda-wordmark${suffix}.svg`} alt="" style={{ height: wordH }} className={`w-auto ${wordmarkClassName}`} />
+      )}
     </span>
   )
 }
