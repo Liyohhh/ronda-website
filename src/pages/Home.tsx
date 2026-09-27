@@ -3,7 +3,7 @@ import { supabase } from '../services/supabase'
 import Header from '../components/Header'
 import JourneyPanel, { type TripOption } from '../components/JourneyPanel'
 import StopIcon from '../components/StopIcon'
-import { stopIconKind } from '../data/stopIcon'
+import { stopIconKind, type StopIconKind } from '../data/stopIcon'
 import { useLanguage } from '../hooks/useLanguage'
 
 // Set this to an image path (e.g. '/banner.jpg' in the public folder) when the banner is ready
@@ -19,16 +19,26 @@ type Stop = {
   stop_lon: number
 }
 
+// Any place in Malaysia, from the geocode Edge Function (OpenStreetMap via Photon)
+type Place = { name: string; detail: string; lat: number; lon: number; kind: string; osm: string }
+
+// What the user picked as Start / End: a stop or a place
+type Pick = { name: string; lat: number; lon: number }
+
+const PLACE_KINDS: StopIconKind[] = ['airport', 'hospital', 'school', 'mall', 'mosque', 'home', 'building', 'place']
+const placeKind = (k: string): StopIconKind => (PLACE_KINDS.includes(k as StopIconKind) ? (k as StopIconKind) : 'place')
+
 function Home() {
   const { t } = useLanguage()
   const [tab, setTab] = useState<'directions' | 'lines'>('directions')
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
-  const [startStop, setStartStop] = useState<Stop | null>(null)
-  const [endStop, setEndStop] = useState<Stop | null>(null)
+  const [startStop, setStartStop] = useState<Pick | null>(null)
+  const [endStop, setEndStop] = useState<Pick | null>(null)
   const [line, setLine] = useState('')
   const [activeField, setActiveField] = useState<'start' | 'end' | null>(null)
   const [suggestions, setSuggestions] = useState<Stop[]>([])
+  const [places, setPlaces] = useState<Place[]>([])
 
   // Trip planner results (shown in the right-side panel)
   const [options, setOptions] = useState<TripOption[]>([])
@@ -40,7 +50,9 @@ function Home() {
 
   // Station autocomplete (live from Supabase)
   const query = activeField === 'start' ? start : activeField === 'end' ? end : ''
-  const visibleSuggestions = query ? suggestions : []
+  // keep the stop list short so matching places stay in view below it
+  const visibleSuggestions = query ? suggestions.slice(0, 8) : []
+  const visiblePlaces = query.trim().length >= 3 ? places : []
 
   useEffect(() => {
     if (!query) return
@@ -65,6 +77,29 @@ function Home() {
     return () => controller.abort()
   }, [query])
 
+  // Place autocomplete (KLIA, Pandan Perdana, malls...), debounced: the geocoder is a shared service
+  useEffect(() => {
+    const q = query.trim()
+    if (q.length < 3) return
+
+    let cancelled = false
+    const timer = setTimeout(async () => {
+      const { data, error } = await supabase.functions.invoke('geocode', { body: { q } })
+      if (cancelled) return
+      if (error || data?.error) {
+        console.error('Place search error:', error || data?.error)
+        setPlaces([])
+        return
+      }
+      setPlaces(data?.results ?? [])
+    }, 350)
+
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [query])
+
   const handleSwap = () => {
     setStart(end)
     setEnd(start)
@@ -84,14 +119,14 @@ function Home() {
 
     // Planner defaults to leaving now (Malaysia time)
     const body = {
-      from: { lat: startStop.stop_lat, lon: startStop.stop_lon },
-      to: { lat: endStop.stop_lat, lon: endStop.stop_lon },
+      from: { lat: startStop.lat, lon: startStop.lon },
+      to: { lat: endStop.lat, lon: endStop.lon },
     }
 
     setLoading(true)
     setPlanError('')
     setOptions([])
-    setSearchedFor({ from: startStop.stop_name, to: endStop.stop_name })
+    setSearchedFor({ from: startStop.name, to: endStop.name })
     setSearchId((n) => n + 1)
 
     const { data, error } = await supabase.functions.invoke('plan-trip', { body })
@@ -117,17 +152,18 @@ function Home() {
     setPlanError('')
   }
 
-  const pickSuggestion = (stop: Stop) => {
+  const pickSuggestion = (pick: Pick) => {
     if (activeField === 'start') {
-      setStart(stop.stop_name)
-      setStartStop(stop)
+      setStart(pick.name)
+      setStartStop(pick)
     }
     if (activeField === 'end') {
-      setEnd(stop.stop_name)
-      setEndStop(stop)
+      setEnd(pick.name)
+      setEndStop(pick)
     }
     setActiveField(null)
     setSuggestions([])
+    setPlaces([])
   }
 
   return (
@@ -261,29 +297,71 @@ function Home() {
                   </button>
                 </div>
 
-                {/* Suggestions: scrollable list with icons */}
-                {visibleSuggestions.length > 0 && activeField && (
+                {/* Suggestions: stations & stops first, then any place (OpenStreetMap) */}
+                {(visibleSuggestions.length > 0 || visiblePlaces.length > 0) && activeField && (
                   <div className="absolute left-0 right-0 mt-2 bg-white border rounded-2xl shadow-lg overflow-hidden z-10">
-                    <div className="max-h-80 overflow-y-auto overscroll-contain">
+                    <div className="max-h-96 overflow-y-auto overscroll-contain">
                       <div className="sticky top-0 z-10 bg-white text-xs text-gray-400 px-6 pt-3 pb-2 border-b border-gray-100">
                         {t('searchAnywhere')}
                       </div>
-                      {visibleSuggestions.map((s) => (
-                        <button
-                          key={`${s.feed_id}:${s.stop_id}`}
-                          onMouseDown={(e) => {
-                            e.preventDefault()
-                            pickSuggestion(s)
-                          }}
-                          className="w-full text-start px-6 py-2.5 flex items-center gap-3 hover:bg-gray-50"
-                        >
-                          <StopIcon kind={stopIconKind(s.stop_name, s.category)} />
-                          <div className="min-w-0">
-                            <div className="text-gray-800 truncate">{s.stop_name}</div>
-                            <div className="text-xs text-gray-500 truncate">{s.category}</div>
+                      {visibleSuggestions.length > 0 && (
+                        <div role="group" aria-label={t('stationsHeading')}>
+                          <div className="px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+                            {t('stationsHeading')}
                           </div>
-                        </button>
-                      ))}
+                          {visibleSuggestions.map((s) => (
+                            <button
+                              key={`${s.feed_id}:${s.stop_id}`}
+                              onMouseDown={(e) => {
+                                e.preventDefault()
+                                pickSuggestion({ name: s.stop_name, lat: s.stop_lat, lon: s.stop_lon })
+                              }}
+                              className="w-full text-start px-6 py-2.5 flex items-center gap-3 hover:bg-gray-50"
+                            >
+                              <StopIcon kind={stopIconKind(s.stop_name, s.category)} />
+                              <div className="min-w-0">
+                                <div className="text-gray-800 truncate">{s.stop_name}</div>
+                                <div className="text-xs text-gray-500 truncate">{s.category}</div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      {visiblePlaces.length > 0 && (
+                        <div role="group" aria-label={t('placesHeading')} className="border-t border-gray-100">
+                          <div className="px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+                            {t('placesHeading')}
+                          </div>
+                          {visiblePlaces.map((p) => (
+                            <button
+                              key={p.osm || `${p.name}:${p.lat}:${p.lon}`}
+                              onMouseDown={(e) => {
+                                e.preventDefault()
+                                pickSuggestion({ name: p.name, lat: p.lat, lon: p.lon })
+                              }}
+                              className="w-full text-start px-6 py-2.5 flex items-center gap-3 hover:bg-gray-50"
+                            >
+                              <StopIcon kind={placeKind(p.kind)} />
+                              <div className="min-w-0">
+                                <div className="text-gray-800 truncate">{p.name}</div>
+                                {p.detail && <div className="text-xs text-gray-500 truncate">{p.detail}</div>}
+                              </div>
+                            </button>
+                          ))}
+                          <div className="px-6 py-2 text-[11px] text-gray-400">
+                            ©{' '}
+                            <a
+                              href="https://www.openstreetmap.org/copyright"
+                              target="_blank"
+                              rel="noreferrer"
+                              className="underline hover:text-gray-600"
+                            >
+                              OpenStreetMap
+                            </a>{' '}
+                            contributors
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

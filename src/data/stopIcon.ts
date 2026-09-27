@@ -12,6 +12,7 @@ export type StopIconKind =
   | 'mosque'
   | 'home'
   | 'building'
+  | 'place'
 
 const PLACE_RULES: { kind: StopIconKind; pattern: RegExp }[] = [
   { kind: 'airport', pattern: /\b(klia|airport|lapangan terbang|skypark)\b/i },

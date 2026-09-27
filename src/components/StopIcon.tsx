@@ -55,6 +55,12 @@ const PATHS: Record<StopIconKind, ReactNode> = {
       <path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2" />
     </>
   ),
+  place: (
+    <>
+      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </>
+  ),
 }
 
 // Rail stations use solid RONDA blue; everything else uses the light tint

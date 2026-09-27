@@ -3,8 +3,11 @@ import { useLanguage } from '../hooks/useLanguage'
 
 export type Place = { name: string; lat: number; lon: number }
 
+// First / last legs can be walked or driven (taxi / e-hailing estimate); `alt` is the other option
+export type LegAlt = { mode: 'walk' | 'drive'; duration_min: number; distance_m: number }
+
 export type Leg = {
-  mode: 'walk' | 'transit'
+  mode: 'walk' | 'drive' | 'transit'
   from: Place
   to: Place
   start: string
@@ -19,6 +22,7 @@ export type Leg = {
   headsign?: string | null
   num_stops?: number
   stops?: { name: string; time: string }[]
+  alt?: LegAlt
 }
 
 export type TripOption = {
@@ -27,6 +31,7 @@ export type TripOption = {
   duration_min: number
   transfers: number
   walk_min: number
+  drive_min?: number
   hops: string[]
   legs: Leg[]
 }
@@ -42,6 +47,21 @@ type Props = {
 }
 
 const NAVY = '#002472'
+const GOLD = '#C9A45C'
+
+// "or walk 72 min" / "or drive 9 min" under a first / last leg
+function AltLine({ alt, t }: { alt: LegAlt; t: (k: 'orWalk' | 'orDrive') => string }) {
+  return (
+    <div className="text-xs text-gray-500 mt-0.5">
+      {alt.mode === 'walk' ? t('orWalk') : t('orDrive')} {alt.duration_min} min · {formatDistance(alt.distance_m)}
+    </div>
+  )
+}
+
+function formatDistance(m?: number) {
+  if (!m) return ''
+  return m >= 1000 ? `${(m / 1000).toFixed(1)} km` : `${m} m`
+}
 
 // GTFS colours come without "#" and can be null (e.g. ERL)
 function lineColour(c?: string | null) {
@@ -60,9 +80,10 @@ function textOn(hex: string) {
 // GTFS route_type 3 = bus
 const isBus = (leg: Leg) => leg.route_type === 3
 
-// Main label: the line name (e.g. "MRT Kajang Line"), but the route number for buses (e.g. "T789")
+// Main label: the line name (e.g. "MRT Kajang Line"), or "BUS" + the bus number (e.g. "BUS T789")
 function legLabel(leg: Leg) {
-  return (isBus(leg) ? leg.route_short_name || leg.hop : leg.hop || leg.route_short_name) ?? ''
+  if (isBus(leg)) return leg.route_short_name ? `BUS ${leg.route_short_name}` : leg.hop ?? 'BUS'
+  return leg.hop || leg.route_short_name || ''
 }
 
 // Secondary label: the network for buses; the branch name for rail when it's a real name
@@ -142,7 +163,8 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                     key={i}
                     style={{
                       flexGrow: Math.max(l.duration_min, 1),
-                      backgroundColor: l.mode === 'transit' ? lineColour(l.colour) : 'rgba(255,255,255,0.35)',
+                      backgroundColor:
+                        l.mode === 'transit' ? lineColour(l.colour) : l.mode === 'drive' ? GOLD : 'rgba(255,255,255,0.35)',
                     }}
                   />
                 ))}
@@ -203,10 +225,15 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                                 </span>
                               )
                             })}
-                          {o.hops.length === 0 && <span className="text-xs text-gray-600">{t('walkTo')} {to}</span>}
+                          {o.hops.length === 0 && (
+                            <span className="text-xs text-gray-600">
+                              {o.legs[0]?.mode === 'drive' ? t('driveTo') : t('walkTo')} {to}
+                            </span>
+                          )}
                         </div>
                         <div className="text-xs text-gray-500 mt-2">
                           {t('transfers')}: {o.transfers} · {o.walk_min} {t('minWalk')}
+                          {!!o.drive_min && ` · ${o.drive_min} ${t('minDrive')}`}
                         </div>
                       </button>
                     ))}
@@ -229,12 +256,23 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                             backgroundImage:
                               leg.mode === 'walk'
                                 ? 'repeating-linear-gradient(to bottom, #cbd5e1 0 4px, transparent 4px 8px)'
-                                : undefined,
+                                : leg.mode === 'drive'
+                                  ? `repeating-linear-gradient(to bottom, ${GOLD} 0 6px, transparent 6px 9px)`
+                                  : undefined,
                           }}
                         />
                       )}
 
-                      {leg.mode === 'walk' ? (
+                      {leg.mode === 'drive' ? (
+                        <span className="w-10 h-10 rounded-full bg-[#C9A45C]/15 text-[#8a6a2a] flex items-center justify-center flex-shrink-0">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M5 16h14v-4l-2-5H7l-2 5z" />
+                            <path d="M5 12h14" />
+                            <circle cx="8" cy="16.5" r="1.5" />
+                            <circle cx="16" cy="16.5" r="1.5" />
+                          </svg>
+                        </span>
+                      ) : leg.mode === 'walk' ? (
                         <span className="w-10 h-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center flex-shrink-0">
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="12" cy="4" r="2" />
@@ -254,15 +292,16 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                       )}
 
                       <div className="flex-1 min-w-0 pt-1">
-                        {leg.mode === 'walk' ? (
+                        {leg.mode !== 'transit' ? (
                           <>
                             <div className="font-medium text-gray-900">
-                              {t('walkTo')} {placeName(leg.to)}
+                              {leg.mode === 'drive' ? t('driveTo') : t('walkTo')} {placeName(leg.to)}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {leg.start} · {leg.duration_min} {t('minWalk')}
-                              {leg.distance_m ? ` · ${leg.distance_m} m` : ''}
+                              {leg.start} · {leg.duration_min} {leg.mode === 'drive' ? t('minDrive') : t('minWalk')}
+                              {leg.distance_m ? ` · ${formatDistance(leg.distance_m)}` : ''}
                             </div>
+                            {leg.alt && <AltLine alt={leg.alt} t={t} />}
                           </>
                         ) : (
                           <>
@@ -296,9 +335,7 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                 })}
               </ol>
 
-              <p className="text-xs text-gray-400 mt-6 italic">
-                Times are from published timetables. Walking times are estimates.
-              </p>
+              <p className="text-xs text-gray-400 mt-6 italic">{t('estimatesNote')}</p>
             </>
           )}
         </div>
