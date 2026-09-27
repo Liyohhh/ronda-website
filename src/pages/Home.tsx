@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { supabase } from '../services/supabase'
+import Header from '../components/Header'
+import { useLanguage } from '../hooks/useLanguage'
+
+// Set this to an image path (e.g. '/banner.jpg' in the public folder) when the banner is ready
+const BANNER_IMAGE: string | null = '/Image/Banner.jpg'
 
 type Stop = {
   stop_id: string
@@ -10,6 +14,7 @@ type Stop = {
 }
 
 function Home() {
+  const { t } = useLanguage()
   const [tab, setTab] = useState<'directions' | 'lines'>('directions')
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
@@ -96,161 +101,155 @@ function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-6 py-4">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-[#002472] rounded-full" />
-          <span className="font-bold text-lg text-[#002472]">RONDA</span>
-        </div>
+      <Header />
 
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <select className="appearance-none border rounded pl-3 pr-10 py-1 text-sm text-gray-600">
-              <option>English</option>
-              <option>Bahasa Melayu</option>
-              <option>中文</option>
-            </select>
-            <svg
-              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path d="M5.25 7.5L10 12.25L14.75 7.5H5.25Z" />
-            </svg>
-          </div>
-
-          <Link
-            to="/login"
-            className="text-sm border border-[#002472] text-[#002472] px-4 py-1 rounded-full font-medium hover:bg-[#002472] hover:text-white"
-          >
-            Sign in
-          </Link>
-        </div>
-      </div>
-
-      {/* Tab switcher */}
-      <div className="flex justify-center mt-8">
-        <div className="flex bg-gray-100 rounded-full p-1">
-          <button
-            onClick={() => setTab('directions')}
-            className={`px-8 py-2 rounded-full text-sm font-semibold transition ${
-              tab === 'directions' ? 'bg-white text-black shadow' : 'text-gray-500'
-            }`}
-          >
-            Directions
-          </button>
-          <button
-            onClick={() => setTab('lines')}
-            className={`px-8 py-2 rounded-full text-sm font-semibold transition ${
-              tab === 'lines' ? 'bg-white text-black shadow' : 'text-gray-500'
-            }`}
-          >
-            Lines
-          </button>
-        </div>
-      </div>
-
-      {/* Search bar + suggestions dropdown */}
-      <div className="flex justify-center mt-6 px-4 relative">
-        <div className="w-full max-w-3xl relative">
-          <div className="bg-white rounded-full shadow-lg border flex items-center pr-2">
-            {tab === 'directions' ? (
-              <>
-                <div className="flex-1 flex items-center px-6 py-3">
-                  <div className="flex-1">
-                    <div className="text-xs text-gray-400">Start</div>
-                    <input
-                      type="text"
-                      value={start}
-                      onChange={(e) => setStart(e.target.value)}
-                      onFocus={() => setActiveField('start')}
-                      onBlur={() => setTimeout(() => setActiveField(null), 150)}
-                      placeholder="Choose starting point"
-                      className="w-full text-base outline-none"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleSwap}
-                  className="w-10 h-10 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0"
-                  aria-label="Swap"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/>
-                  </svg>
-                </button>
-
-                <div className="flex-1 flex items-center px-6 py-3">
-                  <div className="flex-1">
-                    <div className="text-xs text-gray-400">End</div>
-                    <input
-                      type="text"
-                      value={end}
-                      onChange={(e) => setEnd(e.target.value)}
-                      onFocus={() => setActiveField('end')}
-                      onBlur={() => setTimeout(() => setActiveField(null), 150)}
-                      placeholder="Choose destination"
-                      className="w-full text-base outline-none"
-                    />
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="flex-1 flex items-center px-6 py-3">
-                <div className="flex-1">
-                  <div className="text-xs text-gray-400">Line</div>
-                  <input
-                    type="text"
-                    value={line}
-                    onChange={(e) => setLine(e.target.value)}
-                    placeholder="Search for a line"
-                    className="w-full text-base outline-none"
-                  />
-                </div>
-              </div>
-            )}
-
-            <button
-              onClick={handleSearch}
-              className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0"
-              aria-label="Search"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21l-4.35-4.35"/>
-              </svg>
-            </button>
-          </div>
-
-          {suggestions.length > 0 && activeField && (
-            <div className="absolute left-0 right-0 mt-2 bg-white border rounded-2xl shadow-lg overflow-hidden z-10">
-              <div className="text-xs text-gray-400 px-6 pt-3 pb-1">
-                Search anywhere in Malaysia
-              </div>
-              {suggestions.map((s) => (
-                <button
-                  key={s.stop_id}
-                  onMouseDown={(e) => {
-                    e.preventDefault()
-                    pickSuggestion(s)
-                  }}
-                  className="w-full text-left px-6 py-3 flex items-center gap-3 hover:bg-gray-50"
-                >
-                  <div className="w-8 h-8 rounded bg-[#002472] text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">
-                    {s.category}
-                  </div>
-                  <span className="text-gray-800">{s.stop_name}</span>
-                </button>
-              ))}
+      {/* Banner (sits behind the search card, RedBus-style) */}
+      <section className="relative">
+        <div
+          className="relative h-[320px] overflow-hidden bg-[#e8edf7] bg-cover bg-center"
+          style={BANNER_IMAGE ? { backgroundImage: `url(${BANNER_IMAGE})` } : undefined}
+        >
+          {!BANNER_IMAGE && (
+            <div className="absolute inset-4 border-2 border-dashed border-[#002472]/20 rounded-2xl flex items-end justify-end p-4">
+              <span className="text-xs text-[#002472]/40">Banner image placeholder · 1920 × 320</span>
             </div>
           )}
+          <div className="relative max-w-3xl mx-auto px-4 pt-12">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#002472]">{t('bannerTitle')}</h1>
+            <p className="text-[#002472]/70 mt-2">{t('bannerSubtitle')}</p>
+          </div>
         </div>
-      </div>
+
+        {/* Search card overlapping the banner */}
+        <div className="relative z-20 -mt-36 px-4 flex justify-center">
+          <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl px-6 pt-5 pb-6">
+            {/* Tab switcher */}
+            <div className="flex justify-center">
+              <div className="flex bg-gray-100 rounded-full p-1">
+                <button
+                  onClick={() => setTab('directions')}
+                  className={`px-8 py-2 rounded-full text-sm font-semibold transition ${
+                    tab === 'directions' ? 'bg-white text-black shadow' : 'text-gray-500'
+                  }`}
+                >
+                  {t('directions')}
+                </button>
+                <button
+                  onClick={() => setTab('lines')}
+                  className={`px-8 py-2 rounded-full text-sm font-semibold transition ${
+                    tab === 'lines' ? 'bg-white text-black shadow' : 'text-gray-500'
+                  }`}
+                >
+                  {t('lines')}
+                </button>
+              </div>
+            </div>
+
+            {/* Search bar + suggestions dropdown */}
+            <div className="flex justify-center mt-5 relative">
+              <div className="w-full max-w-3xl relative">
+                <div className="bg-white rounded-full shadow-lg border flex items-center pe-2">
+                  {tab === 'directions' ? (
+                    <>
+                      <div className="flex-1 flex items-center px-6 py-3">
+                        <div className="flex-1">
+                          <div className="text-xs text-gray-400">{t('start')}</div>
+                          <input
+                            type="text"
+                            value={start}
+                            onChange={(e) => setStart(e.target.value)}
+                            onFocus={() => setActiveField('start')}
+                            onBlur={() => setTimeout(() => setActiveField(null), 150)}
+                            placeholder={t('startPh')}
+                            className="w-full text-base outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={handleSwap}
+                        className="w-10 h-10 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0"
+                        aria-label="Swap"
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/>
+                        </svg>
+                      </button>
+
+                      <div className="flex-1 flex items-center px-6 py-3">
+                        <div className="flex-1">
+                          <div className="text-xs text-gray-400">{t('end')}</div>
+                          <input
+                            type="text"
+                            value={end}
+                            onChange={(e) => setEnd(e.target.value)}
+                            onFocus={() => setActiveField('end')}
+                            onBlur={() => setTimeout(() => setActiveField(null), 150)}
+                            placeholder={t('endPh')}
+                            className="w-full text-base outline-none"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex-1 flex items-center px-6 py-3">
+                      <div className="flex-1">
+                        <div className="text-xs text-gray-400">{t('line')}</div>
+                        <input
+                          type="text"
+                          value={line}
+                          onChange={(e) => setLine(e.target.value)}
+                          placeholder={t('linePh')}
+                          className="w-full text-base outline-none"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={handleSearch}
+                    className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0"
+                    aria-label="Search"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="11" r="8"/>
+                      <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                  </button>
+                </div>
+
+                {suggestions.length > 0 && activeField && (
+                  <div className="absolute left-0 right-0 mt-2 bg-white border rounded-2xl shadow-lg overflow-hidden z-10">
+                    <div className="text-xs text-gray-400 px-6 pt-3 pb-1">
+                      {t('searchAnywhere')}
+                    </div>
+                    {suggestions.map((s) => (
+                      <button
+                        key={s.stop_id}
+                        onMouseDown={(e) => {
+                          e.preventDefault()
+                          pickSuggestion(s)
+                        }}
+                        className="w-full text-start px-6 py-3 flex items-center gap-3 hover:bg-gray-50"
+                      >
+                        <div className="w-8 h-8 rounded bg-[#002472] text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                          {s.category}
+                        </div>
+                        <span className="text-gray-800">{s.stop_name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
 
       {/* Journey results (only shows after search) */}
       {journey && (
-        <div className="flex justify-center mt-6 px-4">
+        <div className="flex justify-center mt-8 px-4">
           <div className="w-full max-w-3xl">
             <div className="mb-4">
               <div className="text-sm text-gray-500">Your journey</div>
@@ -309,16 +308,16 @@ function Home() {
           <div className="text-white">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-6 h-6 bg-white/20 rounded-full" />
-              <span className="text-white/80 text-sm">Why ride with us?</span>
+              <span className="text-white/80 text-sm">{t('heroEyebrow')}</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-              Get anywhere with RONDA in Malaysia
-            </h1>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+              {t('heroTitle')}
+            </h2>
             <p className="text-white/70 text-lg mb-6">
-              One app for MRT, LRT, KTM, Monorail, and buses. Plan smarter, discover more.
+              {t('heroText')}
             </p>
             <button className="bg-white text-[#002472] px-6 py-2 rounded-full font-semibold hover:bg-gray-100">
-              Get the app
+              {t('getApp')}
             </button>
           </div>
 
