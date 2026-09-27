@@ -1,6 +1,6 @@
 // Picks an icon for a search suggestion.
 // Place keywords in the stop name win (e.g. "Hospital Kajang"); otherwise the
-// transport mode is taken from the Hop label returned by search_stops().
+// transport mode is taken from the line name(s) returned by search_stops().
 
 export type StopIconKind =
   | 'train'
@@ -35,7 +35,7 @@ export function stopIconKind(stopName: string, category: string): StopIconKind {
   return 'bus'
 }
 
-// "MRT Feeder Hop" is a feeder BUS, and BRT Sunway is a bus rapid transit line
+// "MRT Feeder Bus" is a feeder BUS, and BRT Sunway is a bus rapid transit line
 export function isRailCategory(category: string) {
   return RAIL.test(category) && !/feeder|brt/i.test(category)
 }

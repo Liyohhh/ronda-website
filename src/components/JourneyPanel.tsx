@@ -14,6 +14,7 @@ export type Leg = {
   hop?: string | null
   route_short_name?: string | null
   route_long_name?: string | null
+  route_type?: number | null
   colour?: string | null
   headsign?: string | null
   num_stops?: number
@@ -54,6 +55,21 @@ function textOn(hex: string) {
   if (h.length !== 6) return '#fff'
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16))
   return 0.299 * r + 0.587 * g + 0.114 * b > 160 ? '#111827' : '#fff'
+}
+
+// GTFS route_type 3 = bus
+const isBus = (leg: Leg) => leg.route_type === 3
+
+// Main label: the line name (e.g. "MRT Kajang Line"), but the route number for buses (e.g. "T789")
+function legLabel(leg: Leg) {
+  return (isBus(leg) ? leg.route_short_name || leg.hop : leg.hop || leg.route_short_name) ?? ''
+}
+
+// Secondary label: the network for buses; the branch name for rail when it's a real name
+// (e.g. "Port Klang Line" under "KTM Komuter"), not a bare code like "KGL"
+function legSubLabel(leg: Leg) {
+  const sub = isBus(leg) ? leg.hop : leg.route_short_name?.includes(' ') ? leg.route_short_name : null
+  return sub && sub !== legLabel(leg) ? sub : null
 }
 
 function JourneyPanel({ open, from, to, loading, error, options, onClose }: Props) {
@@ -183,7 +199,7 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                                   className="text-xs px-2 py-0.5 rounded"
                                   style={{ backgroundColor: c, color: textOn(c) }}
                                 >
-                                  {l.route_short_name || l.hop}
+                                  {legLabel(l)}
                                 </span>
                               )
                             })}
@@ -255,10 +271,10 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                                 className="inline-block text-xs font-semibold px-2 py-0.5 rounded"
                                 style={{ backgroundColor: c, color: textOn(c) }}
                               >
-                                {leg.route_short_name || leg.hop}
+                                {legLabel(leg)}
                               </span>
-                              {leg.hop && leg.hop !== leg.route_short_name && (
-                                <span className="text-xs text-gray-500">{leg.hop}</span>
+                              {legSubLabel(leg) && (
+                                <span className="text-xs text-gray-500">{legSubLabel(leg)}</span>
                               )}
                             </div>
                             {leg.headsign && (
