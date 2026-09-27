@@ -30,9 +30,6 @@ function Home() {
   const [activeField, setActiveField] = useState<'start' | 'end' | null>(null)
   const [suggestions, setSuggestions] = useState<Stop[]>([])
 
-  // "" = leave now, otherwise "YYYY-MM-DDTHH:MM"
-  const [departAt, setDepartAt] = useState('')
-
   // Trip planner results (shown in the right-side panel)
   const [options, setOptions] = useState<TripOption[]>([])
   const [loading, setLoading] = useState(false)
@@ -85,13 +82,10 @@ function Home() {
       return
     }
 
-    const body: Record<string, unknown> = {
+    // Planner defaults to leaving now (Malaysia time)
+    const body = {
       from: { lat: startStop.stop_lat, lon: startStop.stop_lon },
       to: { lat: endStop.stop_lat, lon: endStop.stop_lon },
-    }
-    if (departAt) {
-      body.date = departAt.slice(0, 10)
-      body.time = departAt.slice(11, 16)
     }
 
     setLoading(true)
@@ -152,8 +146,8 @@ function Home() {
             </div>
           )}
           <div className="relative max-w-3xl mx-auto px-4 pt-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#FFFFFF]">{t('bannerTitle')}</h1>
-            <p className="text-[#FFFFFF]/70 mt-2">{t('bannerSubtitle')}</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#ffffff]">{t('bannerTitle')}</h1>
+            <p className="text-[#ffffff]/70 mt-2">{t('bannerSubtitle')}</p>
           </div>
         </div>
 
@@ -291,29 +285,6 @@ function Home() {
                         </button>
                       ))}
                     </div>
-                  </div>
-                )}
-
-                {/* Departure time (directions only) */}
-                {tab === 'directions' && (
-                  <div className="flex flex-wrap items-center gap-3 mt-3 px-6 text-sm text-gray-600">
-                    <button
-                      onClick={() => setDepartAt('')}
-                      className={`px-3 py-1 rounded-full border ${
-                        departAt === '' ? 'bg-[#002472] text-white border-[#002472]' : 'border-gray-300'
-                      }`}
-                    >
-                      {t('departNow')}
-                    </button>
-                    <span>{t('departAt')}</span>
-                    <input
-                      type="datetime-local"
-                      value={departAt}
-                      onChange={(e) => setDepartAt(e.target.value)}
-                      className={`border rounded-full px-3 py-1 outline-none max-w-full min-w-0 ${
-                        departAt ? 'border-[#002472] text-[#002472]' : 'border-gray-300'
-                      }`}
-                    />
                   </div>
                 )}
 
