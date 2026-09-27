@@ -114,6 +114,9 @@ const en = {
   direct: "Direct",
   seeSteps: "See steps",
   destination: 'Destination',
+  noServiceTonight: 'No more trains or buses tonight. Take a taxi / e-hailing now, or catch the first service tomorrow at {time}.',
+  serviceResumes: 'Trains and buses are not running now. Service resumes at {time}, or take a taxi / e-hailing now.',
+  tomorrow: 'Tomorrow',
 }
 
 export type TranslationKey = keyof typeof en
@@ -227,6 +230,9 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     direct: "Terus",
     seeSteps: "Lihat langkah",
     destination: 'Destinasi',
+    noServiceTonight: 'Tiada lagi tren atau bas malam ini. Naik teksi / e-hailing sekarang, atau naik perkhidmatan pertama esok pada {time}.',
+    serviceResumes: 'Tren dan bas tidak beroperasi sekarang. Perkhidmatan bermula semula pada {time}, atau naik teksi / e-hailing sekarang.',
+    tomorrow: 'Esok',
   },
   zh: {
     signUp: '注册',
@@ -335,6 +341,9 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     direct: "直达",
     seeSteps: "查看步骤",
     destination: '目的地',
+    noServiceTonight: '今晚已无火车或巴士。可立即乘坐出租车 / 网约车，或搭乘明天 {time} 的首班车。',
+    serviceResumes: '目前火车和巴士暂停运营。服务将于 {time} 恢复，或立即乘坐出租车 / 网约车。',
+    tomorrow: '明天',
   },
   ar: {
     signUp: 'إنشاء حساب',
@@ -443,5 +452,8 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     direct: "مباشر",
     seeSteps: "عرض الخطوات",
     destination: 'الوجهة',
+    noServiceTonight: 'لا توجد قطارات أو حافلات أخرى الليلة. استقل سيارة أجرة الآن، أو أول رحلة غداً في {time}.',
+    serviceResumes: 'القطارات والحافلات لا تعمل الآن. تستأنف الخدمة في {time}، أو استقل سيارة أجرة الآن.',
+    tomorrow: 'غداً',
   },
 }

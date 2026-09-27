@@ -43,7 +43,11 @@ export type TripOption = {
   fare?: Fare | null
   hops: string[]
   legs: Leg[]
+  next_day?: boolean   // tomorrow's first services, shown when nothing runs tonight
 }
+
+// No trains / buses right now: 'tomorrow' = last one has gone, 'resumes' = early morning before the first one
+export type ServiceNotice = { kind: 'tomorrow' | 'resumes'; time: string } | null
 
 type Props = {
   open: boolean
@@ -52,6 +56,7 @@ type Props = {
   loading: boolean
   error: string
   options: TripOption[]
+  notice?: ServiceNotice
   onClose: () => void
 }
 
@@ -102,6 +107,8 @@ function sortOptions(list: TripOption[], key: SortKey) {
   const arrive = (o: TripOption) => o.arrival
   const price = (o: TripOption) => o.fare?.amount
   return [...list].sort((a, b) => {
+    const day = Number(!!a.next_day) - Number(!!b.next_day)
+    if (day) return day
     switch (key) {
       case 'priceLow':
       case 'priceHigh': {
@@ -160,7 +167,7 @@ function RoutePreview({ option }: { option: TripOption }) {
 
 // ---------- panel ----------
 
-function JourneyPanel({ open, from, to, loading, error, options, onClose }: Props) {
+function JourneyPanel({ open, from, to, loading, error, options, notice, onClose }: Props) {
   const { t } = useLanguage()
   const [sort, setSort] = useState<SortKey>('fastest')
   const [detail, setDetail] = useState<TripOption | null>(null)
@@ -295,6 +302,14 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
           {/* Route choices */}
           {!loading && !error && !detail && options.length > 0 && (
             <ul className="p-4 space-y-3">
+              {notice && (
+                <li className="flex gap-2.5 bg-amber-50 border border-amber-200 text-amber-900 text-sm rounded-2xl px-4 py-3" role="status">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="flex-shrink-0 mt-0.5">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+                  </svg>
+                  <span>{t(notice.kind === 'tomorrow' ? 'noServiceTonight' : 'serviceResumes').replace('{time}', notice.time)}</span>
+                </li>
+              )}
               {sorted.map((o, i) => {
                 const firstRide = o.legs.find((l) => l.mode === 'transit')
                 return (
@@ -309,6 +324,11 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                           <span className="ms-2 text-sm text-gray-500">
                             {o.departure} – {o.arrival}
                           </span>
+                          {o.next_day && (
+                            <span className="ms-2 align-middle inline-block rounded-full bg-[#002472]/10 text-[#002472] text-[11px] font-semibold px-2 py-0.5">
+                              {t('tomorrow')}
+                            </span>
+                          )}
                         </div>
                         <div className="text-base font-semibold">
                           <FareText fare={o.fare} t={t} />
@@ -353,6 +373,11 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                     <span className="ms-2 text-sm text-gray-500">
                       {detail.departure} – {detail.arrival}
                     </span>
+                    {detail.next_day && (
+                      <span className="ms-2 align-middle inline-block rounded-full bg-[#002472]/10 text-[#002472] text-[11px] font-semibold px-2 py-0.5">
+                        {t('tomorrow')}
+                      </span>
+                    )}
                   </div>
                   <div className="text-lg font-semibold">
                     <FareText fare={detail.fare} t={t} />

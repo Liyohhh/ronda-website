@@ -2,7 +2,7 @@ import { useState, type KeyboardEvent } from 'react'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
 import BrandLogo from '../components/BrandLogo'
-import JourneyPanel, { type TripOption } from '../components/JourneyPanel'
+import JourneyPanel, { type TripOption, type ServiceNotice } from '../components/JourneyPanel'
 import SuggestionList from '../components/SuggestionList'
 import { buildItems, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
@@ -29,6 +29,8 @@ function Home() {
   const [planError, setPlanError] = useState('')
   const [searchedFor, setSearchedFor] = useState<{ from: string; to: string } | null>(null)
   const [searchId, setSearchId] = useState(0)
+  // After the last train / before the first one: when service (re)starts
+  const [notice, setNotice] = useState<ServiceNotice>(null)
 
   // Smart search: stops + places for whichever box is focused
   const query = activeField === 'start' ? start : activeField === 'end' ? end : ''
@@ -81,6 +83,7 @@ function Home() {
     setLoading(true)
     setPlanError('')
     setOptions([])
+    setNotice(null)
     setSearchedFor({ from: startStop.name, to: endStop.name })
     setSearchId((n) => n + 1)
 
@@ -99,11 +102,15 @@ function Home() {
       return
     }
     setOptions(found)
+    const meta = data?.meta
+    if (meta?.next_day?.first_departure) setNotice({ kind: 'tomorrow', time: meta.next_day.first_departure })
+    else if (meta?.service_resumes) setNotice({ kind: 'resumes', time: meta.service_resumes })
   }
 
   const closePanel = () => {
     setSearchedFor(null)
     setOptions([])
+    setNotice(null)
     setPlanError('')
   }
 
@@ -302,6 +309,7 @@ function Home() {
         loading={loading}
         error={planError}
         options={options}
+        notice={notice}
         onClose={closePanel}
       />
 
