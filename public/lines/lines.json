@@ -1,0 +1,276 @@
+[
+  {
+    "id": "lrt-ampang",
+    "name": "LRT Ampang Line",
+    "mode": "LRT",
+    "code": "AGL",
+    "color": "#E57200",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "rapid-rail-kl",
+      "routeIds": [
+        "AG"
+      ]
+    },
+    "svg": "/lines/lrt-ampang.svg"
+  },
+  {
+    "id": "lrt-sri-petaling",
+    "name": "LRT Sri Petaling Line",
+    "mode": "LRT",
+    "code": "SPL",
+    "color": "#76232F",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "rapid-rail-kl",
+      "routeIds": [
+        "PH"
+      ]
+    },
+    "svg": "/lines/lrt-sri-petaling.svg"
+  },
+  {
+    "id": "lrt-kelana-jaya",
+    "name": "LRT Kelana Jaya Line",
+    "mode": "LRT",
+    "code": "KJL",
+    "color": "#D50032",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "rapid-rail-kl",
+      "routeIds": [
+        "KJ"
+      ]
+    },
+    "svg": "/lines/lrt-kelana-jaya.svg"
+  },
+  {
+    "id": "lrt-shah-alam",
+    "name": "LRT Shah Alam Line",
+    "mode": "LRT",
+    "code": "SAL",
+    "color": "#00A9E0",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "rapid-rail-kl",
+      "routeIds": [
+        "SA"
+      ]
+    },
+    "svg": "/lines/lrt-shah-alam.svg"
+  },
+  {
+    "id": "mrt-kajang",
+    "name": "MRT Kajang Line",
+    "mode": "MRT",
+    "code": "KGL",
+    "color": "#047940",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "rapid-rail-kl",
+      "routeIds": [
+        "KGL"
+      ]
+    },
+    "svg": "/lines/mrt-kajang.svg"
+  },
+  {
+    "id": "mrt-putrajaya",
+    "name": "MRT Putrajaya Line",
+    "mode": "MRT",
+    "code": "PYL",
+    "color": "#FFCD00",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "rapid-rail-kl",
+      "routeIds": [
+        "PYL"
+      ]
+    },
+    "svg": "/lines/mrt-putrajaya.svg"
+  },
+  {
+    "id": "monorail",
+    "name": "KL Monorail Line",
+    "mode": "MONORAIL",
+    "code": "MRL",
+    "color": "#84BD00",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "rapid-rail-kl",
+      "routeIds": [
+        "MR"
+      ]
+    },
+    "svg": "/lines/monorail.svg"
+  },
+  {
+    "id": "brt-sunway",
+    "name": "BRT Sunway Line",
+    "mode": "BRT",
+    "code": "BRT",
+    "color": "#115740",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "rapid-rail-kl",
+      "routeIds": [
+        "BRT"
+      ]
+    },
+    "svg": "/lines/brt-sunway.svg"
+  },
+  {
+    "id": "erl-klia-ekspres",
+    "name": "ERL KLIA Ekspres",
+    "mode": "ERL",
+    "code": null,
+    "color": "#6B2C91",
+    "textColor": "#FFFFFF",
+    "colorSource": "unverified",
+    "gtfs": {
+      "feedId": "erl",
+      "routeIds": [
+        "KE"
+      ]
+    },
+    "svg": "/lines/erl-klia-ekspres.svg"
+  },
+  {
+    "id": "erl-klia-transit",
+    "name": "ERL KLIA Transit",
+    "mode": "ERL",
+    "code": null,
+    "color": "#00A19A",
+    "textColor": "#FFFFFF",
+    "colorSource": "unverified",
+    "gtfs": {
+      "feedId": "erl",
+      "routeIds": [
+        "KT"
+      ]
+    },
+    "svg": "/lines/erl-klia-transit.svg"
+  },
+  {
+    "id": "ktm-port-klang",
+    "name": "KTM Port Klang Line",
+    "mode": "KTM",
+    "code": null,
+    "color": "#DC2420",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "ktmb",
+      "routeIds": [
+        "KA15_KD19"
+      ]
+    },
+    "svg": "/lines/ktm-port-klang.svg"
+  },
+  {
+    "id": "ktm-seremban",
+    "name": "KTM Seremban Line",
+    "mode": "KTM",
+    "code": null,
+    "color": "#3C5A9F",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "ktmb",
+      "routeIds": [
+        "KC05_KB18"
+      ]
+    },
+    "svg": "/lines/ktm-seremban.svg"
+  },
+  {
+    "id": "ktm-shuttle-selatan",
+    "name": "KTM Shuttle Selatan (JB Sentral – Paloh)",
+    "mode": "KTM",
+    "code": null,
+    "color": "#0A3D7A",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "ktmb",
+      "routeIds": [
+        "SS"
+      ]
+    },
+    "svg": "/lines/ktm-shuttle-selatan.svg"
+  },
+  {
+    "id": "ktm-padang-besar",
+    "name": "KTM Padang Besar Line",
+    "mode": "KTM",
+    "code": null,
+    "color": "#018000",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "ktmb",
+      "routeIds": [
+        "100_47300"
+      ]
+    },
+    "svg": "/lines/ktm-padang-besar.svg"
+  },
+  {
+    "id": "ktm-ipoh",
+    "name": "KTM Ipoh Line",
+    "mode": "KTM",
+    "code": null,
+    "color": "#1964B7",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "ktmb",
+      "routeIds": [
+        "100_9000"
+      ]
+    },
+    "svg": "/lines/ktm-ipoh.svg"
+  },
+  {
+    "id": "ktm-ets",
+    "name": "KTM ETS",
+    "mode": "ETS",
+    "code": null,
+    "color": "#FFC72C",
+    "textColor": "#000000",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "ktmb",
+      "routeIds": [
+        "ETS"
+      ]
+    },
+    "svg": "/lines/ktm-ets.svg"
+  },
+  {
+    "id": "ktm-intercity",
+    "name": "KTM Intercity",
+    "mode": "KTM",
+    "code": null,
+    "color": "#6E6E6E",
+    "textColor": "#FFFFFF",
+    "colorSource": "gtfs",
+    "gtfs": {
+      "feedId": "ktmb",
+      "routeIds": [
+        "ERT",
+        "SH",
+        "ST"
+      ]
+    },
+    "svg": "/lines/ktm-intercity.svg"
+  }
+]
