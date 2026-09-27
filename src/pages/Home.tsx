@@ -1,30 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, type KeyboardEvent } from 'react'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
 import BrandLogo from '../components/BrandLogo'
 import JourneyPanel, { type TripOption } from '../components/JourneyPanel'
-import StopIcon from '../components/StopIcon'
-import { stopIconKind, type StopIconKind } from '../data/stopIcon'
+import SuggestionList from '../components/SuggestionList'
+import { buildItems, type Pick } from '../data/suggestions'
+import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
 
-type Stop = {
-  stop_id: string
-  stop_name: string
-  category: string
-  search: string
-  feed_id: string
-  stop_lat: number
-  stop_lon: number
-}
-
-// Any place in Malaysia, from the geocode Edge Function (OpenStreetMap via Photon)
-type Place = { name: string; detail: string; lat: number; lon: number; kind: string; osm: string }
-
-// What the user picked as Start / End: a stop or a place
-type Pick = { name: string; lat: number; lon: number }
-
-const PLACE_KINDS: StopIconKind[] = ['airport', 'hospital', 'school', 'mall', 'mosque', 'home', 'building', 'place']
-const placeKind = (k: string): StopIconKind => (PLACE_KINDS.includes(k as StopIconKind) ? (k as StopIconKind) : 'place')
+const LIST_ID = 'place-suggestions'
 
 function Home() {
   const { t } = useLanguage()
@@ -35,8 +19,8 @@ function Home() {
   const [endStop, setEndStop] = useState<Pick | null>(null)
   const [line, setLine] = useState('')
   const [activeField, setActiveField] = useState<'start' | 'end' | null>(null)
-  const [suggestions, setSuggestions] = useState<Stop[]>([])
-  const [places, setPlaces] = useState<Place[]>([])
+  // keyboard-highlighted suggestion, tied to the query it was chosen for
+  const [highlight, setHighlight] = useState<{ query: string; index: number }>({ query: '', index: -1 })
 
   // Trip planner results (shown in the right-side panel)
   const [options, setOptions] = useState<TripOption[]>([])
@@ -46,57 +30,30 @@ function Home() {
   const [searchedFor, setSearchedFor] = useState<{ from: string; to: string } | null>(null)
   const [searchId, setSearchId] = useState(0)
 
-  // Station autocomplete (live from Supabase)
+  // Smart search: stops + places for whichever box is focused
   const query = activeField === 'start' ? start : activeField === 'end' ? end : ''
-  // keep the stop list short so matching places stay in view below it
-  const visibleSuggestions = query ? suggestions.slice(0, 8) : []
-  const visiblePlaces = query.trim().length >= 3 ? places : []
+  const { stops, places, loading: searching } = useSmartSearch(query)
+  const items = query.trim() ? buildItems(stops, places) : []
+  const listOpen = activeField !== null && items.length > 0
+  const highlighted = highlight.query === normaliseQuery(query) ? highlight.index : -1
 
-  useEffect(() => {
-    if (!query) return
-
-    const controller = new AbortController()
-
-    const fetchSuggestions = async () => {
-      const { data, error } = await supabase.rpc('search_stops', { query })
-
-      if (error) {
-        console.error('Supabase search error:', error)
-        return
-      }
-
-      if (!controller.signal.aborted) {
-        setSuggestions(data || [])
-      }
+  // Arrow keys move through suggestions, Enter picks (or searches from the End box), Escape closes
+  const onFieldKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    const q = normaliseQuery(query)
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!items.length) return
+      e.preventDefault()
+      const step = e.key === 'ArrowDown' ? 1 : -1
+      setHighlight({ query: q, index: (highlighted + step + items.length) % items.length })
+    } else if (e.key === 'Enter') {
+      if (listOpen && highlighted >= 0) {
+        e.preventDefault()
+        pickSuggestion(items[highlighted].pick)
+      } else if (activeField === 'end') handleSearch()
+    } else if (e.key === 'Escape') {
+      setActiveField(null)
     }
-
-    fetchSuggestions()
-
-    return () => controller.abort()
-  }, [query])
-
-  // Place autocomplete (KLIA, Pandan Perdana, malls...), debounced: the geocoder is a shared service
-  useEffect(() => {
-    const q = query.trim()
-    if (q.length < 3) return
-
-    let cancelled = false
-    const timer = setTimeout(async () => {
-      const { data, error } = await supabase.functions.invoke('geocode', { body: { q } })
-      if (cancelled) return
-      if (error || data?.error) {
-        console.error('Place search error:', error || data?.error)
-        setPlaces([])
-        return
-      }
-      setPlaces(data?.results ?? [])
-    }, 350)
-
-    return () => {
-      cancelled = true
-      clearTimeout(timer)
-    }
-  }, [query])
+  }
 
   const handleSwap = () => {
     setStart(end)
@@ -160,8 +117,7 @@ function Home() {
       setEndStop(pick)
     }
     setActiveField(null)
-    setSuggestions([])
-    setPlaces([])
+    setHighlight({ query: '', index: -1 })
   }
 
   return (
@@ -232,6 +188,14 @@ function Home() {
                             }}
                             onFocus={() => setActiveField('start')}
                             onBlur={() => setTimeout(() => setActiveField((f) => (f === 'start' ? null : f)), 150)}
+                            onKeyDown={onFieldKey}
+                            role="combobox"
+                            aria-label={t('start')}
+                            aria-autocomplete="list"
+                            aria-expanded={listOpen && activeField === 'start'}
+                            aria-controls={LIST_ID}
+                            aria-activedescendant={activeField === 'start' && highlighted >= 0 ? `${LIST_ID}-${highlighted}` : undefined}
+                            autoComplete="off"
                             placeholder={t('startPh')}
                             className="w-full text-base outline-none"
                           />
@@ -260,7 +224,14 @@ function Home() {
                             }}
                             onFocus={() => setActiveField('end')}
                             onBlur={() => setTimeout(() => setActiveField((f) => (f === 'end' ? null : f)), 150)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                            onKeyDown={onFieldKey}
+                            role="combobox"
+                            aria-label={t('end')}
+                            aria-autocomplete="list"
+                            aria-expanded={listOpen && activeField === 'end'}
+                            aria-controls={LIST_ID}
+                            aria-activedescendant={activeField === 'end' && highlighted >= 0 ? `${LIST_ID}-${highlighted}` : undefined}
+                            autoComplete="off"
                             placeholder={t('endPh')}
                             className="w-full text-base outline-none"
                           />
@@ -300,72 +271,16 @@ function Home() {
                 </div>
 
                 {/* Suggestions: stations & stops first, then any place (OpenStreetMap) */}
-                {(visibleSuggestions.length > 0 || visiblePlaces.length > 0) && activeField && (
-                  <div className="absolute left-0 right-0 mt-2 bg-white border rounded-2xl shadow-lg overflow-hidden z-10">
-                    <div className="max-h-96 overflow-y-auto overscroll-contain">
-                      <div className="sticky top-0 z-10 bg-white text-xs text-gray-400 px-6 pt-3 pb-2 border-b border-gray-100">
-                        {t('searchAnywhere')}
-                      </div>
-                      {visibleSuggestions.length > 0 && (
-                        <div role="group" aria-label={t('stationsHeading')}>
-                          <div className="px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400">
-                            {t('stationsHeading')}
-                          </div>
-                          {visibleSuggestions.map((s) => (
-                            <button
-                              key={`${s.feed_id}:${s.stop_id}`}
-                              onMouseDown={(e) => {
-                                e.preventDefault()
-                                pickSuggestion({ name: s.stop_name, lat: s.stop_lat, lon: s.stop_lon })
-                              }}
-                              className="w-full text-start px-6 py-2.5 flex items-center gap-3 hover:bg-gray-50"
-                            >
-                              <StopIcon kind={stopIconKind(s.stop_name, s.category)} />
-                              <div className="min-w-0">
-                                <div className="text-gray-800 truncate">{s.stop_name}</div>
-                                <div className="text-xs text-gray-500 truncate">{s.category}</div>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                      {visiblePlaces.length > 0 && (
-                        <div role="group" aria-label={t('placesHeading')} className="border-t border-gray-100">
-                          <div className="px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400">
-                            {t('placesHeading')}
-                          </div>
-                          {visiblePlaces.map((p) => (
-                            <button
-                              key={p.osm || `${p.name}:${p.lat}:${p.lon}`}
-                              onMouseDown={(e) => {
-                                e.preventDefault()
-                                pickSuggestion({ name: p.name, lat: p.lat, lon: p.lon })
-                              }}
-                              className="w-full text-start px-6 py-2.5 flex items-center gap-3 hover:bg-gray-50"
-                            >
-                              <StopIcon kind={placeKind(p.kind)} />
-                              <div className="min-w-0">
-                                <div className="text-gray-800 truncate">{p.name}</div>
-                                {p.detail && <div className="text-xs text-gray-500 truncate">{p.detail}</div>}
-                              </div>
-                            </button>
-                          ))}
-                          <div className="px-6 py-2 text-[11px] text-gray-400">
-                            ©{' '}
-                            <a
-                              href="https://www.openstreetmap.org/copyright"
-                              target="_blank"
-                              rel="noreferrer"
-                              className="underline hover:text-gray-600"
-                            >
-                              OpenStreetMap
-                            </a>{' '}
-                            contributors
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                {listOpen && (
+                  <SuggestionList
+                    id={LIST_ID}
+                    items={items}
+                    query={query}
+                    loading={searching}
+                    highlighted={highlighted}
+                    onHover={(index) => setHighlight({ query: normaliseQuery(query), index })}
+                    onPick={pickSuggestion}
+                  />
                 )}
 
                 {/* Form error (stop not picked from the list) */}

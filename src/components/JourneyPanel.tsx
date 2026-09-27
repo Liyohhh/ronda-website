@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
+import type { TranslationKey } from '../i18n/translations'
+import LineBadge from './LineBadge'
+import { busLine, lineForRoute, type Line } from '../data/lines'
 
 export type Place = { name: string; lat: number; lon: number }
 
 // First / last legs can be walked or driven (taxi / e-hailing estimate); `alt` is the other option
 export type LegAlt = { mode: 'walk' | 'drive'; duration_min: number; distance_m: number }
+
+export type Fare = { amount: number; currency?: string; exact: boolean }
 
 export type Leg = {
   mode: 'walk' | 'drive' | 'transit'
@@ -19,6 +24,9 @@ export type Leg = {
   route_long_name?: string | null
   route_type?: number | null
   colour?: string | null
+  feed_id?: string
+  route_id?: string
+  fare?: Fare | null
   headsign?: string | null
   num_stops?: number
   stops?: { name: string; time: string }[]
@@ -32,6 +40,7 @@ export type TripOption = {
   transfers: number
   walk_min: number
   drive_min?: number
+  fare?: Fare | null
   hops: string[]
   legs: Leg[]
 }
@@ -46,16 +55,39 @@ type Props = {
   onClose: () => void
 }
 
-const NAVY = '#002472'
+type SortKey = 'fastest' | 'priceLow' | 'priceHigh' | 'transfers' | 'walking'
+
 const GOLD = '#C9A45C'
 
-// "or walk 72 min" / "or drive 9 min" under a first / last leg
-function AltLine({ alt, t }: { alt: LegAlt; t: (k: 'orWalk' | 'orDrive') => string }) {
-  return (
-    <div className="text-xs text-gray-500 mt-0.5">
-      {alt.mode === 'walk' ? t('orWalk') : t('orDrive')} {alt.duration_min} min · {formatDistance(alt.distance_m)}
-    </div>
-  )
+// ---------- helpers ----------
+
+const isBus = (leg: Leg) => leg.route_type === 3
+
+// Badge artwork for a ride: the rail line's official badge, or a bus badge in the route's GTFS colour
+function legLine(leg: Leg): Line {
+  const line = leg.feed_id && leg.route_id ? lineForRoute(leg.feed_id, leg.route_id) : undefined
+  if (line) return line
+  return busLine(isBus(leg) ? leg.colour : null, legLabel(leg))
+}
+
+// Full label: the line name ("MRT Kajang Line"), or "BUS" + number ("BUS T789")
+function legLabel(leg: Leg) {
+  if (isBus(leg)) return leg.route_short_name ? `BUS ${leg.route_short_name}` : leg.hop ?? 'BUS'
+  return leg.hop || leg.route_short_name || ''
+}
+
+// Short label for the route preview: "Kajang", "Ampang", "400", "KLIA Transit"
+function legShort(leg: Leg) {
+  if (isBus(leg)) return leg.route_short_name ?? 'BUS'
+  const line = leg.feed_id && leg.route_id ? lineForRoute(leg.feed_id, leg.route_id) : undefined
+  const name = line?.name ?? leg.hop ?? leg.route_short_name ?? ''
+  return name.replace(/^(MRT|LRT|KTM|ERL|BRT|KL)\s+/, '').replace(/\s+Line$/, '') || name
+}
+
+// Secondary label in the steps: the network for buses; the branch for rail when it's a real name
+function legSubLabel(leg: Leg) {
+  const sub = isBus(leg) ? leg.hop : leg.route_short_name?.includes(' ') ? leg.route_short_name : null
+  return sub && sub !== legLabel(leg) ? sub : null
 }
 
 function formatDistance(m?: number) {
@@ -63,118 +95,194 @@ function formatDistance(m?: number) {
   return m >= 1000 ? `${(m / 1000).toFixed(1)} km` : `${m} m`
 }
 
-// GTFS colours come without "#" and can be null (e.g. ERL)
-function lineColour(c?: string | null) {
-  if (!c) return NAVY
-  return c.startsWith('#') ? c : `#${c}`
+const money = (n: number) => `RM ${n.toFixed(2)}`
+
+// Unknown fares sort last, whatever the direction
+function sortOptions(list: TripOption[], key: SortKey) {
+  const arrive = (o: TripOption) => o.arrival
+  const price = (o: TripOption) => o.fare?.amount
+  return [...list].sort((a, b) => {
+    switch (key) {
+      case 'priceLow':
+      case 'priceHigh': {
+        const pa = price(a), pb = price(b)
+        if (pa == null || pb == null) return pa == null ? (pb == null ? 0 : 1) : -1
+        return key === 'priceLow' ? pa - pb : pb - pa
+      }
+      case 'transfers':
+        return a.transfers - b.transfers || a.duration_min - b.duration_min
+      case 'walking':
+        return a.walk_min - b.walk_min || a.duration_min - b.duration_min
+      default:
+        return arrive(a).localeCompare(arrive(b)) || a.duration_min - b.duration_min
+    }
+  })
 }
 
-// dark text on light line colours (e.g. MRT Putrajaya yellow), white text otherwise
-function textOn(hex: string) {
-  const h = hex.replace('#', '')
-  if (h.length !== 6) return '#fff'
-  const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16))
-  return 0.299 * r + 0.587 * g + 0.114 * b > 160 ? '#111827' : '#fff'
+// ---------- small pieces ----------
+
+function FareText({ fare, t }: { fare?: Fare | null; t: (k: TranslationKey) => string }) {
+  if (!fare) return <span className="text-gray-400">{t('fareUnknown')}</span>
+  if (fare.amount === 0 && fare.exact) return <span className="text-emerald-700">{t('fareFree')}</span>
+  return (
+    <span className="text-gray-900">
+      {!fare.exact && <span className="text-xs font-normal text-gray-500 me-1">{t('fareFrom')}</span>}
+      {money(fare.amount)}
+    </span>
+  )
 }
 
-// GTFS route_type 3 = bus
-const isBus = (leg: Leg) => leg.route_type === 3
-
-// Main label: the line name (e.g. "MRT Kajang Line"), or "BUS" + the bus number (e.g. "BUS T789")
-function legLabel(leg: Leg) {
-  if (isBus(leg)) return leg.route_short_name ? `BUS ${leg.route_short_name}` : leg.hop ?? 'BUS'
-  return leg.hop || leg.route_short_name || ''
+// "(badge) Kajang › (badge) 400"
+function RoutePreview({ option }: { option: TripOption }) {
+  const rides = option.legs.filter((l) => l.mode === 'transit')
+  if (!rides.length) {
+    const first = option.legs[0]
+    return <span className="text-sm text-gray-600">{first?.mode === 'drive' ? '🚕' : '🚶'} {option.duration_min} min</span>
+  }
+  return (
+    <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+      {rides.map((l, i) => (
+        <Fragment key={i}>
+          {i > 0 && (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          )}
+          <span className="inline-flex items-center gap-1">
+            <LineBadge line={legLine(l)} size={22} decorative />
+            <span className="text-sm font-medium text-gray-800">{legShort(l)}</span>
+          </span>
+        </Fragment>
+      ))}
+    </div>
+  )
 }
 
-// Secondary label: the network for buses; the branch name for rail when it's a real name
-// (e.g. "Port Klang Line" under "KTM Komuter"), not a bare code like "KGL"
-function legSubLabel(leg: Leg) {
-  const sub = isBus(leg) ? leg.hop : leg.route_short_name?.includes(' ') ? leg.route_short_name : null
-  return sub && sub !== legLabel(leg) ? sub : null
-}
+// ---------- panel ----------
 
 function JourneyPanel({ open, from, to, loading, error, options, onClose }: Props) {
   const { t } = useLanguage()
-  const [selected, setSelected] = useState(0)
+  const [sort, setSort] = useState<SortKey>('fastest')
+  const [detail, setDetail] = useState<TripOption | null>(null)
 
   useEffect(() => {
     if (!open) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (detail) setDetail(null)
+      else onClose()
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, onClose])
+  }, [open, onClose, detail])
+
+  const sorted = useMemo(() => sortOptions(options, sort), [options, sort])
+  const anyFare = options.some((o) => o.fare)
 
   if (!open) return null
 
-  const option = options[Math.min(selected, options.length - 1)]
-  // The planner names the ends "Start" / "Destination"; show the picked stop names instead
-  const placeName = (p: Place) =>
-    p.name === 'Start' ? from : p.name === 'Destination' ? to : p.name
+  // The planner names the ends "Start" / "Destination"; show the picked names instead
+  const placeName = (p: Place) => (p.name === 'Start' ? from : p.name === 'Destination' ? to : p.name)
+
+  const pills: { key: SortKey; label: string }[] = [
+    { key: 'fastest', label: t('sortFastest') },
+    { key: sort === 'priceHigh' ? 'priceHigh' : 'priceLow', label: sort === 'priceHigh' ? t('sortPriceHigh') : t('sortPriceLow') },
+    { key: 'transfers', label: t('sortFewestTransfers') },
+    { key: 'walking', label: t('sortLeastWalking') },
+  ]
+  const onPill = (key: SortKey) => {
+    // tapping the price pill again flips low <-> high
+    if ((key === 'priceLow' || key === 'priceHigh') && (sort === 'priceLow' || sort === 'priceHigh')) {
+      setSort(sort === 'priceLow' ? 'priceHigh' : 'priceLow')
+    } else setSort(key)
+  }
 
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={t('yourJourney')}>
       {/* Backdrop */}
-      <div
-        onClick={onClose}
-        className="absolute inset-0 bg-[#002472]/20 backdrop-blur-[2px] transition-opacity duration-200 starting:opacity-0"
-      />
+      <div onClick={onClose} className="absolute inset-0 bg-[#001233]/30 backdrop-blur-[2px] transition-opacity duration-200 starting:opacity-0" />
 
-      {/* Side panel: full height on the right (desktop), bottom sheet on mobile */}
+      {/* Side panel on desktop, bottom sheet on mobile */}
       <div
-        className={`absolute bg-white shadow-2xl flex flex-col transition-all duration-300 ease-out
-          inset-x-0 bottom-0 max-h-[85vh] rounded-t-3xl starting:translate-y-full
-          md:inset-x-auto md:inset-y-0 md:end-0 md:w-[440px] md:max-h-none md:rounded-none
+        className={`absolute bg-gray-50 shadow-2xl flex flex-col transition-all duration-300 ease-out
+          inset-x-0 bottom-0 max-h-[90vh] rounded-t-3xl overflow-hidden starting:translate-y-full
+          md:inset-x-auto md:inset-y-0 md:end-0 md:w-[460px] md:max-h-none md:rounded-none
           md:starting:translate-y-0 md:starting:translate-x-full rtl:md:starting:-translate-x-full`}
       >
-        {/* Header */}
-        <div className="bg-[#002472] text-white px-6 pt-5 pb-6 rounded-t-3xl md:rounded-none md:pt-8">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <div className="text-xs text-white/60 uppercase tracking-wide">{t('yourJourney')}</div>
-              <div className="mt-1 font-semibold leading-snug">
-                <div className="truncate">{from}</div>
-                <div className="text-white/50 text-sm">↓</div>
-                <div className="truncate">{to}</div>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              aria-label="Close"
-              className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center flex-shrink-0"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        {/* From / to */}
+        <div className="bg-[#002472] text-white px-5 pt-5 pb-5 md:pt-6">
+          <div className="flex items-center justify-between mb-4">
+            {detail ? (
+              <button onClick={() => setDetail(null)} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/85 hover:text-white">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180">
+                  <path d="M15 6l-6 6 6 6" />
+                </svg>
+                {t('allRoutes')}
+              </button>
+            ) : (
+              <span className="text-xs uppercase tracking-wider text-white/60">{t('yourJourney')}</span>
+            )}
+            <button onClick={onClose} aria-label="Close" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
             </button>
           </div>
 
-          {option && (
-            <>
-              <div className="mt-5">
-                <div className="text-3xl font-bold">{option.duration_min} min</div>
-                <div className="text-sm text-white/70">
-                  {option.departure} – {option.arrival} · {t('transfers')}: {option.transfers}
-                </div>
+          <div className="flex gap-3">
+            {/* origin ring, dotted line, destination dot */}
+            <div className="flex flex-col items-center pt-3.5 pb-3.5" aria-hidden="true">
+              <span className="w-3 h-3 rounded-full border-2 border-white/80" />
+              <span className="flex-1 w-0 border-s-2 border-dotted border-white/40 my-1" />
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: GOLD }} />
+            </div>
+            <div className="flex-1 min-w-0 space-y-2">
+              <div className="bg-white/10 rounded-lg px-3 py-2">
+                <div className="text-[11px] text-white/60">{t('fromLabel')}</div>
+                <div className="font-semibold truncate">{from}</div>
               </div>
-              {/* Proportional segment bar */}
-              <div className="mt-4 flex h-2 rounded-full overflow-hidden bg-white/10 gap-0.5">
-                {option.legs.map((l, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      flexGrow: Math.max(l.duration_min, 1),
-                      backgroundColor:
-                        l.mode === 'transit' ? lineColour(l.colour) : l.mode === 'drive' ? GOLD : 'rgba(255,255,255,0.35)',
-                    }}
-                  />
-                ))}
+              <div className="bg-white/10 rounded-lg px-3 py-2">
+                <div className="text-[11px] text-white/60">{t('toLabel')}</div>
+                <div className="font-semibold truncate">{to}</div>
               </div>
-            </>
-          )}
+            </div>
+          </div>
+
+          <div className="mt-3 inline-flex items-center gap-1.5 text-sm text-white/80">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+            {t('leavingNow')}
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-6 py-5">
-          {/* Loading */}
+        {/* Sort pills (route list only) */}
+        {!detail && !loading && !error && options.length > 0 && (
+          <div className="bg-white border-b border-gray-200" role="group" aria-label={t('sortBy')}>
+            <div className="flex gap-2 overflow-x-auto [scrollbar-width:none] px-5 py-3">
+              {pills.map((p) => {
+                const active = p.key === sort || ((p.key === 'priceLow' || p.key === 'priceHigh') && (sort === 'priceLow' || sort === 'priceHigh'))
+                const disabled = (p.key === 'priceLow' || p.key === 'priceHigh') && !anyFare
+                return (
+                  <button
+                    key={p.key}
+                    onClick={() => onPill(p.key)}
+                    disabled={disabled}
+                    aria-pressed={active}
+                    className={`h-9 px-4 rounded-full text-sm font-medium whitespace-nowrap border transition-colors disabled:opacity-40 ${
+                      active ? 'bg-[#002472] border-[#002472] text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-[#002472]/50'
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className="flex-1 overflow-y-auto">
           {loading && (
             <div className="flex flex-col items-center justify-center py-16 text-gray-500 text-sm gap-3">
               <div className="w-8 h-8 border-2 border-[#002472]/20 border-t-[#002472] rounded-full animate-spin" />
@@ -182,77 +290,90 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
             </div>
           )}
 
-          {/* Planner error / no route */}
-          {!loading && error && (
-            <div className="bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{error}</div>
+          {!loading && error && <div className="m-5 bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{error}</div>}
+
+          {/* Route choices */}
+          {!loading && !error && !detail && options.length > 0 && (
+            <ul className="p-4 space-y-3">
+              {sorted.map((o, i) => {
+                const firstRide = o.legs.find((l) => l.mode === 'transit')
+                return (
+                  <li key={`${o.departure}-${o.arrival}-${i}`}>
+                    <button
+                      onClick={() => setDetail(o)}
+                      className="w-full text-start bg-white rounded-2xl border border-gray-200 p-4 hover:border-[#002472]/50 hover:shadow-md transition"
+                    >
+                      <div className="flex items-baseline justify-between gap-3">
+                        <div>
+                          <span className="text-xl font-bold text-gray-900">{o.duration_min} min</span>
+                          <span className="ms-2 text-sm text-gray-500">
+                            {o.departure} – {o.arrival}
+                          </span>
+                        </div>
+                        <div className="text-base font-semibold">
+                          <FareText fare={o.fare} t={t} />
+                        </div>
+                      </div>
+
+                      <div className="mt-3">
+                        <RoutePreview option={o} />
+                      </div>
+
+                      <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500">
+                        {firstRide && (
+                          <span className="text-gray-600">
+                            {t('leavesFrom').replace('{time}', firstRide.start).replace('{place}', placeName(firstRide.from))}
+                          </span>
+                        )}
+                        <span>{o.transfers === 0 ? t('direct') : `${t('transfers')}: ${o.transfers}`}</span>
+                        <span>
+                          {o.walk_min} {t('minWalk')}
+                        </span>
+                        {!!o.drive_min && (
+                          <span>
+                            {o.drive_min} {t('minDrive')}
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  </li>
+                )
+              })}
+              {anyFare && <li className="px-1 text-[11px] text-gray-400">{t('fareNote')}</li>}
+            </ul>
           )}
 
-          {!loading && !error && option && (
-            <>
-              {/* Route options */}
-              {options.length > 1 && (
-                <>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2">{t('routeOptions')}</h3>
-                  <div className="grid gap-2 mb-6">
-                    {options.map((o, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setSelected(i)}
-                        className={`text-start border rounded-xl p-3 transition ${
-                          o === option
-                            ? 'border-[#002472] ring-2 ring-[#002472]/20 bg-[#002472]/5'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="flex items-baseline justify-between">
-                          <div className="font-semibold text-gray-900">
-                            {o.departure} → {o.arrival}
-                          </div>
-                          <div className="text-sm text-gray-600">{o.duration_min} min</div>
-                        </div>
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {o.legs
-                            .filter((l) => l.mode === 'transit')
-                            .map((l, j) => {
-                              const c = lineColour(l.colour)
-                              return (
-                                <span
-                                  key={j}
-                                  className="text-xs px-2 py-0.5 rounded"
-                                  style={{ backgroundColor: c, color: textOn(c) }}
-                                >
-                                  {legLabel(l)}
-                                </span>
-                              )
-                            })}
-                          {o.hops.length === 0 && (
-                            <span className="text-xs text-gray-600">
-                              {o.legs[0]?.mode === 'drive' ? t('driveTo') : t('walkTo')} {to}
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-2">
-                          {t('transfers')}: {o.transfers} · {o.walk_min} {t('minWalk')}
-                          {!!o.drive_min && ` · ${o.drive_min} ${t('minDrive')}`}
-                        </div>
-                      </button>
-                    ))}
+          {/* Steps for one choice */}
+          {!loading && !error && detail && (
+            <div className="p-5">
+              <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-5">
+                <div className="flex items-baseline justify-between">
+                  <div>
+                    <span className="text-2xl font-bold text-gray-900">{detail.duration_min} min</span>
+                    <span className="ms-2 text-sm text-gray-500">
+                      {detail.departure} – {detail.arrival}
+                    </span>
                   </div>
-                </>
-              )}
+                  <div className="text-lg font-semibold">
+                    <FareText fare={detail.fare} t={t} />
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <RoutePreview option={detail} />
+                </div>
+              </div>
 
-              {/* Step-by-step timeline for the selected option */}
               <ol className="relative">
-                {option.legs.map((leg, i) => {
-                  const last = i === option.legs.length - 1
-                  const c = lineColour(leg.colour)
+                {detail.legs.map((leg, i) => {
+                  const last = i === detail.legs.length - 1
+                  const line = leg.mode === 'transit' ? legLine(leg) : null
                   return (
                     <li key={i} className="relative flex gap-4 pb-5 last:pb-0">
                       {!last && (
                         <span
-                          className="absolute start-5 top-10 bottom-0 w-0.5 -translate-x-1/2 rtl:translate-x-1/2"
+                          className="absolute start-5 top-11 bottom-0 w-0.5 -translate-x-1/2 rtl:translate-x-1/2"
                           style={{
-                            backgroundColor: leg.mode === 'transit' ? c : undefined,
+                            backgroundColor: line ? line.color : undefined,
                             backgroundImage:
                               leg.mode === 'walk'
                                 ? 'repeating-linear-gradient(to bottom, #cbd5e1 0 4px, transparent 4px 8px)'
@@ -263,30 +384,22 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                         />
                       )}
 
-                      {leg.mode === 'drive' ? (
+                      {line ? (
+                        <LineBadge line={line} size={40} decorative />
+                      ) : leg.mode === 'drive' ? (
                         <span className="w-10 h-10 rounded-full bg-[#C9A45C]/15 text-[#8a6a2a] flex items-center justify-center flex-shrink-0">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                             <path d="M5 16h14v-4l-2-5H7l-2 5z" />
                             <path d="M5 12h14" />
                             <circle cx="8" cy="16.5" r="1.5" />
                             <circle cx="16" cy="16.5" r="1.5" />
                           </svg>
                         </span>
-                      ) : leg.mode === 'walk' ? (
+                      ) : (
                         <span className="w-10 h-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center flex-shrink-0">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                             <circle cx="12" cy="4" r="2" />
                             <path d="M12 6v6l-3 8M12 12l3 8M9 10l-4 2" />
-                          </svg>
-                        </span>
-                      ) : (
-                        <span
-                          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: c, color: textOn(c) }}
-                        >
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="4" y="4" width="16" height="16" rx="2" />
-                            <path d="M4 12h16" />
                           </svg>
                         </span>
                       )}
@@ -301,23 +414,26 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
                               {leg.start} · {leg.duration_min} {leg.mode === 'drive' ? t('minDrive') : t('minWalk')}
                               {leg.distance_m ? ` · ${formatDistance(leg.distance_m)}` : ''}
                             </div>
-                            {leg.alt && <AltLine alt={leg.alt} t={t} />}
+                            {leg.alt && (
+                              <div className="text-xs text-gray-500 mt-0.5">
+                                {leg.alt.mode === 'walk' ? t('orWalk') : t('orDrive')} {leg.alt.duration_min} min · {formatDistance(leg.alt.distance_m)}
+                              </div>
+                            )}
                           </>
                         ) : (
                           <>
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span
-                                className="inline-block text-xs font-semibold px-2 py-0.5 rounded"
-                                style={{ backgroundColor: c, color: textOn(c) }}
-                              >
-                                {legLabel(leg)}
-                              </span>
-                              {legSubLabel(leg) && (
-                                <span className="text-xs text-gray-500">{legSubLabel(leg)}</span>
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                              <span className="font-semibold text-gray-900">{legLabel(leg)}</span>
+                              {legSubLabel(leg) && <span className="text-xs text-gray-500">{legSubLabel(leg)}</span>}
+                              {leg.fare && (
+                                <span className="ms-auto text-sm font-medium text-gray-700">
+                                  {!leg.fare.exact && <span className="text-xs font-normal text-gray-500 me-1">{t('fareFrom')}</span>}
+                                  {money(leg.fare.amount)}
+                                </span>
                               )}
                             </div>
                             {leg.headsign && (
-                              <div className="text-sm text-gray-500 mt-1">
+                              <div className="text-sm text-gray-500">
                                 {t('towards')} {leg.headsign}
                               </div>
                             )}
@@ -336,7 +452,7 @@ function JourneyPanel({ open, from, to, loading, error, options, onClose }: Prop
               </ol>
 
               <p className="text-xs text-gray-400 mt-6 italic">{t('estimatesNote')}</p>
-            </>
+            </div>
           )}
         </div>
       </div>

@@ -8,7 +8,7 @@
 // Plain data + string builders (no React), so scripts/export-line-badges.ts can reuse it to
 // write public/lines/*.svg for the app and other repos.
 
-export type LineMode = 'MRT' | 'LRT' | 'MONORAIL' | 'BRT' | 'KTM' | 'ETS' | 'ERL'
+export type LineMode = 'MRT' | 'LRT' | 'MONORAIL' | 'BRT' | 'KTM' | 'ETS' | 'ERL' | 'BUS'
 
 export type Line = {
   id: string // stable slug, also the SVG filename
@@ -53,6 +53,20 @@ export function lineForRoute(feedId: string, routeId: string): Line | undefined 
   return LINES.find((l) => l.gtfs.feedId === feedId && l.gtfs.routeIds.includes(routeId))
 }
 
+// Buses aren't in LINES (hundreds of routes). Their badge uses the route's own GTFS colour when the
+// operator publishes one (Rapid KL stage buses do), otherwise RONDA navy (MRT feeder buses, bus stops).
+export const BUS_FALLBACK_COLOR = '#002472'
+
+export function busLine(color?: string | null, name = 'Bus'): Line {
+  const c = color ? (color.startsWith('#') ? color : `#${color}`) : BUS_FALLBACK_COLOR
+  return { id: 'bus', name, mode: 'BUS', color: c.toUpperCase(), textColor: '#FFFFFF', colorSource: color ? 'gtfs' : 'unverified', gtfs: { feedId: '', routeIds: [] } }
+}
+
+// Distinct rail lines serving a stop, in LINES order (for interchange stations)
+export function linesForStop(feedId: string, routeIds: string[] = []): Line[] {
+  return LINES.filter((l) => l.gtfs.feedId === feedId && l.gtfs.routeIds.some((r) => routeIds.includes(r)))
+}
+
 // ---------- badge artwork ----------
 // 48x48 rounded square in the line colour, a white vehicle glyph and the mode label underneath.
 
@@ -71,11 +85,11 @@ const GLYPHS: Record<'train' | 'monorail' | 'bus' | 'airport', string> = {
 }
 
 const MODE_GLYPH: Record<LineMode, keyof typeof GLYPHS> = {
-  MRT: 'train', LRT: 'train', KTM: 'train', ETS: 'train', ERL: 'airport', MONORAIL: 'monorail', BRT: 'bus',
+  MRT: 'train', LRT: 'train', KTM: 'train', ETS: 'train', ERL: 'airport', MONORAIL: 'monorail', BRT: 'bus', BUS: 'bus',
 }
 
 const MODE_LABEL: Record<LineMode, string> = {
-  MRT: 'MRT', LRT: 'LRT', KTM: 'KTM', ETS: 'ETS', ERL: 'KLIA', MONORAIL: 'MONORAIL', BRT: 'BRT',
+  MRT: 'MRT', LRT: 'LRT', KTM: 'KTM', ETS: 'ETS', ERL: 'KLIA', MONORAIL: 'MONORAIL', BRT: 'BRT', BUS: 'BUS',
 }
 
 // Standalone SVG markup for a line badge (used by the website component and the file export)
