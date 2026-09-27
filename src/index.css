@@ -7,6 +7,14 @@
 
 html {
   scroll-behavior: smooth;
+  /* in-page links (#download) stop below the sticky header: 64px row + services row on phones */
+  scroll-padding-top: 120px;
+}
+
+@media (min-width: 1024px) {
+  html {
+    scroll-padding-top: 80px;
+  }
 }
 
 body {

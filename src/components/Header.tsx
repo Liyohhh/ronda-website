@@ -12,6 +12,15 @@ function Header() {
   const session = useSession()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+  // sticky header: add a shadow once the page has scrolled under it
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -37,7 +46,11 @@ function Header() {
   }
 
   return (
-    <header className="relative z-30 bg-white border-b border-gray-200">
+    <header
+      className={`sticky top-0 z-40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85 border-b border-gray-200 transition-shadow ${
+        scrolled ? 'shadow-[0_4px_20px_-8px_rgb(0_36_114/0.25)]' : ''
+      }`}
+    >
       {/* One row: logo + services on the left, language / help / account on the right.
           The row is the positioning box for the services dropdown, so it spans the full width. */}
       <div className="relative flex items-center h-16 px-4 sm:px-6 gap-3 lg:gap-6">
