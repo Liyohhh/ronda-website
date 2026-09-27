@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../services/supabase'
 import Header from '../components/Header'
+import JourneyPanel, { type TripOption } from '../components/JourneyPanel'
+import StopIcon from '../components/StopIcon'
+import { stopIconKind } from '../data/stopIcon'
 import { useLanguage } from '../hooks/useLanguage'
 
 // Set this to an image path (e.g. '/banner.jpg' in the public folder) when the banner is ready
@@ -11,6 +14,9 @@ type Stop = {
   stop_name: string
   category: string
   search: string
+  feed_id: string
+  stop_lat: number
+  stop_lon: number
 }
 
 function Home() {
@@ -18,19 +24,29 @@ function Home() {
   const [tab, setTab] = useState<'directions' | 'lines'>('directions')
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
+  const [startStop, setStartStop] = useState<Stop | null>(null)
+  const [endStop, setEndStop] = useState<Stop | null>(null)
   const [line, setLine] = useState('')
-  const [journey, setJourney] = useState<any>(null)
   const [activeField, setActiveField] = useState<'start' | 'end' | null>(null)
   const [suggestions, setSuggestions] = useState<Stop[]>([])
 
-  useEffect(() => {
-    const query =
-      activeField === 'start' ? start : activeField === 'end' ? end : ''
+  // "" = leave now, otherwise "YYYY-MM-DDTHH:MM"
+  const [departAt, setDepartAt] = useState('')
 
-    if (!query || query.length < 1) {
-      setSuggestions([])
-      return
-    }
+  // Trip planner results (shown in the right-side panel)
+  const [options, setOptions] = useState<TripOption[]>([])
+  const [loading, setLoading] = useState(false)
+  const [formError, setFormError] = useState('')
+  const [planError, setPlanError] = useState('')
+  const [searchedFor, setSearchedFor] = useState<{ from: string; to: string } | null>(null)
+  const [searchId, setSearchId] = useState(0)
+
+  // Station autocomplete (live from Supabase)
+  const query = activeField === 'start' ? start : activeField === 'end' ? end : ''
+  const visibleSuggestions = query ? suggestions : []
+
+  useEffect(() => {
+    if (!query) return
 
     const controller = new AbortController()
 
@@ -50,51 +66,72 @@ function Home() {
     fetchSuggestions()
 
     return () => controller.abort()
-  }, [start, end, activeField])
+  }, [query])
 
   const handleSwap = () => {
     setStart(end)
     setEnd(start)
+    setStartStop(endStop)
+    setEndStop(startStop)
   }
 
-  const handleSearch = () => {
-    if (tab !== 'directions' || !start || !end) return
+  const handleSearch = async () => {
+    if (tab !== 'directions') return
     setActiveField(null)
+    setFormError('')
 
-    setJourney({
-      from: start,
-      to: end,
-      totalDuration: 52,
-      steps: [
-        { type: 'walk', description: 'Walk to nearest station', duration: 3 },
-        {
-          type: 'transit',
-          line: 'LRT Kelana Jaya Line',
-          color: '#E30613',
-          from: start,
-          to: 'KL Sentral',
-          duration: 15,
-          stops: 6,
-        },
-        { type: 'walk', description: 'Transfer to next platform', duration: 5 },
-        {
-          type: 'transit',
-          line: 'MRT Kajang Line',
-          color: '#00A651',
-          from: 'KL Sentral',
-          to: end,
-          duration: 27,
-          stops: 8,
-        },
-        { type: 'walk', description: `Walk to ${end}`, duration: 2 },
-      ],
-    })
+    if (!startStop || !endStop) {
+      setFormError(t('chooseFromList'))
+      return
+    }
+
+    const body: Record<string, unknown> = {
+      from: { lat: startStop.stop_lat, lon: startStop.stop_lon },
+      to: { lat: endStop.stop_lat, lon: endStop.stop_lon },
+    }
+    if (departAt) {
+      body.date = departAt.slice(0, 10)
+      body.time = departAt.slice(11, 16)
+    }
+
+    setLoading(true)
+    setPlanError('')
+    setOptions([])
+    setSearchedFor({ from: startStop.stop_name, to: endStop.stop_name })
+    setSearchId((n) => n + 1)
+
+    const { data, error } = await supabase.functions.invoke('plan-trip', { body })
+    setLoading(false)
+
+    if (error || data?.error) {
+      console.error('Trip planner error:', error || data?.error)
+      setPlanError(t('planError'))
+      return
+    }
+
+    const found: TripOption[] = data?.options ?? []
+    if (found.length === 0) {
+      setPlanError(t('noRoutes'))
+      return
+    }
+    setOptions(found)
+  }
+
+  const closePanel = () => {
+    setSearchedFor(null)
+    setOptions([])
+    setPlanError('')
   }
 
   const pickSuggestion = (stop: Stop) => {
-    const label = `${stop.category} ${stop.stop_name}`
-    if (activeField === 'start') setStart(label)
-    if (activeField === 'end') setEnd(label)
+    if (activeField === 'start') {
+      setStart(stop.stop_name)
+      setStartStop(stop)
+    }
+    if (activeField === 'end') {
+      setEnd(stop.stop_name)
+      setEndStop(stop)
+    }
     setActiveField(null)
     setSuggestions([])
   }
@@ -115,8 +152,8 @@ function Home() {
             </div>
           )}
           <div className="relative max-w-3xl mx-auto px-4 pt-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#002472]">{t('bannerTitle')}</h1>
-            <p className="text-[#002472]/70 mt-2">{t('bannerSubtitle')}</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#FFFFFF]">{t('bannerTitle')}</h1>
+            <p className="text-[#FFFFFF]/70 mt-2">{t('bannerSubtitle')}</p>
           </div>
         </div>
 
@@ -157,9 +194,12 @@ function Home() {
                           <input
                             type="text"
                             value={start}
-                            onChange={(e) => setStart(e.target.value)}
+                            onChange={(e) => {
+                              setStart(e.target.value)
+                              setStartStop(null)
+                            }}
                             onFocus={() => setActiveField('start')}
-                            onBlur={() => setTimeout(() => setActiveField(null), 150)}
+                            onBlur={() => setTimeout(() => setActiveField((f) => (f === 'start' ? null : f)), 150)}
                             placeholder={t('startPh')}
                             className="w-full text-base outline-none"
                           />
@@ -182,9 +222,13 @@ function Home() {
                           <input
                             type="text"
                             value={end}
-                            onChange={(e) => setEnd(e.target.value)}
+                            onChange={(e) => {
+                              setEnd(e.target.value)
+                              setEndStop(null)
+                            }}
                             onFocus={() => setActiveField('end')}
-                            onBlur={() => setTimeout(() => setActiveField(null), 150)}
+                            onBlur={() => setTimeout(() => setActiveField((f) => (f === 'end' ? null : f)), 150)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                             placeholder={t('endPh')}
                             className="w-full text-base outline-none"
                           />
@@ -208,99 +252,92 @@ function Home() {
 
                   <button
                     onClick={handleSearch}
-                    className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0"
+                    disabled={loading}
+                    className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                     aria-label="Search"
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="11" cy="11" r="8"/>
-                      <path d="M21 21l-4.35-4.35"/>
-                    </svg>
+                    {loading ? (
+                      <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                      </svg>
+                    )}
                   </button>
                 </div>
 
-                {suggestions.length > 0 && activeField && (
+                {/* Suggestions: scrollable list with icons */}
+                {visibleSuggestions.length > 0 && activeField && (
                   <div className="absolute left-0 right-0 mt-2 bg-white border rounded-2xl shadow-lg overflow-hidden z-10">
-                    <div className="text-xs text-gray-400 px-6 pt-3 pb-1">
-                      {t('searchAnywhere')}
+                    <div className="max-h-80 overflow-y-auto overscroll-contain">
+                      <div className="sticky top-0 z-10 bg-white text-xs text-gray-400 px-6 pt-3 pb-2 border-b border-gray-100">
+                        {t('searchAnywhere')}
+                      </div>
+                      {visibleSuggestions.map((s) => (
+                        <button
+                          key={`${s.feed_id}:${s.stop_id}`}
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            pickSuggestion(s)
+                          }}
+                          className="w-full text-start px-6 py-2.5 flex items-center gap-3 hover:bg-gray-50"
+                        >
+                          <StopIcon kind={stopIconKind(s.stop_name, s.category)} />
+                          <div className="min-w-0">
+                            <div className="text-gray-800 truncate">{s.stop_name}</div>
+                            <div className="text-xs text-gray-500 truncate">{s.category}</div>
+                          </div>
+                        </button>
+                      ))}
                     </div>
-                    {suggestions.map((s) => (
-                      <button
-                        key={s.stop_id}
-                        onMouseDown={(e) => {
-                          e.preventDefault()
-                          pickSuggestion(s)
-                        }}
-                        className="w-full text-start px-6 py-3 flex items-center gap-3 hover:bg-gray-50"
-                      >
-                        <div className="w-8 h-8 rounded bg-[#002472] text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">
-                          {s.category}
-                        </div>
-                        <span className="text-gray-800">{s.stop_name}</span>
-                      </button>
-                    ))}
                   </div>
+                )}
+
+                {/* Departure time (directions only) */}
+                {tab === 'directions' && (
+                  <div className="flex flex-wrap items-center gap-3 mt-3 px-6 text-sm text-gray-600">
+                    <button
+                      onClick={() => setDepartAt('')}
+                      className={`px-3 py-1 rounded-full border ${
+                        departAt === '' ? 'bg-[#002472] text-white border-[#002472]' : 'border-gray-300'
+                      }`}
+                    >
+                      {t('departNow')}
+                    </button>
+                    <span>{t('departAt')}</span>
+                    <input
+                      type="datetime-local"
+                      value={departAt}
+                      onChange={(e) => setDepartAt(e.target.value)}
+                      className={`border rounded-full px-3 py-1 outline-none max-w-full min-w-0 ${
+                        departAt ? 'border-[#002472] text-[#002472]' : 'border-gray-300'
+                      }`}
+                    />
+                  </div>
+                )}
+
+                {/* Form error (stop not picked from the list) */}
+                {formError && (
+                  <div className="mt-3 bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{formError}</div>
                 )}
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* Journey results (only shows after search) */}
-      {journey && (
-        <div className="flex justify-center mt-8 px-4">
-          <div className="w-full max-w-3xl">
-            <div className="mb-4">
-              <div className="text-sm text-gray-500">Your journey</div>
-              <h2 className="text-xl font-bold">{journey.from} → {journey.to}</h2>
-              <div className="text-gray-600 text-sm">{journey.totalDuration} min total</div>
-            </div>
-
-            <div className="border rounded-lg divide-y bg-white">
-              {journey.steps.map((step: any, i: number) => (
-                <div key={i} className="p-4 flex items-start gap-4">
-                  {step.type === 'walk' ? (
-                    <>
-                      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600">
-                          <circle cx="12" cy="4" r="2"/>
-                          <path d="M12 6v6l-3 8M12 12l3 8M9 10l-4 2"/>
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium">{step.description}</div>
-                        <div className="text-sm text-gray-500">{step.duration} min walk</div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white"
-                        style={{ backgroundColor: step.color }}
-                      >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="4" y="4" width="16" height="16" rx="2"/>
-                          <path d="M4 12h16"/>
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium">{step.line}</div>
-                        <div className="text-sm text-gray-600">{step.from} → {step.to}</div>
-                        <div className="text-sm text-gray-500">{step.duration} min · {step.stops} stops</div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <p className="text-xs text-gray-400 mt-4 italic">
-              Journey computation is still mocked. Station data is now live from the database.
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Journey results in the right-side panel */}
+      <JourneyPanel
+        key={searchId}
+        open={searchedFor !== null}
+        from={searchedFor?.from ?? ''}
+        to={searchedFor?.to ?? ''}
+        loading={loading}
+        error={planError}
+        options={options}
+        onClose={closePanel}
+      />
 
       {/* Hero section */}
       <div className="mt-16 bg-[#002472] px-6 py-20">
