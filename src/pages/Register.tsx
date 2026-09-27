@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 import BrandLogo from '../components/BrandLogo'
+import SocialLogin from '../components/SocialLogin'
 
 function Register() {
   const [name, setName] = useState('')
@@ -139,37 +140,7 @@ function Register() {
               <div className="flex-1 h-px bg-gray-300" />
             </div>
 
-            <div className="flex gap-3 justify-center">
-              <button
-                disabled
-                className="w-14 h-11 border rounded-lg flex items-center justify-center bg-gray-50"
-              >
-                <svg width="20" height="20" viewBox="0 0 18 18">
-                  <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.9c1.7-1.56 2.7-3.87 2.7-6.62z" />
-                  <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.98v2.33A9 9 0 0 0 9 18z" />
-                  <path fill="#FBBC05" d="M3.95 10.7A5.4 5.4 0 0 1 3.68 9c0-.59.1-1.17.27-1.7V4.97H.98A9 9 0 0 0 0 9c0 1.45.35 2.83.98 4.03l2.97-2.33z" />
-                  <path fill="#EA4335" d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A9 9 0 0 0 .98 4.97l2.97 2.33C4.66 5.17 6.65 3.58 9 3.58z" />
-                </svg>
-              </button>
-
-              <button
-                disabled
-                className="w-14 h-11 border rounded-lg flex items-center justify-center bg-gray-50"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24">
-                  <path fill="#1877F2" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.89v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/>
-                </svg>
-              </button>
-
-              <button
-                disabled
-                className="w-14 h-11 border rounded-lg flex items-center justify-center bg-gray-50"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24">
-                  <path fill="#0A66C2" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/>
-                </svg>
-              </button>
-            </div>
+            <SocialLogin />
 
             <p className="text-center text-sm text-gray-500 mt-6">
               Already have an account?{' '}
