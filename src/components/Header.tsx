@@ -5,6 +5,7 @@ import { useSession } from '../hooks/useSession'
 import { useLanguage } from '../hooks/useLanguage'
 import { LANGUAGES, type Lang } from '../i18n/translations'
 import ServiceNav from './ServiceNav'
+import BrandLogo from './BrandLogo'
 
 function Header() {
   const { lang, setLang, t } = useLanguage()
@@ -39,9 +40,8 @@ function Header() {
     <header className="relative z-30 bg-white">
       {/* Top bar */}
       <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200">
-        <Link to="/" className="flex items-center gap-2">
-        <img src="/Image/Logo.jpg" alt="RONDA" className="w-8 h-8 rounded-full object-cover" />
-          <span className="font-bold text-lg text-[#002472]">RONDA</span>
+        <Link to="/" className="flex items-center" aria-label="RONDA home">
+          <BrandLogo size="sm" />
         </Link>
 
         <div className="flex items-center gap-5 text-sm text-[#002472]">

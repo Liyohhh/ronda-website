@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../services/supabase'
+import BrandLogo from '../components/BrandLogo'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -26,13 +27,12 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       {/* Top bar */}
       <div className="flex items-center justify-between px-6 py-4 border-b">
-        <div className="flex items-center gap-2">
-        <img src="/Image/Logo.jpg" alt="RONDA" className="w-8 h-8 rounded-full object-cover" />
-          <span className="font-bold text-lg text-[#002472]">RONDA</span>
-        </div>
+        <Link to="/" className="flex items-center" aria-label="RONDA home">
+          <BrandLogo size="sm" />
+        </Link>
 
         <div className="relative">
           <select className="appearance-none border rounded pl-3 pr-10 py-1 text-sm text-gray-600">
@@ -53,9 +53,7 @@ function Login() {
       <div className="flex flex-1">
         {/* Left promotional panel */}
         <div className="hidden md:flex md:w-1/2 bg-[#002472] flex-col justify-center px-16 text-white">
-          <span className="inline-block bg-white/10 text-sm px-3 py-1 rounded-full w-fit mb-6">
-            RONDA
-          </span>
+          <BrandLogo tone="light" size="lg" className="mb-8" />
           <h1 className="text-4xl font-bold leading-tight mb-4">
             Ronda. Move Smart. Discover More.
           </h1>

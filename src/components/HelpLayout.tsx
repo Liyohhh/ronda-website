@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import type { HelpCategory } from '../data/helpCategories'
+import BrandLogo from './BrandLogo'
 
 export function HelpLayout({ children }: { children: ReactNode }) {
   const { t } = useLanguage()
@@ -10,9 +11,8 @@ export function HelpLayout({ children }: { children: ReactNode }) {
       <header className="border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2">
-            <link rel="icon" type="image/jpeg" href="/Image/Logo.jpg" />
-              <span className="font-bold text-lg text-[#002472]">RONDA</span>
+            <Link to="/" className="flex items-center" aria-label="RONDA home">
+              <BrandLogo size="sm" />
             </Link>
             <span className="w-px h-5 bg-gray-300" />
             <Link to="/help" className="text-[#002472]">
