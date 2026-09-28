@@ -167,7 +167,7 @@ function FeatureCarousel() {
       <div className="relative mt-4">
         {arrow(-1)}
         {arrow(1)}
-        <div className="overflow-hidden rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-[#002472]/[0.04] shadow-sm">
+        <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#002472] via-[#0a3391] to-[#1747b8] shadow-lg">
           <div
             className="flex transition-transform duration-500 ease-out motion-reduce:transition-none"
             style={{ transform: `translateX(${(rtl ? 1 : -1) * index * 100}%)` }}
@@ -187,8 +187,8 @@ function FeatureCarousel() {
                     <Visual />
                   </div>
                   <div className="order-1 md:order-2 text-center md:text-start">
-                    <h3 className="text-2xl md:text-3xl font-bold text-[#002472] leading-tight">{t(s.title)}</h3>
-                    <p className="mt-4 text-gray-600 md:text-lg leading-relaxed">{t(s.text)}</p>
+                    <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight">{t(s.title)}</h3>
+                    <p className="mt-4 text-white/80 md:text-lg leading-relaxed">{t(s.text)}</p>
                   </div>
                 </div>
               )

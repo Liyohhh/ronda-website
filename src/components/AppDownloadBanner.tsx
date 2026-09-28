@@ -47,8 +47,9 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
 function AppDownloadBanner() {
   const { t } = useLanguage()
   return (
-    <section id="download" aria-labelledby="download-title" className="px-4 sm:px-6 py-10">
-      <div className="relative max-w-6xl mx-auto overflow-hidden rounded-3xl bg-[#001233] text-white">
+    // Full width, and its bottom fades into the footer's navy so the two read as one block
+    <section id="download" aria-labelledby="download-title" className="mt-12">
+      <div className="relative overflow-hidden bg-[#002472] text-white">
         {/* KL skyline, darkened so the text reads */}
         <picture>
           <source srcSet="/Image/banner-kl.webp" type="image/webp" />
@@ -60,8 +61,9 @@ function AppDownloadBanner() {
           />
         </picture>
         <div className="absolute inset-0 bg-gradient-to-r from-[#001233]/95 via-[#001233]/80 to-[#001233]/60" />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-[#002472]" />
 
-        <div className="relative grid gap-8 md:grid-cols-[1.1fr_1fr_auto] items-center px-6 sm:px-10 py-10">
+        <div className="relative max-w-6xl mx-auto grid gap-8 md:grid-cols-[1.1fr_1fr_auto] items-center px-4 sm:px-6 pt-14 pb-12">
           <div>
             <BrandLogo tone="light" size="md" wordmark={false} />
             <h2 id="download-title" className="mt-4 text-2xl sm:text-3xl font-bold leading-tight">
