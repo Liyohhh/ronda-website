@@ -17,6 +17,9 @@ export type Fare = { amount: number; currency?: string; exact: boolean; basis?: 
 // Whose fares to show: Malaysians ride GoKL / Smart Selangor free, tourists pay
 export type Resident = 'citizen' | 'non_citizen'
 
+// How the rider pays: Rapid KL cash / token fares are higher than cashless (Touch 'n Go, card)
+export type Payment = 'cashless' | 'cash'
+
 // Departure time picked by the rider (Malaysia time); null = leave now
 export type DepartAt = { date: string; time: string } | null
 
@@ -67,6 +70,8 @@ type Props = {
   notice?: ServiceNotice
   resident: Resident
   onResidentChange: (r: Resident) => void
+  payment: Payment
+  onPaymentChange: (p: Payment) => void
   departAt: DepartAt
   onDepartChange: (d: DepartAt) => void
   onPlacesChange: (p: { from?: Pick; to?: Pick }) => void // edit From / To and re-plan
@@ -185,7 +190,7 @@ function RoutePreview({ option }: { option: TripOption }) {
 
 // ---------- panel ----------
 
-function JourneyPanel({ open, from, to, loading, error, options, notice, resident, onResidentChange, departAt, onDepartChange, onPlacesChange, onClose }: Props) {
+function JourneyPanel({ open, from, to, loading, error, options, notice, resident, onResidentChange, payment, onPaymentChange, departAt, onDepartChange, onPlacesChange, onClose }: Props) {
   const { t, lang } = useLanguage()
   const [sort, setSort] = useState<SortKey>('fastest')
   const [detail, setDetail] = useState<TripOption | null>(null)
@@ -311,23 +316,44 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, residen
             />
           )}
 
-          {/* Fares for Malaysians or tourists (some buses are free for Malaysians only) */}
-          <div className="mt-3 flex items-center gap-2 text-sm" role="group" aria-label={t('faresFor')}>
-            <span className="text-white/60">{t('faresFor')}</span>
-            <div className="inline-flex rounded-full bg-white/10 p-0.5">
-              {(['citizen', 'non_citizen'] as const).map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => r !== resident && onResidentChange(r)}
-                  aria-pressed={r === resident}
-                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
-                    r === resident ? 'bg-white text-[#002472]' : 'text-white/80 hover:text-white'
-                  }`}
-                >
-                  {r === 'citizen' ? t('fareMalaysian') : t('fareTourist')}
-                </button>
-              ))}
+          {/* Fares: for Malaysians or tourists (some buses are free for Malaysians only), paid cashless or cash */}
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div className="flex items-center gap-2" role="group" aria-label={t('faresFor')}>
+              <span className="text-white/60">{t('faresFor')}</span>
+              <div className="inline-flex rounded-full bg-white/10 p-0.5">
+                {(['citizen', 'non_citizen'] as const).map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => r !== resident && onResidentChange(r)}
+                    aria-pressed={r === resident}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                      r === resident ? 'bg-white text-[#002472]' : 'text-white/80 hover:text-white'
+                    }`}
+                  >
+                    {r === 'citizen' ? t('fareMalaysian') : t('fareTourist')}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-2" role="group" aria-label={t('payWith')}>
+              <span className="text-white/60">{t('payWith')}</span>
+              <div className="inline-flex rounded-full bg-white/10 p-0.5">
+                {(['cashless', 'cash'] as const).map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => p !== payment && onPaymentChange(p)}
+                    aria-pressed={p === payment}
+                    title={p === 'cashless' ? t('payCashlessHint') : undefined}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                      p === payment ? 'bg-white text-[#002472]' : 'text-white/80 hover:text-white'
+                    }`}
+                  >
+                    {p === 'cashless' ? t('payCashless') : t('payCash')}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>

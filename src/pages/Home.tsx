@@ -9,7 +9,7 @@ import TrailsSection from '../components/TrailsSection'
 import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
 import ReviewsSection from '../components/ReviewsSection'
-import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt } from '../components/JourneyPanel'
+import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
 import SuggestionList from '../components/SuggestionList'
 import { buildItems, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
@@ -142,6 +142,24 @@ function Home() {
     handleSearch({ res: r })
   }
 
+  // Cashless (default) or cash / token fares; remembered on this device
+  const [payment, setPayment] = useState<Payment>(() => {
+    try {
+      return localStorage.getItem('ronda.payment') === 'cash' ? 'cash' : 'cashless'
+    } catch {
+      return 'cashless'
+    }
+  })
+  const changePayment = (p: Payment) => {
+    setPayment(p)
+    try {
+      localStorage.setItem('ronda.payment', p)
+    } catch {
+      // storage blocked: the choice lasts for this visit only
+    }
+    handleSearch({ pay: p })
+  }
+
   // Leave now, or at a date / time picked in the results panel
   const [departAt, setDepartAt] = useState<DepartAt>(null)
   const changeDepart = (d: DepartAt) => {
@@ -168,8 +186,9 @@ function Home() {
   }
 
   // Plan with the current boxes / options; `o` overrides them (panel edits pass the new values directly)
-  const handleSearch = async (o: { res?: Resident; when?: DepartAt; from?: Pick; to?: Pick } = {}) => {
+  const handleSearch = async (o: { res?: Resident; pay?: Payment; when?: DepartAt; from?: Pick; to?: Pick } = {}) => {
     const res = o.res ?? resident
+    const pay = o.pay ?? payment
     const when = o.when !== undefined ? o.when : departAt
     const fromStop = o.from ?? startStop
     const toStop = o.to ?? endStop
@@ -188,6 +207,7 @@ function Home() {
       from: { lat: fromStop.lat, lon: fromStop.lon },
       to: { lat: toStop.lat, lon: toStop.lon },
       resident: res,
+      payment: pay,
       ...(when ?? {}),
     }
 
@@ -469,6 +489,8 @@ function Home() {
         notice={notice}
         resident={resident}
         onResidentChange={changeResident}
+        payment={payment}
+        onPaymentChange={changePayment}
         departAt={departAt}
         onDepartChange={changeDepart}
         onPlacesChange={({ from, to }) => {
