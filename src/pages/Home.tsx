@@ -8,7 +8,7 @@ import TrailsSection from '../components/TrailsSection'
 import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
 import ReviewsSection from '../components/ReviewsSection'
-import JourneyPanel, { type TripOption, type ServiceNotice, type Resident } from '../components/JourneyPanel'
+import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt } from '../components/JourneyPanel'
 import SuggestionList from '../components/SuggestionList'
 import { buildItems, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
@@ -138,12 +138,19 @@ function Home() {
     handleSearch(r)
   }
 
+  // Leave now, or at a date / time picked in the results panel
+  const [departAt, setDepartAt] = useState<DepartAt>(null)
+  const changeDepart = (d: DepartAt) => {
+    setDepartAt(d)
+    handleSearch(resident, d)
+  }
+
   const openFirstLine = () => {
     const first = matchLines(line)[0]
     if (first) navigate(`/lines/${first.id}`)
   }
 
-  const handleSearch = async (res: Resident = resident) => {
+  const handleSearch = async (res: Resident = resident, when: DepartAt = departAt) => {
     if (tab === 'lines') return openFirstLine()
     if (tab !== 'directions') return
     setActiveField(null)
@@ -159,6 +166,7 @@ function Home() {
       from: { lat: startStop.lat, lon: startStop.lon },
       to: { lat: endStop.lat, lon: endStop.lon },
       resident: res,
+      ...(when ?? {}),
     }
 
     setLoading(true)
@@ -410,6 +418,8 @@ function Home() {
         notice={notice}
         resident={resident}
         onResidentChange={changeResident}
+        departAt={departAt}
+        onDepartChange={changeDepart}
         onClose={closePanel}
       />
 

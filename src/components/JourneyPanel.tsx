@@ -4,6 +4,7 @@ import type { TranslationKey } from '../i18n/translations'
 import LineBadge from './LineBadge'
 import { busLine, lineForRoute, type Line } from '../data/lines'
 import { formatDuration } from '../i18n/duration'
+import { malaysiaNow } from '../data/time'
 
 export type Place = { name: string; lat: number; lon: number }
 
@@ -11,6 +12,9 @@ export type Fare = { amount: number; currency?: string; exact: boolean; basis?: 
 
 // Whose fares to show: Malaysians ride GoKL / Smart Selangor free, tourists pay
 export type Resident = 'citizen' | 'non_citizen'
+
+// Departure time picked by the rider (Malaysia time); null = leave now
+export type DepartAt = { date: string; time: string } | null
 
 export type Leg = {
   mode: 'walk' | 'transit'
@@ -59,6 +63,8 @@ type Props = {
   notice?: ServiceNotice
   resident: Resident
   onResidentChange: (r: Resident) => void
+  departAt: DepartAt
+  onDepartChange: (d: DepartAt) => void
   onClose: () => void
 }
 
@@ -169,10 +175,23 @@ function RoutePreview({ option }: { option: TripOption }) {
 
 // ---------- panel ----------
 
-function JourneyPanel({ open, from, to, loading, error, options, notice, resident, onResidentChange, onClose }: Props) {
-  const { t } = useLanguage()
+function JourneyPanel({ open, from, to, loading, error, options, notice, resident, onResidentChange, departAt, onDepartChange, onClose }: Props) {
+  const { t, lang } = useLanguage()
   const [sort, setSort] = useState<SortKey>('fastest')
   const [detail, setDetail] = useState<TripOption | null>(null)
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(() => departAt ?? malaysiaNow())
+  const openEditor = () => {
+    setDraft(departAt ?? malaysiaNow())
+    setEditing(true)
+  }
+  // "today, 18:30" / "Tue 30 Sep, 07:15"
+  const departLabel = (d: NonNullable<DepartAt>) => {
+    const day = d.date === malaysiaNow().date
+      ? t('todayLabel')
+      : new Date(d.date + 'T00:00:00Z').toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
+    return `${day}, ${d.time}`
+  }
 
   useEffect(() => {
     if (!open) return
@@ -257,13 +276,68 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, residen
             </div>
           </div>
 
-          <div className="mt-3 inline-flex items-center gap-1.5 text-sm text-white/80">
+          {/* Leaving now, or a date and time the rider picks */}
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-white/80">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <circle cx="12" cy="12" r="9" />
               <path d="M12 7v5l3 2" />
             </svg>
-            {t('leavingNow')}
+            <span>{departAt ? t('leavingAt').replace('{when}', departLabel(departAt)) : t('leavingNow')}</span>
+            <button
+              type="button"
+              onClick={() => (editing ? setEditing(false) : openEditor())}
+              aria-expanded={editing}
+              className="rounded-full bg-white/10 hover:bg-white/20 px-3 py-0.5 text-xs font-semibold text-white"
+            >
+              {t('changeTime')}
+            </button>
           </div>
+          {editing && (
+            <form
+              className="mt-2 flex flex-wrap items-end gap-2"
+              onSubmit={(e) => {
+                e.preventDefault()
+                setEditing(false)
+                onDepartChange({ date: draft.date, time: draft.time })
+              }}
+            >
+              <label className="text-xs text-white/70">
+                {t('departDate')}
+                <input
+                  type="date"
+                  required
+                  value={draft.date}
+                  onChange={(e) => setDraft({ ...draft, date: e.target.value })}
+                  className="mt-0.5 block rounded-lg bg-white/10 px-2 py-1.5 text-sm text-white [color-scheme:dark] outline-none focus:ring-2 focus:ring-white/60"
+                />
+              </label>
+              <label className="text-xs text-white/70">
+                {t('departTime')}
+                <input
+                  type="time"
+                  required
+                  value={draft.time}
+                  onChange={(e) => setDraft({ ...draft, time: e.target.value })}
+                  className="mt-0.5 block rounded-lg bg-white/10 px-2 py-1.5 text-sm text-white [color-scheme:dark] outline-none focus:ring-2 focus:ring-white/60"
+                />
+              </label>
+              <button type="submit" className="rounded-full bg-white text-[#002472] px-4 py-1.5 text-sm font-semibold hover:bg-gray-100">
+                {t('showRoutes')}
+              </button>
+              {departAt && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditing(false)
+                    onDepartChange(null)
+                  }}
+                  className="rounded-full px-3 py-1.5 text-sm font-semibold text-white/85 hover:text-white"
+                >
+                  {t('leaveNowBtn')}
+                </button>
+              )}
+            </form>
+          )}
 
           {/* Fares for Malaysians or tourists (some buses are free for Malaysians only) */}
           <div className="mt-3 flex items-center gap-2 text-sm" role="group" aria-label={t('faresFor')}>
