@@ -53,6 +53,13 @@ export function lineForRoute(feedId: string, routeId: string): Line | undefined 
   return LINES.find((l) => l.gtfs.feedId === feedId && l.gtfs.routeIds.includes(routeId))
 }
 
+// Lines matching a search (name, code, mode or id words); all lines for an empty query
+export function matchLines(query: string): Line[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return LINES
+  return LINES.filter((l) => [l.name, l.code ?? '', l.mode, l.id.replace(/-/g, ' ')].some((s) => s.toLowerCase().includes(q)))
+}
+
 // Buses aren't in LINES (hundreds of routes). Their badge uses the route's own GTFS colour when the
 // operator publishes one (Rapid KL stage buses do), otherwise RONDA navy (MRT feeder buses, bus stops).
 export const BUS_FALLBACK_COLOR = '#002472'

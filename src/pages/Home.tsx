@@ -1,5 +1,7 @@
 import { useEffect, useState, type KeyboardEvent } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import LinePicker from '../components/LinePicker'
+import { matchLines } from '../data/lines'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
 import TrailsSection from '../components/TrailsSection'
@@ -16,7 +18,9 @@ const LIST_ID = 'place-suggestions'
 
 function Home() {
   const { t } = useLanguage()
-  const [tab, setTab] = useState<'directions' | 'lines'>('directions')
+  // /?tab=lines opens the Lines tab (the "All lines" link on line pages)
+  const [tab, setTab] = useState<'directions' | 'lines'>(() => (new URLSearchParams(window.location.search).get('tab') === 'lines' ? 'lines' : 'directions'))
+  const navigate = useNavigate()
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
   const [startStop, setStartStop] = useState<Pick | null>(null)
@@ -134,7 +138,13 @@ function Home() {
     handleSearch(r)
   }
 
+  const openFirstLine = () => {
+    const first = matchLines(line)[0]
+    if (first) navigate(`/lines/${first.id}`)
+  }
+
   const handleSearch = async (res: Resident = resident) => {
+    if (tab === 'lines') return openFirstLine()
     if (tab !== 'directions') return
     setActiveField(null)
     setFormError('')
@@ -329,6 +339,8 @@ function Home() {
                           type="text"
                           value={line}
                           onChange={(e) => setLine(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && openFirstLine()}
+                          aria-label={t('line')}
                           placeholder={t('linePh')}
                           className="w-full text-base outline-none"
                         />
@@ -365,6 +377,9 @@ function Home() {
                     onPick={pickSuggestion}
                   />
                 )}
+
+                {/* Lines tab: every line, filtered as you type */}
+                {tab === 'lines' && <LinePicker query={line} />}
 
                 {/* Form error (stop not picked from the list) */}
                 {formError && (
