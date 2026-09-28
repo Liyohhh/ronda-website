@@ -58,15 +58,15 @@ function ReviewsSection() {
           ))}
         </ul>
       ) : (
-        <div className="mt-4 bg-white border border-gray-200 rounded-3xl px-6 py-6 md:py-7 flex flex-col md:flex-row md:items-center gap-5">
+        <div className="mt-4 bg-[#002472] text-white rounded-3xl px-6 py-6 md:py-7 flex flex-col md:flex-row md:items-center gap-5">
           <div className="flex-1">
             <Stars rating={0} />
-            <h3 className="mt-3 text-xl font-semibold text-[#002472]">{t('reviewsEmptyTitle')}</h3>
-            <p className="mt-1 text-gray-600">{t('reviewsEmptyText')}</p>
+            <h3 className="mt-3 text-xl font-semibold">{t('reviewsEmptyTitle')}</h3>
+            <p className="mt-1 text-white/75">{t('reviewsEmptyText')}</p>
           </div>
           <Link
             to={FEEDBACK_HREF}
-            className="self-start md:self-center flex-shrink-0 inline-flex items-center h-11 px-6 rounded-full bg-[#002472] text-white font-semibold hover:bg-[#001a55] transition-colors"
+            className="self-start md:self-center flex-shrink-0 inline-flex items-center h-11 px-6 rounded-full bg-white text-[#002472] font-semibold hover:bg-gray-100 transition-colors"
           >
             {t('reviewsCta')}
           </Link>

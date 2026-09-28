@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import LineBadge from '../components/LineBadge'
 import TrailCover from '../components/TrailCover'
@@ -68,6 +69,11 @@ function SectionTitle({ id, children }: { id: string; children: string }) {
 
 function About() {
   const { t } = useLanguage()
+  // header menu links like /about#about-faq: scroll to that section (also when already on /about)
+  const { hash } = useLocation()
+  useEffect(() => {
+    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' })
+  }, [hash])
   return (
     <SiteLayout>
       {/* Intro */}

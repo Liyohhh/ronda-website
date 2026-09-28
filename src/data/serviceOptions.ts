@@ -1,160 +1,75 @@
-// Content shown in the header's service dropdowns (Alibaba-style hover panels).
-// Durations are approximate and for display only; confirm before using in bookings.
+// Content of the header's hover menus. Every item is a working link: plan a trip to a station,
+// open a trail category, or jump to a section of the About page.
+// Place and station names are proper nouns and stay the same in every language.
 
-export type ServiceItem = { name: string; detail: string }
-export type ServiceColumn = { title: string; items: ServiceItem[] }
-export type ServiceOption = {
-  key: 'merchant' | 'busShuttle' | 'airportTransfer' | 'chauffeur'
-  columns: ServiceColumn[]
-  promo: { title: string; text: string; cta: string }
+import type { TranslationKey } from '../i18n/translations'
+import { TRAIL_CATEGORIES, categoryKey } from './trails'
+
+// /?to=<stop name>&toName=<shown name> opens Home with the End box filled in
+const planTo = (stop: string, shown = stop) => `/?to=${encodeURIComponent(stop)}&toName=${encodeURIComponent(shown)}`
+
+export type NavItem = { to: string; name?: string; label?: TranslationKey; detail?: string }
+export type NavColumn = { title: TranslationKey; items: NavItem[] }
+export type NavMenu = {
+  key: 'navTravel' | 'navExplore' | 'about'
+  columns: NavColumn[]
+  promo: { title: TranslationKey; text: TranslationKey; cta: TranslationKey; to: string }
 }
 
-export const SERVICE_OPTIONS: ServiceOption[] = [
+export const NAV_MENUS: NavMenu[] = [
   {
-    key: 'merchant',
+    key: 'navTravel',
     columns: [
       {
-        title: 'Shopping near stations',
+        title: 'navAirports',
         items: [
-          { name: 'Pavilion Kuala Lumpur', detail: 'MRT Bukit Bintang' },
-          { name: 'Suria KLCC', detail: 'LRT KLCC' },
-          { name: 'Mid Valley Megamall', detail: 'KTM Mid Valley' },
-          { name: 'Sunway Pyramid', detail: 'BRT Sunway Lagoon' },
+          { name: 'KLIA Terminal 1', detail: 'ERL KLIA T1', to: planTo('ERL KLIA T1', 'KLIA Terminal 1') },
+          { name: 'KLIA Terminal 2', detail: 'ERL KLIA T2', to: planTo('ERL KLIA T2', 'KLIA Terminal 2') },
+          { name: 'KL Sentral', detail: 'KLIA Ekspres · KLIA Transit', to: planTo('ERL KL Sentral', 'KL Sentral') },
         ],
       },
       {
-        title: 'Attractions',
+        title: 'navBusTerminals',
         items: [
-          { name: 'Petronas Twin Towers', detail: 'LRT KLCC' },
-          { name: 'Batu Caves', detail: 'KTM Batu Caves' },
-          { name: 'Central Market (Pasar Seni)', detail: 'LRT / MRT Pasar Seni' },
-          { name: 'KL Bird Park', detail: 'Near KTM Kuala Lumpur' },
-        ],
-      },
-      {
-        title: 'Food & dining',
-        items: [
-          { name: 'Jalan Alor Food Street', detail: 'MRT Bukit Bintang' },
-          { name: 'Petaling Street', detail: 'LRT / MRT Pasar Seni' },
-          { name: 'Kampung Baru', detail: 'LRT Kampung Baru' },
-          { name: 'Brickfields (Little India)', detail: 'KL Sentral' },
+          { name: 'Terminal Bersepadu Selatan (TBS)', detail: 'LRT / KTM / ERL Bandar Tasik Selatan', to: planTo('LRT Bandar Tasik Selatan', 'Terminal Bersepadu Selatan (TBS)') },
+          { name: 'Pudu Sentral', detail: 'LRT Plaza Rakyat', to: planTo('LRT Plaza Rakyat', 'Pudu Sentral') },
         ],
       },
     ],
-    promo: {
-      title: 'Become a RONDA merchant',
-      text: 'List your business in RONDA 300, the places within 300m of every station.',
-      cta: 'Partner with us',
-    },
+    promo: { title: 'navPlanTitle', text: 'navPlanText', cta: 'navPlanCta', to: '/' },
   },
   {
-    key: 'busShuttle',
+    key: 'navExplore',
     columns: [
       {
-        title: 'Popular express bus routes',
-        items: [
-          { name: 'Kuala Lumpur → Penang', detail: 'Approx. 5 hrs' },
-          { name: 'Kuala Lumpur → Johor Bahru', detail: 'Approx. 4.5 hrs' },
-          { name: 'Kuala Lumpur → Melaka', detail: 'Approx. 2 hrs' },
-          { name: 'Kuala Lumpur → Ipoh', detail: 'Approx. 3 hrs' },
-          { name: 'Kuala Lumpur → Singapore', detail: 'Approx. 5–6 hrs' },
-        ],
+        title: 'navTrailCats',
+        items: TRAIL_CATEGORIES.map((c) => ({ label: categoryKey(c), to: `/trails?category=${c}` })),
       },
       {
-        title: 'Bus terminals',
+        title: 'navPopular',
         items: [
-          { name: 'Terminal Bersepadu Selatan (TBS)', detail: 'LRT / KTM / ERL Bandar Tasik Selatan' },
-          { name: 'Terminal Bersepadu Gombak (TBG)', detail: 'East Coast routes' },
-          { name: 'Pudu Sentral', detail: 'LRT Plaza Rakyat' },
-          { name: 'KL Sentral', detail: 'Airport and Genting coaches' },
-        ],
-      },
-      {
-        title: 'City & shuttle services',
-        items: [
-          { name: 'GoKL City Bus', detail: 'Free city loop, Kuala Lumpur' },
-          { name: 'Smart Selangor', detail: 'Free bus, Selangor' },
-          { name: 'Genting Highlands shuttle', detail: 'From KL Sentral' },
-          { name: 'Hop On Hop Off KL', detail: 'City sightseeing bus' },
+          { name: 'Petronas Twin Towers', detail: 'LRT KLCC', to: planTo('LRT KLCC', 'Petronas Twin Towers') },
+          { name: 'Pavilion Kuala Lumpur', detail: 'MRT Bukit Bintang', to: planTo('MRT Bukit Bintang', 'Pavilion Kuala Lumpur') },
+          { name: 'Batu Caves', detail: 'KTM Batu Caves', to: planTo('KTM Batu Caves', 'Batu Caves') },
+          { name: 'Central Market (Pasar Seni)', detail: 'MRT Pasar Seni', to: planTo('MRT Pasar Seni', 'Central Market (Pasar Seni)') },
         ],
       },
     ],
-    promo: {
-      title: 'Compare bus operators',
-      text: 'See schedules and seats across operators in one search.',
-      cta: 'Search buses',
-    },
+    promo: { title: 'trailsTitle', text: 'trailsSubtitle', cta: 'navSeeTrails', to: '/trails' },
   },
   {
-    key: 'airportTransfer',
+    key: 'about',
     columns: [
       {
-        title: 'Airports',
+        title: 'navAboutRonda',
         items: [
-          { name: 'KLIA Terminal 1', detail: 'Sepang, Selangor' },
-          { name: 'KLIA Terminal 2', detail: 'Sepang, Selangor' },
-          { name: 'Sultan Abdul Aziz Shah Airport', detail: 'Subang' },
-          { name: 'Penang International Airport', detail: 'Bayan Lepas' },
-          { name: 'Senai International Airport', detail: 'Johor Bahru' },
-        ],
-      },
-      {
-        title: 'Rail to KLIA',
-        items: [
-          { name: 'KLIA Ekspres', detail: 'KL Sentral → KLIA, non-stop' },
-          { name: 'KLIA Transit', detail: 'Stops at BTS, Putrajaya & Cyberjaya, Salak Tinggi' },
-        ],
-      },
-      {
-        title: 'Road transfers',
-        items: [
-          { name: 'Airport coach', detail: 'KL Sentral ↔ KLIA T1 / T2' },
-          { name: 'Private car transfer', detail: 'Door-to-door, fixed price' },
-          { name: 'Group van transfer', detail: 'Up to 10 passengers' },
+          { label: 'howTitle', to: '/about#about-how' },
+          { label: 'networksTitle', to: '/about#about-networks' },
+          { label: 'faqTitle', to: '/about#about-faq' },
+          { label: 'helpCentre', to: '/help' },
         ],
       },
     ],
-    promo: {
-      title: 'Landing soon?',
-      text: 'Book a transfer ahead and get picked up at arrivals.',
-      cta: 'Book a transfer',
-    },
-  },
-  {
-    key: 'chauffeur',
-    columns: [
-      {
-        title: 'Services',
-        items: [
-          { name: 'Hourly hire', detail: 'Driver on standby, minimum hours apply' },
-          { name: 'Full-day hire', detail: 'Up to 10 hours' },
-          { name: 'Corporate & events', detail: 'Meetings, weddings, VIP guests' },
-        ],
-      },
-      {
-        title: 'Popular day trips',
-        items: [
-          { name: 'Kuala Lumpur city tour', detail: 'KLCC, Merdeka Square, Batu Caves' },
-          { name: 'Putrajaya', detail: 'Mosques, bridges and lake' },
-          { name: 'Melaka heritage', detail: 'UNESCO World Heritage city' },
-          { name: 'Genting Highlands', detail: 'Hill resort' },
-          { name: 'Kuala Selangor fireflies', detail: 'Evening trip' },
-        ],
-      },
-      {
-        title: 'Vehicle types',
-        items: [
-          { name: 'Sedan', detail: 'Up to 3 passengers' },
-          { name: 'MPV', detail: 'Up to 6 passengers' },
-          { name: 'Premium MPV', detail: 'Toyota Alphard / Vellfire class' },
-          { name: 'Van', detail: 'Up to 10 passengers' },
-        ],
-      },
-    ],
-    promo: {
-      title: 'Travel in comfort',
-      text: 'Licensed, vetted drivers for city trips and long journeys.',
-      cta: 'Hire a chauffeur',
-    },
+    promo: { title: 'navMerchantTitle', text: 'navMerchantText', cta: 'navMerchantCta', to: '/help' },
   },
 ]

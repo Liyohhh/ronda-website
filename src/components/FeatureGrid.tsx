@@ -18,14 +18,14 @@ const FEATURES: { key: TranslationKey; icon: string; soon?: boolean }[] = [
 function FeatureGrid() {
   const { t } = useLanguage()
   return (
-    <section aria-labelledby="features-title" className="mt-8 bg-[#e3ebfa]">
+    <section aria-labelledby="features-title" className="mt-8 bg-[#002472]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <h2 id="features-title" className="text-2xl md:text-3xl font-bold text-[#002472]">
+        <h2 id="features-title" className="text-2xl md:text-3xl font-bold text-white">
           {t('featuresTitle')}
         </h2>
         <ul className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
           {FEATURES.map((f) => (
-            <li key={f.key} className="relative bg-white border border-gray-200 rounded-2xl p-5 flex flex-col items-center text-center gap-3">
+            <li key={f.key} className="relative bg-white rounded-2xl p-5 flex flex-col items-center text-center gap-3">
               {f.soon && (
                 <span className="absolute top-2 end-2 text-[10px] font-bold uppercase tracking-wide text-[#8a6a2a] bg-[#C9A45C]/15 px-2 py-0.5 rounded-full">
                   {t('soon')}

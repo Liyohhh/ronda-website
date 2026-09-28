@@ -1,17 +1,17 @@
 import { useRef, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
-import { SERVICE_OPTIONS, type ServiceOption } from '../data/serviceOptions'
+import { NAV_MENUS, type NavMenu } from '../data/serviceOptions'
 
-type Key = ServiceOption['key']
+type Key = NavMenu['key']
 
-// Service tabs with hover dropdowns. Sits inside the header row; the dropdown is positioned
+// Header menus with hover panels. Sits inside the header row; the panel is positioned
 // against the nearest `relative` ancestor (the header row), so it spans the full width.
 function ServiceNav({ className = '' }: { className?: string }) {
   const { t } = useLanguage()
   const [active, setActive] = useState<Key | null>(null)
   // Keeps the last panel's content rendered while it fades out
-  const [shown, setShown] = useState<Key>('merchant')
+  const [shown, setShown] = useState<Key>('navTravel')
   const closeTimer = useRef<number | undefined>(undefined)
 
   const open = (key: Key) => {
@@ -25,94 +25,76 @@ function ServiceNav({ className = '' }: { className?: string }) {
     closeTimer.current = window.setTimeout(() => setActive(null), 150)
   }
 
-  const option = SERVICE_OPTIONS.find((o) => o.key === shown)!
+  const close = () => {
+    window.clearTimeout(closeTimer.current)
+    setActive(null)
+  }
+
+  const menu = NAV_MENUS.find((m) => m.key === shown)!
   const isOpen = active !== null
 
   return (
-    <nav className={className} onMouseLeave={scheduleClose} aria-label="Services">
+    <nav className={className} onMouseLeave={scheduleClose} aria-label="Main">
       <ul className="flex items-stretch gap-6 text-sm text-[#002472] whitespace-nowrap">
-        {SERVICE_OPTIONS.map((o) => (
-          <li key={o.key} className="flex">
+        {NAV_MENUS.map((m) => (
+          <li key={m.key} className="flex">
             <button
               type="button"
-              onMouseEnter={() => open(o.key)}
-              onFocus={() => open(o.key)}
-              onClick={() => (active === o.key ? setActive(null) : open(o.key))}
-              aria-expanded={active === o.key}
-              className={`py-3 border-b-2 font-medium transition-colors ${
-                active === o.key ? 'border-[#002472]' : 'border-transparent hover:border-[#002472]/40'
+              onMouseEnter={() => open(m.key)}
+              onFocus={() => open(m.key)}
+              onClick={() => (active === m.key ? setActive(null) : open(m.key))}
+              aria-expanded={active === m.key}
+              className={`py-3 border-b-2 font-medium transition-colors flex items-center gap-1 ${
+                active === m.key ? 'border-[#002472]' : 'border-transparent hover:border-[#002472]/40'
               }`}
             >
-              {t(o.key)}
+              {t(m.key)}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`transition-transform ${active === m.key ? 'rotate-180' : ''}`}>
+                <path d="M6 9l6 6 6-6" />
+              </svg>
             </button>
           </li>
         ))}
-        {/* Trails: a plain page link, no dropdown */}
-        <li className="flex">
-          <NavLink
-            to="/trails"
-            onMouseEnter={scheduleClose}
-            className={({ isActive }) =>
-              `py-3 border-b-2 font-medium transition-colors flex items-center ${
-                isActive ? 'border-[#002472]' : 'border-transparent hover:border-[#002472]/40'
-              }`
-            }
-          >
-            {t('trails')}
-          </NavLink>
-        </li>
-        <li className="flex">
-          <NavLink
-            to="/about"
-            onMouseEnter={scheduleClose}
-            className={({ isActive }) =>
-              `py-3 border-b-2 font-medium transition-colors flex items-center ${
-                isActive ? 'border-[#002472]' : 'border-transparent hover:border-[#002472]/40'
-              }`
-            }
-          >
-            {t('about')}
-          </NavLink>
-        </li>
       </ul>
 
-      {/* Dropdown panel */}
+      {/* Hover panel */}
       <div
         onMouseEnter={() => active && open(active)}
         className={`absolute left-0 right-0 top-full bg-white border-b border-gray-200 shadow-xl transition-all duration-200 ease-out ${
           isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'
         }`}
       >
-        <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-          {option.columns.map((col) => (
+        <div className="max-w-6xl mx-auto px-6 py-7 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {menu.columns.map((col) => (
             <div key={col.title}>
-              <h3 className="text-sm font-semibold text-[#002472] mb-3">{col.title}</h3>
+              <h3 className="text-sm font-semibold text-[#002472] mb-3">{t(col.title)}</h3>
               <ul className="space-y-2.5">
                 {col.items.map((item) => (
-                  <li key={item.name}>
-                    <button type="button" className="text-start group">
-                      <div className="text-sm text-gray-800 group-hover:text-[#002472] group-hover:underline">
-                        {item.name}
-                      </div>
-                      <div className="text-xs text-gray-500">{item.detail}</div>
-                    </button>
+                  <li key={item.to}>
+                    <Link to={item.to} onClick={close} className="block group">
+                      <span className="block text-sm text-gray-800 group-hover:text-[#002472] group-hover:underline">
+                        {item.label ? t(item.label) : item.name}
+                      </span>
+                      {item.detail && <span className="block text-xs text-gray-500">{item.detail}</span>}
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
 
-          <div className="rounded-2xl bg-[#002472] text-white p-6 flex flex-col justify-between">
+          <div className={`rounded-2xl bg-[#002472] text-white p-6 flex flex-col justify-between ${menu.columns.length === 1 ? 'md:col-span-2' : ''}`}>
             <div>
-              <h3 className="font-semibold text-lg mb-2">{option.promo.title}</h3>
-              <p className="text-sm text-white/70">{option.promo.text}</p>
+              <h3 className="font-semibold text-lg mb-2">{t(menu.promo.title)}</h3>
+              <p className="text-sm text-white/70">{t(menu.promo.text)}</p>
             </div>
-            <button
-              type="button"
+            <Link
+              to={menu.promo.to}
+              onClick={close}
               className="mt-6 self-start bg-white text-[#002472] px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-100"
             >
-              {option.promo.cta}
-            </button>
+              {t(menu.promo.cta)}
+            </Link>
           </div>
         </div>
       </div>

@@ -188,7 +188,7 @@ function Home() {
 
         {/* Search card: half on the photo, half on the white below it */}
         <div className="relative z-20 mt-10 px-4 flex justify-center">
-          <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-white" aria-hidden="true" />
+          <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-gray-50" aria-hidden="true" />
           <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-xl px-6 pt-4 pb-5">
             {/* Tab switcher */}
             <div className="flex justify-center">
