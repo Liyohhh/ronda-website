@@ -9,6 +9,10 @@ type Props = {
   className?: string
 }
 
+// width / height of the traced SVGs (viewBox), so each image gets a fixed size and can't collapse
+const MARK_RATIO = 1788 / 1734
+const WORD_RATIO = 3936 / 666
+
 // mark height / wordmark height in px
 const SIZES = {
   sm: [32, 16],
@@ -21,10 +25,10 @@ function BrandLogo({ tone = 'dark', size = 'sm', wordmark = true, wordmarkClassN
   const [markH, wordH] = SIZES[size]
   const suffix = tone === 'light' ? '-light' : ''
   return (
-    <span dir="ltr" className={`inline-flex items-center gap-2 ${className}`} role="img" aria-label="RONDA">
-      <img src={`/brand/ronda-mark${suffix}.svg`} alt="" style={{ height: markH }} className="w-auto" />
+    <span dir="ltr" className={`inline-flex items-center gap-2 flex-shrink-0 ${className}`} role="img" aria-label="RONDA">
+      <img src={`/brand/ronda-mark${suffix}.svg`} alt="" style={{ height: markH, width: Math.round(markH * MARK_RATIO) }} className="max-w-none flex-shrink-0" />
       {wordmark && (
-        <img src={`/brand/ronda-wordmark${suffix}.svg`} alt="" style={{ height: wordH }} className={`w-auto ${wordmarkClassName}`} />
+        <img src={`/brand/ronda-wordmark${suffix}.svg`} alt="" style={{ height: wordH, width: Math.round(wordH * WORD_RATIO) }} className={`max-w-none flex-shrink-0 ${wordmarkClassName}`} />
       )}
     </span>
   )

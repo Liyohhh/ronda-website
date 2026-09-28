@@ -62,8 +62,28 @@ const SOCIALS: Social[] = [
     id: 'qq',
     label: 'QQ',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="#1EBAFC" d="M21.395 15.035a40 40 0 0 0-.803-2.264l-1.079-2.695c.001-.032.014-.562.014-.836C19.526 4.632 17.351 0 12 0S4.474 4.632 4.474 9.241c0 .274.013.804.014.836l-1.08 2.695a39 39 0 0 0-.802 2.264c-1.021 3.283-.69 4.643-.438 4.673.54.065 2.103-2.472 2.103-2.472 0 1.469.756 3.387 2.394 4.771-.612.188-1.363.479-1.845.835-.434.32-.379.646-.301.778.343.578 5.883.369 7.482.189 1.6.18 7.14.389 7.483-.189.078-.132.132-.458-.301-.778-.483-.356-1.233-.646-1.846-.836 1.637-1.384 2.393-3.302 2.393-4.771 0 0 1.563 2.537 2.103 2.472.251-.03.581-1.39-.438-4.673" />
+      // QQ penguin in its brand colours: slate body, white belly, yellow beak + feet, red scarf, winking eye
+      <svg width="22" height="22" viewBox="96 60 320 360" aria-hidden="true">
+        {/* flippers */}
+        <ellipse cx="128" cy="292" rx="26" ry="58" transform="rotate(18 128 292)" fill="#36474F" />
+        <ellipse cx="384" cy="292" rx="26" ry="58" transform="rotate(-18 384 292)" fill="#36474F" />
+        {/* head + body */}
+        <path fill="#36474F" d="M256 72c68 0 118 50 120 122 2 20 6 44 10 70 10 66-40 136-130 136s-140-70-130-136c4-26 8-50 10-70 2-72 52-122 120-122z" />
+        {/* belly */}
+        <ellipse cx="256" cy="322" rx="90" ry="82" fill="#ECEFF1" />
+        {/* feet */}
+        <ellipse cx="190" cy="396" rx="54" ry="24" fill="#FFC107" />
+        <ellipse cx="322" cy="396" rx="54" ry="24" fill="#FFC107" />
+        {/* scarf band + hanging end */}
+        <path fill="#FF3D00" d="M122 214c86 44 182 44 268-6l-6 36c-86 50-178 50-262 8z" />
+        <path fill="#FF3D00" d="M156 244l52 6-2 78c-18 8-36 8-52 0z" />
+        {/* beak */}
+        <ellipse cx="256" cy="204" rx="74" ry="20" fill="#FFC107" />
+        {/* eyes: open left, winking right */}
+        <ellipse cx="228" cy="146" rx="25" ry="34" fill="#FFFFFF" />
+        <ellipse cx="232" cy="150" rx="11" ry="16" fill="#36474F" />
+        <ellipse cx="286" cy="146" rx="25" ry="34" fill="#FFFFFF" />
+        <path d="M271 154q15-16 30 0" fill="none" stroke="#36474F" strokeWidth="9" strokeLinecap="round" />
       </svg>
     ),
   },
