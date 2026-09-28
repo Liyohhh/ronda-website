@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { TRAILS } from '../data/trails'
 import TrailCard from './TrailCard'
@@ -44,9 +43,6 @@ function TrailsSection() {
         <div className="flex items-center gap-2 flex-shrink-0">
           {arrow(-1)}
           {arrow(1)}
-          <Link to="/trails" className="ms-2 text-sm font-semibold text-[#002472] hover:underline whitespace-nowrap">
-            {t('viewAll')}
-          </Link>
         </div>
       </div>
 
