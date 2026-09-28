@@ -1,6 +1,8 @@
 import { Link, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import TrailCover from '../components/TrailCover'
+import PhotoCredit from '../components/PhotoCredit'
+import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import LineBadge from '../components/LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
 import {
@@ -69,6 +71,11 @@ function TrailDetail() {
             <p className="mt-1 text-white/85">{t(trailDescKey(trail))}</p>
           </div>
         </div>
+        {TRAIL_PHOTOS[trail.slug] && (
+          <p className="absolute top-2 end-3 text-[10px] text-white/70">
+            {t('photoLabel')}: <PhotoCredit photo={TRAIL_PHOTOS[trail.slug]} />
+          </p>
+        )}
       </section>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">

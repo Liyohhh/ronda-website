@@ -34,7 +34,6 @@ export type Trail = {
   slug: string
   key: string // translation key stem: trail_<key>_name, trail_<key>_desc
   category: TrailCategory
-  cover: string | null // /Image/trails/<slug>.webp once photos exist
   stops: TrailStop[]
 }
 
@@ -137,40 +136,40 @@ export const PLACES: Record<string, Place> = Object.fromEntries(PLACE_LIST.map((
 
 // ---------- trails ----------
 export const TRAILS: Trail[] = [
-  { slug: 'shopping', key: 'shopping', category: 'shopping', cover: null,
+  { slug: 'shopping', key: 'shopping', category: 'shopping',
     stops: [{ placeId: 'pavilion' }, { placeId: 'lot10' }, { placeId: 'suriaKlcc' }, { placeId: 'midValley' }, { placeId: 'sunwayPyramid' }] },
-  { slug: 'heritage', key: 'heritage', category: 'culture', cover: null,
+  { slug: 'heritage', key: 'heritage', category: 'culture',
     stops: [{ placeId: 'sultanAbdulSamad' }, { placeId: 'merdekaSquare' }, { placeId: 'centralMarket' }, { placeId: 'oldKlStation' }, { placeId: 'stadiumMerdeka' }] },
-  { slug: 'museum', key: 'museum', category: 'culture', cover: null,
+  { slug: 'museum', key: 'museum', category: 'culture',
     stops: [{ placeId: 'muziumNegara' }, { placeId: 'iamm' }, { placeId: 'textileMuseum' }, { placeId: 'nationalArtGallery' }, { placeId: 'petrosains' }] },
-  { slug: 'nature', key: 'nature', category: 'nature', cover: null,
+  { slug: 'nature', key: 'nature', category: 'nature',
     stops: [{ placeId: 'klForestEcoPark' }, { placeId: 'perdanaBotanical' }, { placeId: 'batuCaves' }, { placeId: 'frim' }] },
-  { slug: 'food-hawker', key: 'food', category: 'food', cover: null,
+  { slug: 'food-hawker', key: 'food', category: 'food',
     stops: [{ placeId: 'jalanAlor' }, { placeId: 'petalingStreet' }, { placeId: 'bangsar' }] },
-  { slug: 'street-art', key: 'streetArt', category: 'culture', cover: null,
+  { slug: 'street-art', key: 'streetArt', category: 'culture',
     stops: [{ placeId: 'kwaiChaiHong' }, { placeId: 'riverOfLife' }] },
-  { slug: 'night-market', key: 'nightMarket', category: 'food', cover: null,
+  { slug: 'night-market', key: 'nightMarket', category: 'food',
     stops: [
       { placeId: 'ss2Market', day: 'mon' },
       { placeId: 'connaughtMarket', day: 'wed' },
       { placeId: 'lorongTarMarket', day: 'sat' },
       { placeId: 'bangsarMarket', day: 'sun' },
     ] },
-  { slug: 'cultural-harmony', key: 'harmony', category: 'culture', cover: null,
+  { slug: 'cultural-harmony', key: 'harmony', category: 'culture',
     stops: [{ placeId: 'masjidJamek' }, { placeId: 'stMarys' }, { placeId: 'sriMahamariamman' }, { placeId: 'guanDi' }] },
-  { slug: 'cafe-hopping', key: 'cafe', category: 'food', cover: null,
+  { slug: 'cafe-hopping', key: 'cafe', category: 'food',
     stops: [{ placeId: 'chinatownCafes' }, { placeId: 'bangsarCafes' }, { placeId: 'section17Cafes' }, { placeId: 'ss15Cafes' }] },
-  { slug: 'hidden-gems', key: 'hiddenGems', category: 'explore', cover: null,
+  { slug: 'hidden-gems', key: 'hiddenGems', category: 'explore',
     stops: [{ placeId: 'kampungBaru' }, { placeId: 'chowKitMarket' }, { placeId: 'theanHou' }, { placeId: 'brickfields' }] },
-  { slug: 'instagrammable', key: 'insta', category: 'explore', cover: null,
+  { slug: 'instagrammable', key: 'insta', category: 'explore',
     stops: [{ placeId: 'twinTowers' }, { placeId: 'batuCavesSteps' }, { placeId: 'salomaLink' }, { placeId: 'merdekaSquare' }, { placeId: 'kwaiChaiHong' }] },
-  { slug: 'student-budget', key: 'budget', category: 'explore', cover: null,
+  { slug: 'student-budget', key: 'budget', category: 'explore',
     stops: [{ placeId: 'klccPark' }, { placeId: 'centralMarket' }, { placeId: 'batuCaves' }, { placeId: 'muziumNegara', todo: 'Confirm entry fee' }, { placeId: 'klForestEcoPark', todo: 'Confirm whether the canopy walk is free' }] },
-  { slug: 'wellness-park', key: 'wellness', category: 'nature', cover: null,
+  { slug: 'wellness-park', key: 'wellness', category: 'nature',
     stops: [{ placeId: 'klccPark' }, { placeId: 'perdanaBotanical' }, { placeId: 'tamanTugu' }] },
-  { slug: 'festive', key: 'festive', category: 'culture', cover: null,
+  { slug: 'festive', key: 'festive', category: 'culture',
     stops: [{ placeId: 'kampungBaruRaya' }, { placeId: 'chinatownCny' }, { placeId: 'brickfieldsDeepavali' }] },
-  { slug: 'rooftop-dining', key: 'rooftop', category: 'food', cover: null,
+  { slug: 'rooftop-dining', key: 'rooftop', category: 'food',
     stops: [{ placeId: 'heliLounge' }, { placeId: 'marinis' }, { placeId: 'skybarTraders' }, { placeId: 'klTowerRevolving' }] },
 ]
 

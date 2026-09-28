@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import LineBadge from '../components/LineBadge'
 import TrailCover from '../components/TrailCover'
+import PhotoCredit from '../components/PhotoCredit'
+import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import { busLine } from '../data/lines'
@@ -200,6 +202,19 @@ function About() {
               </details>
             ))}
           </div>
+        </section>
+
+        {/* Credits for the trail photos (CC BY / BY-SA need them) */}
+        <section aria-labelledby="about-credits" className="pt-14 pb-4 max-w-3xl">
+          <h2 id="about-credits" className="text-lg font-semibold text-[#002472]">{t('photoCredits')}</h2>
+          <p className="mt-1 text-sm text-gray-500">{t('photoCreditsIntro')}</p>
+          <ul className="mt-3 grid gap-1 sm:grid-cols-2 text-xs text-gray-600">
+            {TRAILS.filter((tr) => TRAIL_PHOTOS[tr.slug]).map((tr) => (
+              <li key={tr.slug}>
+                {t(trailNameKey(tr))}: <PhotoCredit photo={TRAIL_PHOTOS[tr.slug]} />
+              </li>
+            ))}
+          </ul>
         </section>
       </div>
     </SiteLayout>
