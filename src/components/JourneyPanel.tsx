@@ -5,6 +5,7 @@ import LineBadge from './LineBadge'
 import { busLine, lineForRoute, type Line } from '../data/lines'
 import { formatDuration } from '../i18n/duration'
 import { malaysiaNow } from '../data/time'
+import DepartPicker from './DepartPicker'
 
 export type Place = { name: string; lat: number; lon: number }
 
@@ -293,50 +294,22 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, residen
             </button>
           </div>
           {editing && (
-            <form
-              className="mt-2 flex flex-wrap items-end gap-2"
-              onSubmit={(e) => {
-                e.preventDefault()
+            <DepartPicker
+              value={draft}
+              onChange={setDraft}
+              onSubmit={() => {
                 setEditing(false)
                 onDepartChange({ date: draft.date, time: draft.time })
               }}
-            >
-              <label className="text-xs text-white/70">
-                {t('departDate')}
-                <input
-                  type="date"
-                  required
-                  value={draft.date}
-                  onChange={(e) => setDraft({ ...draft, date: e.target.value })}
-                  className="mt-0.5 block rounded-lg bg-white/10 px-2 py-1.5 text-sm text-white [color-scheme:dark] outline-none focus:ring-2 focus:ring-white/60"
-                />
-              </label>
-              <label className="text-xs text-white/70">
-                {t('departTime')}
-                <input
-                  type="time"
-                  required
-                  value={draft.time}
-                  onChange={(e) => setDraft({ ...draft, time: e.target.value })}
-                  className="mt-0.5 block rounded-lg bg-white/10 px-2 py-1.5 text-sm text-white [color-scheme:dark] outline-none focus:ring-2 focus:ring-white/60"
-                />
-              </label>
-              <button type="submit" className="rounded-full bg-white text-[#002472] px-4 py-1.5 text-sm font-semibold hover:bg-gray-100">
-                {t('showRoutes')}
-              </button>
-              {departAt && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditing(false)
-                    onDepartChange(null)
-                  }}
-                  className="rounded-full px-3 py-1.5 text-sm font-semibold text-white/85 hover:text-white"
-                >
-                  {t('leaveNowBtn')}
-                </button>
-              )}
-            </form>
+              onLeaveNow={
+                departAt
+                  ? () => {
+                      setEditing(false)
+                      onDepartChange(null)
+                    }
+                  : undefined
+              }
+            />
           )}
 
           {/* Fares for Malaysians or tourists (some buses are free for Malaysians only) */}
