@@ -53,11 +53,71 @@ export function lineForRoute(feedId: string, routeId: string): Line | undefined 
   return LINES.find((l) => l.gtfs.feedId === feedId && l.gtfs.routeIds.includes(routeId))
 }
 
-// Lines matching a search (name, code, mode or id words); all lines for an empty query
+// ---------- line search (fuzzy: tolerates typos and partial words) ----------
+
+// Other names riders use for a line
+const LINE_ALIASES: Record<string, string[]> = {
+  'lrt-kelana-jaya': ['klj', 'kj', 'gombak putra heights'],
+  'lrt-ampang': ['agl'],
+  'lrt-sri-petaling': ['spl', 'puchong'],
+  'lrt-shah-alam': ['lrt3', 'klang bandar utama johan setia'],
+  'mrt-kajang': ['sbk', 'sungai buloh kajang', 'mrt1'],
+  'mrt-putrajaya': ['ssp', 'sungai buloh serdang putrajaya', 'mrt2'],
+  monorail: ['monorel', 'mono', 'mrl'],
+  'brt-sunway': ['sunway bus rapid'],
+  'erl-klia-ekspres': ['airport express klia2 lapangan terbang'],
+  'erl-klia-transit': ['airport putrajaya cyberjaya lapangan terbang'],
+  'ktm-port-klang': ['komuter commuter pelabuhan klang tanjung malim'],
+  'ktm-seremban': ['komuter commuter batu caves tampin'],
+  'ktm-shuttle-selatan': ['komuter johor paloh'],
+  'ktm-padang-besar': ['komuter utara butterworth'],
+  'ktm-ipoh': ['komuter utara butterworth'],
+  'ktm-ets': ['electric train service intercity'],
+  'ktm-intercity': ['ekspres rakyat timuran tebrau shuttle'],
+}
+
+const words = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, ' ').trim().split(' ').filter(Boolean)
+
+// Damerau-Levenshtein distance (a swap of two letters counts as one typo)
+function editDistance(a: string, b: string) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)])
+  for (let j = 1; j <= b.length; j++) d[0][j] = j
+  for (let i = 1; i <= a.length; i++)
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost)
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1)
+    }
+  return d[a.length][b.length]
+}
+
+// typos allowed for a typed word of this length
+const allowed = (n: number) => (n <= 3 ? 0 : n <= 6 ? 1 : 2)
+
+// how well one typed word fits a word of the line (0 = exact / prefix); Infinity = no match
+function wordScore(typed: string, word: string) {
+  if (word.startsWith(typed)) return 0
+  const full = editDistance(typed, word)
+  const prefix = typed.length < word.length ? editDistance(typed, word.slice(0, typed.length)) : full
+  const best = Math.min(full, prefix + 0.5)
+  return best <= allowed(typed.length) + 0.5 ? best : Infinity
+}
+
+// Lines matching a search, best first; every typed word must fit some word of the line (typos allowed)
 export function matchLines(query: string): Line[] {
-  const q = query.trim().toLowerCase()
-  if (!q) return LINES
-  return LINES.filter((l) => [l.name, l.code ?? '', l.mode, l.id.replace(/-/g, ' ')].some((s) => s.toLowerCase().includes(q)))
+  const typed = words(query)
+  if (!typed.length) return []
+  const scored: { line: Line; score: number }[] = []
+  for (const l of LINES) {
+    const vocab = words([l.name, l.code ?? '', l.mode, l.id, ...(LINE_ALIASES[l.id] ?? [])].join(' '))
+    let score = 0
+    for (const t of typed) {
+      score += Math.min(...vocab.map((w) => wordScore(t, w)))
+      if (score === Infinity) break
+    }
+    if (score !== Infinity) scored.push({ line: l, score })
+  }
+  return scored.sort((a, b) => a.score - b.score || LINES.indexOf(a.line) - LINES.indexOf(b.line)).map((s) => s.line)
 }
 
 // Buses aren't in LINES (hundreds of routes). Their badge uses the route's own GTFS colour when the

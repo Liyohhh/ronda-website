@@ -1,27 +1,40 @@
-import { Link } from 'react-router-dom'
 import LineBadge from './LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
-import { matchLines } from '../data/lines'
+import { matchLines, type Line } from '../data/lines'
 
-// Lines tab on Home: every line with its badge, filtered by what's typed (name, code or mode)
-function LinePicker({ query }: { query: string }) {
+// Lines tab dropdown: lines matching what's typed (typos allowed), best match first
+type Props = { id: string; query: string; highlighted: number; onPick: (line: Line) => void; onHover: (i: number) => void }
+
+function LinePicker({ id, query, highlighted, onPick, onHover }: Props) {
   const { t } = useLanguage()
   const lines = matchLines(query)
-  if (!lines.length) return <p className="mt-4 text-center text-sm text-gray-500">{t('lineNoMatch').replace('{q}', query.trim())}</p>
   return (
-    <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 max-h-80 overflow-y-auto pe-1" aria-label={t('lines')}>
-      {lines.map((l) => (
-        <li key={l.id}>
-          <Link to={`/lines/${l.id}`} className="flex items-center gap-3 rounded-2xl border border-gray-200 px-3 py-2 hover:border-[#002472]/40 hover:bg-gray-50 transition">
-            <LineBadge line={l} size={32} decorative />
-            <span className="min-w-0">
-              <span className="block text-sm font-semibold text-gray-900 truncate">{l.name}</span>
-              {l.code && <span className="block text-xs text-gray-500">{l.code}</span>}
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <div className="absolute left-0 right-0 top-full mt-2 z-30 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+      {lines.length === 0 ? (
+        <p className="px-5 py-4 text-sm text-gray-500">{t('lineNoMatch').replace('{q}', query.trim())}</p>
+      ) : (
+        <ul id={id} role="listbox" aria-label={t('lines')} className="max-h-80 overflow-y-auto py-1">
+          {lines.map((l, i) => (
+            <li
+              key={l.id}
+              id={`${id}-${i}`}
+              role="option"
+              aria-selected={i === highlighted}
+              onMouseDown={(e) => {
+                e.preventDefault() // keep focus in the input until the pick is handled
+                onPick(l)
+              }}
+              onMouseEnter={() => onHover(i)}
+              className={`flex items-center gap-3 px-5 py-2 cursor-pointer ${i === highlighted ? 'bg-gray-100' : ''}`}
+            >
+              <LineBadge line={l} size={24} decorative />
+              <span className="text-sm text-gray-900">{l.name}</span>
+              {l.code && <span className="ms-auto text-xs text-gray-400">{l.code}</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   )
 }
 

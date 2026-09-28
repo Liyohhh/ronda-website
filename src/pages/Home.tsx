@@ -1,7 +1,8 @@
 import { useEffect, useState, type KeyboardEvent } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import LinePicker from '../components/LinePicker'
-import { matchLines } from '../data/lines'
+import LinePanel from '../components/LinePanel'
+import { matchLines, type Line } from '../data/lines'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
 import TrailsSection from '../components/TrailsSection'
@@ -20,7 +21,6 @@ function Home() {
   const { t } = useLanguage()
   // /?tab=lines opens the Lines tab (the "All lines" link on line pages)
   const [tab, setTab] = useState<'directions' | 'lines'>(() => (new URLSearchParams(window.location.search).get('tab') === 'lines' ? 'lines' : 'directions'))
-  const navigate = useNavigate()
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
   const [startStop, setStartStop] = useState<Pick | null>(null)
@@ -74,6 +74,10 @@ function Home() {
     }
   }, [toParam, params, setParams])
   const [line, setLine] = useState('')
+  // Lines tab: dropdown open, keyboard-highlighted row, and the line shown in the side panel
+  const [lineListOpen, setLineListOpen] = useState(false)
+  const [lineHi, setLineHi] = useState(-1)
+  const [pickedLine, setPickedLine] = useState<Line | null>(null)
   const [activeField, setActiveField] = useState<'start' | 'end' | null>(null)
   // keyboard-highlighted suggestion, tied to the query it was chosen for
   const [highlight, setHighlight] = useState<{ query: string; index: number }>({ query: '', index: -1 })
@@ -145,9 +149,22 @@ function Home() {
     handleSearch(resident, d)
   }
 
+  const pickLine = (l: Line) => {
+    setPickedLine(l)
+    setLineListOpen(false)
+    setLineHi(-1)
+  }
   const openFirstLine = () => {
-    const first = matchLines(line)[0]
-    if (first) navigate(`/lines/${first.id}`)
+    const found = matchLines(line)
+    const l = found[lineHi >= 0 && lineHi < found.length ? lineHi : 0]
+    if (l) pickLine(l)
+  }
+  const onLineKey = (e: React.KeyboardEvent) => {
+    const n = matchLines(line).length
+    if (e.key === 'ArrowDown') { e.preventDefault(); setLineListOpen(true); setLineHi((h) => Math.min(n - 1, h + 1)) }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setLineHi((h) => Math.max(0, h - 1)) }
+    else if (e.key === 'Enter') openFirstLine()
+    else if (e.key === 'Escape') setLineListOpen(false)
   }
 
   const handleSearch = async (res: Resident = resident, when: DepartAt = departAt) => {
@@ -346,8 +363,20 @@ function Home() {
                         <input
                           type="text"
                           value={line}
-                          onChange={(e) => setLine(e.target.value)}
-                          onKeyDown={(e) => e.key === 'Enter' && openFirstLine()}
+                          onChange={(e) => {
+                            setLine(e.target.value)
+                            setLineListOpen(true)
+                            setLineHi(-1)
+                          }}
+                          onFocus={() => setLineListOpen(true)}
+                          onClick={() => setLineListOpen(true)}
+                          onBlur={() => setLineListOpen(false)}
+                          onKeyDown={onLineKey}
+                          role="combobox"
+                          aria-expanded={lineListOpen}
+                          aria-controls="line-list"
+                          aria-activedescendant={lineListOpen && lineHi >= 0 ? `line-list-${lineHi}` : undefined}
+                          autoComplete="off"
                           aria-label={t('line')}
                           placeholder={t('linePh')}
                           className="w-full text-base outline-none"
@@ -387,7 +416,9 @@ function Home() {
                 )}
 
                 {/* Lines tab: every line, filtered as you type */}
-                {tab === 'lines' && <LinePicker query={line} />}
+                {tab === 'lines' && lineListOpen && line.trim() !== '' && (
+                  <LinePicker id="line-list" query={line} highlighted={lineHi} onHover={setLineHi} onPick={pickLine} />
+                )}
 
                 {/* Form error (stop not picked from the list) */}
                 {formError && (
@@ -405,6 +436,21 @@ function Home() {
       <TrailsSection />
       <FeatureGrid />
       <ReviewsSection />
+
+      {/* Line stations in the right-side panel; "Plan a trip here" fills the End box */}
+      {pickedLine && (
+        <LinePanel
+          line={pickedLine}
+          onClose={() => setPickedLine(null)}
+          onPlan={(st) => {
+            setPickedLine(null)
+            setTab('directions')
+            setEnd(st.name)
+            setEndStop({ name: st.name, lat: st.lat, lon: st.lon })
+            setTimeout(() => document.getElementById('start-input')?.focus(), 0)
+          }}
+        />
+      )}
 
       {/* Journey results in the right-side panel */}
       <JourneyPanel
