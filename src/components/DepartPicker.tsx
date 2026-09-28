@@ -1,122 +1,197 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
-import { malaysiaNow } from '../data/time'
+import { malaysiaNow, to12h, from12h } from '../data/time'
 
-// Departure picker in RONDA's own style (the browser's date / time pickers follow the OS theme):
-// day chips for the next week and a time card with hour / minute columns. Times are Malaysia time, 24h.
-type Value = { date: string; time: string }
-type Props = { value: Value; onChange: (v: Value) => void; onSubmit: () => void; onLeaveNow?: () => void }
+// Departure picker in RONDA's own style (the browser's pickers follow the OS theme):
+// a date pill with a calendar card and a time pill with an hour / minute stepper and an AM / PM switch.
+// Changes apply by themselves shortly after the rider stops picking (no extra button).
+type Value = { date: string; time: string } // YYYY-MM-DD, HH:MM (24h, Malaysia time)
+type Props = { value: Value; onChange: (v: Value) => void; onLeaveNow?: () => void }
 
-const HOURS = Array.from({ length: 24 }, (_, h) => String(h).padStart(2, '0'))
-const MINUTES = Array.from({ length: 12 }, (_, m) => String(m * 5).padStart(2, '0'))
+const MAX_DAYS_AHEAD = 90
 
-// the next 7 days in Malaysia, as YYYY-MM-DD
-function nextDays() {
-  const today = malaysiaNow().date
-  return Array.from({ length: 7 }, (_, i) => new Date(Date.parse(today + 'T00:00:00Z') + i * 86400000).toISOString().slice(0, 10))
-}
+const ymd = (d: Date) => d.toISOString().slice(0, 10)
+const addDays = (date: string, n: number) => ymd(new Date(Date.parse(date + 'T00:00:00Z') + n * 86400000))
 
-function DepartPicker({ value, onChange, onSubmit, onLeaveNow }: Props) {
-  const { t, lang } = useLanguage()
-  const [timeOpen, setTimeOpen] = useState(false)
+// a pill button that opens a white card underneath; closes on outside click / Escape
+function Popover({ label, icon, children, open, setOpen }: { label: string; icon: ReactNode; children: ReactNode; open: boolean; setOpen: (o: boolean) => void }) {
   const box = useRef<HTMLDivElement>(null)
-  const days = nextDays()
-  const [hh, mm] = value.time.split(':')
-
-  // close the time card on outside click / Escape
   useEffect(() => {
-    if (!timeOpen) return
-    const onDown = (e: MouseEvent) => !box.current?.contains(e.target as Node) && setTimeOpen(false)
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setTimeOpen(false)
+    if (!open) return
+    const onDown = (e: MouseEvent) => !box.current?.contains(e.target as Node) && setOpen(false)
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
     document.addEventListener('mousedown', onDown)
     document.addEventListener('keydown', onKey)
     return () => {
       document.removeEventListener('mousedown', onDown)
       document.removeEventListener('keydown', onKey)
     }
-  }, [timeOpen])
-
-  // scroll the selected hour / minute into view when the card opens
+  }, [open, setOpen])
   useEffect(() => {
-    if (timeOpen) box.current?.querySelectorAll('[aria-selected="true"]').forEach((el) => el.scrollIntoView({ block: 'center' }))
-  }, [timeOpen])
+    if (open) box.current?.querySelectorAll('[data-scroll-to="true"]').forEach((el) => el.scrollIntoView({ block: 'center' }))
+  }, [open])
+  return (
+    <div className="relative" ref={box}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 px-4 py-1.5 text-sm font-semibold text-white tabular-nums"
+      >
+        {icon}
+        {label}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={open ? 'rotate-180' : ''}>
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+      {open && <div className="absolute start-0 top-full mt-2 z-20 rounded-2xl bg-white shadow-xl border border-gray-200 p-3">{children}</div>}
+    </div>
+  )
+}
 
-  const dayLabel = (d: string, i: number) =>
-    i === 0 ? t('todayLabel') : i === 1 ? t('tomorrow') : new Date(d + 'T00:00:00Z').toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
+// up / down arrow for the time stepper
+function Step({ dir, onClick, label }: { dir: 1 | -1; onClick: () => void; label: string }) {
+  return (
+    <button type="button" onClick={onClick} aria-label={label} className="w-10 h-7 rounded-lg text-gray-400 hover:text-[#002472] hover:bg-gray-100 flex items-center justify-center">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d={dir === 1 ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6'} />
+      </svg>
+    </button>
+  )
+}
 
-  const chip = (active: boolean) =>
-    `whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold transition-colors ${active ? 'bg-white text-[#002472]' : 'bg-white/10 text-white/85 hover:bg-white/20'}`
+function DepartPicker({ value, onChange, onLeaveNow }: Props) {
+  const { t, lang } = useLanguage()
+  const today = malaysiaNow().date
+  const [draft, setDraft] = useState(value)
+  const [dateOpen, setDateOpen] = useState(false)
+  const [timeOpen, setTimeOpen] = useState(false)
+  const [month, setMonth] = useState(draft.date.slice(0, 7)) // YYYY-MM shown in the calendar
+  const timer = useRef<number | undefined>(undefined)
 
-  const column = (items: string[], selected: string, pick: (v: string) => void, label: string) => (
-    <ul role="listbox" aria-label={label} className="max-h-44 overflow-y-auto py-1 [scrollbar-width:thin]">
-      {items.map((v) => (
-        <li key={v}>
-          <button
-            type="button"
-            role="option"
-            aria-selected={v === selected}
-            onClick={() => pick(v)}
-            className={`w-full rounded-lg px-3 py-1.5 text-sm tabular-nums ${v === selected ? 'bg-[#002472] text-white font-semibold' : 'text-gray-800 hover:bg-gray-100'}`}
-          >
-            {v}
-          </button>
-        </li>
-      ))}
-    </ul>
+  // apply a change after a short pause, so picking hour, minute and AM/PM runs one search
+  const update = (v: Value, delay = 700) => {
+    setDraft(v)
+    window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => onChange(v), delay)
+  }
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  const t12 = to12h(draft.time)
+  // move the time by n minutes (wraps round midnight); minutes snap to 5
+  const stepTime = (n: number) => {
+    const [H, M] = draft.time.split(':').map(Number)
+    const mins = (((H * 60 + Math.round(M / 5) * 5 + n) % 1440) + 1440) % 1440
+    update({ ...draft, time: `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}` })
+  }
+  const dateLabel = draft.date === today
+    ? t('todayLabel')
+    : draft.date === addDays(today, 1)
+      ? t('tomorrow')
+      : new Date(draft.date + 'T00:00:00Z').toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
+
+  // calendar grid for `month`, weeks starting Monday
+  const first = new Date(month + '-01T00:00:00Z')
+  const lead = (first.getUTCDay() + 6) % 7
+  const daysIn = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate()
+  const cells: (string | null)[] = [...Array(lead).fill(null), ...Array.from({ length: daysIn }, (_, i) => `${month}-${String(i + 1).padStart(2, '0')}`)]
+  const last = addDays(today, MAX_DAYS_AHEAD)
+  const shiftMonth = (n: number) => {
+    const d = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + n, 1))
+    setMonth(ymd(d).slice(0, 7))
+  }
+  const weekdays = Array.from({ length: 7 }, (_, i) => new Date(Date.UTC(2024, 0, 1 + i)).toLocaleDateString(lang, { weekday: 'narrow', timeZone: 'UTC' }))
+
+  const calIcon = (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M3 10h18M8 3v4M16 3v4" />
+    </svg>
+  )
+  const clockIcon = (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </svg>
   )
 
   return (
-    <form
-      className="mt-3 space-y-3"
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit()
-      }}
-    >
-      <div className="flex gap-1.5 overflow-x-auto [scrollbar-width:none] -mx-1 px-1" role="group" aria-label={t('departDate')}>
-        {days.map((d, i) => (
-          <button key={d} type="button" aria-pressed={d === value.date} onClick={() => onChange({ ...value, date: d })} className={chip(d === value.date)}>
-            <span className="inline-block first-letter:uppercase">{dayLabel(d, i)}</span>
-          </button>
-        ))}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative" ref={box}>
-          <button
-            type="button"
-            onClick={() => setTimeOpen((o) => !o)}
-            aria-expanded={timeOpen}
-            aria-label={`${t('departTime')}: ${value.time}`}
-            className="inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 px-4 py-1.5 text-sm font-semibold text-white tabular-nums"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7v5l3 2" />
-            </svg>
-            {value.time}
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={timeOpen ? 'rotate-180' : ''}>
-              <path d="M6 9l6 6 6-6" />
-            </svg>
-          </button>
-          {timeOpen && (
-            <div className="absolute start-0 top-full mt-2 z-20 w-44 rounded-2xl bg-white shadow-xl border border-gray-200 p-2 grid grid-cols-2 gap-1">
-              {column(HOURS, hh, (h) => onChange({ ...value, time: `${h}:${mm}` }), t('hourLabel'))}
-              {column(MINUTES.includes(mm) ? MINUTES : [...MINUTES, mm].sort(), mm, (m) => onChange({ ...value, time: `${hh}:${m}` }), t('minuteLabel'))}
-            </div>
-          )}
+    <div className="mt-3 flex flex-wrap items-center gap-2">
+      <Popover label={dateLabel} icon={calIcon} open={dateOpen} setOpen={(o) => { setDateOpen(o); if (o) setMonth(draft.date.slice(0, 7)) }}>
+        <div className="w-64" role="group" aria-label={t('departDate')}>
+          <div className="flex items-center justify-between mb-2">
+            <button type="button" onClick={() => shiftMonth(-1)} disabled={month <= today.slice(0, 7)} aria-label={t('scrollPrev')} className="w-8 h-8 rounded-full text-[#002472] hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180"><path d="M15 6l-6 6 6 6" /></svg>
+            </button>
+            <span className="text-sm font-semibold text-gray-900">{first.toLocaleDateString(lang, { month: 'long', year: 'numeric', timeZone: 'UTC' })}</span>
+            <button type="button" onClick={() => shiftMonth(1)} disabled={month >= last.slice(0, 7)} aria-label={t('scrollNext')} className="w-8 h-8 rounded-full text-[#002472] hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180"><path d="M9 6l6 6-6 6" /></svg>
+            </button>
+          </div>
+          <div className="grid grid-cols-7 gap-0.5 text-center">
+            {weekdays.map((w, i) => (
+              <span key={i} className="text-[11px] font-semibold text-gray-400 py-1">{w}</span>
+            ))}
+            {cells.map((d, i) =>
+              d === null ? (
+                <span key={`x${i}`} />
+              ) : (
+                <button
+                  key={d}
+                  type="button"
+                  disabled={d < today || d > last}
+                  aria-pressed={d === draft.date}
+                  onClick={() => {
+                    setDateOpen(false)
+                    update({ ...draft, date: d }, 0)
+                  }}
+                  className={`h-8 rounded-full text-sm tabular-nums disabled:text-gray-300 disabled:hover:bg-transparent ${
+                    d === draft.date ? 'bg-[#002472] text-white font-semibold' : d === today ? 'text-[#002472] font-semibold ring-1 ring-[#002472]/30 hover:bg-gray-100' : 'text-gray-800 hover:bg-gray-100'
+                  }`}
+                >
+                  {Number(d.slice(8))}
+                </button>
+              ),
+            )}
+          </div>
         </div>
+      </Popover>
 
-        <button type="submit" className="rounded-full bg-white text-[#002472] px-4 py-1.5 text-sm font-semibold hover:bg-gray-100">
-          {t('showRoutes')}
+      <Popover label={`${t12.h}:${t12.m} ${t12.ap}`} icon={clockIcon} open={timeOpen} setOpen={setTimeOpen}>
+        <div className="flex items-center gap-3" role="group" aria-label={t('departTime')}>
+          <div className="flex flex-col items-center">
+            <Step dir={1} onClick={() => stepTime(60)} label={t('hourLabel') + ' +'} />
+            <span className="text-2xl font-semibold text-gray-900 tabular-nums w-10 text-center">{t12.h}</span>
+            <Step dir={-1} onClick={() => stepTime(-60)} label={t('hourLabel') + ' −'} />
+          </div>
+          <span className="text-2xl font-semibold text-gray-300 -mt-0.5">:</span>
+          <div className="flex flex-col items-center">
+            <Step dir={1} onClick={() => stepTime(5)} label={t('minuteLabel') + ' +'} />
+            <span className="text-2xl font-semibold text-gray-900 tabular-nums w-10 text-center">{t12.m}</span>
+            <Step dir={-1} onClick={() => stepTime(-5)} label={t('minuteLabel') + ' −'} />
+          </div>
+          <div className="ms-1 flex flex-col rounded-xl bg-gray-100 p-0.5">
+            {(['AM', 'PM'] as const).map((ap) => (
+              <button
+                key={ap}
+                type="button"
+                aria-pressed={t12.ap === ap}
+                onClick={() => t12.ap !== ap && update({ ...draft, time: from12h(t12.h, t12.m, ap) })}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${t12.ap === ap ? 'bg-[#002472] text-white' : 'text-gray-500 hover:text-gray-800'}`}
+              >
+                {ap}
+              </button>
+            ))}
+          </div>
+        </div>
+      </Popover>
+
+      {onLeaveNow && (
+        <button type="button" onClick={onLeaveNow} className="rounded-full px-3 py-1.5 text-sm font-semibold text-white/85 hover:text-white">
+          {t('leaveNowBtn')}
         </button>
-        {onLeaveNow && (
-          <button type="button" onClick={onLeaveNow} className="rounded-full px-3 py-1.5 text-sm font-semibold text-white/85 hover:text-white">
-            {t('leaveNowBtn')}
-          </button>
-        )}
-      </div>
-    </form>
+      )}
+    </div>
   )
 }
 

@@ -4,8 +4,9 @@ import type { TranslationKey } from '../i18n/translations'
 import LineBadge from './LineBadge'
 import { busLine, lineForRoute, type Line } from '../data/lines'
 import { formatDuration } from '../i18n/duration'
-import { malaysiaNow } from '../data/time'
+import { malaysiaNow, format12h } from '../data/time'
 import DepartPicker from './DepartPicker'
+import WalkIcon from './WalkIcon'
 
 export type Place = { name: string; lat: number; lon: number }
 
@@ -153,7 +154,12 @@ function RoutePreview({ option }: { option: TripOption }) {
   const { t } = useLanguage()
   const rides = option.legs.filter((l) => l.mode === 'transit')
   if (!rides.length) {
-    return <span className="text-sm text-gray-600">🚶 {formatDuration(option.duration_min, t)}</span>
+    return (
+      <span className="inline-flex items-center gap-1 text-sm text-gray-600">
+        <WalkIcon size={16} />
+        {formatDuration(option.duration_min, t)}
+      </span>
+    )
   }
   return (
     <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
@@ -186,12 +192,12 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, residen
     setDraft(departAt ?? malaysiaNow())
     setEditing(true)
   }
-  // "today, 18:30" / "Tue 30 Sep, 07:15"
+  // "today, 6:30 PM" / "Tue 30 Sep, 7:15 AM"
   const departLabel = (d: NonNullable<DepartAt>) => {
     const day = d.date === malaysiaNow().date
       ? t('todayLabel')
       : new Date(d.date + 'T00:00:00Z').toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
-    return `${day}, ${d.time}`
+    return `${day}, ${format12h(d.time)}`
   }
 
   useEffect(() => {
@@ -296,11 +302,7 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, residen
           {editing && (
             <DepartPicker
               value={draft}
-              onChange={setDraft}
-              onSubmit={() => {
-                setEditing(false)
-                onDepartChange({ date: draft.date, time: draft.time })
-              }}
+              onChange={(v) => onDepartChange(v)}
               onLeaveNow={
                 departAt
                   ? () => {
@@ -471,10 +473,7 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, residen
                         <LineBadge line={line} size={40} decorative />
                       ) : (
                         <span className="w-10 h-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center flex-shrink-0">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <circle cx="12" cy="4" r="2" />
-                            <path d="M12 6v6l-3 8M12 12l3 8M9 10l-4 2" />
-                          </svg>
+                          <WalkIcon size={22} />
                         </span>
                       )}
 
