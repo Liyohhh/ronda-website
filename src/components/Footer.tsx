@@ -11,7 +11,8 @@ function Footer() {
       title: t('footerTravel'),
       links: [
         { to: '/', label: t('directions') },
-        { to: '#download', label: t('getApp') },
+        { to: '/?tab=lines', label: t('lines') },
+        { to: '/trails', label: t('trails') },
       ],
     },
     {
@@ -33,7 +34,8 @@ function Footer() {
 
   return (
     <footer className="bg-[#002472] text-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+      {/* the app banner sits right above; a thin line separates the two */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 border-t border-white/10 grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <BrandLogo tone="light" size="md" />
           <p className="mt-4 text-sm text-white/70 max-w-xs">{t('footerTagline')}</p>

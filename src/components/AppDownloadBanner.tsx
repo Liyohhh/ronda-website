@@ -1,6 +1,5 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { useLanguage } from '../hooks/useLanguage'
-import BrandLogo from './BrandLogo'
 
 // "Get the RONDA app" band. SiteLayout always renders it just above the footer.
 // Store links come from env vars; until the app is published the badges show "Coming soon".
@@ -65,15 +64,13 @@ function AppDownloadBanner() {
 
         <div className="relative max-w-6xl mx-auto grid gap-8 md:grid-cols-[1.1fr_1fr_auto] items-center px-4 sm:px-6 pt-14 pb-12">
           <div>
-            <BrandLogo tone="light" size="md" wordmark={false} />
-            <h2 id="download-title" className="mt-4 text-2xl sm:text-3xl font-bold leading-tight">
+            <h2 id="download-title" className="text-2xl sm:text-3xl font-bold leading-tight">
               {t('appBannerTitle')}
             </h2>
             <p className="mt-2 text-white/75 max-w-md">{t('appBannerText')}</p>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">{t('downloadOn')}</h3>
             <div className="flex flex-col gap-3">
               <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
               <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
