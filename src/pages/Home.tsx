@@ -1,6 +1,8 @@
-import { useState, type KeyboardEvent } from 'react'
+import { useEffect, useState, type KeyboardEvent } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
+import TrailsSection from '../components/TrailsSection'
 import JourneyPanel, { type TripOption, type ServiceNotice } from '../components/JourneyPanel'
 import SuggestionList from '../components/SuggestionList'
 import { buildItems, type Pick } from '../data/suggestions'
@@ -16,6 +18,33 @@ function Home() {
   const [end, setEnd] = useState('')
   const [startStop, setStartStop] = useState<Pick | null>(null)
   const [endStop, setEndStop] = useState<Pick | null>(null)
+
+  // "Plan a trip here" (Trails): /?to=<exact stop name>&toName=<shown name> fills in the End box,
+  // then the params are cleared and the Start box gets focus
+  const [params, setParams] = useSearchParams()
+  const toParam = params.get('to')
+  useEffect(() => {
+    if (!toParam) return
+    const shown = params.get('toName') || toParam
+    let cancelled = false
+    supabase.rpc('search_stops', { query: toParam }).then(({ data, error }) => {
+      if (cancelled) return
+      setParams({}, { replace: true })
+      if (error || !data?.length) {
+        console.error('Could not find destination station:', toParam, error)
+        return
+      }
+      const stop = (data as { stop_name: string; stop_lat: number; stop_lon: number }[]).find((s) => s.stop_name === toParam) ?? data[0]
+      setEnd(shown)
+      setEndStop({ name: shown, lat: stop.stop_lat, lon: stop.stop_lon })
+      const startBox = document.getElementById('start-input')
+      startBox?.scrollIntoView({ block: 'center' })
+      startBox?.focus()
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [toParam, params, setParams])
   const [line, setLine] = useState('')
   const [activeField, setActiveField] = useState<'start' | 'end' | null>(null)
   // keyboard-highlighted suggestion, tied to the query it was chosen for
@@ -200,6 +229,7 @@ function Home() {
                             onBlur={() => setTimeout(() => setActiveField((f) => (f === 'start' ? null : f)), 150)}
                             onKeyDown={onFieldKey}
                             role="combobox"
+                            id="start-input"
                             aria-label={t('start')}
                             aria-autocomplete="list"
                             aria-expanded={listOpen && activeField === 'start'}
@@ -302,6 +332,9 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* Curated lifestyle routes */}
+      <TrailsSection />
 
       {/* Journey results in the right-side panel */}
       <JourneyPanel

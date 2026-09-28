@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { SERVICE_OPTIONS, type ServiceOption } from '../data/serviceOptions'
 
@@ -46,6 +47,20 @@ function ServiceNav({ className = '' }: { className?: string }) {
             </button>
           </li>
         ))}
+        {/* Trails: a plain page link, no dropdown */}
+        <li className="flex">
+          <NavLink
+            to="/trails"
+            onMouseEnter={scheduleClose}
+            className={({ isActive }) =>
+              `py-3 border-b-2 font-medium transition-colors flex items-center ${
+                isActive ? 'border-[#002472]' : 'border-transparent hover:border-[#002472]/40'
+              }`
+            }
+          >
+            {t('trails')}
+          </NavLink>
+        </li>
       </ul>
 
       {/* Dropdown panel */}
