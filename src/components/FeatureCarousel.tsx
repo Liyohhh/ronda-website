@@ -150,7 +150,7 @@ function FeatureCarousel() {
       ref={rootRef}
       aria-roledescription="carousel"
       aria-labelledby="slides-title"
-      className="max-w-6xl mx-auto px-4 sm:px-6 pt-14"
+      className="max-w-6xl mx-auto px-4 sm:px-6 pt-10"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -160,11 +160,11 @@ function FeatureCarousel() {
         if (e.key === 'ArrowLeft') go(index + (rtl ? 1 : -1))
       }}
     >
-      <h2 id="slides-title" className="text-2xl md:text-3xl font-bold text-gray-900 text-center">
+      <h2 id="slides-title" className="text-2xl md:text-3xl font-bold text-gray-900">
         {t('slidesTitle')}
       </h2>
 
-      <div className="relative mt-8">
+      <div className="relative mt-4">
         {arrow(-1)}
         {arrow(1)}
         <div className="overflow-hidden rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-[#002472]/[0.04] shadow-sm">
@@ -181,7 +181,7 @@ function FeatureCarousel() {
                   aria-roledescription="slide"
                   aria-label={`${i + 1} / ${n}`}
                   aria-hidden={i !== index}
-                  className="w-full flex-shrink-0 grid md:grid-cols-2 gap-8 md:gap-12 items-center px-8 sm:px-14 md:px-16 py-10 md:py-14"
+                  className="w-full flex-shrink-0 grid md:grid-cols-2 gap-8 md:gap-12 items-center px-8 sm:px-14 md:px-16 py-8 md:py-10"
                 >
                   <div className="flex justify-center order-2 md:order-1">
                     <Visual />
@@ -197,7 +197,7 @@ function FeatureCarousel() {
         </div>
       </div>
 
-      <div className="mt-5 flex justify-center gap-2">
+      <div className="mt-4 flex justify-center gap-2">
         {SLIDES.map((s, i) => (
           <button
             key={s.key}

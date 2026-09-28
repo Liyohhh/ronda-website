@@ -336,11 +336,10 @@ function Home() {
         </div>
       </section>
 
-      {/* Curated lifestyle routes */}
-      <TrailsSection />
-
-      {/* What RONDA does: slides, feature tiles, rider reviews (the app banner + footer follow in SiteLayout) */}
+      {/* Below the search, Traveloka-style: banner slides, a row of trails with category pills,
+          feature tiles, rider reviews (the app banner + footer follow in SiteLayout) */}
       <FeatureCarousel />
+      <TrailsSection />
       <FeatureGrid />
       <ReviewsSection />
 

@@ -1,7 +1,7 @@
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 
-// Navy band of feature tiles. `soon` = planned, labelled "Coming soon" so nothing is oversold.
+// Feature tiles. `soon` = planned, labelled "Coming soon" so nothing is oversold.
 const FEATURES: { key: TranslationKey; icon: string; soon?: boolean }[] = [
   { key: 'feat_directions', icon: 'M5 19l4-14 4 9 3-5 3 10M3 19h18' },
   { key: 'feat_places', icon: 'M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z' },
@@ -18,14 +18,14 @@ const FEATURES: { key: TranslationKey; icon: string; soon?: boolean }[] = [
 function FeatureGrid() {
   const { t } = useLanguage()
   return (
-    <section aria-labelledby="features-title" className="mt-14 bg-[#002472]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14">
-        <h2 id="features-title" className="text-2xl md:text-3xl font-bold text-white text-center">
+    <section aria-labelledby="features-title" className="pt-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <h2 id="features-title" className="text-2xl md:text-3xl font-bold text-gray-900">
           {t('featuresTitle')}
         </h2>
-        <ul className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+        <ul className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
           {FEATURES.map((f) => (
-            <li key={f.key} className="relative bg-white rounded-2xl p-5 flex flex-col items-center text-center gap-3 shadow-sm">
+            <li key={f.key} className="relative bg-white border border-gray-200 rounded-2xl p-5 flex flex-col items-center text-center gap-3">
               {f.soon && (
                 <span className="absolute top-2 end-2 text-[10px] font-bold uppercase tracking-wide text-[#8a6a2a] bg-[#C9A45C]/15 px-2 py-0.5 rounded-full">
                   {t('soon')}

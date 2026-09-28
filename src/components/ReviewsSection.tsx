@@ -44,13 +44,13 @@ function ReviewCard({ review }: { review: Review }) {
 function ReviewsSection() {
   const { t } = useLanguage()
   return (
-    <section aria-labelledby="reviews-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-14">
-      <h2 id="reviews-title" className="text-2xl md:text-3xl font-bold text-gray-900 text-center">
+    <section aria-labelledby="reviews-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-12">
+      <h2 id="reviews-title" className="text-2xl md:text-3xl font-bold text-gray-900">
         {t('reviewsTitle')}
       </h2>
 
       {REVIEWS.length > 0 ? (
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {REVIEWS.map((r) => (
             <li key={r.id}>
               <ReviewCard review={r} />
@@ -58,15 +58,15 @@ function ReviewsSection() {
           ))}
         </ul>
       ) : (
-        <div className="mt-8 max-w-2xl mx-auto text-center bg-white border border-gray-200 rounded-3xl px-6 py-10">
-          <div className="flex justify-center">
+        <div className="mt-4 bg-white border border-gray-200 rounded-3xl px-6 py-6 md:py-7 flex flex-col md:flex-row md:items-center gap-5">
+          <div className="flex-1">
             <Stars rating={0} />
+            <h3 className="mt-3 text-xl font-semibold text-[#002472]">{t('reviewsEmptyTitle')}</h3>
+            <p className="mt-1 text-gray-600">{t('reviewsEmptyText')}</p>
           </div>
-          <h3 className="mt-4 text-xl font-semibold text-[#002472]">{t('reviewsEmptyTitle')}</h3>
-          <p className="mt-2 text-gray-600">{t('reviewsEmptyText')}</p>
           <Link
             to={FEEDBACK_HREF}
-            className="mt-6 inline-flex items-center h-11 px-6 rounded-full bg-[#002472] text-white font-semibold hover:bg-[#001a55] transition-colors"
+            className="self-start md:self-center flex-shrink-0 inline-flex items-center h-11 px-6 rounded-full bg-[#002472] text-white font-semibold hover:bg-[#001a55] transition-colors"
           >
             {t('reviewsCta')}
           </Link>

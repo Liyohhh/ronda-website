@@ -32,7 +32,7 @@ function TrailsSection() {
   )
 
   return (
-    <section aria-labelledby="trails-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-10">
+    <section aria-labelledby="trails-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-12">
       <div className="flex items-end justify-between gap-4 mb-4">
         <div>
           <h2 id="trails-title" className="text-2xl md:text-3xl font-bold text-gray-900">
