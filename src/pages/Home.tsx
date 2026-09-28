@@ -6,7 +6,7 @@ import TrailsSection from '../components/TrailsSection'
 import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
 import ReviewsSection from '../components/ReviewsSection'
-import JourneyPanel, { type TripOption, type ServiceNotice } from '../components/JourneyPanel'
+import JourneyPanel, { type TripOption, type ServiceNotice, type Resident } from '../components/JourneyPanel'
 import SuggestionList from '../components/SuggestionList'
 import { buildItems, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
@@ -95,7 +95,25 @@ function Home() {
     setEndStop(startStop)
   }
 
-  const handleSearch = async () => {
+  // Fares for Malaysians or tourists; remembered on this device
+  const [resident, setResident] = useState<Resident>(() => {
+    try {
+      return localStorage.getItem('ronda.resident') === 'non_citizen' ? 'non_citizen' : 'citizen'
+    } catch {
+      return 'citizen'
+    }
+  })
+  const changeResident = (r: Resident) => {
+    setResident(r)
+    try {
+      localStorage.setItem('ronda.resident', r)
+    } catch {
+      // storage blocked: the choice lasts for this visit only
+    }
+    handleSearch(r)
+  }
+
+  const handleSearch = async (res: Resident = resident) => {
     if (tab !== 'directions') return
     setActiveField(null)
     setFormError('')
@@ -109,6 +127,7 @@ function Home() {
     const body = {
       from: { lat: startStop.lat, lon: startStop.lon },
       to: { lat: endStop.lat, lon: endStop.lon },
+      resident: res,
     }
 
     setLoading(true)
@@ -297,7 +316,7 @@ function Home() {
                   )}
 
                   <button
-                    onClick={handleSearch}
+                    onClick={() => handleSearch()}
                     disabled={loading}
                     className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                     aria-label="Search"
@@ -353,6 +372,8 @@ function Home() {
         error={planError}
         options={options}
         notice={notice}
+        resident={resident}
+        onResidentChange={changeResident}
         onClose={closePanel}
       />
 

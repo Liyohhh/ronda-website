@@ -7,7 +7,10 @@ import { formatDuration } from '../i18n/duration'
 
 export type Place = { name: string; lat: number; lon: number }
 
-export type Fare = { amount: number; currency?: string; exact: boolean }
+export type Fare = { amount: number; currency?: string; exact: boolean; basis?: 'od' | 'flat' | 'zone_min' | 'joined'; joined_rides?: number }
+
+// Whose fares to show: Malaysians ride GoKL / Smart Selangor free, tourists pay
+export type Resident = 'citizen' | 'non_citizen'
 
 export type Leg = {
   mode: 'walk' | 'transit'
@@ -25,6 +28,7 @@ export type Leg = {
   feed_id?: string
   route_id?: string
   fare?: Fare | null
+  fare_included?: boolean // covered by the previous ride's fare (line change inside the paid area)
   headsign?: string | null
   num_stops?: number
   stops?: { name: string; time: string }[]
@@ -53,6 +57,8 @@ type Props = {
   error: string
   options: TripOption[]
   notice?: ServiceNotice
+  resident: Resident
+  onResidentChange: (r: Resident) => void
   onClose: () => void
 }
 
@@ -163,7 +169,7 @@ function RoutePreview({ option }: { option: TripOption }) {
 
 // ---------- panel ----------
 
-function JourneyPanel({ open, from, to, loading, error, options, notice, onClose }: Props) {
+function JourneyPanel({ open, from, to, loading, error, options, notice, resident, onResidentChange, onClose }: Props) {
   const { t } = useLanguage()
   const [sort, setSort] = useState<SortKey>('fastest')
   const [detail, setDetail] = useState<TripOption | null>(null)
@@ -257,6 +263,26 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, onClose
               <path d="M12 7v5l3 2" />
             </svg>
             {t('leavingNow')}
+          </div>
+
+          {/* Fares for Malaysians or tourists (some buses are free for Malaysians only) */}
+          <div className="mt-3 flex items-center gap-2 text-sm" role="group" aria-label={t('faresFor')}>
+            <span className="text-white/60">{t('faresFor')}</span>
+            <div className="inline-flex rounded-full bg-white/10 p-0.5">
+              {(['citizen', 'non_citizen'] as const).map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => r !== resident && onResidentChange(r)}
+                  aria-pressed={r === resident}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                    r === resident ? 'bg-white text-[#002472]' : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  {r === 'citizen' ? t('fareMalaysian') : t('fareTourist')}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -427,6 +453,7 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, onClose
                                   {money(leg.fare.amount)}
                                 </span>
                               )}
+                              {leg.fare_included && <span className="ms-auto text-xs text-gray-500">{t('fareIncluded')}</span>}
                             </div>
                             {leg.headsign && (
                               <div className="text-sm text-gray-500">
