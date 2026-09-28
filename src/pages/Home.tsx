@@ -3,6 +3,9 @@ import { useSearchParams } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
 import TrailsSection from '../components/TrailsSection'
+import FeatureCarousel from '../components/FeatureCarousel'
+import FeatureGrid from '../components/FeatureGrid'
+import ReviewsSection from '../components/ReviewsSection'
 import JourneyPanel, { type TripOption, type ServiceNotice } from '../components/JourneyPanel'
 import SuggestionList from '../components/SuggestionList'
 import { buildItems, type Pick } from '../data/suggestions'
@@ -335,6 +338,11 @@ function Home() {
 
       {/* Curated lifestyle routes */}
       <TrailsSection />
+
+      {/* What RONDA does: slides, feature tiles, rider reviews (the app banner + footer follow in SiteLayout) */}
+      <FeatureCarousel />
+      <FeatureGrid />
+      <ReviewsSection />
 
       {/* Journey results in the right-side panel */}
       <JourneyPanel
