@@ -26,6 +26,27 @@ function Home() {
   // then the params are cleared and the Start box gets focus
   const [params, setParams] = useSearchParams()
   const toParam = params.get('to')
+  // a place without a station (e.g. a coach terminal): /?toLat=&toLon=&toName=
+  const toLat = Number(params.get('toLat')), toLon = Number(params.get('toLon'))
+  const toPlace = params.get('toName') && Number.isFinite(toLat) && Number.isFinite(toLon) && params.get('toLat') && params.get('toLon')
+  useEffect(() => {
+    if (toParam || !toPlace) return
+    const shown = params.get('toName')!
+    let cancelled = false
+    // after this render, like the station prefill below (which waits for its lookup)
+    Promise.resolve().then(() => {
+      if (cancelled) return
+      setParams({}, { replace: true })
+      setEnd(shown)
+      setEndStop({ name: shown, lat: toLat, lon: toLon })
+      const startBox = document.getElementById('start-input')
+      startBox?.scrollIntoView({ block: 'center' })
+      startBox?.focus()
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [toParam, toPlace, toLat, toLon, params, setParams])
   useEffect(() => {
     if (!toParam) return
     const shown = params.get('toName') || toParam

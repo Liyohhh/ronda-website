@@ -7,6 +7,8 @@ import { TRAIL_CATEGORIES, categoryKey } from './trails'
 
 // /?to=<stop name>&toName=<shown name> opens Home with the End box filled in
 const planTo = (stop: string, shown = stop) => `/?to=${encodeURIComponent(stop)}&toName=${encodeURIComponent(shown)}`
+// a place with no station of its own; coordinates from OpenStreetMap
+const planToPlace = (lat: number, lon: number, shown: string) => `/?toLat=${lat}&toLon=${lon}&toName=${encodeURIComponent(shown)}`
 
 export type NavItem = { to: string; name?: string; label?: TranslationKey; detail?: string }
 export type NavColumn = { title: TranslationKey; items: NavItem[] }
@@ -33,6 +35,8 @@ export const NAV_MENUS: NavMenu[] = [
         items: [
           { name: 'Terminal Bersepadu Selatan (TBS)', detail: 'LRT / KTM / ERL Bandar Tasik Selatan', to: planTo('LRT Bandar Tasik Selatan', 'Terminal Bersepadu Selatan (TBS)') },
           { name: 'Pudu Sentral', detail: 'LRT Plaza Rakyat', to: planTo('LRT Plaza Rakyat', 'Pudu Sentral') },
+          // OSM way 871914528 (Gombak Integrated Transport Terminal)
+          { name: 'Terminal Bersepadu Gombak (TBG)', detail: 'Gombak, Selangor', to: planToPlace(3.2304945, 101.7250658, 'Terminal Bersepadu Gombak (TBG)') },
         ],
       },
     ],
