@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
+import { formatDuration } from '../i18n/duration'
 import LineBadge from './LineBadge'
 import TrailCover from './TrailCover'
 import { LINES } from '../data/lines'
@@ -22,11 +23,12 @@ function PhoneCard({ children }: { children: ReactNode }) {
 
 // Sample trip, drawn the way the results panel draws it (illustrative, not live data)
 function PlanPreview() {
+  const { t } = useLanguage()
   return (
     <PhoneCard>
       <div className="text-xs text-gray-400">KLIA T1 → Pandan Perdana</div>
       <div className="mt-1 flex items-baseline justify-between">
-        <span className="text-2xl font-bold text-gray-900">78 min</span>
+        <span className="text-2xl font-bold text-gray-900">{formatDuration(78, t)}</span>
         <span className="text-sm text-gray-500">09:03 – 10:21</span>
       </div>
       <div className="mt-3 flex items-center gap-1.5 flex-wrap">

@@ -61,6 +61,19 @@ function ServiceNav({ className = '' }: { className?: string }) {
             {t('trails')}
           </NavLink>
         </li>
+        <li className="flex">
+          <NavLink
+            to="/about"
+            onMouseEnter={scheduleClose}
+            className={({ isActive }) =>
+              `py-3 border-b-2 font-medium transition-colors flex items-center ${
+                isActive ? 'border-[#002472]' : 'border-transparent hover:border-[#002472]/40'
+              }`
+            }
+          >
+            {t('about')}
+          </NavLink>
+        </li>
       </ul>
 
       {/* Dropdown panel */}

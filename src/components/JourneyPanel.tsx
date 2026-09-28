@@ -3,16 +3,14 @@ import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import LineBadge from './LineBadge'
 import { busLine, lineForRoute, type Line } from '../data/lines'
+import { formatDuration } from '../i18n/duration'
 
 export type Place = { name: string; lat: number; lon: number }
-
-// First / last legs can be walked or driven (taxi / e-hailing estimate); `alt` is the other option
-export type LegAlt = { mode: 'walk' | 'drive'; duration_min: number; distance_m: number }
 
 export type Fare = { amount: number; currency?: string; exact: boolean }
 
 export type Leg = {
-  mode: 'walk' | 'drive' | 'transit'
+  mode: 'walk' | 'transit'
   from: Place
   to: Place
   start: string
@@ -30,7 +28,6 @@ export type Leg = {
   headsign?: string | null
   num_stops?: number
   stops?: { name: string; time: string }[]
-  alt?: LegAlt
 }
 
 export type TripOption = {
@@ -39,7 +36,6 @@ export type TripOption = {
   duration_min: number
   transfers: number
   walk_min: number
-  drive_min?: number
   fare?: Fare | null
   hops: string[]
   legs: Leg[]
@@ -141,10 +137,10 @@ function FareText({ fare, t }: { fare?: Fare | null; t: (k: TranslationKey) => s
 
 // "(badge) Kajang › (badge) 400"
 function RoutePreview({ option }: { option: TripOption }) {
+  const { t } = useLanguage()
   const rides = option.legs.filter((l) => l.mode === 'transit')
   if (!rides.length) {
-    const first = option.legs[0]
-    return <span className="text-sm text-gray-600">{first?.mode === 'drive' ? '🚕' : '🚶'} {option.duration_min} min</span>
+    return <span className="text-sm text-gray-600">🚶 {formatDuration(option.duration_min, t)}</span>
   }
   return (
     <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
@@ -320,7 +316,7 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, onClose
                     >
                       <div className="flex items-baseline justify-between gap-3">
                         <div>
-                          <span className="text-xl font-bold text-gray-900">{o.duration_min} min</span>
+                          <span className="text-xl font-bold text-gray-900">{formatDuration(o.duration_min, t)}</span>
                           <span className="ms-2 text-sm text-gray-500">
                             {o.departure} – {o.arrival}
                           </span>
@@ -346,14 +342,7 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, onClose
                           </span>
                         )}
                         <span>{o.transfers === 0 ? t('direct') : `${t('transfers')}: ${o.transfers}`}</span>
-                        <span>
-                          {o.walk_min} {t('minWalk')}
-                        </span>
-                        {!!o.drive_min && (
-                          <span>
-                            {o.drive_min} {t('minDrive')}
-                          </span>
-                        )}
+                        <span>{t('walkDur').replace('{dur}', formatDuration(o.walk_min, t))}</span>
                       </div>
                     </button>
                   </li>
@@ -369,7 +358,7 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, onClose
               <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-5">
                 <div className="flex items-baseline justify-between">
                   <div>
-                    <span className="text-2xl font-bold text-gray-900">{detail.duration_min} min</span>
+                    <span className="text-2xl font-bold text-gray-900">{formatDuration(detail.duration_min, t)}</span>
                     <span className="ms-2 text-sm text-gray-500">
                       {detail.departure} – {detail.arrival}
                     </span>
@@ -400,26 +389,13 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, onClose
                           style={{
                             backgroundColor: line ? line.color : undefined,
                             backgroundImage:
-                              leg.mode === 'walk'
-                                ? 'repeating-linear-gradient(to bottom, #cbd5e1 0 4px, transparent 4px 8px)'
-                                : leg.mode === 'drive'
-                                  ? `repeating-linear-gradient(to bottom, ${GOLD} 0 6px, transparent 6px 9px)`
-                                  : undefined,
+                              leg.mode === 'walk' ? 'repeating-linear-gradient(to bottom, #cbd5e1 0 4px, transparent 4px 8px)' : undefined,
                           }}
                         />
                       )}
 
                       {line ? (
                         <LineBadge line={line} size={40} decorative />
-                      ) : leg.mode === 'drive' ? (
-                        <span className="w-10 h-10 rounded-full bg-[#C9A45C]/15 text-[#8a6a2a] flex items-center justify-center flex-shrink-0">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M5 16h14v-4l-2-5H7l-2 5z" />
-                            <path d="M5 12h14" />
-                            <circle cx="8" cy="16.5" r="1.5" />
-                            <circle cx="16" cy="16.5" r="1.5" />
-                          </svg>
-                        </span>
                       ) : (
                         <span className="w-10 h-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center flex-shrink-0">
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -433,17 +409,12 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, onClose
                         {leg.mode !== 'transit' ? (
                           <>
                             <div className="font-medium text-gray-900">
-                              {leg.mode === 'drive' ? t('driveTo') : t('walkTo')} {placeName(leg.to)}
+                              {t('walkTo')} {placeName(leg.to)}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {leg.start} · {leg.duration_min} {leg.mode === 'drive' ? t('minDrive') : t('minWalk')}
+                              {leg.start} · {t('walkDur').replace('{dur}', formatDuration(leg.duration_min, t))}
                               {leg.distance_m ? ` · ${formatDistance(leg.distance_m)}` : ''}
                             </div>
-                            {leg.alt && (
-                              <div className="text-xs text-gray-500 mt-0.5">
-                                {leg.alt.mode === 'walk' ? t('orWalk') : t('orDrive')} {leg.alt.duration_min} min · {formatDistance(leg.alt.distance_m)}
-                              </div>
-                            )}
                           </>
                         ) : (
                           <>
@@ -466,7 +437,7 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, onClose
                               {leg.start} {placeName(leg.from)} → {leg.end} {placeName(leg.to)}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {leg.duration_min} min · {leg.num_stops} {t('stopsLabel')}
+                              {formatDuration(leg.duration_min, t)} · {leg.num_stops} {t('stopsLabel')}
                             </div>
                           </>
                         )}

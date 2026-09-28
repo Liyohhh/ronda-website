@@ -24,6 +24,7 @@ function Footer() {
     {
       title: t('footerSupport'),
       links: [
+        { to: '/about', label: t('about') },
         { to: '/help', label: t('helpCentre') },
         { to: '/help/policies', label: t('policies') },
       ],
