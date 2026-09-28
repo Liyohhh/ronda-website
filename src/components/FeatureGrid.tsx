@@ -18,9 +18,9 @@ const FEATURES: { key: TranslationKey; icon: string; soon?: boolean }[] = [
 function FeatureGrid() {
   const { t } = useLanguage()
   return (
-    <section aria-labelledby="features-title" className="pt-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <h2 id="features-title" className="text-2xl md:text-3xl font-bold text-gray-900">
+    <section aria-labelledby="features-title" className="mt-8 bg-[#e3ebfa]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+        <h2 id="features-title" className="text-2xl md:text-3xl font-bold text-[#002472]">
           {t('featuresTitle')}
         </h2>
         <ul className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">

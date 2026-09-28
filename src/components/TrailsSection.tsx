@@ -35,7 +35,7 @@ function TrailsSection() {
     <section aria-labelledby="trails-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-12">
       <div className="flex items-end justify-between gap-4 mb-4">
         <div>
-          <h2 id="trails-title" className="text-2xl md:text-3xl font-bold text-gray-900">
+          <h2 id="trails-title" className="text-2xl md:text-3xl font-bold text-[#002472]">
             {t('trailsTitle')}
           </h2>
           <p className="mt-1 text-gray-500">{t('trailsSubtitle')}</p>

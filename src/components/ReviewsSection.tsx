@@ -45,7 +45,7 @@ function ReviewsSection() {
   const { t } = useLanguage()
   return (
     <section aria-labelledby="reviews-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-12">
-      <h2 id="reviews-title" className="text-2xl md:text-3xl font-bold text-gray-900">
+      <h2 id="reviews-title" className="text-2xl md:text-3xl font-bold text-[#002472]">
         {t('reviewsTitle')}
       </h2>
 

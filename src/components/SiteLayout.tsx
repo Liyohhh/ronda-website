@@ -7,7 +7,7 @@ import Footer from './Footer'
 // banner and the footer. The banner is always second-last, whatever the page adds above it.
 function SiteLayout({ children, subheader }: { children: ReactNode; subheader?: ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
       {subheader}
       <main className="flex-1">{children}</main>

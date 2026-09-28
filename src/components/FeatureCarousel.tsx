@@ -160,7 +160,7 @@ function FeatureCarousel() {
         if (e.key === 'ArrowLeft') go(index + (rtl ? 1 : -1))
       }}
     >
-      <h2 id="slides-title" className="text-2xl md:text-3xl font-bold text-gray-900">
+      <h2 id="slides-title" className="text-2xl md:text-3xl font-bold text-[#002472]">
         {t('slidesTitle')}
       </h2>
 

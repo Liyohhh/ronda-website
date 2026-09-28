@@ -60,7 +60,7 @@ function SoonBadge() {
 
 function SectionTitle({ id, children }: { id: string; children: string }) {
   return (
-    <h2 id={id} className="text-2xl md:text-3xl font-bold text-gray-900">
+    <h2 id={id} className="text-2xl md:text-3xl font-bold text-[#002472]">
       {children}
     </h2>
   )
