@@ -84,6 +84,7 @@ function Home() {
 
   // Trip planner results (shown in the right-side panel)
   const [options, setOptions] = useState<TripOption[]>([])
+  const [moreOptions, setMoreOptions] = useState<TripOption[]>([])
   const [loading, setLoading] = useState(false)
   const [formError, setFormError] = useState('')
   const [planError, setPlanError] = useState('')
@@ -214,6 +215,7 @@ function Home() {
     setLoading(true)
     setPlanError('')
     setOptions([])
+    setMoreOptions([])
     setNotice(null)
     setSearchedFor({ from: fromStop.name, to: toStop.name })
     setSearchId((n) => n + 1)
@@ -233,6 +235,7 @@ function Home() {
       return
     }
     setOptions(found)
+    setMoreOptions(data?.more_options ?? [])
     const meta = data?.meta
     if (meta?.next_day?.first_departure) setNotice({ kind: 'tomorrow', time: meta.next_day.first_departure })
     else if (meta?.service_resumes) setNotice({ kind: 'resumes', time: meta.service_resumes })
@@ -241,6 +244,7 @@ function Home() {
   const closePanel = () => {
     setSearchedFor(null)
     setOptions([])
+    setMoreOptions([])
     setNotice(null)
     setPlanError('')
   }
@@ -467,6 +471,7 @@ function Home() {
         <LinePanel
           line={pickedLine}
           onClose={() => setPickedLine(null)}
+          onPick={setPickedLine}
           onPlan={(st) => {
             setPickedLine(null)
             setTab('directions')
@@ -486,6 +491,7 @@ function Home() {
         loading={loading}
         error={planError}
         options={options}
+        moreOptions={moreOptions}
         notice={notice}
         resident={resident}
         onResidentChange={changeResident}
