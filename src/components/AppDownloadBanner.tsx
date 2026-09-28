@@ -1,12 +1,12 @@
-import { QRCodeSVG } from 'qrcode.react'
 import { useLanguage } from '../hooks/useLanguage'
+import BrandLogo from './BrandLogo'
+import LineBadge from './LineBadge'
+import WalkIcon from './WalkIcon'
 
 // "Get the RONDA app" band. SiteLayout always renders it just above the footer.
 // Store links come from env vars; until the app is published the badges show "Coming soon".
 const PLAY_URL = import.meta.env.VITE_PLAY_STORE_URL as string | undefined
 const APPSTORE_URL = import.meta.env.VITE_APP_STORE_URL as string | undefined
-// What the QR code opens: a download page if set, otherwise this website
-const DOWNLOAD_URL = (import.meta.env.VITE_APP_DOWNLOAD_URL as string | undefined) || window.location.origin
 
 const PLAY_PATH =
   'M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z'
@@ -43,46 +43,81 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
   )
 }
 
+// Phone mock-up with a simplified RONDA screen (illustration, not live data). It rises above the banner's
+// top edge and is cut off at the bottom, like app banners on bank / airline sites.
+function PhoneMockup() {
+  const { t } = useLanguage()
+  return (
+    <div className="w-[230px] rounded-[2.4rem] bg-[#0b0f1a] p-2.5 shadow-2xl ring-1 ring-white/10" aria-hidden="true">
+      <div className="relative rounded-[1.9rem] overflow-hidden bg-gray-50 h-[440px]">
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-[#0b0f1a]" />
+        <div className="bg-[#002472] px-4 pt-10 pb-4">
+          <BrandLogo tone="light" size="sm" />
+          <div className="mt-3 rounded-xl bg-white px-3 py-2 space-y-1.5">
+            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full border-2 border-[#002472]" />KL Sentral</div>
+            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full bg-[#C9A45C]" />KLCC</div>
+          </div>
+        </div>
+        <div className="p-3 space-y-2">
+          {[
+            { lines: ['lrt-kelana-jaya'], time: '07:52 – 08:04', dur: t('durMin').replace('{m}', '12') },
+            { lines: ['monorail', 'lrt-kelana-jaya'], time: '07:55 – 08:15', dur: t('durMin').replace('{m}', '20') },
+          ].map((r) => (
+            <div key={r.time} className="rounded-xl bg-white border border-gray-200 p-2.5">
+              <div className="flex items-baseline justify-between">
+                <span className="text-sm font-bold text-gray-900">{r.dur}</span>
+                <span className="text-[9px] text-gray-400">{r.time}</span>
+              </div>
+              <div className="mt-1.5 flex items-center gap-1">
+                <WalkIcon size={12} className="text-gray-400" />
+                {r.lines.map((l) => (
+                  <LineBadge key={l} line={l} size={18} decorative />
+                ))}
+              </div>
+            </div>
+          ))}
+          <div className="rounded-xl bg-white border border-gray-200 p-2.5">
+            <div className="h-2 w-24 rounded bg-gray-200" />
+            <div className="mt-2 h-2 w-16 rounded bg-gray-100" />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function AppDownloadBanner() {
   const { t } = useLanguage()
   return (
-    // Full width, and its bottom fades into the footer's navy so the two read as one block
-    <section id="download" aria-labelledby="download-title" className="mt-12">
-      <div className="relative overflow-hidden bg-[#002472] text-white">
+    // Full width, and its bottom fades into the footer's navy so the two read as one block.
+    // The phone sits outside the clipped background so it can rise above the banner.
+    <section id="download" aria-labelledby="download-title" className="relative mt-24 text-white">
+      <div className="absolute inset-0 overflow-hidden bg-[#002472]">
         {/* KL skyline, darkened so the text reads */}
         <picture>
           <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-          <img
-            src="/Image/banner-kl.jpg"
-            alt=""
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover object-[center_40%]"
-          />
+          <img src="/Image/banner-kl.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[center_40%]" />
         </picture>
         <div className="absolute inset-0 bg-gradient-to-r from-[#001233]/95 via-[#001233]/80 to-[#001233]/60" />
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-[#002472]" />
+      </div>
 
-        <div className="relative max-w-6xl mx-auto grid gap-8 md:grid-cols-[1.1fr_1fr_auto] items-center px-4 sm:px-6 pt-14 pb-12">
-          <div>
-            <h2 id="download-title" className="text-2xl sm:text-3xl font-bold leading-tight">
-              {t('appBannerTitle')}
-            </h2>
-            <p className="mt-2 text-white/75 max-w-md">{t('appBannerText')}</p>
-          </div>
+      <div className="relative max-w-6xl mx-auto grid gap-8 md:grid-cols-[1.1fr_auto_auto] items-center px-4 sm:px-6">
+        <div className="py-12">
+          <h2 id="download-title" className="text-2xl sm:text-3xl font-bold leading-tight">
+            {t('appBannerTitle')}
+          </h2>
+          <p className="mt-2 text-white/75 max-w-md">{t('appBannerText')}</p>
+        </div>
 
-          <div>
-            <div className="flex flex-col gap-3">
-              <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
-              <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
-            </div>
-          </div>
+        <div className="flex flex-col gap-3 pb-12 md:pb-0">
+          <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
+          <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
+        </div>
 
-          <div className="hidden md:flex flex-col items-center">
-            <span className="text-sm text-white/80 mb-2">{t('scanToDownload')}</span>
-            <div className="bg-white p-2.5 rounded-xl">
-              <QRCodeSVG value={DOWNLOAD_URL} size={120} fgColor="#002472" level="M" title={t('scanToDownload')} />
-            </div>
-          </div>
+        {/* phone: its top pokes above the banner, its bottom is cut at the banner's bottom edge */}
+        <div className="hidden md:block self-end -mt-20 h-[calc(100%+5rem)] max-h-[340px] overflow-hidden">
+          <PhoneMockup />
         </div>
       </div>
     </section>
