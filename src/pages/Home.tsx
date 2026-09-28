@@ -139,14 +139,14 @@ function Home() {
     } catch {
       // storage blocked: the choice lasts for this visit only
     }
-    handleSearch(r)
+    handleSearch({ res: r })
   }
 
   // Leave now, or at a date / time picked in the results panel
   const [departAt, setDepartAt] = useState<DepartAt>(null)
   const changeDepart = (d: DepartAt) => {
     setDepartAt(d)
-    handleSearch(resident, d)
+    handleSearch({ when: d })
   }
 
   const pickLine = (l: Line) => {
@@ -167,21 +167,26 @@ function Home() {
     else if (e.key === 'Escape') setLineListOpen(false)
   }
 
-  const handleSearch = async (res: Resident = resident, when: DepartAt = departAt) => {
+  // Plan with the current boxes / options; `o` overrides them (panel edits pass the new values directly)
+  const handleSearch = async (o: { res?: Resident; when?: DepartAt; from?: Pick; to?: Pick } = {}) => {
+    const res = o.res ?? resident
+    const when = o.when !== undefined ? o.when : departAt
+    const fromStop = o.from ?? startStop
+    const toStop = o.to ?? endStop
     if (tab === 'lines') return openFirstLine()
     if (tab !== 'directions') return
     setActiveField(null)
     setFormError('')
 
-    if (!startStop || !endStop) {
+    if (!fromStop || !toStop) {
       setFormError(t('chooseFromList'))
       return
     }
 
     // Planner defaults to leaving now (Malaysia time)
     const body = {
-      from: { lat: startStop.lat, lon: startStop.lon },
-      to: { lat: endStop.lat, lon: endStop.lon },
+      from: { lat: fromStop.lat, lon: fromStop.lon },
+      to: { lat: toStop.lat, lon: toStop.lon },
       resident: res,
       ...(when ?? {}),
     }
@@ -190,7 +195,7 @@ function Home() {
     setPlanError('')
     setOptions([])
     setNotice(null)
-    setSearchedFor({ from: startStop.name, to: endStop.name })
+    setSearchedFor({ from: fromStop.name, to: toStop.name })
     setSearchId((n) => n + 1)
 
     const { data, error } = await supabase.functions.invoke('plan-trip', { body })
@@ -466,6 +471,17 @@ function Home() {
         onResidentChange={changeResident}
         departAt={departAt}
         onDepartChange={changeDepart}
+        onPlacesChange={({ from, to }) => {
+          if (from) {
+            setStart(from.name)
+            setStartStop(from)
+          }
+          if (to) {
+            setEnd(to.name)
+            setEndStop(to)
+          }
+          handleSearch({ from, to })
+        }}
         onClose={closePanel}
       />
 

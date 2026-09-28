@@ -7,6 +7,8 @@ import { formatDuration } from '../i18n/duration'
 import { malaysiaNow, format12h } from '../data/time'
 import DepartPicker from './DepartPicker'
 import WalkIcon from './WalkIcon'
+import PlaceField from './PlaceField'
+import type { Pick } from '../data/suggestions'
 
 export type Place = { name: string; lat: number; lon: number }
 
@@ -67,6 +69,7 @@ type Props = {
   onResidentChange: (r: Resident) => void
   departAt: DepartAt
   onDepartChange: (d: DepartAt) => void
+  onPlacesChange: (p: { from?: Pick; to?: Pick }) => void // edit From / To and re-plan
   onClose: () => void
 }
 
@@ -182,7 +185,7 @@ function RoutePreview({ option }: { option: TripOption }) {
 
 // ---------- panel ----------
 
-function JourneyPanel({ open, from, to, loading, error, options, notice, resident, onResidentChange, departAt, onDepartChange, onClose }: Props) {
+function JourneyPanel({ open, from, to, loading, error, options, notice, resident, onResidentChange, departAt, onDepartChange, onPlacesChange, onClose }: Props) {
   const { t, lang } = useLanguage()
   const [sort, setSort] = useState<SortKey>('fastest')
   const [detail, setDetail] = useState<TripOption | null>(null)
@@ -272,14 +275,8 @@ function JourneyPanel({ open, from, to, loading, error, options, notice, residen
               <span className="w-3 h-3 rounded-full" style={{ backgroundColor: GOLD }} />
             </div>
             <div className="flex-1 min-w-0 space-y-2">
-              <div className="bg-white/10 rounded-lg px-3 py-2">
-                <div className="text-[11px] text-white/60">{t('fromLabel')}</div>
-                <div className="font-semibold truncate">{from}</div>
-              </div>
-              <div className="bg-white/10 rounded-lg px-3 py-2">
-                <div className="text-[11px] text-white/60">{t('toLabel')}</div>
-                <div className="font-semibold truncate">{to}</div>
-              </div>
+              <PlaceField id="panel-from" label={t('fromLabel')} value={from} onPick={(p) => onPlacesChange({ from: p })} />
+              <PlaceField id="panel-to" label={t('toLabel')} value={to} onPick={(p) => onPlacesChange({ to: p })} />
             </div>
           </div>
 
