@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { HelpLayout, CategoryIcon } from '../components/HelpLayout'
 import { HELP_CATEGORIES, HOT_QUESTIONS } from '../data/helpCategories'
+import Icon from '../components/Icon'
 
 function Help() {
   const { t } = useLanguage()
@@ -27,10 +28,7 @@ function Help() {
             className="flex-1 min-w-0 py-2.5 text-base outline-none bg-transparent"
           />
           <button className="w-11 h-11 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0 hover:bg-[#001a55]" aria-label="Search">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8" />
-              <path d="M21 21l-4.35-4.35" />
-            </svg>
+            <Icon name="search" size={22} />
           </button>
         </div>
       </section>

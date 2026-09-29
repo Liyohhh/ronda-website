@@ -1,120 +1,29 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
-import { formatDuration } from '../i18n/duration'
-import LineBadge from './LineBadge'
-import TrailCover from './TrailCover'
-import { LINES } from '../data/lines'
-import { TRAILS } from '../data/trails'
+import Icon from './Icon'
+import PhotoCredit from './PhotoCredit'
+import { SLIDE_PHOTOS } from '../data/trailPhotos'
 
-// "Travel made effortless" slides: a live mini-preview built from real RONDA pieces on one side,
-// the message on the other. Arrows, dots, keyboard, and a gentle auto-advance that pauses on
-// hover / focus and is off for people who prefer reduced motion.
+// "Travel made effortless" slides: a white card on the light page whose lower part sits over the top of
+// the navy band below (Home puts the band right after it). Photo on one side, the message on the other.
+// Arrows, dots, keyboard, and a gentle auto-advance that pauses on hover / focus and is off for people who
+// prefer reduced motion. Photos: Wikimedia Commons, credited on the slide and on the About page.
 
-const AUTO_MS = 7000
+const AUTO_MS = 8000
+const GOLD_TEXT = '#a07d36' // RONDA gold, dark enough to read on white
 
-function PhoneCard({ children }: { children: ReactNode }) {
-  return (
-    <div className="w-full max-w-sm bg-white rounded-3xl border border-gray-200 shadow-xl p-5" aria-hidden="true">
-      {children}
-    </div>
-  )
-}
-
-// Sample trip, drawn the way the results panel draws it (illustrative, not live data)
-function PlanPreview() {
-  const { t } = useLanguage()
-  return (
-    <PhoneCard>
-      <div className="text-xs text-gray-400">KLIA T1 → Pandan Perdana</div>
-      <div className="mt-1 flex items-baseline justify-between">
-        <span className="text-2xl font-bold text-gray-900">{formatDuration(78, t)}</span>
-        <span className="text-sm text-gray-500">09:03 – 10:21</span>
-      </div>
-      <div className="mt-3 flex items-center gap-1.5 flex-wrap">
-        {['erl-klia-transit', 'lrt-sri-petaling'].map((id) => (
-          <span key={id} className="flex items-center gap-1.5">
-            <LineBadge line={id} size={26} decorative />
-            <span className="text-gray-300">›</span>
-          </span>
-        ))}
-        <span className="inline-flex items-center gap-1 text-sm font-medium text-gray-700">
-          <span className="w-[26px] h-[26px] rounded-md bg-[#002472] text-white text-[9px] font-bold flex items-center justify-center">BUS</span>
-          400
-        </span>
-      </div>
-      {/* stop names and times only, so the preview reads the same in every language */}
-      <ol className="mt-4 space-y-2">
-        {[
-          ['09:07', 'ERL KLIA T1'],
-          ['09:34', 'LRT Bandar Tasik Selatan'],
-          ['09:48', 'LRT Pudu'],
-          ['10:21', 'Pandan Perdana'],
-        ].map(([time, stop]) => (
-          <li key={stop} className="flex items-center gap-3 text-sm">
-            <span className="w-11 text-gray-400 tabular-nums">{time}</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C9A45C]" />
-            <span className="text-gray-700">{stop}</span>
-          </li>
-        ))}
-      </ol>
-    </PhoneCard>
-  )
-}
-
-function LinesPreview() {
-  return (
-    <PhoneCard>
-      <div className="grid grid-cols-5 gap-3">
-        {LINES.slice(0, 15).map((l) => (
-          <LineBadge key={l.id} line={l} size={44} decorative />
-        ))}
-      </div>
-    </PhoneCard>
-  )
-}
-
-function FaresPreview() {
-  const rows: [string, string, string][] = [
-    ['erl-klia-transit', 'klia2 → Putrajaya', 'RM 9.40'],
-    ['brt-sunway', 'Sunway-Setia Jaya → Mentari', 'RM 1.30'],
-    ['erl-klia-ekspres', 'KL Sentral → KLIA T1', 'RM 55.00'],
-  ]
-  return (
-    <PhoneCard>
-      <div className="divide-y divide-gray-100">
-        {rows.map(([id, trip, fare]) => (
-          <div key={trip} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-            <LineBadge line={id} size={32} decorative />
-            <span className="flex-1 text-sm text-gray-700">{trip}</span>
-            <span className="text-sm font-semibold text-gray-900">{fare}</span>
-          </div>
-        ))}
-      </div>
-    </PhoneCard>
-  )
-}
-
-function TrailsPreview() {
-  return (
-    <div className="grid grid-cols-3 gap-3 w-full max-w-sm" aria-hidden="true">
-      {TRAILS.filter((t) => ['food-hawker', 'heritage', 'nature'].includes(t.slug)).map((t) => (
-        <div key={t.slug} className="aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
-          <TrailCover trail={t} />
-        </div>
-      ))}
-    </div>
-  )
-}
-
-const SLIDES: { key: string; title: TranslationKey; text: TranslationKey; visual: () => ReactNode }[] = [
-  { key: 'plan', title: 'slide_plan_title', text: 'slide_plan_text', visual: PlanPreview },
-  { key: 'lines', title: 'slide_lines_title', text: 'slide_lines_text', visual: LinesPreview },
-  { key: 'fares', title: 'slide_fares_title', text: 'slide_fares_text', visual: FaresPreview },
-  { key: 'trails', title: 'slide_trails_title', text: 'slide_trails_text', visual: TrailsPreview },
+type Slide = { key: keyof typeof SLIDE_PHOTOS; n: 1 | 2 | 3 | 4; action: 'plan' | 'lines' | 'login' }
+const SLIDES: Slide[] = [
+  { key: 'plan', n: 1, action: 'plan' },
+  { key: 'ronda300', n: 2, action: 'lines' },
+  { key: 'fares', n: 3, action: 'plan' },
+  { key: 'saved', n: 4, action: 'login' },
 ]
+const k = (n: number, part: string) => `s${n}_${part}` as TranslationKey
 
-function FeatureCarousel() {
+function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () => void }) {
   const { t, lang } = useLanguage()
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
@@ -135,22 +44,36 @@ function FeatureCarousel() {
       type="button"
       onClick={() => go(index + dir)}
       aria-label={dir === 1 ? t('scrollNext') : t('scrollPrev')}
-      className={`absolute top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/90 border border-gray-200 shadow-md text-[#002472] hover:bg-white flex items-center justify-center ${
-        dir === 1 ? 'end-2 md:-end-5' : 'start-2 md:-start-5'
+      className={`absolute top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg ring-1 ring-gray-200 text-[#002472] hover:bg-gray-50 hidden md:flex items-center justify-center ${
+        dir === 1 ? '-end-6' : '-start-6'
       }`}
     >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180">
-        <path d={dir === 1 ? 'M9 6l6 6-6 6' : 'M15 6l-6 6 6 6'} />
-      </svg>
+      <Icon name={dir === 1 ? 'chevronRight' : 'chevronLeft'} size={24} className="rtl:rotate-180" />
     </button>
   )
+  const cta = (s: Slide, active: boolean) => {
+    const cls = 'inline-flex items-center gap-1.5 rounded-full bg-[#002472] px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-[#0a3391] transition-colors'
+    const label = (
+      <>
+        {t(k(s.n, 'cta'))}
+        <Icon name="chevronRight" size={18} className="rtl:rotate-180" />
+      </>
+    )
+    const tab = active ? 0 : -1
+    if (s.action === 'login') return <Link to="/login" className={cls} tabIndex={tab}>{label}</Link>
+    return (
+      <button type="button" onClick={s.action === 'plan' ? onPlan : onLines} className={cls} tabIndex={tab}>
+        {label}
+      </button>
+    )
+  }
 
   return (
     <section
       ref={rootRef}
       aria-roledescription="carousel"
       aria-labelledby="slides-title"
-      className="max-w-6xl mx-auto px-4 sm:px-6 pt-10"
+      className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-16 md:pt-20"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -160,54 +83,77 @@ function FeatureCarousel() {
         if (e.key === 'ArrowLeft') go(index + (rtl ? 1 : -1))
       }}
     >
-      <h2 id="slides-title" className="text-2xl md:text-3xl font-bold text-[#002472]">
+      <h2 id="slides-title" className="text-center text-2xl md:text-3xl font-bold text-[#002472]">
         {t('slidesTitle')}
       </h2>
 
-      <div className="relative mt-4">
+      <div className="relative mt-8">
         {arrow(-1)}
         {arrow(1)}
-        <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#002472] via-[#0a3391] to-[#1747b8] shadow-lg">
+        <div className="overflow-hidden rounded-[2rem] bg-white shadow-2xl shadow-[#001233]/15 ring-1 ring-gray-100">
           <div
-            className="flex transition-transform duration-500 ease-out motion-reduce:transition-none"
+            className="flex transition-transform duration-700 ease-out motion-reduce:transition-none"
             style={{ transform: `translateX(${(rtl ? 1 : -1) * index * 100}%)` }}
           >
             {SLIDES.map((s, i) => {
-              const Visual = s.visual
+              const photo = SLIDE_PHOTOS[s.key]
+              const active = i === index
               return (
                 <div
                   key={s.key}
                   role="group"
                   aria-roledescription="slide"
                   aria-label={`${i + 1} / ${n}`}
-                  aria-hidden={i !== index}
-                  className="w-full flex-shrink-0 grid md:grid-cols-2 gap-8 md:gap-12 items-center px-8 sm:px-14 md:px-16 py-8 md:py-10"
+                  aria-hidden={!active}
+                  className="w-full flex-shrink-0 grid md:grid-cols-2 gap-8 md:gap-12 items-center p-6 sm:p-10 md:p-12"
                 >
-                  <div className="flex justify-center order-2 md:order-1">
-                    <Visual />
-                  </div>
-                  <div className="order-1 md:order-2 text-center md:text-start">
-                    <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight">{t(s.title)}</h3>
-                    <p className="mt-4 text-white/80 md:text-lg leading-relaxed">{t(s.text)}</p>
+                  <figure className="relative">
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                      className="w-full aspect-[4/3] object-cover rounded-2xl shadow-lg"
+                    />
+                    <figcaption className="absolute bottom-2 end-2 rounded-full bg-black/45 px-2 py-0.5 text-[10px] text-white/90 backdrop-blur-sm">
+                      <PhotoCredit photo={photo} />
+                    </figcaption>
+                  </figure>
+                  <div className="text-center md:text-start">
+                    <p className="text-sm font-semibold" style={{ color: GOLD_TEXT }}>
+                      {t(k(s.n, 'tag'))}
+                    </p>
+                    <h3 className="mt-2 text-2xl md:text-4xl font-bold leading-tight text-[#002472]">{t(k(s.n, 'title'))}</h3>
+                    <p className="mt-4 text-gray-600 leading-relaxed">{t(k(s.n, 'body'))}</p>
+                    <ul className="mt-5 space-y-2.5 text-sm md:text-base text-start inline-block md:block">
+                      {[1, 2, 3].map((p) => (
+                        <li key={p} className="flex items-start gap-3 text-gray-800">
+                          <span className="mt-0.5 w-6 h-6 rounded-full bg-[#002472]/8 text-[#002472] flex items-center justify-center flex-shrink-0">
+                            <Icon name="check" size={16} />
+                          </span>
+                          {t(k(s.n, `p${p}`))}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-7">{cta(s, active)}</div>
                   </div>
                 </div>
               )
             })}
           </div>
-        </div>
-      </div>
 
-      <div className="mt-4 flex justify-center gap-2">
-        {SLIDES.map((s, i) => (
-          <button
-            key={s.key}
-            type="button"
-            onClick={() => go(i)}
-            aria-label={t('goToSlide').replace('{n}', String(i + 1))}
-            aria-current={i === index}
-            className={`h-2.5 rounded-full transition-all ${i === index ? 'w-7 bg-[#002472]' : 'w-2.5 bg-gray-300 hover:bg-gray-400'}`}
-          />
-        ))}
+          <div className="pb-6 flex justify-center gap-2">
+            {SLIDES.map((s, i) => (
+              <button
+                key={s.key}
+                type="button"
+                onClick={() => go(i)}
+                aria-label={t('goToSlide').replace('{n}', String(i + 1))}
+                aria-current={i === index}
+                className={`h-2.5 rounded-full transition-all ${i === index ? 'w-8 bg-[#002472]' : 'w-2.5 bg-gray-300 hover:bg-gray-400'}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )

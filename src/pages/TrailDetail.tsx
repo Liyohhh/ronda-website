@@ -5,6 +5,7 @@ import PhotoCredit from '../components/PhotoCredit'
 import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import LineBadge from '../components/LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
+import Icon from '../components/Icon'
 import {
   PLACES,
   categoryKey,
@@ -23,9 +24,7 @@ function BackLink() {
   const { t } = useLanguage()
   return (
     <Link to="/trails" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#002472] hover:underline">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180">
-        <path d="M15 6l-6 6 6 6" />
-      </svg>
+      <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
       {t('backToTrails')}
     </Link>
   )
@@ -41,10 +40,7 @@ function TrailDetail() {
       <SiteLayout>
         <div className="max-w-xl mx-auto px-4 py-20 text-center">
           <div className="mx-auto w-14 h-14 rounded-full bg-[#002472]/10 text-[#002472] flex items-center justify-center" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="7" />
-              <path d="M21 21l-4.3-4.3M8.5 8.5l5 5M13.5 8.5l-5 5" />
-            </svg>
+            <Icon name="searchOff" size={26} />
           </div>
           <h1 className="mt-4 text-2xl font-bold text-gray-900">{t('trailNotFound')}</h1>
           <p className="mt-2 text-gray-500">{t('trailNotFoundText')}</p>
@@ -129,10 +125,7 @@ function TrailDetail() {
                         to={planHref(place.station)}
                         className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#002472] text-white text-sm font-semibold hover:bg-[#001a55] transition-colors"
                       >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                          <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
-                          <circle cx="12" cy="10" r="2.5" />
-                        </svg>
+                        <Icon name="locationOnOutline" size={16} />
                         {t('planTripHere')}
                       </Link>
                     )}

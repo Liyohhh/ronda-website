@@ -6,6 +6,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import ServiceNav from './ServiceNav'
 import BrandLogo from './BrandLogo'
 import LanguageMenu from './LanguageMenu'
+import Icon from './Icon'
 
 function Header() {
   const { t } = useLanguage()
@@ -132,33 +133,21 @@ function Header() {
 const PILL =
   'h-9 px-3 inline-flex items-center gap-1.5 rounded-full hover:bg-[#002472]/5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#002472]/40'
 
-// 20px outline icons, 1.75 stroke, so the set looks even
-const ICON = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.75, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const
-
 function HelpIcon() {
   return (
-    <svg {...ICON}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M9.6 9.3a2.5 2.5 0 0 1 4.8 1c0 1.7-2.4 2.2-2.4 3.7" />
-      <path d="M12 17.2h.01" strokeWidth={2.4} />
-    </svg>
+    <Icon name="helpOutline" />
   )
 }
 
 function UserIcon({ size = 20 }: { size?: number }) {
   return (
-    <svg {...ICON} width={size} height={size}>
-      <circle cx="12" cy="8" r="3.75" />
-      <path d="M4.75 20a7.25 7.25 0 0 1 14.5 0" />
-    </svg>
+    <Icon name="personOutline" size={size} />
   )
 }
 
 function ChevronIcon({ className = '' }: { className?: string }) {
   return (
-    <svg {...ICON} width={14} height={14} strokeWidth={2} className={className}>
-      <path d="M6 9l6 6 6-6" />
-    </svg>
+    <Icon name="expandMore" size={14} className={className} />
   )
 }
 

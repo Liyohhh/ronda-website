@@ -3,6 +3,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import { TRAILS } from '../data/trails'
 import TrailCard from './TrailCard'
 import CategoryPills, { type CategoryFilter } from './CategoryPills'
+import Icon from './Icon'
 
 // Home page: "Explore Trails" with category pills and a swipeable row of trail cards
 function TrailsSection() {
@@ -25,9 +26,7 @@ function TrailsSection() {
       aria-label={dir === 1 ? t('scrollNext') : t('scrollPrev')}
       className="hidden md:flex w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md items-center justify-center text-[#002472] hover:bg-gray-50"
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180">
-        <path d={dir === 1 ? 'M9 6l6 6-6 6' : 'M15 6l-6 6 6 6'} />
-      </svg>
+      <Icon name={dir === 1 ? 'chevronRight' : 'chevronLeft'} size={18} className="rtl:rotate-180" />
     </button>
   )
 

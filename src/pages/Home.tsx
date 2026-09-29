@@ -8,12 +8,14 @@ import SiteLayout from '../components/SiteLayout'
 import TrailsSection from '../components/TrailsSection'
 import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
+import NavyBand from '../components/NavyBand'
 import ReviewsSection from '../components/ReviewsSection'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
 import SuggestionList from '../components/SuggestionList'
 import { buildItems, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
+import Icon from '../components/Icon'
 
 const LIST_ID = 'place-suggestions'
 
@@ -266,7 +268,7 @@ function Home() {
     <SiteLayout>
       {/* Hero: KL skyline, darkened so the white headline stands out; the search card overlaps its bottom */}
       <section className="relative">
-        {/* Photo behind the whole hero; the white strip in the card row hides its lower part,
+        {/* Photo behind the whole hero; the light strip in the card row hides its lower part,
             so the photo always ends exactly halfway down the search card (pure CSS, any card height) */}
         <div className="absolute inset-0 overflow-hidden bg-[#001233]" aria-hidden="true">
           <picture>
@@ -281,25 +283,25 @@ function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#001233]/85 via-[#001233]/60 to-[#001233]/80" />
         </div>
 
-        <div className="relative max-w-5xl mx-auto px-4 pt-10 md:pt-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(0_18_51/0.6)]">
+        <div className="relative max-w-6xl mx-auto px-4 pt-12 md:pt-16 text-center">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(0_18_51/0.6)]">
             {t('bannerTitle')}
           </h1>
-          <p className="mt-3 text-lg md:text-xl text-white/85 [text-shadow:0_1px_12px_rgb(0_18_51/0.6)]">
+          <p className="mt-4 text-lg md:text-2xl text-white/85 [text-shadow:0_1px_12px_rgb(0_18_51/0.6)]">
             {t('bannerSubtitle')}
           </p>
         </div>
 
-        {/* Search card: half on the photo, half on the white below it */}
+        {/* Search card: half on the photo, half on the light page below it */}
         <div className="relative z-20 mt-10 px-4 flex justify-center">
           <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-gray-50" aria-hidden="true" />
-          <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-xl px-6 pt-4 pb-5">
+          <div className="relative w-full max-w-6xl bg-white rounded-[2rem] shadow-2xl px-5 md:px-10 pt-5 pb-7">
             {/* Tab switcher */}
             <div className="flex justify-center">
               <div className="flex bg-gray-100 rounded-full p-1">
                 <button
                   onClick={() => setTab('directions')}
-                  className={`px-8 py-2 rounded-full text-sm font-semibold transition ${
+                  className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
                     tab === 'directions' ? 'bg-white text-black shadow' : 'text-gray-500'
                   }`}
                 >
@@ -307,7 +309,7 @@ function Home() {
                 </button>
                 <button
                   onClick={() => setTab('lines')}
-                  className={`px-8 py-2 rounded-full text-sm font-semibold transition ${
+                  className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
                     tab === 'lines' ? 'bg-white text-black shadow' : 'text-gray-500'
                   }`}
                 >
@@ -317,14 +319,14 @@ function Home() {
             </div>
 
             {/* Search bar + suggestions dropdown */}
-            <div className="flex justify-center mt-3 relative">
-              <div className="w-full max-w-3xl relative">
-                <div className="bg-white rounded-full shadow-lg border flex items-center pe-2">
+            <div className="flex justify-center mt-4 relative">
+              <div className="w-full max-w-5xl relative">
+                <div className="bg-white rounded-full shadow-lg border flex items-center pe-2.5">
                   {tab === 'directions' ? (
                     <>
-                      <div className="flex-1 flex items-center px-6 py-3">
+                      <div className="flex-1 flex items-center px-7 py-4">
                         <div className="flex-1">
-                          <div className="text-xs text-gray-400">{t('start')}</div>
+                          <div className="text-sm text-gray-400">{t('start')}</div>
                           <input
                             type="text"
                             value={start}
@@ -344,24 +346,22 @@ function Home() {
                             aria-activedescendant={activeField === 'start' && highlighted >= 0 ? `${LIST_ID}-${highlighted}` : undefined}
                             autoComplete="off"
                             placeholder={t('startPh')}
-                            className="w-full text-base outline-none"
+                            className="w-full text-lg outline-none"
                           />
                         </div>
                       </div>
 
                       <button
                         onClick={handleSwap}
-                        className="w-10 h-10 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0"
+                        className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0"
                         aria-label="Swap"
                       >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/>
-                        </svg>
+                        <Icon name="swapVert" size={22} />
                       </button>
 
-                      <div className="flex-1 flex items-center px-6 py-3">
+                      <div className="flex-1 flex items-center px-7 py-4">
                         <div className="flex-1">
-                          <div className="text-xs text-gray-400">{t('end')}</div>
+                          <div className="text-sm text-gray-400">{t('end')}</div>
                           <input
                             type="text"
                             value={end}
@@ -380,15 +380,15 @@ function Home() {
                             aria-activedescendant={activeField === 'end' && highlighted >= 0 ? `${LIST_ID}-${highlighted}` : undefined}
                             autoComplete="off"
                             placeholder={t('endPh')}
-                            className="w-full text-base outline-none"
+                            className="w-full text-lg outline-none"
                           />
                         </div>
                       </div>
                     </>
                   ) : (
-                    <div className="flex-1 flex items-center px-6 py-3">
+                    <div className="flex-1 flex items-center px-7 py-4">
                       <div className="flex-1">
-                        <div className="text-xs text-gray-400">{t('line')}</div>
+                        <div className="text-sm text-gray-400">{t('line')}</div>
                         <input
                           type="text"
                           value={line}
@@ -408,7 +408,7 @@ function Home() {
                           autoComplete="off"
                           aria-label={t('line')}
                           placeholder={t('linePh')}
-                          className="w-full text-base outline-none"
+                          className="w-full text-lg outline-none"
                         />
                       </div>
                     </div>
@@ -417,16 +417,13 @@ function Home() {
                   <button
                     onClick={() => handleSearch()}
                     disabled={loading}
-                    className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                    className="w-14 h-14 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                     aria-label="Search"
                   >
                     {loading ? (
                       <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
                     ) : (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="11" cy="11" r="8"/>
-                        <path d="M21 21l-4.35-4.35"/>
-                      </svg>
+                      <Icon name="search" size={20} />
                     )}
                   </button>
                 </div>
@@ -459,11 +456,23 @@ function Home() {
         </div>
       </section>
 
-      {/* Below the search, Traveloka-style: banner slides, a row of trails with category pills,
-          feature tiles, rider reviews (the app banner + footer follow in SiteLayout) */}
-      <FeatureCarousel />
+      {/* Below the search: the feature slides as a white card that sits over the top of the navy band,
+          the feature tiles in the band, then trails and rider reviews (app banner + footer follow in SiteLayout) */}
+      <FeatureCarousel
+        onPlan={() => {
+          setTab('directions')
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+          setTimeout(() => document.getElementById('start-input')?.focus({ preventScroll: true }), 400)
+        }}
+        onLines={() => {
+          setTab('lines')
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}
+      />
+      <NavyBand overlap>
+        <FeatureGrid />
+      </NavyBand>
       <TrailsSection />
-      <FeatureGrid />
       <ReviewsSection />
 
       {/* Line stations in the right-side panel; "Plan a trip here" fills the End box */}

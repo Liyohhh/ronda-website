@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { FEEDBACK_HREF, REVIEWS, type Review } from '../data/reviews'
+import Icon from './Icon'
 
 // "What riders say": real reviews from src/data/reviews.ts, or an honest empty state until there are any.
 
@@ -8,9 +9,7 @@ function Stars({ rating }: { rating: number }) {
   return (
     <span className="flex gap-0.5" role="img" aria-label={`${rating} / 5`}>
       {[1, 2, 3, 4, 5].map((i) => (
-        <svg key={i} width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill={i <= rating ? '#C9A45C' : '#E5E7EB'}>
-          <path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" />
-        </svg>
+        <Icon key={i} name="star" size={16} className={i <= rating ? 'text-[#C9A45C]' : 'text-[#E5E7EB]'} />
       ))}
     </span>
   )

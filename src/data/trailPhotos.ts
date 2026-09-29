@@ -24,3 +24,11 @@ export const TRAIL_PHOTOS: Record<string, TrailPhoto> = {
   festive: { src: commons('d/d7', 'Thean_Hou_Temple%2C_2023_%2803%29.jpg'), author: 'Bahnfrend', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Thean_Hou_Temple,_2023_(03).jpg' },
   'rooftop-dining': { src: commons('c/cc', 'Kuala_Lumpur_Skyline_at_dusk_1.jpg'), author: 'Walkerssk', license: 'CC0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/', page: 'https://commons.wikimedia.org/wiki/File:Kuala_Lumpur_Skyline_at_dusk_1.jpg' },
 }
+
+// Home page slides ("Travel made effortless"): real photos, same licence rules and credits as above
+export const SLIDE_PHOTOS: Record<'plan' | 'ronda300' | 'fares' | 'saved', TrailPhoto & { alt: string }> = {
+  plan: { src: commons('b/b4', 'Putrajaya_Line_Hyundai_Rotem_train_approaching_Kentonmen_station.jpg'), alt: 'MRT Putrajaya Line train on the elevated track', author: 'Wlsrudals', license: 'CC0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/', page: 'https://commons.wikimedia.org/wiki/File:Putrajaya_Line_Hyundai_Rotem_train_approaching_Kentonmen_station.jpg' },
+  ronda300: { src: commons('e/ef', 'Petaling_Street%2C_Kuala_Lumpur_01.jpg'), alt: 'Petaling Street, Kuala Lumpur', author: 'IQRemix', license: 'CC BY-SA 2.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0', page: 'https://commons.wikimedia.org/wiki/File:Petaling_Street,_Kuala_Lumpur_01.jpg' },
+  fares: { src: commons('b/b4', 'KLCC_LRT_station_faregates.jpg'), alt: 'Fare gates at LRT KLCC station', author: 'Fazley Fadzil', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:KLCC_LRT_station_faregates.jpg' },
+  saved: { src: commons('f/fb', 'KG20_PY23_Tun_Razak_Exchange_MRT_Concourse_20231209_090131.jpg'), alt: 'Concourse of Tun Razak Exchange MRT station', author: 'Wiki Farazi', license: 'CC0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/', page: 'https://commons.wikimedia.org/wiki/File:KG20_PY23_Tun_Razak_Exchange_MRT_Concourse_20231209_090131.jpg' },
+}

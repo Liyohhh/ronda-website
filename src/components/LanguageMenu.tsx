@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { LANGUAGES, type Lang } from '../i18n/translations'
+import Icon from './Icon'
 
 // Themed language picker (the native <select> list can't be styled on Windows).
 // Button + listbox with arrow keys, Enter/Space, Escape and click-outside.
@@ -81,17 +82,9 @@ function LanguageMenu({ variant = 'pill', compact = false }: Props) {
         aria-label={`Language: ${current.label}`}
         className={`${buttonClass} inline-flex items-center gap-1.5 text-sm font-medium text-[#002472] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#002472]/40`}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M3.6 9h16.8M3.6 15h16.8M12 3c2.3 2.5 3.5 5.5 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.5-3.5-9S9.7 5.5 12 3z" />
-        </svg>
+        <Icon name="language" size={20} />
         <span className={compact ? 'hidden sm:inline' : ''}>{current.label}</span>
-        <svg
-          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
-          className={`transition-transform ${open ? 'rotate-180' : ''}`}
-        >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
+        <Icon name="expandMore" size={14} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
@@ -122,9 +115,7 @@ function LanguageMenu({ variant = 'pill', compact = false }: Props) {
               >
                 {l.label}
                 {selected && (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M5 12.5l4.5 4.5L19 7.5" />
-                  </svg>
+                  <Icon name="check" size={16} />
                 )}
               </li>
             )

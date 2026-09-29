@@ -10,6 +10,7 @@ import HelpCategory from './pages/HelpCategory'
 import Trails from './pages/Trails'
 import TrailDetail from './pages/TrailDetail'
 import About from './pages/About'
+import Services from './pages/Services'
 import { LanguageProvider } from './i18n/LanguageProvider'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/trails" element={<Trails />} />
           <Route path="/trails/:slug" element={<TrailDetail />} />
           <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
         </Routes>
       </BrowserRouter>
     </LanguageProvider>

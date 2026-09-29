@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { NAV_MENUS, type NavMenu } from '../data/serviceOptions'
+import Icon from './Icon'
 
 type Key = NavMenu['key']
 
@@ -49,9 +50,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
               }`}
             >
               {t(m.key)}
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`transition-transform ${active === m.key ? 'rotate-180' : ''}`}>
-                <path d="M6 9l6 6 6-6" />
-              </svg>
+              <Icon name="expandMore" size={12} className={`transition-transform ${active === m.key ? 'rotate-180' : ''}`} />
             </button>
           </li>
         ))}
@@ -75,7 +74,9 @@ function ServiceNav({ className = '' }: { className?: string }) {
                       <span className="block text-sm text-gray-800 group-hover:text-[#002472] group-hover:underline">
                         {item.label ? t(item.label) : item.name}
                       </span>
-                      {item.detail && <span className="block text-xs text-gray-500">{item.detail}</span>}
+                      {(item.detail || item.detailLabel) && (
+                        <span className="block text-xs text-gray-500">{item.detailLabel ? t(item.detailLabel).replace('{n}', '10') : item.detail}</span>
+                      )}
                     </Link>
                   </li>
                 ))}

@@ -2,6 +2,7 @@ import { useState, type KeyboardEvent } from 'react'
 import SuggestionList from './SuggestionList'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { buildItems, type Pick } from '../data/suggestions'
+import Icon from './Icon'
 
 // A From / To box in the results panel: shows the place, and on click becomes a search field with the
 // same smart suggestions as the Home search. Picking a suggestion calls onPick (the trip is re-planned).
@@ -46,9 +47,7 @@ function PlaceField({ id, label, value, onPick }: Props) {
         <div className="text-[11px] text-white/60">{label}</div>
         <div className="flex items-center gap-2">
           <span className="flex-1 font-semibold truncate">{value}</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-white/50 group-hover:text-white">
-            <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
-          </svg>
+          <Icon name="editOutline" size={14} className="text-white/50 group-hover:text-white" />
         </div>
       </button>
     )

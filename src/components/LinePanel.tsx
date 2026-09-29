@@ -3,6 +3,7 @@ import LineBadge from './LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
 import { LINES, type Line } from '../data/lines'
 import { supabase } from '../services/supabase'
+import Icon from './Icon'
 
 type Station = { seq: number; stop_id: string; name: string; lat: number; lon: number }
 
@@ -51,30 +52,29 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
           md:inset-x-auto md:inset-y-0 md:end-0 md:w-[460px] md:max-h-none md:rounded-none
           md:starting:translate-y-0 md:starting:translate-x-full rtl:md:starting:-translate-x-full`}
       >
-        {/* Header, as in the journey panel: the line instead of From / To */}
-        <div className="bg-[#002472] text-white px-5 pt-5 pb-5 md:pt-6">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs uppercase tracking-wider text-white/60">{t('lines')}</span>
-            <button onClick={onClose} aria-label="Close" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                <path d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            </button>
-          </div>
-          <div className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 border-b-4" style={{ borderColor: line.color }}>
-            <LineBadge line={line} size={40} decorative />
-            <div className="min-w-0">
-              <h2 className="text-lg font-bold leading-tight truncate">{line.name}</h2>
-              <p className="text-sm text-white/70">
-                {current && !current.error ? t('lineStationCount').replace('{n}', String(current.stations.length)) : ' '}
-              </p>
+        {/* Header in RONDA navy: the line's logo and name, then every line as a tab (the picked one underlined in its colour) */}
+        <div className="bg-[#002472] text-white">
+          <div className="px-5 pt-5 pb-4 md:pt-6">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs uppercase tracking-wider text-white/60">{t('lines')}</span>
+              <button onClick={onClose} aria-label="Close" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
+                <Icon name="close" size={18} />
+              </button>
+            </div>
+            <div className="flex items-center gap-3.5">
+              <span className="rounded-full bg-white p-1 flex-shrink-0">
+                <LineBadge line={line} size={44} decorative />
+              </span>
+              <div className="min-w-0">
+                <h2 className="text-xl font-bold leading-tight truncate">{line.name}</h2>
+                <p className="mt-0.5 text-sm text-white/70">
+                  {current && !current.error ? t('lineStationCount').replace('{n}', String(current.stations.length)) : '\u00a0'}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Every line, scroll sideways to switch */}
-        <div className="bg-white border-b border-gray-200">
-          <div ref={strip} className="flex gap-2 overflow-x-auto [scrollbar-width:none] px-5 py-3" role="group" aria-label={t('lines')}>
+          <div ref={strip} className="flex gap-1 overflow-x-auto [scrollbar-width:none] px-3 border-t border-white/10" role="group" aria-label={t('lines')}>
             {LINES.map((l) => {
               const active = l.id === line.id
               return (
@@ -83,12 +83,12 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
                   type="button"
                   onClick={() => !active && onPick(l)}
                   aria-pressed={active}
-                  className={`h-9 ps-1 pe-3.5 rounded-full inline-flex items-center gap-1.5 text-sm font-medium whitespace-nowrap border transition-colors ${
-                    active ? '' : 'bg-white border-gray-300 text-gray-700 hover:border-[#002472]/50'
+                  className={`px-2.5 pt-3 pb-2.5 inline-flex items-center gap-2 text-sm whitespace-nowrap border-b-[3px] transition-colors ${
+                    active ? 'font-semibold text-white' : 'border-transparent font-medium text-white/60 hover:text-white'
                   }`}
-                  style={active ? { backgroundColor: l.color, borderColor: l.color, color: l.textColor } : undefined}
+                  style={active ? { borderColor: l.color } : undefined}
                 >
-                  <LineBadge line={l} size={26} decorative />
+                  <LineBadge line={l} size={22} decorative />
                   {shortName(l)}
                 </button>
               )

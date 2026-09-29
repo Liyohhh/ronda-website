@@ -1,42 +1,52 @@
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
+import type { IconName } from '../data/icons'
+import Icon from './Icon'
 
-// Feature tiles. `soon` = planned, labelled "Coming soon" so nothing is oversold.
-const FEATURES: { key: TranslationKey; icon: string; soon?: boolean }[] = [
-  { key: 'feat_directions', icon: 'M5 19l4-14 4 9 3-5 3 10M3 19h18' },
-  { key: 'feat_places', icon: 'M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z' },
-  { key: 'feat_lines', icon: 'M6 4h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 21l2-4M16 21l-2-4' },
-  { key: 'feat_fares', icon: 'M3 7h18v10H3zM3 11h18M7 15h3' },
-  { key: 'feat_trails', icon: 'M4 20c3-6 6-2 8-8s5-4 8-8M4 20h4M16 4h4v4' },
-  { key: 'feat_airport', icon: 'M10.5 20l1.5-6-6 2.5v-2l6-4V5a1.5 1.5 0 0 1 3 0v5.5l6 4v2l-6-2.5 1.5 6-3-1z' },
-  { key: 'feat_languages', icon: 'M4 5h8M8 3v2M6 5c0 4 3 7 6 8M10 5c0 4-3 7-6 8M13 21l4-10 4 10M14.5 17h5' },
-  { key: 'feat_ronda300', icon: 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0-18 0M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0-8 0M12 12h.01', soon: true },
-  { key: 'feat_saved', icon: 'M6 3h12v18l-6-4-6 4z', soon: true },
-  { key: 'feat_alerts', icon: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4', soon: true },
+// Feature tiles, each with a two-tone icon: a big navy shape and a small light-blue badge on its corner
+const FEATURES: { key: TranslationKey; icon: IconName; accent: IconName }[] = [
+  { key: 'feat_directions', icon: 'route', accent: 'directionsWalk' },
+  { key: 'feat_places', icon: 'locationOn', accent: 'search' },
+  { key: 'feat_lines', icon: 'train', accent: 'palette' },
+  { key: 'feat_fares', icon: 'payments', accent: 'sell' },
+  { key: 'feat_trails', icon: 'hiking', accent: 'map' },
+  { key: 'feat_airport', icon: 'flight', accent: 'luggage' },
+  { key: 'feat_languages', icon: 'translate', accent: 'chat' },
+  { key: 'feat_ronda300', icon: 'myLocation', accent: 'storefront' },
+  { key: 'feat_saved', icon: 'bookmark', accent: 'favorite' },
+  { key: 'feat_alerts', icon: 'notifications', accent: 'scheduleOutline' },
 ]
 
+function DuoIcon({ icon, accent }: { icon: IconName; accent: IconName }) {
+  return (
+    <span className="relative w-16 h-16" aria-hidden="true">
+      <span className="absolute top-0 end-0 text-[#002472]">
+        <Icon name={icon} size={46} />
+      </span>
+      <span className="absolute bottom-0 start-0 w-8 h-8 rounded-full bg-[#7f9be0]/85 text-white ring-[3px] ring-white flex items-center justify-center">
+        <Icon name={accent} size={18} />
+      </span>
+    </span>
+  )
+}
+
+// Sits inside the navy band under the "Travel made effortless" slides (see NavyBand)
 function FeatureGrid() {
   const { t } = useLanguage()
   return (
-    <section aria-labelledby="features-title" className="mt-8 bg-[#002472]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <h2 id="features-title" className="text-2xl md:text-3xl font-bold text-white">
+    <section aria-labelledby="features-title" className="relative">
+      <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 lg:px-20 pt-6 pb-8 md:pb-10">
+        <h2 id="features-title" className="text-center text-2xl md:text-3xl font-bold text-white">
           {t('featuresTitle')}
         </h2>
-        <ul className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+        <ul className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
           {FEATURES.map((f) => (
-            <li key={f.key} className="relative bg-white rounded-2xl p-5 flex flex-col items-center text-center gap-3">
-              {f.soon && (
-                <span className="absolute top-2 end-2 text-[10px] font-bold uppercase tracking-wide text-[#8a6a2a] bg-[#C9A45C]/15 px-2 py-0.5 rounded-full">
-                  {t('soon')}
-                </span>
-              )}
-              <span className="w-14 h-14 rounded-2xl bg-[#002472]/[0.07] text-[#002472] flex items-center justify-center" aria-hidden="true">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <path d={f.icon} />
-                </svg>
-              </span>
-              <span className={`text-sm font-semibold leading-snug ${f.soon ? 'text-gray-500' : 'text-gray-900'}`}>{t(f.key)}</span>
+            <li
+              key={f.key}
+              className="bg-white rounded-2xl px-4 pt-6 pb-5 flex flex-col items-center text-center gap-3 shadow-lg shadow-black/10 transition-transform hover:-translate-y-1"
+            >
+              <DuoIcon icon={f.icon} accent={f.accent} />
+              <span className="text-sm font-semibold leading-snug text-gray-900">{t(f.key)}</span>
             </li>
           ))}
         </ul>

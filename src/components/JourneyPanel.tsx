@@ -9,6 +9,7 @@ import DepartPicker from './DepartPicker'
 import WalkIcon from './WalkIcon'
 import PlaceField from './PlaceField'
 import type { Pick } from '../data/suggestions'
+import Icon from './Icon'
 
 export type Place = { name: string; lat: number; lon: number }
 
@@ -120,12 +121,10 @@ function legLabel(leg: Leg) {
   return leg.hop || leg.route_short_name || ''
 }
 
-// Short label for the route preview: "Kajang", "Ampang", "400", "KLIA Transit"
+// Label for the route preview: the station you get on at for rail ("MRT Maluri"), the route number for buses ("400")
 function legShort(leg: Leg) {
   if (isBus(leg)) return leg.route_short_name ?? 'Bus'
-  const line = leg.feed_id && leg.route_id ? lineForRoute(leg.feed_id, leg.route_id) : undefined
-  const name = line?.name ?? leg.hop ?? leg.route_short_name ?? ''
-  return name.replace(/^(MRT|LRT|KTM|ERL|BRT|KL)\s+/, '').replace(/\s+Line$/, '') || name
+  return leg.from.name
 }
 
 // Secondary label in the steps: the branch for rail when it's a real name (buses show their destination instead)
@@ -141,8 +140,6 @@ function formatDistance(m?: number) {
 
 const money = (n: number) => `RM ${n.toFixed(2)}`
 
-// Headway-based rides have estimated times: "~12:53"
-const legTime = (leg: Leg, time: string) => (leg.timing === 'headway' ? `~${time}` : time)
 const hasHeadway = (o: TripOption) => o.legs.some((l) => l.timing === 'headway')
 
 // "Platform 1 · Level 2", only the parts we know
@@ -214,9 +211,7 @@ function RoutePreview({ option }: { option: TripOption }) {
       {rides.map((l, i) => (
         <Fragment key={i}>
           {i > 0 && (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180">
-              <path d="M9 6l6 6-6 6" />
-            </svg>
+            <Icon name="chevronRight" size={14} className="rtl:rotate-180" />
           )}
           <span className="inline-flex items-center gap-1">
             <LineBadge line={legLine(l)} size={22} decorative />
@@ -228,16 +223,28 @@ function RoutePreview({ option }: { option: TripOption }) {
   )
 }
 
-// "52 min (37–52)": with waiting a full headway, and the range from no waiting to that
+// "52 min": trip time, counting a full wait for "every N min" lines
 function Duration({ option, className }: { option: TripOption; className: string }) {
   const { t } = useLanguage()
-  const r = option.duration_range_min
-  return (
-    <>
-      <span className={className}>{formatDuration(option.duration_min, t)}</span>
-      {r && r[0] !== r[1] && <span className="ms-1.5 text-sm font-medium text-gray-500">({r[0]}–{r[1]})</span>}
-    </>
-  )
+  return <span className={className}>{formatDuration(option.duration_min, t)}</span>
+}
+
+// The one thing this route is best at, shown next to its time: Fastest, else Easiest (least walking),
+// else Fewest changes, else Cheapest
+function Highlight({ tags }: { tags?: Tag[] }) {
+  const { t } = useLanguage()
+  const has = (x: Tag) => tags?.includes(x)
+  const pick: [TranslationKey, string] | null = has('fastest')
+    ? ['tagFastest', 'bg-[#002472] text-white']
+    : has('least_walking')
+      ? ['hlEasiest', 'bg-emerald-600 text-white']
+      : has('fewest_changes')
+        ? ['tagFewestChanges', 'bg-[#C9A45C] text-white']
+        : has('cheapest')
+          ? ['tagCheapest', 'bg-[#C9A45C] text-white']
+          : null
+  if (!pick) return null
+  return <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${pick[1]}`}>{t(pick[0])}</span>
 }
 
 function Tags({ tags }: { tags?: Tag[] }) {
@@ -262,11 +269,7 @@ function Tags({ tags }: { tags?: Tag[] }) {
 // Material Icons "accessible" (Apache 2.0), same set as the app
 function WheelchairIcon({ label }: { label: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label={label} className="inline-block text-[#002472]">
-      <title>{label}</title>
-      <circle cx="12" cy="4" r="2" />
-      <path d="M19 13v-2c-1.54.02-3.09-.75-4.07-1.83l-1.29-1.43c-.17-.19-.38-.34-.61-.45-.01 0-.01-.01-.02-.01H13c-.35-.2-.75-.3-1.19-.26C10.76 7.11 10 8.04 10 9.09V15c0 1.1.9 2 2 2h5v5h2v-5.5c0-1.1-.9-2-2-2h-3v-3.45c1.29 1.07 3.25 1.94 5 1.95zm-6.17 5c-.41 1.16-1.52 2-2.83 2-1.66 0-3-1.34-3-3 0-1.31.84-2.41 2-2.83V12.1c-2.28.46-4 2.48-4 4.9 0 2.76 2.24 5 5 5 2.42 0 4.44-1.72 4.9-4h-2.07z" />
-    </svg>
+    <Icon name="accessible" size={16} className="inline-block text-[#002472]" label={label} />
   )
 }
 
@@ -294,8 +297,7 @@ function WalkStep({ leg, next, placeName }: { leg: Leg; next?: Leg; placeName: (
         <div className="font-medium text-gray-900">{t('changeTo').replace('{line}', legLabel(next))}</div>
         <div className="text-sm text-gray-500">
           {t('walkDur').replace('{dur}', formatDuration(leg.duration_min, t))}
-          {leg.transfer.instructions ? ` · ${leg.transfer.instructions}` : ''}
-        </div>
+                  </div>
       </>
     )
   }
@@ -371,7 +373,7 @@ function RideStep({ leg, placeName }: { leg: Leg; placeName: (p: Place) => strin
       <div className="mt-1 flex flex-wrap items-center gap-1.5 text-sm">
         {leg.timing === 'headway' ? (
           <span className="font-semibold text-gray-900">
-            ~{leg.start}
+            {leg.start}
             {nd && !Array.isArray(nd) && <span className="font-normal text-gray-500"> · {t('everyMin').replace('{n}', String(nd.every_min))}</span>}
           </span>
         ) : (
@@ -399,9 +401,7 @@ function RideStep({ leg, placeName }: { leg: Leg; placeName: (p: Place) => strin
           aria-expanded={open}
           className="mt-2 inline-flex items-center gap-1 text-sm text-gray-600 hover:text-[#002472]"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`transition-transform ${open ? 'rotate-90' : 'rtl:rotate-180'}`}>
-            <path d="M9 6l6 6-6 6" />
-          </svg>
+          <Icon name="chevronRight" size={14} className={`transition-transform ${open ? 'rotate-90' : 'rtl:rotate-180'}`} />
           {(n === 1 ? t('rideOneStop') : t('rideStops').replace('{n}', String(n))).replace('{dur}', formatDuration(leg.duration_min, t))}
         </button>
       )}
@@ -411,7 +411,7 @@ function RideStep({ leg, placeName }: { leg: Leg; placeName: (p: Place) => strin
             <li key={`${s.stop_id ?? s.name}-${i}`} className="relative flex items-center gap-2 text-xs text-gray-500">
               {/* stops you ride through: small dots, grey text */}
               <LineMarker color={color} stop={false} />
-              <span className="w-10 flex-shrink-0 tabular-nums text-gray-400">{s.estimated ? `~${s.time}` : s.time}</span>
+              <span className="w-10 flex-shrink-0 tabular-nums text-gray-400">{s.time}</span>
               <span className="min-w-0 truncate">{s.name}</span>
               {s.is_interchange && s.other_lines?.length ? (
                 <span className="inline-flex items-center gap-0.5" title={`${t('interchangeWith')} ${s.other_lines.map((l) => l.name ?? l.route_short_name).join(', ')}`}>
@@ -428,7 +428,7 @@ function RideStep({ leg, placeName }: { leg: Leg; placeName: (p: Place) => strin
       {/* alighting: a big ring on the line */}
       <div className="relative mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
         <LineMarker color={color} stop />
-        <span className="text-sm font-semibold text-gray-900 tabular-nums">{legTime(leg, leg.end)}</span>
+        <span className="text-sm font-semibold text-gray-900 tabular-nums">{leg.end}</span>
         <span className="text-base font-semibold text-gray-900">{placeName(leg.to)}</span>
       </div>
       {alightAt && <div className="text-sm text-gray-700">{alightAt}</div>}
@@ -500,18 +500,20 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
           className="w-full text-start bg-white rounded-2xl border border-gray-200 p-4 hover:border-[#002472]/50 hover:shadow-md transition"
         >
           <div className="flex items-baseline justify-between gap-3">
-            <div>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              {/* what this route is best for, instead of the clock times */}
               <Duration option={o} className="text-xl font-bold text-gray-900" />
-              <span className="ms-2 text-sm text-gray-500">
-                {o.departure} – {hasHeadway(o) ? '~' : ''}{o.arrival}
-              </span>
+              <Highlight tags={o.tags} />
+              <div className="basis-full">
+                <Tags tags={o.tags} />
+              </div>
               {o.next_day && (
                 <span className="ms-2 align-middle inline-block rounded-full bg-[#002472]/10 text-[#002472] text-[11px] font-semibold px-2 py-0.5">
                   {t('tomorrow')}
                 </span>
               )}
             </div>
-            <div className="text-base font-semibold">
+            <div className="text-base font-semibold whitespace-nowrap flex-shrink-0">
               <FareText fare={o.fare} t={t} />
             </div>
           </div>
@@ -520,16 +522,10 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
             <RoutePreview option={o} />
           </div>
 
-          {o.tags?.length ? (
-            <div className="mt-2.5">
-              <Tags tags={o.tags} />
-            </div>
-          ) : null}
-
           <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500">
             {firstRide && (
               <span className="text-gray-600">
-                {t('leavesFrom').replace('{time}', legTime(firstRide, firstRide.start)).replace('{place}', placeName(firstRide.from))}
+                {t('leavesFrom').replace('{time}', firstRide.start).replace('{place}', placeName(firstRide.from))}
               </span>
             )}
             <span>{o.transfers === 0 ? t('direct') : `${t('transfers')}: ${o.transfers}`}</span>
@@ -557,18 +553,14 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
           <div className="flex items-center justify-between mb-4">
             {detail ? (
               <button onClick={() => setDetail(null)} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/85 hover:text-white">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180">
-                  <path d="M15 6l-6 6 6 6" />
-                </svg>
+                <Icon name="chevronLeft" size={18} className="rtl:rotate-180" />
                 {t('allRoutes')}
               </button>
             ) : (
               <span className="text-xs uppercase tracking-wider text-white/60">{t('yourJourney')}</span>
             )}
             <button onClick={onClose} aria-label="Close" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                <path d="M6 6l12 12M18 6L6 18" />
-              </svg>
+              <Icon name="close" size={18} />
             </button>
           </div>
 
@@ -587,10 +579,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
 
           {/* Leaving now, or a date and time the rider picks */}
           <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-white/80">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7v5l3 2" />
-            </svg>
+            <Icon name="scheduleOutline" size={16} />
             <span>{departAt ? t('leavingAt').replace('{when}', departLabel(departAt)) : t('leavingNow')}</span>
             <button
               type="button"
@@ -698,9 +687,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
             <ul className="p-4 space-y-3">
               {notice && (
                 <li className="flex gap-2.5 bg-amber-50 border border-amber-200 text-amber-900 text-sm rounded-2xl px-4 py-3" role="status">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="flex-shrink-0 mt-0.5">
-                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-                  </svg>
+                  <Icon name="darkModeOutline" size={18} className="flex-shrink-0 mt-0.5" />
                   <span>{t(notice.kind === 'tomorrow' ? 'noServiceTonight' : 'serviceResumes').replace('{time}', notice.time)}</span>
                 </li>
               )}
@@ -727,29 +714,25 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
             <div className="p-5">
               <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-5">
                 <div className="flex items-baseline justify-between">
-                  <div>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <Duration option={detail} className="text-2xl font-bold text-gray-900" />
-                    <span className="ms-2 text-sm text-gray-500">
-                      {detail.departure} – {hasHeadway(detail) ? '~' : ''}{detail.arrival}
-                    </span>
+                    <Highlight tags={detail.tags} />
+                    <div className="basis-full">
+                      <Tags tags={detail.tags} />
+                    </div>
                     {detail.next_day && (
                       <span className="ms-2 align-middle inline-block rounded-full bg-[#002472]/10 text-[#002472] text-[11px] font-semibold px-2 py-0.5">
                         {t('tomorrow')}
                       </span>
                     )}
                   </div>
-                  <div className="text-lg font-semibold">
+                  <div className="text-lg font-semibold whitespace-nowrap flex-shrink-0">
                     <FareText fare={detail.fare} t={t} />
                   </div>
                 </div>
                 <div className="mt-3">
                   <RoutePreview option={detail} />
                 </div>
-                {detail.tags?.length ? (
-                  <div className="mt-2.5">
-                    <Tags tags={detail.tags} />
-                  </div>
-                ) : null}
               </div>
 
               <ol className="relative">

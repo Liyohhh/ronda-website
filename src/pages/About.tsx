@@ -4,21 +4,23 @@ import SiteLayout from '../components/SiteLayout'
 import LineBadge from '../components/LineBadge'
 import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
-import { TRAIL_PHOTOS } from '../data/trailPhotos'
+import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import { busLine } from '../data/lines'
 import { TRAILS, trailDescKey, trailNameKey } from '../data/trails'
+import Icon from '../components/Icon'
+import type { IconName } from '../data/icons'
 
 // /about: features, how it works, networks, trails and FAQ.
 // Planned things are labelled "Coming soon" so the page never promises what isn't built yet.
 
-const FEATURES: { title: TranslationKey; text: TranslationKey; icon: string; soon?: boolean }[] = [
-  { title: 'feat_directions', text: 'aboutDirectionsText', icon: 'M5 19l4-14 4 9 3-5 3 10M3 19h18' },
-  { title: 'feat_trails', text: 'aboutTrailsText', icon: 'M4 20c3-6 6-2 8-8s5-4 8-8M4 20h4M16 4h4v4' },
-  { title: 'feat_ronda300', text: 'aboutRonda300Text', icon: 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0-18 0M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0-8 0', soon: true },
-  { title: 'aboutAirportTitle', text: 'aboutAirportText', icon: 'M10.5 20l1.5-6-6 2.5v-2l6-4V5a1.5 1.5 0 0 1 3 0v5.5l6 4v2l-6-2.5 1.5 6-3-1z' },
-  { title: 'aboutMultiTitle', text: 'aboutMultiText', icon: 'M4 5h8M8 3v2M6 5c0 4 3 7 6 8M10 5c0 4-3 7-6 8M13 21l4-10 4 10M14.5 17h5' },
+const FEATURES: { title: TranslationKey; text: TranslationKey; icon: IconName; soon?: boolean }[] = [
+  { title: 'feat_directions', text: 'aboutDirectionsText', icon: 'routeOutline' },
+  { title: 'feat_trails', text: 'aboutTrailsText', icon: 'hiking' },
+  { title: 'feat_ronda300', text: 'aboutRonda300Text', icon: 'adjust', soon: true },
+  { title: 'aboutAirportTitle', text: 'aboutAirportText', icon: 'flight' },
+  { title: 'aboutMultiTitle', text: 'aboutMultiText', icon: 'translate' },
 ]
 
 const STEPS: { title: TranslationKey; text: TranslationKey; soon?: TranslationKey }[] = [
@@ -94,9 +96,7 @@ function About() {
             {FEATURES.map((f) => (
               <li key={f.title} className="bg-white border border-gray-200 rounded-2xl p-5 flex gap-4">
                 <span className="w-12 h-12 rounded-xl bg-[#002472]/[0.07] text-[#002472] flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    <path d={f.icon} />
-                  </svg>
+                  <Icon name={f.icon} size={24} />
                 </span>
                 <div>
                   <h3 className="font-semibold text-gray-900 flex flex-wrap items-center gap-2">
@@ -194,9 +194,7 @@ function About() {
               <details key={n} className="group py-4">
                 <summary className="flex items-center justify-between gap-4 cursor-pointer list-none font-semibold text-gray-900 [&::-webkit-details-marker]:hidden">
                   {t(`faq${n}Q` as TranslationKey)}
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="flex-shrink-0 text-[#002472] transition-transform group-open:rotate-180">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
+                  <Icon name="expandMore" size={18} className="flex-shrink-0 text-[#002472] transition-transform group-open:rotate-180" />
                 </summary>
                 <p className="mt-2 text-gray-600 leading-relaxed">{t(`faq${n}A` as TranslationKey)}</p>
               </details>
@@ -204,7 +202,7 @@ function About() {
           </div>
         </section>
 
-        {/* Credits for the trail photos (CC BY / BY-SA need them) */}
+        {/* Credits for the trail and home-page photos (CC BY / BY-SA need them) */}
         <section aria-labelledby="about-credits" className="pt-14 pb-4 max-w-3xl">
           <h2 id="about-credits" className="text-lg font-semibold text-[#002472]">{t('photoCredits')}</h2>
           <p className="mt-1 text-sm text-gray-500">{t('photoCreditsIntro')}</p>
@@ -212,6 +210,11 @@ function About() {
             {TRAILS.filter((tr) => TRAIL_PHOTOS[tr.slug]).map((tr) => (
               <li key={tr.slug}>
                 {t(trailNameKey(tr))}: <PhotoCredit photo={TRAIL_PHOTOS[tr.slug]} />
+              </li>
+            ))}
+            {Object.entries(SLIDE_PHOTOS).map(([k, ph]) => (
+              <li key={k}>
+                {ph.alt}: <PhotoCredit photo={ph} />
               </li>
             ))}
           </ul>

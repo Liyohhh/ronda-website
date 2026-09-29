@@ -1,6 +1,7 @@
 import type { Trail } from '../data/trails'
 import { CATEGORY_STYLE } from '../data/trailStyles'
 import { TRAIL_PHOTOS } from '../data/trailPhotos'
+import Icon from './Icon'
 
 // Trail cover: the photo when one exists, otherwise a category-tinted RONDA gradient with an icon
 function TrailCover({ trail, className = '' }: { trail: Trail; className?: string }) {
@@ -15,9 +16,7 @@ function TrailCover({ trail, className = '' }: { trail: Trail; className?: strin
       className={`w-full h-full flex items-center justify-center ${className}`}
       style={{ backgroundImage: `linear-gradient(135deg, ${style.from} 10%, ${style.to})` }}
     >
-      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeOpacity="0.85" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-        <path d={style.icon} />
-      </svg>
+      <Icon name={style.icon} size={56} className="text-white/85" />
     </div>
   )
 }

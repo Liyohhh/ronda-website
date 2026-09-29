@@ -10,10 +10,10 @@ const planTo = (stop: string, shown = stop) => `/?to=${encodeURIComponent(stop)}
 // a place with no station of its own; coordinates from OpenStreetMap
 const planToPlace = (lat: number, lon: number, shown: string) => `/?toLat=${lat}&toLon=${lon}&toName=${encodeURIComponent(shown)}`
 
-export type NavItem = { to: string; name?: string; label?: TranslationKey; detail?: string }
+export type NavItem = { to: string; name?: string; label?: TranslationKey; detail?: string; detailLabel?: TranslationKey }
 export type NavColumn = { title: TranslationKey; items: NavItem[] }
 export type NavMenu = {
-  key: 'navTravel' | 'navExplore' | 'about'
+  key: 'navTravel' | 'navExplore' | 'navServices' | 'about'
   columns: NavColumn[]
   promo: { title: TranslationKey; text: TranslationKey; cta: TranslationKey; to: string }
 }
@@ -60,6 +60,29 @@ export const NAV_MENUS: NavMenu[] = [
       },
     ],
     promo: { title: 'trailsTitle', text: 'trailsSubtitle', cta: 'navSeeTrails', to: '/trails' },
+  },
+  {
+    // Chauffeur and private-car transfers (enquiries through the Help Centre)
+    key: 'navServices',
+    columns: [
+      {
+        title: 'navChauffeur',
+        items: [
+          { label: 'svc_hourly', detailLabel: 'svc_hourly_d', to: '/services#chauffeur' },
+          { label: 'svc_fullday', detailLabel: 'svc_fullday_d', to: '/services#chauffeur-day' },
+          { label: 'svc_corporate', detailLabel: 'svc_corporate_d', to: '/services#chauffeur-events' },
+        ],
+      },
+      {
+        title: 'navCarTransfer',
+        items: [
+          { label: 'navCarTransfer', detailLabel: 'svc_private_d', to: '/services#transfer' },
+          { label: 'svc_van', detailLabel: 'svc_upTo', to: '/services#transfer-van' },
+          { label: 'svc_coach', detail: 'KL Sentral ↔ KLIA T1 / T2', to: '/services#transfer-coach' },
+        ],
+      },
+    ],
+    promo: { title: 'navChauffeur', text: 'svc_chauffeurText', cta: 'svc_promoCta', to: '/services' },
   },
   {
     key: 'about',

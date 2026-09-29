@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { malaysiaNow, to12h, from12h } from '../data/time'
+import Icon from './Icon'
 
 // Departure picker in RONDA's own style (the browser's pickers follow the OS theme):
 // a date pill with a calendar card and a time pill with an hour / minute stepper and an AM / PM switch.
@@ -40,9 +41,7 @@ function Popover({ label, icon, children, open, setOpen }: { label: string; icon
       >
         {icon}
         {label}
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={open ? 'rotate-180' : ''}>
-          <path d="M6 9l6 6 6-6" />
-        </svg>
+        <Icon name="expandMore" size={12} className={open ? 'rotate-180' : ''} />
       </button>
       {open && <div className="absolute start-0 top-full mt-2 z-20 rounded-2xl bg-white shadow-xl border border-gray-200 p-3">{children}</div>}
     </div>
@@ -53,9 +52,7 @@ function Popover({ label, icon, children, open, setOpen }: { label: string; icon
 function Step({ dir, onClick, label }: { dir: 1 | -1; onClick: () => void; label: string }) {
   return (
     <button type="button" onClick={onClick} aria-label={label} className="w-10 h-7 rounded-lg text-gray-400 hover:text-[#002472] hover:bg-gray-100 flex items-center justify-center">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d={dir === 1 ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6'} />
-      </svg>
+      <Icon name={dir === 1 ? 'expandLess' : 'expandMore'} size={16} />
     </button>
   )
 }
@@ -103,16 +100,10 @@ function DepartPicker({ value, onChange, onLeaveNow }: Props) {
   const weekdays = Array.from({ length: 7 }, (_, i) => new Date(Date.UTC(2024, 0, 1 + i)).toLocaleDateString(lang, { weekday: 'narrow', timeZone: 'UTC' }))
 
   const calIcon = (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="16" rx="2" />
-      <path d="M3 10h18M8 3v4M16 3v4" />
-    </svg>
+    <Icon name="calendarMonthOutline" size={14} />
   )
   const clockIcon = (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3 2" />
-    </svg>
+    <Icon name="scheduleOutline" size={14} />
   )
 
   return (
@@ -121,11 +112,11 @@ function DepartPicker({ value, onChange, onLeaveNow }: Props) {
         <div className="w-64" role="group" aria-label={t('departDate')}>
           <div className="flex items-center justify-between mb-2">
             <button type="button" onClick={() => shiftMonth(-1)} disabled={month <= today.slice(0, 7)} aria-label={t('scrollPrev')} className="w-8 h-8 rounded-full text-[#002472] hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180"><path d="M15 6l-6 6 6 6" /></svg>
+              <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
             </button>
             <span className="text-sm font-semibold text-gray-900">{first.toLocaleDateString(lang, { month: 'long', year: 'numeric', timeZone: 'UTC' })}</span>
             <button type="button" onClick={() => shiftMonth(1)} disabled={month >= last.slice(0, 7)} aria-label={t('scrollNext')} className="w-8 h-8 rounded-full text-[#002472] hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="rtl:rotate-180"><path d="M9 6l6 6-6 6" /></svg>
+              <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
             </button>
           </div>
           <div className="grid grid-cols-7 gap-0.5 text-center">
