@@ -4,14 +4,17 @@ import { useLanguage } from '../hooks/useLanguage'
 import { HelpLayout, CategoryIcon } from '../components/HelpLayout'
 import { HELP_CATEGORIES, HOT_QUESTIONS } from '../data/helpCategories'
 import Icon from '../components/Icon'
+import { smartScore } from '../data/lines'
 
 function Help() {
   const { t } = useLanguage()
   const [query, setQuery] = useState('')
 
-  const questions = HOT_QUESTIONS.filter((q) =>
-    q.question.toLowerCase().includes(query.trim().toLowerCase()),
-  )
+  // smart search: typos allowed, best match first
+  const questions = HOT_QUESTIONS.map((q) => ({ q, s: smartScore(query, q.question) }))
+    .filter((x) => x.s !== null)
+    .sort((a, b) => a.s! - b.s!)
+    .map((x) => x.q)
 
   return (
     <HelpLayout>

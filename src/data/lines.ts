@@ -97,18 +97,60 @@ const allowed = (n: number) => (n <= 3 ? 0 : n <= 6 ? 1 : 2)
 // how well one typed word fits a word of the line (0 = exact / prefix); Infinity = no match
 function wordScore(typed: string, word: string) {
   if (word.startsWith(typed)) return 0
+  if (/\d/.test(typed)) return Infinity // numbers (bus codes, "Seksyen 7") must match exactly, no typos
   const full = editDistance(typed, word)
   const prefix = typed.length < word.length ? editDistance(typed, word.slice(0, typed.length)) : full
   const best = Math.min(full, prefix + 0.5)
   return best <= allowed(typed.length) + 0.5 ? best : Infinity
 }
 
-// Lines matching a search, best first; every typed word must fit some word of the line (typos allowed)
-export function matchLines(query: string): Line[] {
+// Smart match of a search against any text (help questions, names): every typed word must fit some word
+// of the text, typos allowed except in numbers. Lower = better; null = no match.
+export function smartScore(query: string, text: string): number | null {
+  const typed = words(query), vocab = words(text)
+  if (!typed.length) return 0
+  let score = 0
+  for (const t of typed) {
+    score += Math.min(...vocab.map((w) => wordScore(t, w)))
+    if (score === Infinity) return null
+  }
+  return score
+}
+
+// "T 789", "t789", "bus T789" -> "T789"
+const codeKey = (s: string) => s.toUpperCase().replace(/\bBUS\b/g, '').replace(/[^A-Z0-9]/g, '')
+
+// A route code typed on its own ("T789", "789", "T78", "400", "KGL"): exact code first, then codes that
+// start with it, then the number without its letters (789 -> T789), then a code one character shorter than
+// what was typed (T4113 -> T411). null = not a code search for this line.
+function codeScore(typed: string, code: string) {
+  const c = codeKey(code)
+  if (!typed || !c) return null
+  if (c === typed) return -3
+  const digits = c.replace(/^[A-Z]+/, '')
+  if (/^\d+$/.test(typed) && digits === typed) return -2.5
+  if (c.startsWith(typed)) return -2 + (c.length - typed.length) * 0.01
+  if (/^\d+$/.test(typed) && digits.startsWith(typed)) return -1.5 + (digits.length - typed.length) * 0.01
+  // one character too many ("T4113" -> T411): offer the nearest real code rather than nothing
+  if (typed.length === c.length + 1 && typed.startsWith(c)) return -0.5
+  return null
+}
+
+// Lines matching a search, best first: a route code match wins, otherwise every typed word must fit some
+// word of the line (typos allowed, except in numbers). `extra` = bus routes from the database; rail lines
+// win ties, and the list stops at 40.
+export function matchLines(query: string, extra: Line[] = []): Line[] {
   const typed = words(query)
   if (!typed.length) return []
+  const all = [...LINES, ...extra]
+  const qc = codeKey(query)
   const scored: { line: Line; score: number }[] = []
-  for (const l of LINES) {
+  for (const l of all) {
+    const cs = l.code ? codeScore(qc, l.code) : null
+    if (cs !== null) {
+      scored.push({ line: l, score: cs })
+      continue
+    }
     const vocab = words([l.name, l.code ?? '', l.mode, l.id, ...(LINE_ALIASES[l.id] ?? [])].join(' '))
     let score = 0
     for (const t of typed) {
@@ -117,7 +159,7 @@ export function matchLines(query: string): Line[] {
     }
     if (score !== Infinity) scored.push({ line: l, score })
   }
-  return scored.sort((a, b) => a.score - b.score || LINES.indexOf(a.line) - LINES.indexOf(b.line)).map((s) => s.line)
+  return scored.sort((a, b) => a.score - b.score || all.indexOf(a.line) - all.indexOf(b.line)).slice(0, 40).map((s) => s.line)
 }
 
 // Buses aren't in LINES (hundreds of routes). Their badge uses the route's own GTFS colour when the

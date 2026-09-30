@@ -41,6 +41,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
   }, [line])
 
   const current = result?.id === line.id ? result : null
+  const bus = line.mode === 'BUS'
   const last = (current?.stations.length ?? 0) - 1
 
   return (
@@ -68,13 +69,18 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
               <div className="min-w-0">
                 <h2 className="text-xl font-bold leading-tight truncate">{line.name}</h2>
                 <p className="mt-0.5 text-sm text-white/70">
-                  {current && !current.error ? t('lineStationCount').replace('{n}', String(current.stations.length)) : '\u00a0'}
+                  {current && !current.error
+                    ? bus
+                      ? `${current.stations.length} ${t('stopsLabel')}`
+                      : t('lineStationCount').replace('{n}', String(current.stations.length))
+                    : ' '}
                 </p>
               </div>
             </div>
           </div>
 
-          <div ref={strip} className="flex gap-1 overflow-x-auto [scrollbar-width:none] px-3 border-t border-white/10" role="group" aria-label={t('lines')}>
+          {/* rail lines only; a bus route opens on its own */}
+          <div ref={strip} hidden={bus} className="flex gap-1 overflow-x-auto [scrollbar-width:none] px-3 border-t border-white/10" role="group" aria-label={t('lines')}>
             {LINES.map((l) => {
               const active = l.id === line.id
               return (

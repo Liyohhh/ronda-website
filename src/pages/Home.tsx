@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import LinePicker from '../components/LinePicker'
 import LinePanel from '../components/LinePanel'
 import { matchLines, type Line } from '../data/lines'
+import { useBusRoutes } from '../data/busRoutes'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
 import TrailsSection from '../components/TrailsSection'
@@ -80,6 +81,7 @@ function Home() {
   const [lineListOpen, setLineListOpen] = useState(false)
   const [lineHi, setLineHi] = useState(-1)
   const [pickedLine, setPickedLine] = useState<Line | null>(null)
+  const busLines = useBusRoutes() // every bus route, searchable in the Lines tab
   const [activeField, setActiveField] = useState<'start' | 'end' | null>(null)
   // keyboard-highlighted suggestion, tied to the query it was chosen for
   const [highlight, setHighlight] = useState<{ query: string; index: number }>({ query: '', index: -1 })
@@ -176,12 +178,12 @@ function Home() {
     setLineHi(-1)
   }
   const openFirstLine = () => {
-    const found = matchLines(line)
+    const found = matchLines(line, busLines)
     const l = found[lineHi >= 0 && lineHi < found.length ? lineHi : 0]
     if (l) pickLine(l)
   }
   const onLineKey = (e: React.KeyboardEvent) => {
-    const n = matchLines(line).length
+    const n = matchLines(line, busLines).length
     if (e.key === 'ArrowDown') { e.preventDefault(); setLineListOpen(true); setLineHi((h) => Math.min(n - 1, h + 1)) }
     else if (e.key === 'ArrowUp') { e.preventDefault(); setLineHi((h) => Math.max(0, h - 1)) }
     else if (e.key === 'Enter') openFirstLine()
@@ -443,7 +445,7 @@ function Home() {
 
                 {/* Lines tab: every line, filtered as you type */}
                 {tab === 'lines' && lineListOpen && line.trim() !== '' && (
-                  <LinePicker id="line-list" query={line} highlighted={lineHi} onHover={setLineHi} onPick={pickLine} />
+                  <LinePicker id="line-list" query={line} buses={busLines} highlighted={lineHi} onHover={setLineHi} onPick={pickLine} />
                 )}
 
                 {/* Form error (stop not picked from the list) */}

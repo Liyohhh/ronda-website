@@ -13,7 +13,9 @@ import Icon from './Icon'
 
 export type Place = { name: string; lat: number; lon: number }
 
-export type Fare = { amount: number; currency?: string; exact: boolean; basis?: 'od' | 'flat' | 'zone_min' | 'joined'; joined_rides?: number }
+export type Fare = { amount: number; currency?: string; exact: boolean; basis?: 'od' | 'flat' | 'zone' | 'zone_min' | 'joined'; joined_rides?: number }
+// One ride's fare; amount null = no fare for this payment (Rapid KL buses are cashless only), `note` says why
+export type LegFare = Omit<Fare, 'amount' | 'basis'> & { amount: number | null; basis?: Fare['basis'] | 'unknown'; note?: string }
 
 // Whose fares to show: Malaysians ride GoKL / Smart Selangor free, tourists pay
 export type Resident = 'citizen' | 'non_citizen'
@@ -39,7 +41,7 @@ export type Leg = {
   colour?: string | null
   feed_id?: string
   route_id?: string
-  fare?: Fare | null
+  fare?: LegFare | null
   fare_included?: boolean // covered by the previous ride's fare (line change inside the paid area)
   headsign?: string | null
   num_stops?: number
@@ -346,7 +348,12 @@ function RideStep({ leg, placeName }: { leg: Leg; placeName: (p: Place) => strin
           <span className="text-base font-semibold text-gray-900">{placeName(leg.from)}</span>
         )}
         {legSubLabel(leg) && <span className="text-xs text-gray-500">{legSubLabel(leg)}</span>}
-        {leg.fare && (
+        {leg.fare && leg.fare.amount === null && (
+          <span className="ms-auto text-xs text-gray-500" title={leg.fare.note}>
+            {t('fareUnknown')}
+          </span>
+        )}
+        {leg.fare && leg.fare.amount !== null && (
           <span className="ms-auto text-sm font-medium text-gray-700">
             {!leg.fare.exact && <span className="text-xs font-normal text-gray-500 me-1">{t('fareFrom')}</span>}
             {money(leg.fare.amount)}
