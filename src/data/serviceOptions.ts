@@ -39,6 +39,10 @@ export const NAV_MENUS: NavMenu[] = [
           { name: 'Terminal Bersepadu Gombak (TBG)', detail: 'Gombak, Selangor', to: planToPlace(3.2304945, 101.7250658, 'Terminal Bersepadu Gombak (TBG)') },
         ],
       },
+      {
+        title: 'navLive',
+        items: [{ label: 'liveMapTitle', detailLabel: 'liveMapDetail', to: '/live' }],
+      },
     ],
     promo: { title: 'navPlanTitle', text: 'navPlanText', cta: 'navPlanCta', to: '/' },
   },

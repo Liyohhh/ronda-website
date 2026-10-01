@@ -67,3 +67,9 @@ export function useBusRoutes() {
   }, [])
   return lines
 }
+
+// "MRT Cochrane - Taman Shamelin" / "Terminal Maluri ~ Lebuh Ampang" -> { from, to }; null when it isn't "A - B"
+export function routeEnds(name: string | null | undefined) {
+  const m = (name ?? '').match(/^(.+?)\s+[~–-]\s+(.+)$/)
+  return m ? { from: m[1].trim(), to: m[2].trim() } : null
+}

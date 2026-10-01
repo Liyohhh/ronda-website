@@ -4,8 +4,9 @@ import { useLanguage } from '../hooks/useLanguage'
 import { LINES, type Line } from '../data/lines'
 import { supabase } from '../services/supabase'
 import Icon from './Icon'
+import BusStopName from './BusStopName'
 
-type Station = { seq: number; stop_id: string; name: string; lat: number; lon: number }
+type Station = { seq: number; stop_id: string; name: string; lat: number; lon: number; code?: string | null }
 
 // "MRT Kajang Line" -> "MRT Kajang" for the line strip
 const shortName = (l: Line) => l.name.replace(/\s+Line$/, '')
@@ -129,7 +130,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
                       )}
                     </span>
                     <div className={`flex-1 min-w-0 flex items-center justify-between gap-3 py-2.5 ${i < last ? 'border-b border-gray-100' : ''}`}>
-                      <span className={`text-sm truncate ${end ? 'font-semibold text-gray-900' : 'font-medium text-gray-800'}`}>{s.name}</span>
+                      <BusStopName code={s.code} name={s.name} className={`text-sm ${end ? 'font-semibold text-gray-900' : 'font-medium text-gray-800'}`} />
                       <button
                         type="button"
                         onClick={() => onPlan(s)}

@@ -63,7 +63,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
           isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'
         }`}
       >
-        <div className="max-w-6xl mx-auto px-6 py-7 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className={`max-w-6xl mx-auto px-6 py-7 grid grid-cols-1 gap-8 ${menu.columns.length >= 3 ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
           {menu.columns.map((col) => (
             <div key={col.title}>
               <h3 className="text-sm font-semibold text-[#002472] mb-3">{t(col.title)}</h3>

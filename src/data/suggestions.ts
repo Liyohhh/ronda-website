@@ -9,8 +9,15 @@ export type SuggestionItem =
 
 export const MAX_STOPS = 8
 
-export function buildItems(stops: StopResult[], places: PlaceResult[]): SuggestionItem[] {
+// routeStops: a typed bus route code's stops in running order; shown first, all of them (the list scrolls)
+export function buildItems(stops: StopResult[], places: PlaceResult[], routeStops: StopResult[] = []): SuggestionItem[] {
   return [
+    ...routeStops.map((s) => ({
+      type: 'stop' as const,
+      key: `r:${s.feed_id}:${s.route_code}:${s.stop_sequence}`,
+      pick: { name: s.stop_name, lat: s.stop_lat, lon: s.stop_lon },
+      stop: s,
+    })),
     ...stops.slice(0, MAX_STOPS).map((s) => ({
       type: 'stop' as const,
       key: `s:${s.feed_id}:${s.stop_id}`,

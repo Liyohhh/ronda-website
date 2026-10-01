@@ -99,8 +99,8 @@ function Home() {
 
   // Smart search: stops + places for whichever box is focused
   const query = activeField === 'start' ? start : activeField === 'end' ? end : ''
-  const { stops, places, loading: searching } = useSmartSearch(query)
-  const items = query.trim() ? buildItems(stops, places) : []
+  const { stops, places, routeStops, loading: searching } = useSmartSearch(query)
+  const items = query.trim() ? buildItems(stops, places, routeStops) : []
   const listOpen = activeField !== null && items.length > 0
   const highlighted = highlight.query === normaliseQuery(query) ? highlight.index : -1
 

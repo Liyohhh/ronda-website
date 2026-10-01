@@ -117,8 +117,8 @@ export function smartScore(query: string, text: string): number | null {
   return score
 }
 
-// "T 789", "t789", "bus T789" -> "T789"
-const codeKey = (s: string) => s.toUpperCase().replace(/\bBUS\b/g, '').replace(/[^A-Z0-9]/g, '')
+// "T 789", "t789", "bus T789", "T0789" -> "T789" (leading zeros dropped, as in the database's route_code_key)
+const codeKey = (s: string) => s.toUpperCase().replace(/\bBUS\b/g, '').replace(/[^A-Z0-9]/g, '').replace(/^([A-Z]+)0+(\d)/, '$1$2')
 
 // A route code typed on its own ("T789", "789", "T78", "400", "KGL"): exact code first, then codes that
 // start with it, then the number without its letters (789 -> T789), then a code one character shorter than

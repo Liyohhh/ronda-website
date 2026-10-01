@@ -1,6 +1,8 @@
-import type { ReactNode } from 'react'
+import { Fragment, type ReactNode } from 'react'
 import LineBadge from './LineBadge'
 import StopIcon from './StopIcon'
+import BusStopName from './BusStopName'
+import RouteChip from './RouteChip'
 import { busLine, linesForStop } from '../data/lines'
 import { stopIconKind, type StopIconKind } from '../data/stopIcon'
 import type { StopResult } from '../hooks/useSmartSearch'
@@ -56,8 +58,18 @@ type Props = {
 
 function SuggestionList({ id, items, query, loading, highlighted, onHover, onPick }: Props) {
   const { t } = useLanguage()
+  const isRoute = (it: SuggestionItem) => it.type === 'stop' && !!it.stop.route_code
   const firstPlace = items.findIndex((it) => it.type === 'place')
-  const hasStops = items.some((it) => it.type === 'stop')
+  const firstStop = items.findIndex((it) => it.type === 'stop' && !it.stop.route_code)
+  const hasRoute = items.some(isRoute)
+  // route-code results: "Stop 3 of 24 · towards X" (or "loop")
+  const subtitle = (it: SuggestionItem) => {
+    if (it.type === 'place') return it.place.detail
+    const s = it.stop
+    if (!s.route_code) return s.category
+    const at = t('routeStopOf').replace('{n}', String(s.stop_sequence)).replace('{total}', String(s.stop_count))
+    return `${at} · ${s.towards ? `${t('towards')} ${s.towards}` : t('loopRoute')}`
+  }
 
   return (
     <div className="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden z-10">
@@ -69,13 +81,23 @@ function SuggestionList({ id, items, query, loading, highlighted, onHover, onPic
         <ul id={id} role="listbox" aria-label={t('searchAnywhere')}>
           {items.map((it, i) => (
             <li key={it.key} role="presentation">
-              {i === 0 && hasStops && (
+              {i === 0 && hasRoute && it.type === 'stop' && (
                 <div className="px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400" role="presentation">
+                  {t('routeStopsHeading').split('{code}').map((part, k) => (
+                    <Fragment key={k}>
+                      {k > 0 && <RouteChip code={it.stop.route_code ?? ''} size="sm" className="mx-1 normal-case tracking-normal" />}
+                      {part}
+                    </Fragment>
+                  ))}
+                </div>
+              )}
+              {i === firstStop && (
+                <div className={`px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 ${hasRoute ? 'border-t border-gray-100' : ''}`} role="presentation">
                   {t('stationsHeading')}
                 </div>
               )}
               {i === firstPlace && (
-                <div className={`px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 ${hasStops ? 'border-t border-gray-100' : ''}`} role="presentation">
+                <div className={`px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 ${i > 0 ? 'border-t border-gray-100' : ''}`} role="presentation">
                   {t('placesHeading')}
                 </div>
               )}
@@ -93,9 +115,14 @@ function SuggestionList({ id, items, query, loading, highlighted, onHover, onPic
                 {it.type === 'stop' ? <StopBadge stop={it.stop} /> : <StopIcon kind={placeKind(it.place.kind)} />}
                 <div className="min-w-0">
                   <div className="text-gray-700 truncate">
-                    <Highlight text={it.pick.name} query={query} />
+                    {it.type === 'stop' && it.stop.stop_code ? (
+                      // bus stop: (logo on the left) KL1483 Flora Murni Residence
+                      <BusStopName code={it.stop.stop_code} name={<Highlight text={it.pick.name} query={query} />} />
+                    ) : (
+                      <Highlight text={it.pick.name} query={query} />
+                    )}
                   </div>
-                  <div className="text-xs text-gray-500 truncate">{it.type === 'stop' ? it.stop.category : it.place.detail}</div>
+                  <div className="text-xs text-gray-500 truncate">{subtitle(it)}</div>
                 </div>
               </div>
             </li>

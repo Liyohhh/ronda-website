@@ -1,4 +1,6 @@
 import LineBadge from './LineBadge'
+import RouteChip from './RouteChip'
+import { routeEnds } from '../data/busRoutes'
 import { useLanguage } from '../hooks/useLanguage'
 import { matchLines, type Line } from '../data/lines'
 
@@ -27,15 +29,20 @@ function LinePicker({ id, query, buses, highlighted, onPick, onHover }: Props) {
               onMouseEnter={() => onHover(i)}
               className={`flex items-center gap-3 px-5 py-2 cursor-pointer ${i === highlighted ? 'bg-gray-100' : ''}`}
             >
-              <LineBadge line={l} size={24} decorative />
               {l.mode === 'BUS' ? (
-                // bus: route number chip, then where it goes
-                <>
-                  <span className="rounded-md bg-gray-800 px-1.5 py-0.5 text-xs font-bold text-white tabular-nums">{l.code}</span>
-                  {l.name !== l.code && <span className="min-w-0 truncate text-sm text-gray-900">{l.name}</span>}
-                </>
+                // bus: (bus) T410 Bandar Tasik Selatan / From MRT Taman Connaught
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <RouteChip code={l.code ?? l.name} icon />
+                    {l.name !== l.code && <span className="min-w-0 truncate text-sm font-medium text-gray-900">{routeEnds(l.name)?.to ?? l.name}</span>}
+                  </div>
+                  {routeEnds(l.name) && (
+                    <div className="ms-[26px] truncate text-xs text-gray-500">{t('routeFrom').replace('{place}', routeEnds(l.name)!.from)}</div>
+                  )}
+                </div>
               ) : (
                 <>
+                  <LineBadge line={l} size={24} decorative />
                   <span className="text-sm text-gray-900">{l.name}</span>
                   {l.code && <span className="ms-auto text-xs text-gray-400">{l.code}</span>}
                 </>

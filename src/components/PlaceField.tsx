@@ -12,8 +12,8 @@ function PlaceField({ id, label, value, onPick }: Props) {
   const [editing, setEditing] = useState(false)
   const [text, setText] = useState('')
   const [hi, setHi] = useState<{ q: string; i: number }>({ q: '', i: -1 })
-  const { stops, places, loading } = useSmartSearch(editing ? text : '')
-  const items = editing && text.trim() ? buildItems(stops, places) : []
+  const { stops, places, routeStops, loading } = useSmartSearch(editing ? text : '')
+  const items = editing && text.trim() ? buildItems(stops, places, routeStops) : []
   const highlighted = hi.q === normaliseQuery(text) ? hi.i : -1
 
   const pick = (p: Pick) => {
