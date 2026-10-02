@@ -66,6 +66,8 @@ function Footer() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row gap-2 justify-between text-xs text-white/60">
           <span>© {year} RONDA. {t('footerRights')}</span>
           <span>
+            <Link to="/credits" className="underline hover:text-white">{t('footerCredits')}</Link>
+            {' · '}
             {t('footerMapData')}{' '}
             <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="underline hover:text-white">
               © OpenStreetMap contributors

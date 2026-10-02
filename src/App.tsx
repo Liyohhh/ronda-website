@@ -13,6 +13,7 @@ import TrailDetail from './pages/TrailDetail'
 import About from './pages/About'
 import Services from './pages/Services'
 import LiveMap from './pages/LiveMap'
+import Credits from './pages/Credits'
 import { LanguageProvider } from './i18n/LanguageProvider'
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/live" element={<LiveMap />} />
+          <Route path="/credits" element={<Credits />} />
         </Routes>
       </BrowserRouter>
     </LanguageProvider>
