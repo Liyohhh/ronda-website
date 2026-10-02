@@ -431,6 +431,12 @@ const en = {
   notAllowedBody: 'This page is for RONDA staff and partners. If you think you should have access, contact us.',
   backToHome: 'Back to home',
   outOfReach: '{place} has no train or bus stop within {max} km. The nearest is {stop}, {km} km away.',
+  locLocating: 'Finding your location…',
+  locDenied: 'Location is blocked for this site. Allow it in your browser settings, or move the map yourself.',
+  locUnavailable: 'Your location is not available right now. Try again outdoors, or move the map yourself.',
+  locTimeout: 'Finding your location took too long. Try again.',
+  locUnsupported: 'This browser cannot share your location.',
+  locYouAreHere: 'You are here',
 }
 
 export type TranslationKey = keyof typeof en
@@ -861,6 +867,12 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     notAllowedBody: 'Halaman ini untuk kakitangan dan rakan kongsi RONDA. Jika anda rasa anda sepatutnya mempunyai akses, hubungi kami.',
     backToHome: 'Kembali ke laman utama',
     outOfReach: '{place} tiada stesen kereta api atau hentian bas dalam lingkungan {max} km. Yang terdekat ialah {stop}, {km} km jauhnya.',
+    locLocating: 'Mencari lokasi anda…',
+    locDenied: 'Lokasi disekat untuk laman ini. Benarkan dalam tetapan pelayar, atau gerakkan peta sendiri.',
+    locUnavailable: 'Lokasi anda tidak tersedia sekarang. Cuba lagi di luar bangunan, atau gerakkan peta sendiri.',
+    locTimeout: 'Mencari lokasi anda mengambil masa terlalu lama. Cuba lagi.',
+    locUnsupported: 'Pelayar ini tidak dapat berkongsi lokasi anda.',
+    locYouAreHere: 'Anda di sini',
   },
   zh: {
     signUp: '注册',
@@ -1286,6 +1298,12 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     notAllowedBody: '此页面仅供 RONDA 员工和合作伙伴使用。如果您认为您应该有访问权限，请联系我们。',
     backToHome: '返回首页',
     outOfReach: '{place} 方圆 {max} 公里内没有火车站或巴士站。最近的是 {stop}，距离 {km} 公里。',
+    locLocating: '正在查找您的位置…',
+    locDenied: '此网站的位置权限已被阻止。请在浏览器设置中允许，或自行移动地图。',
+    locUnavailable: '目前无法获取您的位置。请到户外再试，或自行移动地图。',
+    locTimeout: '查找位置超时，请重试。',
+    locUnsupported: '此浏览器无法分享您的位置。',
+    locYouAreHere: '您在这里',
   },
   ar: {
     signUp: 'إنشاء حساب',
@@ -1711,5 +1729,11 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     notAllowedBody: 'هذه الصفحة مخصصة لموظفي RONDA وشركائها. إذا كنت تعتقد أنه يجب أن يكون لديك وصول، فاتصل بنا.',
     backToHome: 'العودة إلى الصفحة الرئيسية',
     outOfReach: 'لا توجد محطة قطار أو حافلة ضمن {max} كم من {place}. أقرب محطة هي {stop}، على بعد {km} كم.',
+    locLocating: 'جارٍ تحديد موقعك…',
+    locDenied: 'الموقع محظور لهذا الموقع. اسمح به من إعدادات المتصفح، أو حرّك الخريطة بنفسك.',
+    locUnavailable: 'موقعك غير متاح الآن. حاول مرة أخرى في الخارج، أو حرّك الخريطة بنفسك.',
+    locTimeout: 'استغرق تحديد موقعك وقتاً طويلاً. حاول مرة أخرى.',
+    locUnsupported: 'لا يمكن لهذا المتصفح مشاركة موقعك.',
+    locYouAreHere: 'أنت هنا',
   },
 }

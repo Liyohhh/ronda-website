@@ -25,3 +25,24 @@ test.describe('live bus map', () => {
     await expect(page.getByText('Live positions are not available right now')).toBeVisible()
   })
 })
+
+test.describe('Near me', () => {
+  test.describe('location allowed', () => {
+    test.use({ geolocation: { latitude: 3.1340, longitude: 101.6865 }, permissions: ['geolocation'] })
+    test('centres the map and marks where you are', async ({ page, backend }) => {
+      void backend
+      await page.goto('/live')
+      await page.getByRole('button', { name: 'Near me' }).click()
+      await expect(page.locator('.leaflet-interactive[fill="#2563EB"]')).toHaveCount(1)
+      await expect(page.getByRole('status')).toHaveCount(0)
+    })
+  })
+
+  test('location blocked: says so instead of doing nothing', async ({ page, backend, context }) => {
+    void backend
+    await context.clearPermissions()
+    await page.goto('/live')
+    await page.getByRole('button', { name: 'Near me' }).click()
+    await expect(page.getByRole('status')).toHaveText(/Location is blocked for this site/)
+  })
+})

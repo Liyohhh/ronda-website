@@ -8,6 +8,7 @@ import Icon from '../components/Icon'
 import RouteChip from '../components/RouteChip'
 import { useLanguage } from '../hooks/useLanguage'
 import { usePoll } from '../hooks/usePoll'
+import { useLocate } from '../hooks/useLocate'
 import { supabase } from '../services/supabase'
 import { ago, liveVehicles, LIVE_POLL_MS, routeKey, stopArrivals, type Arrival, type BusStatus, type LiveBus, type LiveSource } from '../services/live'
 import type { TranslationKey } from '../i18n/translations'
@@ -195,8 +196,23 @@ function LiveMap() {
     }
   }, [])
 
-  const nearMe = () =>
-    navigator.geolocation?.getCurrentPosition((p) => map.current?.setView([p.coords.latitude, p.coords.longitude], STOPS_ZOOM))
+  // "Near me": centre on the rider and mark where they are; every failure is explained
+  const meLayer = useRef<L.LayerGroup | null>(null)
+  const { state: loc, locate } = useLocate()
+  useEffect(() => {
+    const m = map.current
+    if (!m || loc.status !== 'found') return
+    meLayer.current?.remove()
+    meLayer.current = L.layerGroup([
+      L.circle([loc.lat, loc.lon], { radius: loc.accuracy_m, color: '#2563EB', weight: 1, fillOpacity: 0.1, interactive: false }),
+      L.circleMarker([loc.lat, loc.lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#2563EB', fillOpacity: 1 }).bindTooltip(t('locYouAreHere')),
+    ]).addTo(m)
+    m.setView([loc.lat, loc.lon], Math.max(m.getZoom(), STOPS_ZOOM))
+  }, [loc, t])
+  const locMessage =
+    loc.status === 'locating' ? t('locLocating')
+    : loc.status === 'error' ? t(({ denied: 'locDenied', unavailable: 'locUnavailable', timeout: 'locTimeout', unsupported: 'locUnsupported' } as const)[loc.reason])
+    : null
 
   const lastFetch = sources.length ? Math.max(...sources.map((s) => Date.parse(s.fetched_at))) : null
 
@@ -223,7 +239,8 @@ function LiveMap() {
             />
             <button
               type="button"
-              onClick={nearMe}
+              onClick={locate}
+              disabled={loc.status === 'locating'}
               aria-label={t('liveNearMe')}
               className="inline-flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-[#002472] hover:border-[#002472]/50 whitespace-nowrap"
             >
@@ -231,6 +248,11 @@ function LiveMap() {
               <span className="hidden sm:inline">{t('liveNearMe')}</span>
             </button>
           </div>
+          {locMessage && (
+            <p className={`mt-2 text-sm ${loc.status === 'error' ? 'text-amber-800' : 'text-gray-600'}`} role="status">
+              {locMessage}
+            </p>
+          )}
           <label className="mt-2 flex items-center gap-2 text-sm text-gray-700">
             <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#002472]" />
             {t('liveShowOffTrip')}
