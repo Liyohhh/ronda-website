@@ -12,6 +12,7 @@ import FeatureGrid from '../components/FeatureGrid'
 import NavyBand from '../components/NavyBand'
 import ReviewsSection from '../components/ReviewsSection'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
+import { outOfReachMessage } from '../data/outOfReach'
 import SuggestionList from '../components/SuggestionList'
 import { buildItems, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
@@ -244,7 +245,8 @@ function Home() {
 
     const found: TripOption[] = data?.options ?? []
     if (found.length === 0) {
-      setPlanError(t('noRoutes'))
+      // a place with no stop within walking reach gets the reason and the nearest stop
+      setPlanError(outOfReachMessage(data?.meta?.out_of_reach, fromStop.name, toStop.name, t('outOfReach')) ?? t('noRoutes'))
       return
     }
     setOptions(found)

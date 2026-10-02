@@ -126,3 +126,15 @@ test.describe('Enter in the place boxes', () => {
     await expect(page.getByText('Please choose your Start and End from the suggestion list.')).toHaveCount(0)
   })
 })
+
+test('a place with no stop within reach explains why and names the nearest stop', async ({ page, backend }) => {
+  backend.planTrip = () => ({ json: { ...PLAN, options: [], more_options: [], meta: { ...PLAN.meta,
+    out_of_reach: { from: true, to: false, max_walk_m: 3000, nearest_to: null,
+                    nearest_from: { name: 'MRT Kajang', stop_id: 'KG35', feed_id: 'rapid-rail-kl', distance_m: 31600 } } } } })
+  await page.goto('/')
+  await pickPlace(page, 'Start', 'kj10', /KLCC/)
+  await pickPlace(page, 'End', 'pasar', /LRT Pasar Seni/)
+  await page.getByRole('button', { name: 'Search' }).click()
+  await expect(page.getByText(/has no train or bus stop within 3\.0 km\. The nearest is MRT Kajang, 32 km away\./)).toBeVisible()
+  await expect(page.getByText('No routes found for this trip. Try a different time or nearby stop.')).toHaveCount(0)
+})

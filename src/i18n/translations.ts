@@ -430,6 +430,7 @@ const en = {
   notAllowedTitle: 'You do not have access to this page',
   notAllowedBody: 'This page is for RONDA staff and partners. If you think you should have access, contact us.',
   backToHome: 'Back to home',
+  outOfReach: '{place} has no train or bus stop within {max} km. The nearest is {stop}, {km} km away.',
 }
 
 export type TranslationKey = keyof typeof en
@@ -859,6 +860,7 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     notAllowedTitle: 'Anda tidak mempunyai akses ke halaman ini',
     notAllowedBody: 'Halaman ini untuk kakitangan dan rakan kongsi RONDA. Jika anda rasa anda sepatutnya mempunyai akses, hubungi kami.',
     backToHome: 'Kembali ke laman utama',
+    outOfReach: '{place} tiada stesen kereta api atau hentian bas dalam lingkungan {max} km. Yang terdekat ialah {stop}, {km} km jauhnya.',
   },
   zh: {
     signUp: '注册',
@@ -1283,6 +1285,7 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     notAllowedTitle: '您无权访问此页面',
     notAllowedBody: '此页面仅供 RONDA 员工和合作伙伴使用。如果您认为您应该有访问权限，请联系我们。',
     backToHome: '返回首页',
+    outOfReach: '{place} 方圆 {max} 公里内没有火车站或巴士站。最近的是 {stop}，距离 {km} 公里。',
   },
   ar: {
     signUp: 'إنشاء حساب',
@@ -1707,5 +1710,6 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     notAllowedTitle: 'ليس لديك صلاحية الوصول إلى هذه الصفحة',
     notAllowedBody: 'هذه الصفحة مخصصة لموظفي RONDA وشركائها. إذا كنت تعتقد أنه يجب أن يكون لديك وصول، فاتصل بنا.',
     backToHome: 'العودة إلى الصفحة الرئيسية',
+    outOfReach: 'لا توجد محطة قطار أو حافلة ضمن {max} كم من {place}. أقرب محطة هي {stop}، على بعد {km} كم.',
   },
 }
