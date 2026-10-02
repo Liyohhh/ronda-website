@@ -1,0 +1,11 @@
+{
+  "_about": "Known serious/critical accessibility violations (axe, WCAG 2.1 AA) found when the test suite was added on 2 Oct 2026. The a11y tests fail on any rule NOT listed for a page. Remove an entry when it is fixed; never add one without a tracked fix.",
+  "/": ["color-contrast", "aria-hidden-focus"],
+  "/about": ["color-contrast"],
+  "/help": ["color-contrast"],
+  "/services": ["color-contrast"],
+  "/trails": ["color-contrast"],
+  "/login": ["color-contrast"],
+  "/register": ["color-contrast"],
+  "/live": ["button-name"]
+}

@@ -1,0 +1,89 @@
+[
+ {
+  "stop_id": "KJ14",
+  "stop_name": "LRT Pasar Seni",
+  "category": "LRT Kelana Jaya Line",
+  "search": "pasar seni  lrt pasar seni",
+  "similarity_score": 1,
+  "feed_id": "rapid-rail-kl",
+  "stop_lat": 3.142439,
+  "stop_lon": 101.69531,
+  "route_ids": [
+   "KJ"
+  ],
+  "stop_code": null
+ },
+ {
+  "stop_id": "KG16",
+  "stop_name": "MRT Pasar Seni",
+  "category": "MRT Kajang Line",
+  "search": "pasar seni  mrt pasar seni",
+  "similarity_score": 1,
+  "feed_id": "rapid-rail-kl",
+  "stop_lat": 3.142293265,
+  "stop_lon": 101.6955642,
+  "route_ids": [
+   "KGL"
+  ],
+  "stop_code": null
+ },
+ {
+  "stop_id": "1002297",
+  "stop_name": "Pasar Seni (Platform B5)",
+  "category": "BUS 770",
+  "search": "kl2213 pasar seni (platform b5)  ",
+  "similarity_score": 1,
+  "feed_id": "rapid-bus-kl",
+  "stop_lat": 3.142408,
+  "stop_lon": 101.695313,
+  "route_ids": [
+   "U7700"
+  ],
+  "stop_code": "KL2213"
+ },
+ {
+  "stop_id": "1004342",
+  "stop_name": "Pasar Seni (Platform A1 - A2)",
+  "category": "BUS 151 · 580 · 590 · 851",
+  "search": "kl1821 pasar seni (platform a1 - a2)  ",
+  "similarity_score": 1,
+  "feed_id": "rapid-bus-kl",
+  "stop_lat": 3.142834,
+  "stop_lon": 101.6956,
+  "route_ids": [
+   "U1510",
+   "U5800",
+   "U5900",
+   "U8518"
+  ],
+  "stop_code": "KL1821"
+ },
+ {
+  "stop_id": "1001170",
+  "stop_name": "Pasar Seni (Platform A6 - A8)",
+  "category": "BUS 180",
+  "search": "pasar seni (platform a6 - a8)  ",
+  "similarity_score": 1,
+  "feed_id": "rapid-bus-kl",
+  "stop_lat": 3.142984,
+  "stop_lon": 101.695636,
+  "route_ids": [
+   "U1800"
+  ],
+  "stop_code": null
+ },
+ {
+  "stop_id": "1004347",
+  "stop_name": "Pasar Seni (Platform B1 - B2)",
+  "category": "BUS 750",
+  "search": "kl2214 pasar seni (platform b1 - b2)  ",
+  "similarity_score": 1,
+  "feed_id": "rapid-bus-kl",
+  "stop_lat": 3.142615,
+  "stop_lon": 101.695304,
+  "route_ids": [
+   "U7508"
+  ],
+  "stop_code": "KL2214"
+ }
+]

@@ -1,0 +1,16 @@
+[
+ {
+  "stop_id": "KJ10",
+  "stop_name": "LRT KLCC",
+  "category": "LRT Kelana Jaya Line",
+  "search": "klcc  lrt klcc",
+  "similarity_score": 1,
+  "feed_id": "rapid-rail-kl",
+  "stop_lat": 3.158935,
+  "stop_lon": 101.713287,
+  "route_ids": [
+   "KJ"
+  ],
+  "stop_code": null
+ }
+]
