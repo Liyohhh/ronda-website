@@ -328,7 +328,7 @@ function Home() {
                     <>
                       <div className="flex-1 flex items-center px-7 py-4">
                         <div className="flex-1">
-                          <div className="text-sm text-gray-400">{t('start')}</div>
+                          <div className="text-sm text-gray-500">{t('start')}</div>
                           <input
                             type="text"
                             value={start}
@@ -363,7 +363,7 @@ function Home() {
 
                       <div className="flex-1 flex items-center px-7 py-4">
                         <div className="flex-1">
-                          <div className="text-sm text-gray-400">{t('end')}</div>
+                          <div className="text-sm text-gray-500">{t('end')}</div>
                           <input
                             type="text"
                             value={end}
@@ -390,7 +390,7 @@ function Home() {
                   ) : (
                     <div className="flex-1 flex items-center px-7 py-4">
                       <div className="flex-1">
-                        <div className="text-sm text-gray-400">{t('line')}</div>
+                        <div className="text-sm text-gray-500">{t('line')}</div>
                         <input
                           type="text"
                           value={line}

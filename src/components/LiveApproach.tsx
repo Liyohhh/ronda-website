@@ -51,7 +51,7 @@ function LiveApproach({ feedId, routeId, stopId, nextStopId }: Props) {
               {b.eta_secs === null && b.distance_m !== null && b.distance_m > 0 && (
                 <span className="text-gray-500">· {t('liveKmAway').replace('{d}', kmText(b.distance_m))}</span>
               )}
-              <span className="text-xs text-gray-400 tabular-nums">{b.vehicle_id}</span>
+              <span className="text-xs text-gray-500 tabular-nums">{b.vehicle_id}</span>
               {b.wheelchair && <Icon name="accessible" size={14} className="text-[#002472]" label={t('liveWheelchair')} />}
             </li>
           ))}

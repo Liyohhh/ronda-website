@@ -66,10 +66,10 @@ function PhoneMockup() {
             <div key={r.time} className="rounded-xl bg-white border border-gray-200 p-2.5">
               <div className="flex items-baseline justify-between">
                 <span className="text-sm font-bold text-gray-900">{r.dur}</span>
-                <span className="text-[9px] text-gray-400">{r.time}</span>
+                <span className="text-[9px] text-gray-500">{r.time}</span>
               </div>
               <div className="mt-1.5 flex items-center gap-1">
-                <WalkIcon size={12} className="text-gray-400" />
+                <WalkIcon size={12} className="text-gray-500" />
                 {r.lines.map((l) => (
                   <LineBadge key={l} line={l} size={18} decorative />
                 ))}

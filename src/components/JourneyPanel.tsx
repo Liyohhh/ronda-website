@@ -190,7 +190,7 @@ function sortOptions(list: TripOption[], key: SortKey) {
 // ---------- small pieces ----------
 
 function FareText({ fare, t }: { fare?: Fare | null; t: (k: TranslationKey) => string }) {
-  if (!fare) return <span className="text-gray-400">{t('fareUnknown')}</span>
+  if (!fare) return <span className="text-gray-500">{t('fareUnknown')}</span>
   if (fare.amount === 0 && fare.exact) return <span className="text-emerald-700">{t('fareFree')}</span>
   return (
     <span className="text-gray-900">
@@ -250,9 +250,9 @@ function Highlight({ tags }: { tags?: Tag[] }) {
     : has('least_walking')
       ? ['hlEasiest', 'bg-emerald-600 text-white']
       : has('fewest_changes')
-        ? ['tagFewestChanges', 'bg-[#C9A45C] text-white']
+        ? ['tagFewestChanges', 'bg-[#C9A45C] text-[#131b33]']
         : has('cheapest')
-          ? ['tagCheapest', 'bg-[#C9A45C] text-white']
+          ? ['tagCheapest', 'bg-[#C9A45C] text-[#131b33]']
           : null
   if (!pick) return null
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${pick[1]}`}>{t(pick[0])}</span>
@@ -395,7 +395,7 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
             <span className="font-semibold text-gray-900">{leg.start}</span>
             {Array.isArray(nd) && nd.length > 1 && (
               <>
-                <span className="text-gray-400">{t('nextLabel')}</span>
+                <span className="text-gray-500">{t('nextLabel')}</span>
                 {nd.slice(1, 3).map((d) => (
                   <span key={d} className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
                     {d}
@@ -435,7 +435,7 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
             <li key={`${s.stop_id ?? s.name}-${i}`} className="relative flex items-center gap-2 text-xs text-gray-500">
               {/* stops you ride through: small dots, grey text */}
               <LineMarker color={color} stop={false} />
-              <span className="w-10 flex-shrink-0 tabular-nums text-gray-400">{s.time}</span>
+              <span className="w-10 flex-shrink-0 tabular-nums text-gray-500">{s.time}</span>
               <BusStopName code={s.code} name={s.name} />
               {s.is_interchange && s.other_lines?.length ? (
                 <span className="inline-flex items-center gap-0.5" title={`${t('interchangeWith')} ${s.other_lines.map((l) => l.name ?? l.route_short_name).join(', ')}`}>
@@ -729,7 +729,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                 </li>
               )}
               {showMore && sortedMore.map(card)}
-              {anyFare && <li className="px-1 text-[11px] text-gray-400">{t('fareNote')}</li>}
+              {anyFare && <li className="px-1 text-[11px] text-gray-500">{t('fareNote')}</li>}
             </ul>
           )}
 
@@ -798,7 +798,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                 })}
               </ol>
 
-              <p className="text-xs text-gray-400 mt-6 italic">{t(hasHeadway(detail) ? 'headwayNote' : 'estimatesNote')}</p>
+              <p className="text-xs text-gray-500 mt-6 italic">{t(hasHeadway(detail) ? 'headwayNote' : 'estimatesNote')}</p>
             </div>
           )}
         </div>

@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright'
 import { PLAN, expect, test } from './mocks'
 
 // Critical path: pick a start and an end from the suggestions, plan, see the journey.
@@ -30,6 +31,18 @@ test.describe('plan a journey', () => {
     expect(call?.body).toMatchObject({ resident: 'citizen', payment: 'cashless' })
     const [klcc] = (await import('./fixtures/search_klcc.json', { with: { type: 'json' } })).default
     expect(call?.body).toMatchObject({ from: { lat: klcc.stop_lat, lon: klcc.stop_lon } })
+  })
+
+  test('journey panel has no serious accessibility violations', async ({ page, backend }) => {
+    void backend
+    await page.goto('/')
+    await pickPlace(page, 'Start', 'kj10', /KLCC/)
+    await pickPlace(page, 'End', 'pasar', /LRT Pasar Seni/)
+    await page.getByRole('button', { name: 'Search' }).click()
+    await expect(page.getByRole('dialog', { name: 'Your journey' })).toBeVisible()
+    const { violations } = await new AxeBuilder({ page }).include('[role="dialog"]').withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()
+    const bad = violations.filter((v) => v.impact === 'critical' || v.impact === 'serious')
+    expect(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(', ')} - ${v.help}`)).toEqual([])
   })
 
   test('typed text that is not picked from the list asks to choose', async ({ page, backend }) => {

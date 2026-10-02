@@ -74,7 +74,7 @@ function SuggestionList({ id, items, query, loading, highlighted, onHover, onPic
   return (
     <div className="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden z-10">
       <div className="max-h-96 overflow-y-auto overscroll-contain">
-        <div className="sticky top-0 z-10 bg-white/95 backdrop-blur text-xs text-gray-400 px-6 pt-3 pb-2 border-b border-gray-100 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-white/95 backdrop-blur text-xs text-gray-500 px-6 pt-3 pb-2 border-b border-gray-100 flex items-center justify-between">
           <span>{t('searchAnywhere')}</span>
           {loading && <span className="w-3.5 h-3.5 border-2 border-gray-200 border-t-[#002472] rounded-full animate-spin" aria-hidden="true" />}
         </div>
@@ -82,7 +82,7 @@ function SuggestionList({ id, items, query, loading, highlighted, onHover, onPic
           {items.map((it, i) => (
             <li key={it.key} role="presentation">
               {i === 0 && hasRoute && it.type === 'stop' && (
-                <div className="px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400" role="presentation">
+                <div className="px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500" role="presentation">
                   {t('routeStopsHeading').split('{code}').map((part, k) => (
                     <Fragment key={k}>
                       {k > 0 && <RouteChip code={it.stop.route_code ?? ''} size="sm" className="mx-1 normal-case tracking-normal" />}
@@ -92,12 +92,12 @@ function SuggestionList({ id, items, query, loading, highlighted, onHover, onPic
                 </div>
               )}
               {i === firstStop && (
-                <div className={`px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 ${hasRoute ? 'border-t border-gray-100' : ''}`} role="presentation">
+                <div className={`px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500 ${hasRoute ? 'border-t border-gray-100' : ''}`} role="presentation">
                   {t('stationsHeading')}
                 </div>
               )}
               {i === firstPlace && (
-                <div className={`px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 ${i > 0 ? 'border-t border-gray-100' : ''}`} role="presentation">
+                <div className={`px-6 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500 ${i > 0 ? 'border-t border-gray-100' : ''}`} role="presentation">
                   {t('placesHeading')}
                 </div>
               )}
@@ -129,7 +129,7 @@ function SuggestionList({ id, items, query, loading, highlighted, onHover, onPic
           ))}
         </ul>
         {firstPlace >= 0 && (
-          <div className="px-6 py-2 text-[11px] text-gray-400 border-t border-gray-100">
+          <div className="px-6 py-2 text-[11px] text-gray-500 border-t border-gray-100">
             ©{' '}
             <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="underline hover:text-gray-600">
               OpenStreetMap

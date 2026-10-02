@@ -48,7 +48,7 @@ function AuthLayout({ promoTitle, promoText, title, children, footer }: Props) {
 
             <div className="flex items-center gap-3 my-6" aria-hidden="true">
               <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-gray-400 text-xs uppercase tracking-wider">{t('orLabel')}</span>
+              <span className="text-gray-500 text-xs uppercase tracking-wider">{t('orLabel')}</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
 

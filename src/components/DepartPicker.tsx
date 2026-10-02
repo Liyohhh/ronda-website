@@ -51,7 +51,7 @@ function Popover({ label, icon, children, open, setOpen }: { label: string; icon
 // up / down arrow for the time stepper
 function Step({ dir, onClick, label }: { dir: 1 | -1; onClick: () => void; label: string }) {
   return (
-    <button type="button" onClick={onClick} aria-label={label} className="w-10 h-7 rounded-lg text-gray-400 hover:text-[#002472] hover:bg-gray-100 flex items-center justify-center">
+    <button type="button" onClick={onClick} aria-label={label} className="w-10 h-7 rounded-lg text-gray-500 hover:text-[#002472] hover:bg-gray-100 flex items-center justify-center">
       <Icon name={dir === 1 ? 'expandLess' : 'expandMore'} size={16} />
     </button>
   )
@@ -121,7 +121,7 @@ function DepartPicker({ value, onChange, onLeaveNow }: Props) {
           </div>
           <div className="grid grid-cols-7 gap-0.5 text-center">
             {weekdays.map((w, i) => (
-              <span key={i} className="text-[11px] font-semibold text-gray-400 py-1">{w}</span>
+              <span key={i} className="text-[11px] font-semibold text-gray-500 py-1">{w}</span>
             ))}
             {cells.map((d, i) =>
               d === null ? (

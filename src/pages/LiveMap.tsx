@@ -47,7 +47,7 @@ function StopPopup({ stop, t }: { stop: Stop; t: (k: TranslationKey) => string }
       <div className="font-semibold text-gray-900">
         <BusStopName logo code={stop.code} name={stop.name} />
       </div>
-      <div className="mt-2 text-xs font-semibold uppercase tracking-wide text-gray-400">{t('liveArrivals')}</div>
+      <div className="mt-2 text-xs font-semibold uppercase tracking-wide text-gray-500">{t('liveArrivals')}</div>
       {res === null && <div className="text-gray-500">{t('liveLoading')}</div>}
       {res === 'error' && <div className="text-gray-500">{t('liveError')}</div>}
       {res && res !== 'error' && !res.supported && <div className="text-gray-500">{t('liveArrivalsUnsupported')}</div>}
@@ -58,7 +58,7 @@ function StopPopup({ stop, t }: { stop: Stop; t: (k: TranslationKey) => string }
             <li key={`${a.route_id}-${a.vehicle_id}`} className="flex items-center gap-2">
               <RouteChip code={a.label ?? a.route_id} size="sm" />
               <span className="font-semibold text-gray-900">{a.eta_secs < 60 ? t('liveDue') : t('liveMinAway').replace('{n}', String(Math.round(a.eta_secs / 60)))}</span>
-              <span className="ms-auto text-xs text-gray-400 tabular-nums">{a.vehicle_id}</span>
+              <span className="ms-auto text-xs text-gray-500 tabular-nums">{a.vehicle_id}</span>
             </li>
           ))}
         </ul>
@@ -211,7 +211,7 @@ function LiveMap() {
           <h1 className="text-lg font-bold text-[#002472]">{t('liveMapTitle')}</h1>
           <p className="text-sm text-gray-600" aria-live="polite">
             {error && !buses.length ? t('liveError') : fetchedAt ? t('liveBusesCount').replace('{n}', String(shown.length)) : t('liveLoading')}
-            {lastFetch && <span className="text-gray-400"> · {t('liveUpdated').replace('{time}', new Date(lastFetch).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' }))}</span>}
+            {lastFetch && <span className="text-gray-500"> · {t('liveUpdated').replace('{time}', new Date(lastFetch).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' }))}</span>}
           </p>
           <div className="mt-3 flex gap-2">
             <input
@@ -224,6 +224,7 @@ function LiveMap() {
             <button
               type="button"
               onClick={nearMe}
+              aria-label={t('liveNearMe')}
               className="inline-flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-[#002472] hover:border-[#002472]/50 whitespace-nowrap"
             >
               <Icon name="myLocation" size={16} />
@@ -244,7 +245,7 @@ function LiveMap() {
             <li className="inline-flex items-center gap-1">♿ {t('liveWheelchair')}</li>
           </ul>
           {zoom < STOPS_ZOOM && <p className="mt-2 hidden md:block text-xs text-gray-500">{t('liveZoomStops')}</p>}
-          <p className="mt-2 text-[11px] text-gray-400">{t('liveSources')}</p>
+          <p className="mt-2 text-[11px] text-gray-500">{t('liveSources')}</p>
         </section>
       </main>
     </div>

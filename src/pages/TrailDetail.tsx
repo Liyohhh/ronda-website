@@ -78,7 +78,7 @@ function TrailDetail() {
         <BackLink />
 
         <h2 className="mt-6 text-lg font-semibold text-gray-900">
-          {t('trailStops')} <span className="text-gray-400 font-normal">· {t('stopsCount').replace('{n}', String(trail.stops.length))}</span>
+          {t('trailStops')} <span className="text-gray-500 font-normal">· {t('stopsCount').replace('{n}', String(trail.stops.length))}</span>
         </h2>
 
         <ol className="mt-4">
@@ -96,7 +96,7 @@ function TrailDetail() {
 
                 <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-4">
                   {newDay && (
-                    <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#8a6a2a] bg-[#C9A45C]/15 px-2 py-0.5 rounded">
+                    <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#86672a] bg-[#C9A45C]/15 px-2 py-0.5 rounded">
                       {t(weekdayKey(stop.day!))}
                     </div>
                   )}

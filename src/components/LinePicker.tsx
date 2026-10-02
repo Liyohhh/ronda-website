@@ -44,7 +44,7 @@ function LinePicker({ id, query, buses, highlighted, onPick, onHover }: Props) {
                 <>
                   <LineBadge line={l} size={24} decorative />
                   <span className="text-sm text-gray-900">{l.name}</span>
-                  {l.code && <span className="ms-auto text-xs text-gray-400">{l.code}</span>}
+                  {l.code && <span className="ms-auto text-xs text-gray-500">{l.code}</span>}
                 </>
               )}
             </li>

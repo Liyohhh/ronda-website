@@ -12,7 +12,7 @@ import { SLIDE_PHOTOS } from '../data/trailPhotos'
 // prefer reduced motion. Photos: Wikimedia Commons, credited on the slide and on the About page.
 
 const AUTO_MS = 8000
-const GOLD_TEXT = '#a07d36' // RONDA gold, dark enough to read on white
+const GOLD_TEXT = '#86672a' // RONDA gold, dark enough for small text (4.5:1 on white and light tints)
 
 type Slide = { key: keyof typeof SLIDE_PHOTOS; n: 1 | 2 | 3 | 4; action: 'plan' | 'lines' | 'login' }
 const SLIDES: Slide[] = [
@@ -105,6 +105,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
                   aria-roledescription="slide"
                   aria-label={`${i + 1} / ${n}`}
                   aria-hidden={!active}
+                  inert={!active}
                   className="w-full flex-shrink-0 grid md:grid-cols-2 gap-8 md:gap-12 items-center p-6 sm:p-10 md:p-12"
                 >
                   <figure className="relative">
