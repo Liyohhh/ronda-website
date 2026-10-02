@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 import AuthLayout, { AuthField, SubmitButton } from '../components/AuthLayout'
 import { useLanguage } from '../hooks/useLanguage'
+import { safeNext } from '../data/safeNext'
 
 function Login() {
   const { t } = useLanguage()
@@ -11,6 +12,8 @@ function Login() {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const navigate = useNavigate()
+  // back to the page that asked for a sign-in (only a path on this site)
+  const target = safeNext(useSearchParams()[0].get('next'))
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,7 +28,7 @@ function Login() {
       return
     }
 
-    navigate('/')
+    navigate(target, { replace: true })
   }
 
   return (

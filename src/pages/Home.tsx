@@ -1,4 +1,4 @@
-import { useEffect, useState, type KeyboardEvent } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import LinePicker from '../components/LinePicker'
 import LinePanel from '../components/LinePanel'
@@ -104,6 +104,10 @@ function Home() {
   const listOpen = activeField !== null && items.length > 0
   const highlighted = highlight.query === normaliseQuery(query) ? highlight.index : -1
 
+  // Enter pressed while this query's suggestions are still loading: pick the top one when they arrive
+  // (until then the list still shows the previous query's results); see the effect below pickSuggestion
+  const pendingEnter = useRef<string | null>(null)
+
   // Arrow keys move through suggestions, Enter picks (or searches from the End box), Escape closes
   const onFieldKey = (e: KeyboardEvent<HTMLInputElement>) => {
     const q = normaliseQuery(query)
@@ -115,7 +119,12 @@ function Home() {
     } else if (e.key === 'Enter') {
       if (listOpen && highlighted >= 0) {
         e.preventDefault()
-        pickSuggestion(items[highlighted].pick)
+        enterPick(items[highlighted].pick)
+      } else if (q && (activeField === 'start' ? !startStop : activeField === 'end' && !endStop)) {
+        // typed text not picked yet: take the top suggestion (now, or when this query's results arrive)
+        e.preventDefault()
+        if (!searching && items.length) enterPick(items[0].pick)
+        else pendingEnter.current = q
       } else if (activeField === 'end') handleSearch()
     } else if (e.key === 'Escape') {
       setActiveField(null)
@@ -265,6 +274,22 @@ function Home() {
     setActiveField(null)
     setHighlight({ query: '', index: -1 })
   }
+
+  // Enter with a suggestion: take it (the highlighted one, else the top one); from the End box with a Start
+  // already chosen, plan straight away
+  const enterPick = (pick: Pick) => {
+    const field = activeField
+    pickSuggestion(pick)
+    if (field === 'end' && startStop) handleSearch({ to: pick })
+  }
+
+  // a pending Enter is acted on once this query's results have loaded
+  useEffect(() => {
+    const pending = pendingEnter.current
+    if (pending === null || searching) return
+    pendingEnter.current = null
+    if (pending === normaliseQuery(query) && items.length) enterPick(items[0].pick)
+  })
 
   return (
     <SiteLayout>

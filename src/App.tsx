@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import UserDashboard from './pages/UserDashboard'
 import PartnerDashboard from './pages/PartnerDashboard'
 import Admin from './pages/Admin'
+import RequireAuth from './components/RequireAuth'
 import Help from './pages/Help'
 import HelpCategory from './pages/HelpCategory'
 import Trails from './pages/Trails'
@@ -22,9 +23,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/partner-dashboard" element={<PartnerDashboard />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/dashboard" element={<RequireAuth><UserDashboard /></RequireAuth>} />
+          <Route path="/partner-dashboard" element={<RequireAuth role="merchant"><PartnerDashboard /></RequireAuth>} />
+          <Route path="/admin" element={<RequireAuth role="admin"><Admin /></RequireAuth>} />
           <Route path="/help" element={<Help />} />
           <Route path="/help/:category" element={<HelpCategory />} />
           <Route path="/trails" element={<Trails />} />

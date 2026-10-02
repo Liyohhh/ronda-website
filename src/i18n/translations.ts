@@ -427,6 +427,9 @@ const en = {
   noServiceTonight: 'No more trains or buses tonight. The first service tomorrow is at {time}.',
   serviceResumes: 'Trains and buses are not running now. Service resumes at {time}.',
   tomorrow: 'Tomorrow',
+  notAllowedTitle: 'You do not have access to this page',
+  notAllowedBody: 'This page is for RONDA staff and partners. If you think you should have access, contact us.',
+  backToHome: 'Back to home',
 }
 
 export type TranslationKey = keyof typeof en
@@ -853,6 +856,9 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     noServiceTonight: 'Tiada lagi tren atau bas malam ini. Perkhidmatan pertama esok pada {time}.',
     serviceResumes: 'Tren dan bas tidak beroperasi sekarang. Perkhidmatan bermula semula pada {time}.',
     tomorrow: 'Esok',
+    notAllowedTitle: 'Anda tidak mempunyai akses ke halaman ini',
+    notAllowedBody: 'Halaman ini untuk kakitangan dan rakan kongsi RONDA. Jika anda rasa anda sepatutnya mempunyai akses, hubungi kami.',
+    backToHome: 'Kembali ke laman utama',
   },
   zh: {
     signUp: '注册',
@@ -1274,6 +1280,9 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     noServiceTonight: '今晚已无火车或巴士。明天首班车为 {time}。',
     serviceResumes: '目前火车和巴士暂停运营。服务将于 {time} 恢复。',
     tomorrow: '明天',
+    notAllowedTitle: '您无权访问此页面',
+    notAllowedBody: '此页面仅供 RONDA 员工和合作伙伴使用。如果您认为您应该有访问权限，请联系我们。',
+    backToHome: '返回首页',
   },
   ar: {
     signUp: 'إنشاء حساب',
@@ -1695,5 +1704,8 @@ export const translations: Record<Lang, Record<TranslationKey, string>> = {
     noServiceTonight: 'لا توجد قطارات أو حافلات أخرى الليلة. أول رحلة غداً في {time}.',
     serviceResumes: 'القطارات والحافلات لا تعمل الآن. تستأنف الخدمة في {time}.',
     tomorrow: 'غداً',
+    notAllowedTitle: 'ليس لديك صلاحية الوصول إلى هذه الصفحة',
+    notAllowedBody: 'هذه الصفحة مخصصة لموظفي RONDA وشركائها. إذا كنت تعتقد أنه يجب أن يكون لديك وصول، فاتصل بنا.',
+    backToHome: 'العودة إلى الصفحة الرئيسية',
   },
 }

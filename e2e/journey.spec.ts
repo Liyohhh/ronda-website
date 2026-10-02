@@ -94,3 +94,35 @@ test.describe('lines search', () => {
     }
   })
 })
+
+test.describe('Enter in the place boxes', () => {
+  test('Enter takes the top suggestion; Enter in End plans the trip', async ({ page, backend }) => {
+    await page.goto('/')
+    const start = page.getByRole('combobox', { name: 'Start', exact: true })
+    await start.fill('kj10')
+    await expect(page.getByRole('option', { name: /KLCC/ }).first()).toBeVisible()
+    await start.press('Enter')
+    await expect(start).toHaveValue(/KLCC/)
+    const end = page.getByRole('combobox', { name: 'End', exact: true })
+    await end.fill('pasar')
+    await expect(page.getByRole('option', { name: /Pasar Seni/ }).first()).toBeVisible()
+    await end.press('Enter')
+    await expect(page.getByRole('dialog', { name: 'Your journey' })).toBeVisible()
+    expect(backend.calls.some((c) => c.path === '/functions/v1/plan-trip')).toBe(true)
+  })
+
+  test('Enter pressed before the suggestions arrive waits for them', async ({ page, backend }) => {
+    void backend
+    // slow stop search: Enter is pressed while it is still loading
+    await page.route('https://e2e.supabase.test/rest/v1/rpc/search_stops', async (route) => {
+      await new Promise((r) => setTimeout(r, 800))
+      await route.fallback()
+    })
+    await page.goto('/')
+    const start = page.getByRole('combobox', { name: 'Start', exact: true })
+    await start.fill('kj10')
+    await start.press('Enter')
+    await expect(start).toHaveValue(/KLCC/)
+    await expect(page.getByText('Please choose your Start and End from the suggestion list.')).toHaveCount(0)
+  })
+})
