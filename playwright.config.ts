@@ -28,6 +28,7 @@ export default defineConfig({
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !CI,
     timeout: 180_000,
-    env: { VITE_SUPABASE_URL: 'https://e2e.supabase.test', VITE_SUPABASE_ANON_KEY: 'e2e-anon-key' },
+    // no map file in tests: the map falls back to plain OpenStreetMap tiles (src/services/mapStyle.ts)
+    env: { VITE_SUPABASE_URL: 'https://e2e.supabase.test', VITE_SUPABASE_ANON_KEY: 'e2e-anon-key', VITE_MAP_PMTILES_URL: '' },
   },
 })

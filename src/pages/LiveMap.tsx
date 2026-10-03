@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
+import * as maplibregl from 'maplibre-gl'
+import type { Feature, Polygon } from 'geojson'
+import { Protocol } from 'pmtiles'
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import Header from '../components/Header'
 import BusStopName from '../components/BusStopName'
 import Icon from '../components/Icon'
@@ -10,16 +13,24 @@ import { useLanguage } from '../hooks/useLanguage'
 import { usePoll } from '../hooks/usePoll'
 import { useLocate } from '../hooks/useLocate'
 import { supabase } from '../services/supabase'
+import { mapConfig, mapStyle } from '../services/mapStyle'
 import { ago, lateMinutes, liveVehicles, textOn, LIVE_POLL_MS, routeKey, stopArrivals, type Arrival, type BusStatus, type LiveBus, type LiveSource, type LiveTrain } from '../services/live'
 import type { TranslationKey } from '../i18n/translations'
 
-// /live: every Rapid KL and MRT feeder bus and every KTMB train that is sending its position, on an OpenStreetMap
-// map, refreshed every 30 s. Filter by route, line or train number; bus stops appear when zoomed in, and a Rapid KL
-// stop shows the operator's arrival times. A train shows where it is going, its next stop and about how late it is.
+// /live: every Rapid KL and MRT feeder bus and every KTMB train that is sending its position, on RONDA's own
+// Malaysia map (MapLibre + OpenStreetMap data, src/services/mapStyle.ts), refreshed every 30 s. Filter by route,
+// line or train number; bus stops appear when zoomed in, and a Rapid KL stop shows the operator's arrival times.
+// A train shows where it is going, its next stop and about how late it is.
 
-const KL: [number, number] = [3.139, 101.6869]
+// MapLibre's worker, bundled by Vite (its default lookup breaks under the dev server's pre-bundling)
+maplibregl.setWorkerUrl(workerUrl)
+// pmtiles:// URLs read our single map file with HTTP range requests (registered once)
+maplibregl.addProtocol('pmtiles', new Protocol().tile)
+
+const KL: [number, number] = [101.6869, 3.139] // lon, lat
 const STOPS_ZOOM = 16
 const NAVY = '#002472'
+const ME = '#2563EB'
 
 const STATUS: { key: Exclude<BusStatus, null>; label: TranslationKey; color: string }[] = [
   { key: 'on_trip', label: 'liveStatusOnTrip', color: NAVY },
@@ -33,7 +44,15 @@ const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (c) => `&#${c.ch
 
 type Stop = { feed_id: string; stop_id: string; name: string; code: string | null; lat: number; lon: number }
 
-// Arrivals popup for a bus stop, rendered into the Leaflet popup (its own React root, so `t` is passed in)
+// a circle of `m` metres around a point, as a GeoJSON polygon (location accuracy)
+function circle(lon: number, lat: number, m: number): Feature<Polygon> {
+  const pts: [number, number][] = []
+  const dLat = m / 111320, dLon = m / (111320 * Math.cos((lat * Math.PI) / 180))
+  for (let i = 0; i <= 64; i++) { const a = (i / 64) * 2 * Math.PI; pts.push([lon + dLon * Math.cos(a), lat + dLat * Math.sin(a)]) }
+  return { type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [pts] } }
+}
+
+// Arrivals popup for a bus stop, rendered into the map popup (its own React root, so `t` is passed in)
 function StopPopup({ stop, t }: { stop: Stop; t: (k: TranslationKey) => string }) {
   const [res, setRes] = useState<{ arrivals: Arrival[]; supported: boolean } | null | 'error'>(null)
   useEffect(() => {
@@ -68,16 +87,40 @@ function StopPopup({ stop, t }: { stop: Stop; t: (k: TranslationKey) => string }
   )
 }
 
+// A vehicle marker: an HTML element with a popup, moved and updated in place on every refresh
+function upsertMarker(map: maplibregl.Map, all: Map<string, maplibregl.Marker>, id: string, lon: number, lat: number,
+                      html: string, title: string, popup: string, z: number) {
+  const old = all.get(id)
+  if (old) {
+    old.setLngLat([lon, lat])
+    const el = old.getElement()
+    if (el.innerHTML !== html) el.innerHTML = html
+    el.title = title
+    old.getPopup()?.setHTML(popup)
+    return
+  }
+  const el = document.createElement('div')
+  el.innerHTML = html
+  el.title = title
+  el.style.zIndex = String(z)
+  el.style.cursor = 'pointer'
+  const mk = new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([lon, lat])
+    .setPopup(new maplibregl.Popup({ offset: 14, maxWidth: '280px' }).setHTML(popup)).addTo(map)
+  all.set(id, mk)
+}
+const removeMissing = (all: Map<string, maplibregl.Marker>, seen: Set<string>) => {
+  for (const [id, mk] of all) if (!seen.has(id)) { mk.remove(); all.delete(id) }
+}
+
 function LiveMap() {
   const { t, lang } = useLanguage()
   const el = useRef<HTMLDivElement>(null)
-  const map = useRef<L.Map | null>(null)
-  const busLayer = useRef<L.LayerGroup | null>(null)
-  const stopLayer = useRef<L.LayerGroup | null>(null)
-  const markers = useRef(new Map<string, L.Marker>())
-  const trainLayer = useRef<L.LayerGroup | null>(null)
-  const trainMarkers = useRef(new Map<string, L.Marker>())
+  const map = useRef<maplibregl.Map | null>(null)
+  const markers = useRef(new Map<string, maplibregl.Marker>())
+  const trainMarkers = useRef(new Map<string, maplibregl.Marker>())
+  const stopMarkers = useRef<maplibregl.Marker[]>([])
   const popupRoots = useRef(new Set<Root>())
+  const [ready, setReady] = useState(false)
   const [buses, setBuses] = useState<LiveBus[]>([])
   const [trains, setTrains] = useState<LiveTrain[]>([])
   const [sources, setSources] = useState<LiveSource[]>([])
@@ -86,30 +129,31 @@ function LiveMap() {
   const [showOff, setShowOff] = useState(false)
   const [zoom, setZoom] = useState(12)
   const [fetchedAt, setFetchedAt] = useState<number | null>(null)
-  // map tiles failing (offline, blocked, tile server down) and none loaded: say so instead of a grey map
+  // map tiles failing (offline, blocked, map file down) and none loaded: say so instead of a blank map
   const [tilesFailed, setTilesFailed] = useState(false)
   const tRef = useRef(t)
   useEffect(() => {
     tRef.current = t
   })
 
-  // map, tiles and layers, once
+  // map, once
   useEffect(() => {
     if (!el.current || map.current) return
-    const m = L.map(el.current, { zoomControl: false }).setView(KL, 12)
-    L.control.zoom({ position: 'bottomright' }).addTo(m)
-    let loaded = 0, failed = 0
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const { pmtilesUrl, assetsUrl } = mapConfig()
+    const m = new maplibregl.Map({
+      container: el.current,
+      style: mapStyle(lang, pmtilesUrl, assetsUrl),
+      center: KL,
+      zoom: 12,
       maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attributionControl: { compact: true },
     })
-      .on('tileload', () => { loaded++; setTilesFailed(false) })
-      .on('tileerror', () => { failed++; if (!loaded && failed >= 4) setTilesFailed(true) })
-      .addTo(m)
-    stopLayer.current = L.layerGroup().addTo(m)
-    busLayer.current = L.layerGroup().addTo(m)
-    trainLayer.current = L.layerGroup().addTo(m)
+    m.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right')
+    let loaded = 0, failed = 0
+    m.on('sourcedata', (e) => { if (e.tile) { loaded++; setTilesFailed(false) } })
+    m.on('error', () => { failed++; if (!loaded && failed >= 4) setTilesFailed(true) })
     m.on('zoomend', () => setZoom(m.getZoom()))
+    m.once('load', () => setReady(true))
     map.current = m
     const roots = popupRoots.current
     const all = markers.current
@@ -122,7 +166,19 @@ function LiveMap() {
       m.remove()
       map.current = null
     }
+    // the style follows the language in its own effect below
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // map labels in the site language (vector map only; the development fallback has no labels to change)
+  const firstLang = useRef(lang)
+  useEffect(() => {
+    const m = map.current
+    if (!m || lang === firstLang.current) return
+    firstLang.current = lang
+    const { pmtilesUrl, assetsUrl } = mapConfig()
+    if (pmtilesUrl) m.setStyle(mapStyle(lang, pmtilesUrl, assetsUrl))
+  }, [lang])
 
   usePoll(() => {
     liveVehicles()
@@ -148,13 +204,12 @@ function LiveMap() {
 
   // train markers: the train number on the line's colour; the popup says where it is going and how late
   useEffect(() => {
-    const layer = trainLayer.current
-    if (!layer) return
+    const m = map.current
+    if (!m) return
     const seen = new Set<string>()
     for (const tr of shownTrains) {
       seen.add(tr.vehicle_id)
       const html = `<div class="ronda-bus ronda-train" style="background:${esc(tr.colour || NAVY)};color:${textOn(tr.colour || NAVY)}">${esc(tr.train_no)}</div>`
-      const icon = L.divIcon({ html, className: '', iconSize: undefined, iconAnchor: [18, 11] })
       const late = lateMinutes(tr.delay_secs)
       const popup =
         `<div class="text-sm"><div class="font-semibold">${esc(tr.network ?? tr.line ?? '')} · ${esc(t('liveTrain').replace('{no}', tr.train_no))}</div>` +
@@ -162,28 +217,19 @@ function LiveMap() {
         (tr.next_stop ? `<div>${esc(t('liveNextStop').replace('{stop}', tr.next_stop))}</div>` : '') +
         (late === null ? '' : `<div class="${late ? 'text-amber-800 font-medium' : ''}">${esc(late ? t('liveLate').replace('{n}', String(late)) : t('liveOnTime'))}</div>`) +
         `<div class="text-gray-500">${esc(ago(tr.gps_at, t))}</div></div>`
-      const old = trainMarkers.current.get(tr.vehicle_id)
-      if (old) {
-        old.setLatLng([tr.lat, tr.lon]).setIcon(icon).setPopupContent(popup)
-      } else {
-        const mk = L.marker([tr.lat, tr.lon], { icon, keyboard: false, title: `${tr.line ?? ''} ${tr.train_no}`, zIndexOffset: 500 }).bindPopup(popup)
-        mk.addTo(layer)
-        trainMarkers.current.set(tr.vehicle_id, mk)
-      }
+      upsertMarker(m, trainMarkers.current, tr.vehicle_id, tr.lon, tr.lat, html, `${tr.line ?? ''} ${tr.train_no}`, popup, 3)
     }
-    for (const [id, mk] of trainMarkers.current) if (!seen.has(id)) { layer.removeLayer(mk); trainMarkers.current.delete(id) }
+    removeMissing(trainMarkers.current, seen)
   }, [shownTrains, t, lang])
 
   // bus markers: moved in place, so the map doesn't flicker every 30 s
   useEffect(() => {
-    const layer = busLayer.current
-    if (!layer) return
+    const m = map.current
+    if (!m) return
     const seen = new Set<string>()
     for (const b of shown) {
       seen.add(b.vehicle_id)
-      const color = statusColor(b)
-      const html = `<div class="ronda-bus" style="background:${esc(color)}">${esc(b.label ?? '')}${b.wheelchair ? '<span class="ronda-bus-oku" aria-hidden="true">♿</span>' : ''}</div>`
-      const icon = L.divIcon({ html, className: '', iconSize: undefined, iconAnchor: [14, 11] })
+      const html = `<div class="ronda-bus" style="background:${esc(statusColor(b))}">${esc(b.label ?? '')}${b.wheelchair ? '<span class="ronda-bus-oku" aria-hidden="true">♿</span>' : ''}</div>`
       const status = STATUS.find((s) => s.key === b.status)
       const popup =
         `<div class="text-sm"><div class="font-semibold">${esc(b.label ?? b.route_id)} · ${esc(t('liveBus').replace('{plate}', b.vehicle_id))}</div>` +
@@ -191,45 +237,44 @@ function LiveMap() {
         (b.wheelchair ? `<div>♿ ${esc(t('liveWheelchair'))}</div>` : '') +
         (b.speed_kmh !== null ? `<div>${esc(t('liveSpeed').replace('{n}', String(Math.round(b.speed_kmh))))}</div>` : '') +
         `<div class="text-gray-500">${esc(ago(b.gps_at, t))}</div></div>`
-      const old = markers.current.get(b.vehicle_id)
-      if (old) {
-        old.setLatLng([b.lat, b.lon]).setIcon(icon).setPopupContent(popup)
-      } else {
-        const mk = L.marker([b.lat, b.lon], { icon, keyboard: false, title: `${b.label ?? ''} ${b.vehicle_id}` }).bindPopup(popup)
-        mk.addTo(layer)
-        markers.current.set(b.vehicle_id, mk)
-      }
+      upsertMarker(m, markers.current, b.vehicle_id, b.lon, b.lat, html, `${b.label ?? ''} ${b.vehicle_id}`, popup, 2)
     }
-    for (const [id, mk] of markers.current) if (!seen.has(id)) { layer.removeLayer(mk); markers.current.delete(id) }
+    removeMissing(markers.current, seen)
   }, [shown, t, lang])
 
   // bus stops when zoomed in; a click shows the stop's arrival times
   useEffect(() => {
-    const m = map.current, layer = stopLayer.current
-    if (!m || !layer) return
-    let cancelled = false
+    const m = map.current
+    if (!m) return
+    let cancelled = false, seq = 0
+    const clear = () => { for (const mk of stopMarkers.current) mk.remove(); stopMarkers.current = [] }
     const load = () => {
-      layer.clearLayers()
-      if (m.getZoom() < STOPS_ZOOM) return
+      const mine = ++seq
+      if (m.getZoom() < STOPS_ZOOM) { clear(); return }
       const b = m.getBounds()
       supabase
         .rpc('stops_in_bbox', { min_lat: b.getSouth(), min_lon: b.getWest(), max_lat: b.getNorth(), max_lon: b.getEast() })
         .then(({ data }) => {
-          if (cancelled || !data) return
+          if (cancelled || mine !== seq || !data) return
+          clear()
           for (const s of data as Stop[]) {
-            const c = L.circleMarker([s.lat, s.lon], { radius: 6, color: NAVY, weight: 2, fillColor: '#fff', fillOpacity: 1 })
+            const dot = document.createElement('button')
+            dot.type = 'button'
+            dot.className = 'ronda-stop'
+            dot.setAttribute('aria-label', s.name)
             let root: Root | null = null
-            c.bindPopup(() => {
+            const popup = new maplibregl.Popup({ offset: 8, maxWidth: '300px' })
+            popup.on('open', () => {
               const div = document.createElement('div')
               root = createRoot(div)
               popupRoots.current.add(root)
               root.render(<StopPopup stop={s} t={tRef.current} />)
-              return div
+              popup.setDOMContent(div)
             })
-            c.on('popupclose', () => {
-              if (root) { popupRoots.current.delete(root); root.unmount(); root = null }
+            popup.on('close', () => {
+              if (root) { const r = root; root = null; popupRoots.current.delete(r); setTimeout(() => r.unmount()) }
             })
-            c.addTo(layer)
+            stopMarkers.current.push(new maplibregl.Marker({ element: dot }).setLngLat([s.lon, s.lat]).setPopup(popup).addTo(m))
           }
         })
     }
@@ -238,22 +283,40 @@ function LiveMap() {
     return () => {
       cancelled = true
       m.off('moveend', load)
+      clear()
     }
   }, [])
 
-  // "Near me": centre on the rider and mark where they are; every failure is explained
-  const meLayer = useRef<L.LayerGroup | null>(null)
+  // "Near me": centre on the rider and mark where they are (dot + accuracy circle); every failure is explained
+  const meMarker = useRef<maplibregl.Marker | null>(null)
   const { state: loc, locate } = useLocate()
   useEffect(() => {
     const m = map.current
     if (!m || loc.status !== 'found') return
-    meLayer.current?.remove()
-    meLayer.current = L.layerGroup([
-      L.circle([loc.lat, loc.lon], { radius: loc.accuracy_m, color: '#2563EB', weight: 1, fillOpacity: 0.1, interactive: false }),
-      L.circleMarker([loc.lat, loc.lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#2563EB', fillOpacity: 1 }).bindTooltip(t('locYouAreHere')),
-    ]).addTo(m)
-    m.setView([loc.lat, loc.lon], Math.max(m.getZoom(), STOPS_ZOOM))
-  }, [loc, t])
+    const area = circle(loc.lon, loc.lat, loc.accuracy_m)
+    // the accuracy circle is a map layer, so it waits for the style; the dot below does not
+    const draw = () => {
+      if (!m.isStyleLoaded()) return
+      const src = m.getSource('me') as maplibregl.GeoJSONSource | undefined
+      if (src) src.setData(area)
+      else {
+        m.addSource('me', { type: 'geojson', data: area })
+        m.addLayer({ id: 'me-accuracy', type: 'fill', source: 'me', paint: { 'fill-color': ME, 'fill-opacity': 0.1 } })
+        m.addLayer({ id: 'me-accuracy-line', type: 'line', source: 'me', paint: { 'line-color': ME, 'line-width': 1 } })
+      }
+    }
+    draw()
+    m.on('style.load', draw) // first load, and a language change reloads the style: draw the circle again
+    meMarker.current?.remove()
+    const dot = document.createElement('div')
+    dot.className = 'ronda-me'
+    dot.title = t('locYouAreHere')
+    dot.setAttribute('role', 'img')
+    dot.setAttribute('aria-label', t('locYouAreHere'))
+    meMarker.current = new maplibregl.Marker({ element: dot }).setLngLat([loc.lon, loc.lat]).addTo(m)
+    m.easeTo({ center: [loc.lon, loc.lat], zoom: Math.max(m.getZoom(), STOPS_ZOOM) })
+    return () => { m.off('style.load', draw) }
+  }, [loc, t, ready])
   const locMessage =
     loc.status === 'locating' ? t('locLocating')
     : loc.status === 'error' ? t(({ denied: 'locDenied', unavailable: 'locUnavailable', timeout: 'locTimeout', unsupported: 'locUnsupported' } as const)[loc.reason])
@@ -265,7 +328,10 @@ function LiveMap() {
     <div className="h-screen flex flex-col bg-gray-50">
       <Header />
       <main className="relative flex-1 min-h-0">
-        <div ref={el} className="absolute inset-0 z-0" role="application" aria-label={t('liveMapTitle')} />
+        {/* MapLibre's own CSS makes its container position: relative, so the container sits inside the sized box */}
+        <div className="absolute inset-0 z-0">
+          <div ref={el} className="h-full w-full" role="application" aria-label={t('liveMapTitle')} />
+        </div>
         {tilesFailed && (
           <div className="absolute z-[400] inset-x-3 bottom-6 md:inset-x-auto md:end-6 md:max-w-sm rounded-xl bg-white border border-amber-300 shadow-lg px-4 py-3 text-sm text-amber-900" role="alert">
             {t('mapLoadError')}

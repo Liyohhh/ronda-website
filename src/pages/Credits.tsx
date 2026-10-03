@@ -25,13 +25,15 @@ const SECTIONS: Section[] = [
     title: 'creditsMaps', body: 'creditsMapsBody',
     sources: [
       { name: '© OpenStreetMap contributors', url: 'https://www.openstreetmap.org/copyright', licence: { name: 'ODbL', url: 'https://opendatacommons.org/licenses/odbl/' } },
+      { name: 'Protomaps basemap', url: 'https://protomaps.com/', licence: { name: 'BSD-3-Clause', url: 'https://github.com/protomaps/basemaps/blob/main/LICENSE.md' } },
       { name: 'Photon by komoot', url: 'https://photon.komoot.io/' },
     ],
   },
   {
     title: 'creditsSoftware',
     sources: [
-      { name: 'Leaflet', url: 'https://leafletjs.com/', licence: { name: 'BSD-2-Clause', url: 'https://github.com/Leaflet/Leaflet/blob/main/LICENSE' } },
+      { name: 'MapLibre GL JS', url: 'https://maplibre.org/', licence: { name: 'BSD-3-Clause', url: 'https://github.com/maplibre/maplibre-gl-js/blob/main/LICENSE.txt' } },
+      { name: 'PMTiles (Protomaps)', url: 'https://github.com/protomaps/PMTiles', licence: { name: 'BSD-3-Clause', url: 'https://github.com/protomaps/PMTiles/blob/main/LICENSE' } },
       { name: 'Material Symbols and Material Icons (Google)', url: 'https://github.com/google/material-design-icons', licence: { name: 'Apache-2.0', url: 'https://www.apache.org/licenses/LICENSE-2.0' } },
       { name: 'Cupertino Icons (Flutter)', url: 'https://github.com/flutter/packages/tree/main/third_party/packages/cupertino_icons', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
       { name: 'React, React Router, Supabase JS, Tailwind CSS', url: 'https://github.com/Liyohhh/ronda-website/blob/main/package.json', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },

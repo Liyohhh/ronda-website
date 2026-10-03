@@ -17,9 +17,11 @@
     "test:all": "npm run lint && npm run typecheck && npm run test:coverage && npm run test:e2e"
   },
   "dependencies": {
+    "@protomaps/basemaps": "^5.7.2",
     "@supabase/supabase-js": "^2.116.0",
     "@tailwindcss/vite": "^4.3.3",
-    "leaflet": "^1.9.4",
+    "maplibre-gl": "^6.11.2",
+    "pmtiles": "^4.5.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3",
@@ -33,7 +35,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
-    "@types/leaflet": "^1.9.20",
+    "@types/geojson": "^7946.0.16",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

@@ -24,7 +24,7 @@ test.describe('live bus map', () => {
     const train = page.locator('.ronda-train')
     await expect(train).toHaveText('9999')
     await train.click()
-    const popup = page.locator('.leaflet-popup-content')
+    const popup = page.locator('.maplibregl-popup-content')
     await expect(popup).toContainText('KTM ETS · Train 9999')
     await expect(popup).toContainText('to KTM/ETS JB Sentral')
     await expect(popup).toContainText('Next stop: KTM/ETS Kluang')
@@ -55,7 +55,7 @@ test.describe('Near me', () => {
       void backend
       await page.goto('/live')
       await page.getByRole('button', { name: 'Near me' }).click()
-      await expect(page.locator('.leaflet-interactive[fill="#2563EB"]')).toHaveCount(1)
+      await expect(page.locator('.ronda-me')).toHaveCount(1)
       await expect(page.getByRole('status')).toHaveCount(0)
     })
   })

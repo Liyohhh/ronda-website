@@ -71,6 +71,33 @@ body {
   text-overflow: ellipsis;
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
 }
+/* map credit links: underlined, not told apart by colour only (WCAG link-in-text-block) */
+.maplibregl-ctrl.maplibregl-ctrl-attrib a {
+  text-decoration: underline;
+}
+
+/* bus stop on the live map (zoomed in) */
+.ronda-stop {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #002472;
+  border-radius: 9999px;
+  background: #fff;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* "you are here" on the live map */
+.ronda-me {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  background: #2563eb;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.2);
+}
+
 .ronda-train {
   border-radius: 4px;
 }
