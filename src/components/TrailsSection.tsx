@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
-import { TRAILS } from '../data/trails'
+import { useTrails } from '../hooks/useTrails'
 import TrailCard from './TrailCard'
 import CategoryPills, { type CategoryFilter } from './CategoryPills'
 import Icon from './Icon'
@@ -10,7 +10,9 @@ function TrailsSection() {
   const { t, lang } = useLanguage()
   const [category, setCategory] = useState<CategoryFilter>('all')
   const rowRef = useRef<HTMLUListElement>(null)
-  const trails = category === 'all' ? TRAILS : TRAILS.filter((tr) => tr.category === category)
+  const { data, error } = useTrails()
+  const all = data?.trails ?? []
+  const trails = category === 'all' ? all : all.filter((tr) => tr.category === category)
 
   // arrows scroll one "page" of cards; in Arabic (RTL) the row runs the other way
   const scroll = (dir: 1 | -1) => {
@@ -47,7 +49,9 @@ function TrailsSection() {
 
       <CategoryPills value={category} onChange={setCategory} />
 
-      {trails.length === 0 ? (
+      {!data ? (
+        <p className="mt-6 text-gray-500" role={error ? 'alert' : 'status'}>{error ? t('trailsLoadError') : t('loading')}</p>
+      ) : trails.length === 0 ? (
         <p className="mt-6 text-gray-500">{t('noTrailsInCategory')}</p>
       ) : (
         <ul
@@ -56,7 +60,7 @@ function TrailsSection() {
         >
           {trails.map((trail) => (
             <li key={trail.slug} className="snap-start flex-shrink-0 w-[78%] sm:w-[46%] md:w-[31%] lg:w-[23.5%] flex">
-              <TrailCard trail={trail} className="w-full" />
+              <TrailCard trail={trail} places={data.places} className="w-full" />
             </li>
           ))}
         </ul>

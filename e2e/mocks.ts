@@ -7,6 +7,7 @@ import { test as base, expect, type Page, type Route } from '@playwright/test'
 const fixture = (name: string) => JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8'))
 export const SEARCH = { klcc: fixture('search_klcc.json'), pasarSeni: fixture('search_pasar_seni.json') }
 export const PLAN = fixture('plan_klcc_pasar_seni.json')
+export const TRAILS = fixture('trails.json') // public.trails_data(), recorded from production
 
 // made-up buses near KL Sentral (not real plates)
 export const LIVE = {
@@ -61,6 +62,8 @@ async function mockBackend(page: Page): Promise<Backend> {
         const q = String(body?.query ?? '').toLowerCase()
         return json(route, q.includes('kj10') || q.includes('klcc') ? SEARCH.klcc : q.includes('pasar') ? SEARCH.pasarSeni : [])
       }
+      case '/rest/v1/rpc/trails_data':
+        return json(route, TRAILS)
       case '/rest/v1/rpc/bus_routes':
         return json(route, BUS_ROUTES)
       case '/rest/v1/rpc/search_route_stops':

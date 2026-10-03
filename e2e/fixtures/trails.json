@@ -1,0 +1,963 @@
+{
+ "places": [
+  {
+   "id": "bangsar",
+   "name": "Bangsar",
+   "station": {
+    "name": "LRT Bangsar",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Bangsar - Bank Rakyat",
+    "stopId": "KJ16",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "bangsarCafes",
+   "name": "Bangsar cafés",
+   "station": {
+    "name": "LRT Bangsar",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Bangsar - Bank Rakyat",
+    "stopId": "KJ16",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "bangsarMarket",
+   "name": "Bangsar Baru Night Market",
+   "todo": "Nearest station not confirmed (LRT Bangsar is some distance away)"
+  },
+  {
+   "id": "batuCaves",
+   "name": "Batu Caves",
+   "station": {
+    "name": "KTM Batu Caves",
+    "feedId": "ktmb",
+    "search": "KTM Batu Caves",
+    "stopId": "50600",
+    "lineIds": [
+     "ktm-seremban"
+    ]
+   }
+  },
+  {
+   "id": "batuCavesSteps",
+   "name": "Batu Caves rainbow steps",
+   "station": {
+    "name": "KTM Batu Caves",
+    "feedId": "ktmb",
+    "search": "KTM Batu Caves",
+    "stopId": "50600",
+    "lineIds": [
+     "ktm-seremban"
+    ]
+   }
+  },
+  {
+   "id": "brickfields",
+   "name": "Brickfields (Little India)",
+   "station": {
+    "name": "Monorail KL Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail KL Sentral",
+    "stopId": "MR1",
+    "lineIds": [
+     "monorail"
+    ]
+   }
+  },
+  {
+   "id": "brickfieldsDeepavali",
+   "name": "Brickfields (Deepavali)",
+   "station": {
+    "name": "Monorail KL Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail KL Sentral",
+    "stopId": "MR1",
+    "lineIds": [
+     "monorail"
+    ]
+   }
+  },
+  {
+   "id": "centralMarket",
+   "name": "Central Market (Pasar Seni)",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "chinatownCafes",
+   "name": "Chinatown cafés (Petaling Street area)",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "chinatownCny",
+   "name": "Chinatown (Chinese New Year)",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "chowKitMarket",
+   "name": "Chow Kit Market",
+   "station": {
+    "name": "Monorail Chow Kit",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Chow Kit",
+    "stopId": "MR10",
+    "lineIds": [
+     "monorail"
+    ]
+   }
+  },
+  {
+   "id": "connaughtMarket",
+   "name": "Taman Connaught Night Market",
+   "station": {
+    "name": "MRT Taman Connaught",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Taman Connaught",
+    "stopId": "KG26",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "frim",
+   "name": "FRIM (Forest Research Institute Malaysia)",
+   "todo": "Nearest station not confirmed; likely needs a bus or ride-hailing"
+  },
+  {
+   "id": "guanDi",
+   "name": "Guan Di Temple",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "heliLounge",
+   "name": "Heli Lounge Bar",
+   "station": {
+    "name": "Monorail Raja Chulan",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Raja Chulan",
+    "stopId": "MR7",
+    "lineIds": [
+     "monorail"
+    ]
+   }
+  },
+  {
+   "id": "iamm",
+   "name": "Islamic Arts Museum Malaysia",
+   "todo": "Confirm nearest station (KTM Kuala Lumpur vs MRT Muzium Negara) and walking route",
+   "station": {
+    "name": "KTM Kuala Lumpur",
+    "feedId": "ktmb",
+    "search": "KTM/ETS Kuala Lumpur",
+    "stopId": "19000",
+    "lineIds": [
+     "ktm-port-klang",
+     "ktm-seremban",
+     "ktm-ets"
+    ]
+   }
+  },
+  {
+   "id": "jalanAlor",
+   "name": "Jalan Alor",
+   "station": {
+    "name": "MRT Bukit Bintang",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Bukit Bintang",
+    "stopId": "KG18A",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "kampungBaru",
+   "name": "Kampung Baru",
+   "station": {
+    "name": "LRT Kampung Baru",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Kampung Baru - Cbp Coopbank Pertama",
+    "stopId": "KJ11",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "kampungBaruRaya",
+   "name": "Kampung Baru (Hari Raya)",
+   "station": {
+    "name": "LRT Kampung Baru",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Kampung Baru - Cbp Coopbank Pertama",
+    "stopId": "KJ11",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "klccPark",
+   "name": "KLCC Park",
+   "station": {
+    "name": "LRT KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT KLCC",
+    "stopId": "KJ10",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "klForestEcoPark",
+   "name": "KL Forest Eco Park (Bukit Nanas)",
+   "station": {
+    "name": "Monorail Bukit Nanas",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Bukit Nanas",
+    "stopId": "MR8",
+    "lineIds": [
+     "monorail"
+    ]
+   }
+  },
+  {
+   "id": "klTowerRevolving",
+   "name": "Atmosphere 360 (KL Tower)",
+   "todo": "Confirm nearest station (Monorail Bukit Nanas vs Raja Chulan)",
+   "station": {
+    "name": "Monorail Bukit Nanas",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Bukit Nanas",
+    "stopId": "MR8",
+    "lineIds": [
+     "monorail"
+    ]
+   }
+  },
+  {
+   "id": "kwaiChaiHong",
+   "name": "Kwai Chai Hong",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "lorongTarMarket",
+   "name": "Lorong Tuanku Abdul Rahman Night Market",
+   "station": {
+    "name": "Monorail Medan Tuanku",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Medan Tuanku",
+    "stopId": "MR9",
+    "lineIds": [
+     "monorail"
+    ]
+   }
+  },
+  {
+   "id": "lot10",
+   "name": "Lot 10",
+   "station": {
+    "name": "MRT Bukit Bintang",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Bukit Bintang",
+    "stopId": "KG18A",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "marinis",
+   "name": "Marini's on 57",
+   "station": {
+    "name": "LRT KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT KLCC",
+    "stopId": "KJ10",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "masjidJamek",
+   "name": "Masjid Jamek Sultan Abdul Samad",
+   "station": {
+    "name": "LRT Masjid Jamek",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Masjid Jamek",
+    "stopId": "AG7",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling",
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "merdekaSquare",
+   "name": "Merdeka Square (Dataran Merdeka)",
+   "station": {
+    "name": "LRT Masjid Jamek",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Masjid Jamek",
+    "stopId": "AG7",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling",
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "midValley",
+   "name": "Mid Valley Megamall",
+   "station": {
+    "name": "KTM Mid Valley",
+    "feedId": "ktmb",
+    "search": "KTM Perhentian Midvalley",
+    "stopId": "19205",
+    "lineIds": [
+     "ktm-seremban"
+    ]
+   }
+  },
+  {
+   "id": "muziumNegara",
+   "name": "National Museum (Muzium Negara)",
+   "station": {
+    "name": "MRT Muzium Negara",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Muzium Negara",
+    "stopId": "KG15",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "nationalArtGallery",
+   "name": "National Art Gallery (Balai Seni Negara)",
+   "todo": "Confirm nearest station",
+   "station": {
+    "name": "Monorail Titiwangsa",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Titiwangsa",
+    "stopId": "MR11",
+    "lineIds": [
+     "monorail"
+    ]
+   }
+  },
+  {
+   "id": "oldKlStation",
+   "name": "Kuala Lumpur Railway Station (old)",
+   "station": {
+    "name": "KTM Kuala Lumpur",
+    "feedId": "ktmb",
+    "search": "KTM/ETS Kuala Lumpur",
+    "stopId": "19000",
+    "lineIds": [
+     "ktm-port-klang",
+     "ktm-seremban",
+     "ktm-ets"
+    ]
+   }
+  },
+  {
+   "id": "pavilion",
+   "name": "Pavilion Kuala Lumpur",
+   "station": {
+    "name": "MRT Bukit Bintang",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Bukit Bintang",
+    "stopId": "KG18A",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "perdanaBotanical",
+   "name": "Perdana Botanical Garden",
+   "station": {
+    "name": "MRT Muzium Negara",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Muzium Negara",
+    "stopId": "KG15",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "petalingStreet",
+   "name": "Petaling Street",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "petrosains",
+   "name": "Petrosains",
+   "station": {
+    "name": "LRT KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT KLCC",
+    "stopId": "KJ10",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "riverOfLife",
+   "name": "River of Life",
+   "station": {
+    "name": "LRT Masjid Jamek",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Masjid Jamek",
+    "stopId": "AG7",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling",
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "salomaLink",
+   "name": "Saloma Link bridge",
+   "station": {
+    "name": "LRT Kampung Baru",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Kampung Baru - Cbp Coopbank Pertama",
+    "stopId": "KJ11",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "section17Cafes",
+   "name": "Section 17, Petaling Jaya",
+   "todo": "Nearest station not confirmed"
+  },
+  {
+   "id": "skybarTraders",
+   "name": "SkyBar, Traders Hotel",
+   "station": {
+    "name": "LRT KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT KLCC",
+    "stopId": "KJ10",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "sriMahamariamman",
+   "name": "Sri Mahamariamman Temple",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "ss15Cafes",
+   "name": "SS15, Subang Jaya",
+   "station": {
+    "name": "LRT SS15",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Ss 15",
+    "stopId": "KJ29",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "ss2Market",
+   "name": "SS2 Night Market, Petaling Jaya",
+   "todo": "Nearest station not confirmed"
+  },
+  {
+   "id": "stadiumMerdeka",
+   "name": "Stadium Merdeka",
+   "station": {
+    "name": "MRT Merdeka",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Merdeka",
+    "stopId": "KG17",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "stMarys",
+   "name": "St. Mary's Cathedral",
+   "station": {
+    "name": "LRT Masjid Jamek",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Masjid Jamek",
+    "stopId": "AG7",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling",
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "sultanAbdulSamad",
+   "name": "Sultan Abdul Samad Building",
+   "station": {
+    "name": "LRT Masjid Jamek",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Masjid Jamek",
+    "stopId": "AG7",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling",
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "sunwayPyramid",
+   "name": "Sunway Pyramid",
+   "station": {
+    "name": "BRT Sunway Lagoon",
+    "feedId": "rapid-rail-kl",
+    "search": "BRT Sunway Lagoon",
+    "stopId": "BRT3",
+    "lineIds": [
+     "brt-sunway"
+    ]
+   }
+  },
+  {
+   "id": "suriaKlcc",
+   "name": "Suria KLCC",
+   "station": {
+    "name": "LRT KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT KLCC",
+    "stopId": "KJ10",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "tamanTugu",
+   "name": "Taman Tugu",
+   "todo": "About a 30 min walk from the station; confirm the walking route",
+   "station": {
+    "name": "LRT Bandaraya",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Bandaraya - Uob",
+    "stopId": "AG6",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling"
+    ]
+   }
+  },
+  {
+   "id": "textileMuseum",
+   "name": "National Textile Museum",
+   "station": {
+    "name": "LRT Masjid Jamek",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Masjid Jamek",
+    "stopId": "AG7",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling",
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "theanHou",
+   "name": "Thean Hou Temple",
+   "todo": "About a 23 min walk from the station (taxi from KL Sentral is the usual alternative)",
+   "station": {
+    "name": "LRT Bangsar",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Bangsar - Bank Rakyat",
+    "stopId": "KJ16",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  },
+  {
+   "id": "twinTowers",
+   "name": "Petronas Twin Towers",
+   "station": {
+    "name": "LRT KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT KLCC",
+    "stopId": "KJ10",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   }
+  }
+ ],
+ "trails": [
+  {
+   "key": "shopping",
+   "slug": "shopping",
+   "stops": [
+    {
+     "placeId": "pavilion"
+    },
+    {
+     "placeId": "lot10"
+    },
+    {
+     "placeId": "suriaKlcc"
+    },
+    {
+     "placeId": "midValley"
+    },
+    {
+     "placeId": "sunwayPyramid"
+    }
+   ],
+   "category": "shopping"
+  },
+  {
+   "key": "heritage",
+   "slug": "heritage",
+   "stops": [
+    {
+     "placeId": "sultanAbdulSamad"
+    },
+    {
+     "placeId": "merdekaSquare"
+    },
+    {
+     "placeId": "centralMarket"
+    },
+    {
+     "placeId": "oldKlStation"
+    },
+    {
+     "placeId": "stadiumMerdeka"
+    }
+   ],
+   "category": "culture"
+  },
+  {
+   "key": "museum",
+   "slug": "museum",
+   "stops": [
+    {
+     "placeId": "muziumNegara"
+    },
+    {
+     "placeId": "iamm"
+    },
+    {
+     "placeId": "textileMuseum"
+    },
+    {
+     "placeId": "nationalArtGallery"
+    },
+    {
+     "placeId": "petrosains"
+    }
+   ],
+   "category": "culture"
+  },
+  {
+   "key": "nature",
+   "slug": "nature",
+   "stops": [
+    {
+     "placeId": "klForestEcoPark"
+    },
+    {
+     "placeId": "perdanaBotanical"
+    },
+    {
+     "placeId": "batuCaves"
+    },
+    {
+     "placeId": "frim"
+    }
+   ],
+   "category": "nature"
+  },
+  {
+   "key": "food",
+   "slug": "food-hawker",
+   "stops": [
+    {
+     "placeId": "jalanAlor"
+    },
+    {
+     "placeId": "petalingStreet"
+    },
+    {
+     "placeId": "bangsar"
+    }
+   ],
+   "category": "food"
+  },
+  {
+   "key": "streetArt",
+   "slug": "street-art",
+   "stops": [
+    {
+     "placeId": "kwaiChaiHong"
+    },
+    {
+     "placeId": "riverOfLife"
+    }
+   ],
+   "category": "culture"
+  },
+  {
+   "key": "nightMarket",
+   "slug": "night-market",
+   "stops": [
+    {
+     "day": "mon",
+     "placeId": "ss2Market"
+    },
+    {
+     "day": "wed",
+     "placeId": "connaughtMarket"
+    },
+    {
+     "day": "sat",
+     "placeId": "lorongTarMarket"
+    },
+    {
+     "day": "sun",
+     "placeId": "bangsarMarket"
+    }
+   ],
+   "category": "food"
+  },
+  {
+   "key": "harmony",
+   "slug": "cultural-harmony",
+   "stops": [
+    {
+     "placeId": "masjidJamek"
+    },
+    {
+     "placeId": "stMarys"
+    },
+    {
+     "placeId": "sriMahamariamman"
+    },
+    {
+     "placeId": "guanDi"
+    }
+   ],
+   "category": "culture"
+  },
+  {
+   "key": "cafe",
+   "slug": "cafe-hopping",
+   "stops": [
+    {
+     "placeId": "chinatownCafes"
+    },
+    {
+     "placeId": "bangsarCafes"
+    },
+    {
+     "placeId": "section17Cafes"
+    },
+    {
+     "placeId": "ss15Cafes"
+    }
+   ],
+   "category": "food"
+  },
+  {
+   "key": "hiddenGems",
+   "slug": "hidden-gems",
+   "stops": [
+    {
+     "placeId": "kampungBaru"
+    },
+    {
+     "placeId": "chowKitMarket"
+    },
+    {
+     "placeId": "theanHou"
+    },
+    {
+     "placeId": "brickfields"
+    }
+   ],
+   "category": "explore"
+  },
+  {
+   "key": "insta",
+   "slug": "instagrammable",
+   "stops": [
+    {
+     "placeId": "twinTowers"
+    },
+    {
+     "placeId": "batuCavesSteps"
+    },
+    {
+     "placeId": "salomaLink"
+    },
+    {
+     "placeId": "merdekaSquare"
+    },
+    {
+     "placeId": "kwaiChaiHong"
+    }
+   ],
+   "category": "explore"
+  },
+  {
+   "key": "budget",
+   "slug": "student-budget",
+   "stops": [
+    {
+     "placeId": "klccPark"
+    },
+    {
+     "placeId": "centralMarket"
+    },
+    {
+     "placeId": "batuCaves"
+    },
+    {
+     "todo": "Confirm entry fee",
+     "placeId": "muziumNegara"
+    },
+    {
+     "todo": "Confirm whether the canopy walk is free",
+     "placeId": "klForestEcoPark"
+    }
+   ],
+   "category": "explore"
+  },
+  {
+   "key": "wellness",
+   "slug": "wellness-park",
+   "stops": [
+    {
+     "placeId": "klccPark"
+    },
+    {
+     "placeId": "perdanaBotanical"
+    },
+    {
+     "placeId": "tamanTugu"
+    }
+   ],
+   "category": "nature"
+  },
+  {
+   "key": "festive",
+   "slug": "festive",
+   "stops": [
+    {
+     "placeId": "kampungBaruRaya"
+    },
+    {
+     "placeId": "chinatownCny"
+    },
+    {
+     "placeId": "brickfieldsDeepavali"
+    }
+   ],
+   "category": "culture"
+  },
+  {
+   "key": "rooftop",
+   "slug": "rooftop-dining",
+   "stops": [
+    {
+     "placeId": "heliLounge"
+    },
+    {
+     "placeId": "marinis"
+    },
+    {
+     "placeId": "skybarTraders"
+    },
+    {
+     "placeId": "klTowerRevolving"
+    }
+   ],
+   "category": "food"
+  }
+ ]
+}

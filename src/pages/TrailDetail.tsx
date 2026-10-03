@@ -6,8 +6,8 @@ import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import LineBadge from '../components/LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
+import { useTrails } from '../hooks/useTrails'
 import {
-  PLACES,
   categoryKey,
   findTrail,
   placeBlurbKey,
@@ -33,7 +33,18 @@ function BackLink() {
 function TrailDetail() {
   const { t } = useLanguage()
   const { slug } = useParams()
-  const trail = findTrail(slug)
+  const { data, error } = useTrails()
+  const trail = data ? findTrail(data, slug) : undefined
+
+  if (!data) {
+    return (
+      <SiteLayout>
+        <div className="max-w-xl mx-auto px-4 py-20 text-center text-gray-500" role={error ? 'alert' : 'status'}>
+          {error ? t('trailsLoadError') : t('loading')}
+        </div>
+      </SiteLayout>
+    )
+  }
 
   if (!trail) {
     return (
@@ -83,7 +94,7 @@ function TrailDetail() {
 
         <ol className="mt-4">
           {trail.stops.map((stop, i) => {
-            const place = PLACES[stop.placeId]
+            const place = data.places[stop.placeId]
             const last = i === trail.stops.length - 1
             const newDay = stop.day && stop.day !== trail.stops[i - 1]?.day
             return (

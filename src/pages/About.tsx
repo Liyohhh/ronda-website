@@ -8,7 +8,8 @@ import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import { busLine } from '../data/lines'
-import { TRAILS, trailDescKey, trailNameKey } from '../data/trails'
+import { trailDescKey, trailNameKey } from '../data/trails'
+import { useTrails } from '../hooks/useTrails'
 import Icon from '../components/Icon'
 import type { IconName } from '../data/icons'
 
@@ -73,6 +74,7 @@ function SectionTitle({ id, children }: { id: string; children: string }) {
 
 function About() {
   const { t } = useLanguage()
+  const trails = useTrails().data?.trails ?? []
   // header menu links like /about#about-faq: scroll to that section (also when already on /about)
   const { hash } = useLocation()
   useEffect(() => {
@@ -166,7 +168,7 @@ function About() {
           <SectionTitle id="about-trails">{t('trails')}</SectionTitle>
           <p className="mt-2 text-gray-600">{t('trailsIntro')}</p>
           <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {TRAILS.map((trail, i) => (
+            {trails.map((trail, i) => (
               <li key={trail.slug}>
                 <Link
                   to={`/trails/${trail.slug}`}
@@ -207,7 +209,7 @@ function About() {
           <h2 id="about-credits" className="text-lg font-semibold text-[#002472]">{t('photoCredits')}</h2>
           <p className="mt-1 text-sm text-gray-500">{t('photoCreditsIntro')}</p>
           <ul className="mt-3 grid gap-1 sm:grid-cols-2 text-xs text-gray-600">
-            {TRAILS.filter((tr) => TRAIL_PHOTOS[tr.slug]).map((tr) => (
+            {trails.filter((tr) => TRAIL_PHOTOS[tr.slug]).map((tr) => (
               <li key={tr.slug}>
                 {t(trailNameKey(tr))}: <PhotoCredit photo={TRAIL_PHOTOS[tr.slug]} />
               </li>

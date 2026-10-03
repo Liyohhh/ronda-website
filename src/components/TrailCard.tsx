@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
-import { categoryKey, firstStation, trailDescKey, trailNameKey, type Trail } from '../data/trails'
+import { categoryKey, firstStation, trailDescKey, trailNameKey, type Place, type Trail } from '../data/trails'
 import TrailCover from './TrailCover'
 import LineBadge from './LineBadge'
 
 // Card: cover with a category tag, name, one-line description, stop count and starting station
-function TrailCard({ trail, className = '' }: { trail: Trail; className?: string }) {
+function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Record<string, Place>; className?: string }) {
   const { t } = useLanguage()
-  const station = firstStation(trail)
+  const station = firstStation(trail, places)
   return (
     <Link
       to={`/trails/${trail.slug}`}

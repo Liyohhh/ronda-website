@@ -2,7 +2,8 @@ import { useSearchParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import TrailCard from '../components/TrailCard'
 import CategoryPills, { type CategoryFilter } from '../components/CategoryPills'
-import { TRAILS, TRAIL_CATEGORIES } from '../data/trails'
+import { TRAIL_CATEGORIES } from '../data/trails'
+import { useTrails } from '../hooks/useTrails'
 import { useLanguage } from '../hooks/useLanguage'
 
 // /trails: every trail, filterable by category (kept in the URL: /trails?category=food)
@@ -11,7 +12,9 @@ function Trails() {
   const [params, setParams] = useSearchParams()
   const raw = params.get('category')
   const category: CategoryFilter = TRAIL_CATEGORIES.includes(raw as never) ? (raw as CategoryFilter) : 'all'
-  const trails = category === 'all' ? TRAILS : TRAILS.filter((tr) => tr.category === category)
+  const { data, error } = useTrails()
+  const all = data?.trails ?? []
+  const trails = category === 'all' ? all : all.filter((tr) => tr.category === category)
 
   const setCategory = (c: CategoryFilter) => setParams(c === 'all' ? {} : { category: c }, { replace: true })
 
@@ -27,7 +30,9 @@ function Trails() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <CategoryPills value={category} onChange={setCategory} />
 
-        {trails.length === 0 ? (
+        {!data ? (
+          <p className="mt-8 text-gray-500" role={error ? 'alert' : 'status'}>{error ? t('trailsLoadError') : t('loading')}</p>
+        ) : trails.length === 0 ? (
           <div className="mt-8 border border-dashed border-gray-300 rounded-2xl p-10 text-center text-gray-500">
             {t('noTrailsInCategory')}
           </div>
@@ -35,7 +40,7 @@ function Trails() {
           <ul className="mt-6 grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {trails.map((trail) => (
               <li key={trail.slug} className="flex">
-                <TrailCard trail={trail} className="w-full" />
+                <TrailCard trail={trail} places={data.places} className="w-full" />
               </li>
             ))}
           </ul>
