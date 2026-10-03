@@ -1,0 +1,12 @@
+# Cloudflare Pages response headers (https://developers.cloudflare.com/pages/configuration/headers/)
+# A Content-Security-Policy is added at launch, once the domain and the map file's host are known (docs/MAP.md).
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=()
+
+# built files carry a content hash in their name: cache them for a year
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

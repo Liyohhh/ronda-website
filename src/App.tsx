@@ -1,25 +1,36 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Login from './pages/Login'
-import Register from './pages/Register'
 import Home from './pages/Home'
-import UserDashboard from './pages/UserDashboard'
-import PartnerDashboard from './pages/PartnerDashboard'
-import Admin from './pages/Admin'
 import RequireAuth from './components/RequireAuth'
-import Help from './pages/Help'
-import HelpCategory from './pages/HelpCategory'
-import Trails from './pages/Trails'
-import TrailDetail from './pages/TrailDetail'
-import About from './pages/About'
-import Services from './pages/Services'
-import LiveMap from './pages/LiveMap'
-import Credits from './pages/Credits'
 import { LanguageProvider } from './i18n/LanguageProvider'
+import { useLanguage } from './hooks/useLanguage'
+
+// Every page but Home loads when first visited, so the home page doesn't download the map engine and the
+// dashboards (one 1.9 MB script before, 4 Oct 2026)
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
+const UserDashboard = lazy(() => import('./pages/UserDashboard'))
+const PartnerDashboard = lazy(() => import('./pages/PartnerDashboard'))
+const Admin = lazy(() => import('./pages/Admin'))
+const Help = lazy(() => import('./pages/Help'))
+const HelpCategory = lazy(() => import('./pages/HelpCategory'))
+const Trails = lazy(() => import('./pages/Trails'))
+const TrailDetail = lazy(() => import('./pages/TrailDetail'))
+const About = lazy(() => import('./pages/About'))
+const Services = lazy(() => import('./pages/Services'))
+const LiveMap = lazy(() => import('./pages/LiveMap'))
+const Credits = lazy(() => import('./pages/Credits'))
+
+function PageLoading() {
+  const { t } = useLanguage()
+  return <div className="min-h-screen flex items-center justify-center text-gray-500" role="status">{t('loading')}</div>
+}
 
 function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
+        <Suspense fallback={<PageLoading />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -36,6 +47,7 @@ function App() {
           <Route path="/live" element={<LiveMap />} />
           <Route path="/credits" element={<Credits />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </LanguageProvider>
   );
