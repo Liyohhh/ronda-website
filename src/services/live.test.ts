@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const invoke = vi.fn()
 vi.mock('./supabase', () => ({ supabase: { functions: { invoke: (...a: unknown[]) => invoke(...a) } } }))
 
-const { ago, approachingBuses, kmText, liveVehicles, routeKey, stopArrivals } = await import('./live')
+const { ago, approachingBuses, kmText, lateMinutes, textOn, liveVehicles, routeKey, stopArrivals } = await import('./live')
 
 describe('routeKey (same rule as the database route_code_key)', () => {
   it.each([
@@ -21,6 +21,23 @@ describe('ago', () => {
   it('seconds under a minute', () => expect(ago('2026-10-02T09:59:48Z', t, now)).toBe('12 s ago'))
   it('minutes from 60 s', () => expect(ago('2026-10-02T09:57:00Z', t, now)).toBe('3 min ago'))
   it('never negative (clock skew)', () => expect(ago('2026-10-02T10:00:05Z', t, now)).toBe('0 s ago'))
+})
+
+describe('lateMinutes (KTMB trains)', () => {
+  it.each([
+    [null, null],
+    [-300, 0],
+    [0, 0],
+    [179, 0],
+    [180, 3],
+    [460, 8],
+  ])('%s s -> %s', (secs, want) => expect(lateMinutes(secs)).toBe(want))
+})
+
+describe('textOn (marker text colour)', () => {
+  it('dark on KTM ETS yellow', () => expect(textOn('#FFC72C')).toBe('#111827'))
+  it('white on KTM Komuter red and navy', () => { expect(textOn('#DC2420')).toBe('#fff'); expect(textOn('#002472')).toBe('#fff') })
+  it('white when not a colour', () => expect(textOn('nope')).toBe('#fff'))
 })
 
 describe('kmText', () => {

@@ -6,7 +6,7 @@ test.describe('live bus map', () => {
     await expect(page.getByRole('heading', { name: 'Live bus map' })).toBeVisible()
     const inService = LIVE.vehicles.filter((v) => v.status !== 'off_trip').length
     await expect(page.getByText(`${inService} buses live`)).toBeVisible()
-    await expect(page.locator('.ronda-bus')).toHaveCount(inService)
+    await expect(page.locator('.ronda-bus:not(.ronda-train)')).toHaveCount(inService)
     expect(backend.calls.some((c) => c.path === '/functions/v1/live' && (c.body as { action?: string })?.action === 'vehicles')).toBe(true)
   })
 
@@ -14,7 +14,29 @@ test.describe('live bus map', () => {
     void backend
     await page.goto('/live')
     await page.getByRole('textbox', { name: /route/i }).fill('t 789')
-    await expect(page.locator('.ronda-bus')).toHaveCount(1)
+    await expect(page.locator('.ronda-bus:not(.ronda-train)')).toHaveCount(1)
+  })
+
+  test('KTMB trains: count, train number on the map, where it is going and how late', async ({ page, backend }) => {
+    void backend
+    await page.goto('/live')
+    await expect(page.getByText(`${LIVE.trains.length} KTMB trains`)).toBeVisible()
+    const train = page.locator('.ronda-train')
+    await expect(train).toHaveText('9999')
+    await train.click()
+    const popup = page.locator('.leaflet-popup-content')
+    await expect(popup).toContainText('KTM ETS · Train 9999')
+    await expect(popup).toContainText('to KTM/ETS JB Sentral')
+    await expect(popup).toContainText('Next stop: KTM/ETS Kluang')
+    await expect(popup).toContainText('About 6 min late')
+  })
+
+  test('filter by train number shows that train only', async ({ page, backend }) => {
+    void backend
+    await page.goto('/live')
+    await page.getByRole('textbox', { name: /route/i }).fill('9999')
+    await expect(page.locator('.ronda-train')).toHaveCount(1)
+    await expect(page.locator('.ronda-bus:not(.ronda-train)')).toHaveCount(0)
   })
 
   test('feed error is shown instead of an empty map', async ({ page, backend }) => {

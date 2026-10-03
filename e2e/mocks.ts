@@ -14,6 +14,10 @@ export const LIVE = {
     { vehicle_id: 'TEST001', feed_id: 'rapid-bus-kl', route_id: 'T7890', label: 'T789', colour: '127A78', lat: 3.134, lon: 101.686, bearing: 90, speed_kmh: 22, status: 'on_trip', wheelchair: true, current_stop_id: null, source: 'both', gps_at: new Date().toISOString() },
     { vehicle_id: 'TEST002', feed_id: 'rapid-bus-kl', route_id: '402', label: '402', colour: null, lat: 3.139, lon: 101.69, bearing: 180, speed_kmh: 0, status: 'off_trip', wheelchair: false, current_stop_id: null, source: 'kiosk', gps_at: new Date().toISOString() },
   ],
+  // a made-up ETS train in central KL (inside the first map view), about 6 min late
+  trains: [
+    { vehicle_id: 'KTMB-ETSTEST', train_no: '9999', unit: 'ETSTEST', feed_id: 'ktmb', route_id: 'ETS', line: 'ETS', network: 'KTM ETS', colour: '#FFC72C', headsign: 'KTM/ETS JB Sentral', next_stop: 'KTM/ETS Kluang', delay_secs: 370, lat: 3.145, lon: 101.68, bearing: null, gps_at: new Date().toISOString() },
+  ],
   sources: [
     { source: 'official', fetched_at: new Date().toISOString(), ok: true, vehicles: 1 },
     { source: 'kiosk', fetched_at: new Date().toISOString(), ok: true, vehicles: 2 },

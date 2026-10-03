@@ -71,6 +71,10 @@ body {
   text-overflow: ellipsis;
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
 }
+.ronda-train {
+  border-radius: 4px;
+}
+
 .ronda-bus-oku {
   position: absolute;
   top: -8px;

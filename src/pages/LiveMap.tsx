@@ -10,12 +10,12 @@ import { useLanguage } from '../hooks/useLanguage'
 import { usePoll } from '../hooks/usePoll'
 import { useLocate } from '../hooks/useLocate'
 import { supabase } from '../services/supabase'
-import { ago, liveVehicles, LIVE_POLL_MS, routeKey, stopArrivals, type Arrival, type BusStatus, type LiveBus, type LiveSource } from '../services/live'
+import { ago, lateMinutes, liveVehicles, textOn, LIVE_POLL_MS, routeKey, stopArrivals, type Arrival, type BusStatus, type LiveBus, type LiveSource, type LiveTrain } from '../services/live'
 import type { TranslationKey } from '../i18n/translations'
 
-// /live: every Rapid KL and MRT feeder bus that is sending its position, on an OpenStreetMap map, refreshed
-// every 30 s. Filter by route; bus stops appear when zoomed in, and a Rapid KL stop shows the operator's
-// arrival times.
+// /live: every Rapid KL and MRT feeder bus and every KTMB train that is sending its position, on an OpenStreetMap
+// map, refreshed every 30 s. Filter by route, line or train number; bus stops appear when zoomed in, and a Rapid KL
+// stop shows the operator's arrival times. A train shows where it is going, its next stop and about how late it is.
 
 const KL: [number, number] = [3.139, 101.6869]
 const STOPS_ZOOM = 16
@@ -75,8 +75,11 @@ function LiveMap() {
   const busLayer = useRef<L.LayerGroup | null>(null)
   const stopLayer = useRef<L.LayerGroup | null>(null)
   const markers = useRef(new Map<string, L.Marker>())
+  const trainLayer = useRef<L.LayerGroup | null>(null)
+  const trainMarkers = useRef(new Map<string, L.Marker>())
   const popupRoots = useRef(new Set<Root>())
   const [buses, setBuses] = useState<LiveBus[]>([])
+  const [trains, setTrains] = useState<LiveTrain[]>([])
   const [sources, setSources] = useState<LiveSource[]>([])
   const [error, setError] = useState(false)
   const [filter, setFilter] = useState('')
@@ -105,14 +108,17 @@ function LiveMap() {
       .addTo(m)
     stopLayer.current = L.layerGroup().addTo(m)
     busLayer.current = L.layerGroup().addTo(m)
+    trainLayer.current = L.layerGroup().addTo(m)
     m.on('zoomend', () => setZoom(m.getZoom()))
     map.current = m
     const roots = popupRoots.current
     const all = markers.current
+    const allTrains = trainMarkers.current
     return () => {
       roots.forEach((r) => r.unmount())
       roots.clear()
       all.clear()
+      allTrains.clear()
       m.remove()
       map.current = null
     }
@@ -122,6 +128,7 @@ function LiveMap() {
     liveVehicles()
       .then((r) => {
         setBuses(r.vehicles)
+        setTrains(r.trains ?? [])
         setSources(r.sources)
         setError(false)
         setFetchedAt(Date.now())
@@ -134,6 +141,38 @@ function LiveMap() {
     () => buses.filter((b) => (showOff || b.status !== 'off_trip') && (!key || routeKey(b.label ?? b.route_id).startsWith(key))),
     [buses, showOff, key],
   )
+  const shownTrains = useMemo(
+    () => trains.filter((tr) => !key || [tr.train_no, tr.line, tr.network, tr.unit].some((x) => x && routeKey(x).includes(key))),
+    [trains, key],
+  )
+
+  // train markers: the train number on the line's colour; the popup says where it is going and how late
+  useEffect(() => {
+    const layer = trainLayer.current
+    if (!layer) return
+    const seen = new Set<string>()
+    for (const tr of shownTrains) {
+      seen.add(tr.vehicle_id)
+      const html = `<div class="ronda-bus ronda-train" style="background:${esc(tr.colour || NAVY)};color:${textOn(tr.colour || NAVY)}">${esc(tr.train_no)}</div>`
+      const icon = L.divIcon({ html, className: '', iconSize: undefined, iconAnchor: [18, 11] })
+      const late = lateMinutes(tr.delay_secs)
+      const popup =
+        `<div class="text-sm"><div class="font-semibold">${esc(tr.network ?? tr.line ?? '')} · ${esc(t('liveTrain').replace('{no}', tr.train_no))}</div>` +
+        (tr.headsign ? `<div>${esc(t('liveTrainTo').replace('{place}', tr.headsign))}</div>` : '') +
+        (tr.next_stop ? `<div>${esc(t('liveNextStop').replace('{stop}', tr.next_stop))}</div>` : '') +
+        (late === null ? '' : `<div class="${late ? 'text-amber-800 font-medium' : ''}">${esc(late ? t('liveLate').replace('{n}', String(late)) : t('liveOnTime'))}</div>`) +
+        `<div class="text-gray-500">${esc(ago(tr.gps_at, t))}</div></div>`
+      const old = trainMarkers.current.get(tr.vehicle_id)
+      if (old) {
+        old.setLatLng([tr.lat, tr.lon]).setIcon(icon).setPopupContent(popup)
+      } else {
+        const mk = L.marker([tr.lat, tr.lon], { icon, keyboard: false, title: `${tr.line ?? ''} ${tr.train_no}`, zIndexOffset: 500 }).bindPopup(popup)
+        mk.addTo(layer)
+        trainMarkers.current.set(tr.vehicle_id, mk)
+      }
+    }
+    for (const [id, mk] of trainMarkers.current) if (!seen.has(id)) { layer.removeLayer(mk); trainMarkers.current.delete(id) }
+  }, [shownTrains, t, lang])
 
   // bus markers: moved in place, so the map doesn't flicker every 30 s
   useEffect(() => {
@@ -238,6 +277,7 @@ function LiveMap() {
           <h1 className="text-lg font-bold text-[#002472]">{t('liveMapTitle')}</h1>
           <p className="text-sm text-gray-600" aria-live="polite">
             {error && !buses.length ? t('liveError') : fetchedAt ? t('liveBusesCount').replace('{n}', String(shown.length)) : t('liveLoading')}
+            {fetchedAt && shownTrains.length > 0 && <span> · {t('liveTrainsCount').replace('{n}', String(shownTrains.length))}</span>}
             {lastFetch && <span className="text-gray-500"> · {t('liveUpdated').replace('{time}', new Date(lastFetch).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' }))}</span>}
           </p>
           <div className="mt-3 flex gap-2">
