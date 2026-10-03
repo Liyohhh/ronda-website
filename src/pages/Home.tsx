@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import LinePicker from '../components/LinePicker'
 import LinePanel from '../components/LinePanel'
@@ -18,6 +18,7 @@ import { buildItems, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
+import { useLocate } from '../hooks/useLocate'
 
 const LIST_ID = 'place-suggestions'
 
@@ -108,6 +109,18 @@ function Home() {
   // Enter pressed while this query's suggestions are still loading: pick the top one when they arrive
   // (until then the list still shows the previous query's results); see the effect below pickSuggestion
   const pendingEnter = useRef<string | null>(null)
+
+  // "Use my location" as the start: asks for the position only when the button is pressed
+  const onLocated = useCallback((lat: number, lon: number) => {
+    const pick = { name: t('myLocation'), lat, lon }
+    setStart(pick.name)
+    setStartStop(pick)
+    setFormError('')
+  }, [t])
+  const { state: loc, locate } = useLocate(onLocated)
+  const locError = loc.status === 'error'
+    ? t(({ denied: 'locDenied', unavailable: 'locUnavailable', timeout: 'locTimeout', unsupported: 'locUnsupported' } as const)[loc.reason])
+    : ''
 
   // Arrow keys move through suggestions, Enter picks (or searches from the End box), Escape closes
   const onFieldKey = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -378,6 +391,16 @@ function Home() {
                             className="w-full text-lg outline-none"
                           />
                         </div>
+                        <button
+                          type="button"
+                          onClick={locate}
+                          disabled={loc.status === 'locating'}
+                          aria-label={t('useMyLocation')}
+                          title={t('useMyLocation')}
+                          className="ms-2 w-9 h-9 rounded-full text-[#002472] hover:bg-[#002472]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
+                        >
+                          <Icon name="myLocation" size={20} />
+                        </button>
                       </div>
 
                       <button
@@ -476,6 +499,9 @@ function Home() {
                 )}
 
                 {/* Form error (stop not picked from the list) */}
+                {locError && (
+                  <div className="mt-3 bg-amber-50 text-amber-900 text-sm rounded-lg px-4 py-3" role="status">{locError}</div>
+                )}
                 {formError && (
                   <div className="mt-3 bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{formError}</div>
                 )}

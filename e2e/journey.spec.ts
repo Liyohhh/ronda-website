@@ -138,3 +138,27 @@ test('a place with no stop within reach explains why and names the nearest stop'
   await expect(page.getByText(/has no train or bus stop within 3\.0 km\. The nearest is MRT Kajang, 32 km away\./)).toBeVisible()
   await expect(page.getByText('No routes found for this trip. Try a different time or nearby stop.')).toHaveCount(0)
 })
+
+test.describe('Use my location as the start', () => {
+  test.describe('location allowed', () => {
+    test.use({ geolocation: { latitude: 3.1578, longitude: 101.7123 }, permissions: ['geolocation'] })
+    test('fills Start and plans from those coordinates', async ({ page, backend }) => {
+      await page.goto('/')
+      await page.getByRole('button', { name: 'Use my location' }).click()
+      await expect(page.getByRole('combobox', { name: 'Start', exact: true })).toHaveValue('My location')
+      await pickPlace(page, 'End', 'pasar', /LRT Pasar Seni/)
+      await page.getByRole('button', { name: 'Search' }).click()
+      await expect(page.getByRole('dialog', { name: 'Your journey' })).toBeVisible()
+      const call = backend.calls.find((c) => c.path === '/functions/v1/plan-trip')
+      expect(call?.body).toMatchObject({ from: { lat: 3.1578, lon: 101.7123 } })
+    })
+  })
+
+  test('location blocked: explains instead of doing nothing', async ({ page, backend, context }) => {
+    void backend
+    await context.clearPermissions()
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Use my location' }).click()
+    await expect(page.getByRole('status').filter({ hasText: 'Location is blocked' })).toBeVisible()
+  })
+})

@@ -83,6 +83,8 @@ function LiveMap() {
   const [showOff, setShowOff] = useState(false)
   const [zoom, setZoom] = useState(12)
   const [fetchedAt, setFetchedAt] = useState<number | null>(null)
+  // map tiles failing (offline, blocked, tile server down) and none loaded: say so instead of a grey map
+  const [tilesFailed, setTilesFailed] = useState(false)
   const tRef = useRef(t)
   useEffect(() => {
     tRef.current = t
@@ -93,10 +95,14 @@ function LiveMap() {
     if (!el.current || map.current) return
     const m = L.map(el.current, { zoomControl: false }).setView(KL, 12)
     L.control.zoom({ position: 'bottomright' }).addTo(m)
+    let loaded = 0, failed = 0
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(m)
+    })
+      .on('tileload', () => { loaded++; setTilesFailed(false) })
+      .on('tileerror', () => { failed++; if (!loaded && failed >= 4) setTilesFailed(true) })
+      .addTo(m)
     stopLayer.current = L.layerGroup().addTo(m)
     busLayer.current = L.layerGroup().addTo(m)
     m.on('zoomend', () => setZoom(m.getZoom()))
@@ -221,6 +227,11 @@ function LiveMap() {
       <Header />
       <main className="relative flex-1 min-h-0">
         <div ref={el} className="absolute inset-0 z-0" role="application" aria-label={t('liveMapTitle')} />
+        {tilesFailed && (
+          <div className="absolute z-[400] inset-x-3 bottom-6 md:inset-x-auto md:end-6 md:max-w-sm rounded-xl bg-white border border-amber-300 shadow-lg px-4 py-3 text-sm text-amber-900" role="alert">
+            {t('mapLoadError')}
+          </div>
+        )}
 
         {/* controls */}
         <section className="absolute z-[500] top-3 start-3 end-3 md:end-auto md:w-[340px] bg-white rounded-2xl shadow-xl border border-gray-200 p-4">

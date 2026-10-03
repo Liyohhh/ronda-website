@@ -46,3 +46,10 @@ test.describe('Near me', () => {
     await expect(page.getByRole('status')).toHaveText(/Location is blocked for this site/)
   })
 })
+
+test('map tiles failing: says the map could not load', async ({ page, backend }) => {
+  void backend
+  await page.route('https://tile.openstreetmap.org/**', (r) => r.abort())
+  await page.goto('/live')
+  await expect(page.getByRole('alert')).toHaveText(/The map could not load/)
+})
