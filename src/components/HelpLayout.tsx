@@ -32,7 +32,6 @@ export function HelpLayout({ children }: { children: ReactNode }) {
 export function CategoryIcon({ icon }: { icon: HelpCategory['icon'] }) {
   const names: Record<HelpCategory['icon'], IconName> = {
     payments: 'creditCardOutline',
-    refunds: 'currencyExchange',
     general: 'infoOutline',
     policies: 'descriptionOutline',
   }

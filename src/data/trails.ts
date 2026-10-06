@@ -7,11 +7,17 @@
 // src/data/lines.ts for the badge. null = not confirmed yet (see `todo`).
 // No addresses or coordinates here on purpose; don't invent them.
 
-import type { TranslationKey } from '../i18n/translations'
+import type { Lang, TranslationKey } from '../i18n/translations'
 
-export type TrailCategory = 'food' | 'culture' | 'shopping' | 'nature' | 'explore'
+export type TrailCategory = 'food' | 'culture' | 'shopping' | 'nature' | 'explore' | 'halal-fine-dining'
 
+// shown in every language
 export const TRAIL_CATEGORIES: TrailCategory[] = ['food', 'culture', 'shopping', 'nature', 'explore']
+// shown only when the site is in Arabic (pills, trail lists, the Explore menu); hidden in the other languages
+export const ARABIC_ONLY_CATEGORIES: TrailCategory[] = ['halal-fine-dining']
+
+export const isCategoryShown = (c: TrailCategory, lang: Lang) => lang === 'ar' || !ARABIC_ONLY_CATEGORIES.includes(c)
+export const categoriesFor = (lang: Lang) => [...TRAIL_CATEGORIES, ...ARABIC_ONLY_CATEGORIES].filter((c) => isCategoryShown(c, lang))
 
 export type Station = { name: string; search: string; lineIds: string[]; feedId?: string; stopId?: string }
 

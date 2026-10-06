@@ -1,5 +1,6 @@
 # Cloudflare Pages response headers (https://developers.cloudflare.com/pages/configuration/headers/)
-# A Content-Security-Policy is added at launch, once the domain and the map file's host are known (docs/MAP.md).
+# The Content-Security-Policy is added to the built copy by scripts/postbuild.mjs (scripts/csp.mjs), from the
+# same env as the build: Supabase project, map file host, CAPTCHA when the assistant is on.
 
 /*
   X-Content-Type-Options: nosniff

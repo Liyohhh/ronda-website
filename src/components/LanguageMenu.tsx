@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { LANGUAGES, type Lang } from '../i18n/translations'
 import Icon from './Icon'
+import { OPEN_LANGUAGE_MENU } from '../data/features'
 
 // Themed language picker (the native <select> list can't be styled on Windows).
 // Button + listbox with arrow keys, Enter/Space, Escape and click-outside.
@@ -38,6 +39,17 @@ function LanguageMenu({ variant = 'pill', compact = false }: Props) {
     setFocus(Math.max(0, LANGUAGES.findIndex((l) => l.code === lang)))
     setOpen(true)
   }
+
+  // the "4 languages" feature tile on Home: go to the top and open this menu
+  useEffect(() => {
+    const onOpen = () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      setFocus(Math.max(0, LANGUAGES.findIndex((l) => l.code === lang)))
+      setOpen(true)
+    }
+    window.addEventListener(OPEN_LANGUAGE_MENU, onOpen)
+    return () => window.removeEventListener(OPEN_LANGUAGE_MENU, onOpen)
+  }, [lang])
 
   const choose = (code: Lang) => {
     setLang(code)

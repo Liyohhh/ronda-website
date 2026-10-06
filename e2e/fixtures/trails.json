@@ -665,6 +665,77 @@
      "lrt-kelana-jaya"
     ]
    }
+  },
+  {
+   "id": "cindai",
+   "name": "Cindai, Perdana Kuala Lumpur City Centre",
+   "station": {
+    "name": "MRT Persiaran KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Persiaran KLCC",
+    "stopId": "PY21",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
+   },
+   "todo": "Opening hours not verified (owner survey)"
+  },
+  {
+   "id": "warisanCafe",
+   "name": "Warisan Cafe, The Royale Chulan Kuala Lumpur",
+   "station": {
+    "name": "MRT Conlay",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Conlay",
+    "stopId": "PY22",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
+   },
+   "todo": "Opening hours not verified (owner survey)"
+  },
+  {
+   "id": "westinLivingRoom",
+   "name": "The Living Room, The Westin Kuala Lumpur",
+   "station": {
+    "name": "Monorail Bukit Bintang",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Bukit Bintang",
+    "stopId": "MR6",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "todo": "Opening hours not verified (owner survey)"
+  },
+  {
+   "id": "madamZee",
+   "name": "Madam Zee, Ancasa Hotel Kuala Lumpur",
+   "station": {
+    "name": "LRT Plaza Rakyat",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Plaza Rakyat",
+    "stopId": "AG8",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling"
+    ]
+   },
+   "todo": "Opening hours not verified (owner survey)"
+  },
+  {
+   "id": "suasana27",
+   "name": "Suasana @27, TAMU Hotel & Suites",
+   "station": {
+    "name": "LRT Kampung Baru",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Kampung Baru - Cbp Coopbank Pertama",
+    "stopId": "KJ11",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   },
+   "todo": "Opening hours not verified (owner survey)"
   }
  ],
  "trails": [
@@ -958,6 +1029,28 @@
     }
    ],
    "category": "food"
+  },
+  {
+   "slug": "halal-fine-dining",
+   "key": "halalFine",
+   "category": "halal-fine-dining",
+   "stops": [
+    {
+     "placeId": "cindai"
+    },
+    {
+     "placeId": "warisanCafe"
+    },
+    {
+     "placeId": "westinLivingRoom"
+    },
+    {
+     "placeId": "madamZee"
+    },
+    {
+     "placeId": "suasana27"
+    }
+   ]
   }
  ]
 }

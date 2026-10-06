@@ -57,7 +57,7 @@ function Section({ id, icon, title, text, cards, children }: { id: string; icon:
         ))}
       </ul>
       {children}
-      <Link to="/help" className="mt-8 inline-flex items-center gap-1.5 rounded-full bg-[#002472] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0a3391]">
+      <Link to="/help/general#services" className="mt-8 inline-flex items-center gap-1.5 rounded-full bg-[#002472] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0a3391]">
         {t('svc_enquire')}
         <Icon name="chevronRight" size={18} className="rtl:rotate-180" />
       </Link>

@@ -59,7 +59,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
           <div className="px-5 pt-5 pb-4 md:pt-6">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs uppercase tracking-wider text-white/60">{t('lines')}</span>
-              <button onClick={onClose} aria-label="Close" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
+              <button onClick={onClose} aria-label={t('closeAria')} className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
                 <Icon name="close" size={18} />
               </button>
             </div>

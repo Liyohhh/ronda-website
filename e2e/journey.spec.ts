@@ -83,9 +83,21 @@ test.describe('plan a journey', () => {
 })
 
 test.describe('lines search', () => {
-  test('a bus route code finds the route, however it is typed', async ({ page, backend }) => {
+  test('option A (default): the Bus routes tile finds a route code, however it is typed', async ({ page, backend }) => {
     void backend
     await page.goto('/')
+    await page.getByRole('button', { name: 'Lines', exact: true }).click()
+    await page.getByTestId('line-grid').getByRole('button', { name: /Bus routes/ }).click()
+    const box = page.getByRole('searchbox')
+    for (const typed of ['T352', 't 0352']) {
+      await box.fill(typed)
+      await expect(page.getByRole('button', { name: /T352/ }).first()).toBeVisible()
+    }
+  })
+
+  test('option B (?lines=b): the Line box finds a route code, however it is typed', async ({ page, backend }) => {
+    void backend
+    await page.goto('/?lines=b')
     await page.getByRole('button', { name: 'Lines', exact: true }).click()
     const box = page.getByRole('combobox', { name: 'Line', exact: true })
     for (const typed of ['T352', 't 0352']) {

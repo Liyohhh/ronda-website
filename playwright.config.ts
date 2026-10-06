@@ -7,6 +7,8 @@ const CI = !!process.env.CI
 
 export default defineConfig({
   testDir: 'e2e',
+  // the full Home page plus axe needs more than 30 s when every test runs at once on a laptop
+  timeout: 45_000,
   fullyParallel: true,
   forbidOnly: CI,
   retries: CI ? 2 : 0,
@@ -28,7 +30,8 @@ export default defineConfig({
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !CI,
     timeout: 180_000,
-    // no map file in tests: the map falls back to plain OpenStreetMap tiles (src/services/mapStyle.ts)
-    env: { VITE_SUPABASE_URL: 'https://e2e.supabase.test', VITE_SUPABASE_ANON_KEY: 'e2e-anon-key', VITE_MAP_PMTILES_URL: '' },
+    // no map file in tests: the map falls back to plain OpenStreetMap tiles (src/services/mapStyle.ts);
+    // the assistant is on (its backend is mocked), with no CAPTCHA site key (guests see the "log in" message)
+    env: { VITE_SUPABASE_URL: 'https://e2e.supabase.test', VITE_SUPABASE_ANON_KEY: 'e2e-anon-key', VITE_MAP_PMTILES_URL: '', VITE_AI_CHAT: 'on', VITE_CAPTCHA_SITE_KEY: '' },
   },
 })

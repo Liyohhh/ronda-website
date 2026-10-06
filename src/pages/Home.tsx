@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import LinePicker from '../components/LinePicker'
 import LinePanel from '../components/LinePanel'
+import { LineGrid, LineStrip } from '../components/LineTiles'
 import { matchLines, type Line } from '../data/lines'
 import { useBusRoutes } from '../data/busRoutes'
 import { supabase } from '../services/supabase'
@@ -11,6 +12,7 @@ import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
 import NavyBand from '../components/NavyBand'
 import ReviewsSection from '../components/ReviewsSection'
+import PromotionSection from '../components/PromotionSection'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
 import { outOfReachMessage } from '../data/outOfReach'
 import SuggestionList from '../components/SuggestionList'
@@ -26,6 +28,9 @@ function Home() {
   const { t } = useLanguage()
   // /?tab=lines opens the Lines tab (the "All lines" link on line pages)
   const [tab, setTab] = useState<'directions' | 'lines'>(() => (new URLSearchParams(window.location.search).get('tab') === 'lines' ? 'lines' : 'directions'))
+  // Line picker preview (W3): ?lines=a grid in the Lines tab (default), ?lines=b strip under the search card.
+  // Temporary: remove the losing option and this switch once one is chosen.
+  const [linesUi] = useState<'a' | 'b'>(() => (new URLSearchParams(window.location.search).get('lines') === 'b' ? 'b' : 'a'))
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
   const [startStop, setStartStop] = useState<Pick | null>(null)
@@ -34,6 +39,33 @@ function Home() {
   // "Plan a trip here" (Trails): /?to=<exact stop name>&toName=<shown name> fills in the End box,
   // then the params are cleared and the Start box gets focus
   const [params, setParams] = useSearchParams()
+
+  // /#explore (header Explore) and /#plan scroll to that part of Home, also when already on Home
+  // (location.key changes on every navigation); #plan focuses the Start box, #plan-end the End box.
+  // /?tab=lines (feature tile, old links) opens the Lines tab, also when already on Home.
+  const { hash, key: navKey } = useLocation()
+  const tabParam = params.get('tab')
+  useEffect(() => {
+    if (tabParam === 'lines') {
+      const id = setTimeout(() => {
+        setTab('lines')
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }, 0)
+      return () => clearTimeout(id)
+    }
+    const id = hash.slice(1)
+    const target = id === 'plan-end' ? 'plan' : id
+    const el = target ? document.getElementById(target) : null
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (target !== 'plan') return
+    const timer = setTimeout(() => {
+      setTab('directions')
+      // after the tab switch has rendered the boxes
+      setTimeout(() => document.getElementById(id === 'plan-end' ? 'end-input' : 'start-input')?.focus({ preventScroll: true }), 0)
+    }, 400)
+    return () => clearTimeout(timer)
+  }, [hash, navKey, tabParam])
   const toParam = params.get('to')
   // a place without a station (e.g. a coach terminal): /?toLat=&toLon=&toName=
   const toLat = Number(params.get('toLat')), toLon = Number(params.get('toLon'))
@@ -306,10 +338,19 @@ function Home() {
     if (pending === normaliseQuery(query) && items.length) enterPick(items[0].pick)
   })
 
+  // a right-side panel is open: the chat launcher hides so it never covers the panel (ChatWidget)
+  const sidePanel = pickedLine !== null || searchedFor !== null
+  useEffect(() => {
+    if (!sidePanel) return
+    document.body.dataset.sidePanel = 'open'
+    return () => { delete document.body.dataset.sidePanel }
+  }, [sidePanel])
+
   return (
     <SiteLayout>
-      {/* Hero: KL skyline, darkened so the white headline stands out; the search card overlaps its bottom */}
-      <section className="relative">
+      {/* Hero: KL skyline, only lightly darkened so the photo shows; a soft scrim behind the headline keeps the text
+          readable (contrast measured at 375 / 768 / 1440 px); the search card overlaps its bottom */}
+      <section className="relative overflow-x-clip">
         {/* Photo behind the whole hero; the light strip in the card row hides its lower part,
             so the photo always ends exactly halfway down the search card (pure CSS, any card height) */}
         <div className="absolute inset-0 overflow-hidden bg-[#001233]" aria-hidden="true">
@@ -322,22 +363,29 @@ function Home() {
               className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
             />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#001233]/85 via-[#001233]/60 to-[#001233]/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#001233]/45 via-[#001233]/25 to-[#001233]/45" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 pt-12 md:pt-16 text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(0_18_51/0.6)]">
-            {t('bannerTitle')}
-          </h1>
-          <p className="mt-4 text-lg md:text-2xl text-white/85 [text-shadow:0_1px_12px_rgb(0_18_51/0.6)]">
-            {t('bannerSubtitle')}
-          </p>
+          <div className="relative inline-block px-4 py-2">
+            {/* local scrim: darkens only behind the text, fading out at the edges */}
+            <div
+              className="absolute -inset-x-10 -inset-y-8 md:-inset-x-24 md:-inset-y-10 bg-[radial-gradient(ellipse_at_center,rgb(0_18_51/0.75)_0%,rgb(0_18_51/0.62)_50%,transparent_78%)]"
+              aria-hidden="true"
+            />
+            <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(0_18_51/0.7)]">
+              {t('bannerTitle')}
+            </h1>
+            <p className="relative mt-4 text-lg md:text-2xl text-white/95 [text-shadow:0_1px_12px_rgb(0_18_51/0.8)]">
+              {t('bannerSubtitle')}
+            </p>
+          </div>
         </div>
 
         {/* Search card: half on the photo, half on the light page below it */}
         <div className="relative z-20 mt-10 px-4 flex justify-center">
           <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-gray-50" aria-hidden="true" />
-          <div className="relative w-full max-w-6xl bg-white rounded-[2rem] shadow-2xl px-5 md:px-10 pt-5 pb-7">
+          <div id="plan" className="relative w-full max-w-6xl bg-white rounded-[2rem] shadow-2xl px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
             {/* Tab switcher */}
             <div className="flex justify-center">
               <div className="flex bg-gray-100 rounded-full p-1">
@@ -360,6 +408,15 @@ function Home() {
               </div>
             </div>
 
+            {/* Lines tab, option A: every line as a tile, no typing needed */}
+            {tab === 'lines' && linesUi === 'a' ? (
+              <div className="flex justify-center mt-4">
+                <div className="w-full max-w-5xl">
+                  <LineGrid buses={busLines} onPick={pickLine} />
+                </div>
+              </div>
+            ) : (
+            <>
             {/* Search bar + suggestions dropdown */}
             <div className="flex justify-center mt-4 relative">
               <div className="w-full max-w-5xl relative">
@@ -405,8 +462,9 @@ function Home() {
 
                       <button
                         onClick={handleSwap}
-                        className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0"
-                        aria-label="Swap"
+                        disabled={!start.trim() && !end.trim()}
+                        className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                        aria-label={t('swapAria')}
                       >
                         <Icon name="swapVert" size={22} />
                       </button>
@@ -416,6 +474,7 @@ function Home() {
                           <div className="text-sm text-gray-500">{t('end')}</div>
                           <input
                             type="text"
+                            id="end-input"
                             value={end}
                             onChange={(e) => {
                               setEnd(e.target.value)
@@ -443,6 +502,7 @@ function Home() {
                         <div className="text-sm text-gray-500">{t('line')}</div>
                         <input
                           type="text"
+                          id="line-input"
                           value={line}
                           onChange={(e) => {
                             setLine(e.target.value)
@@ -470,7 +530,7 @@ function Home() {
                     onClick={() => handleSearch()}
                     disabled={loading}
                     className="w-14 h-14 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
-                    aria-label="Search"
+                    aria-label={t('searchAria')}
                   >
                     {loading ? (
                       <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -507,12 +567,31 @@ function Home() {
                 )}
               </div>
             </div>
+            </>
+            )}
+
+            {/* Lines, option B: every line in one row under the search, on both tabs */}
+            {linesUi === 'b' && (
+              <div className="flex justify-center">
+                <div className="w-full max-w-5xl min-w-0">
+                  <LineStrip
+                    onPick={pickLine}
+                    onBus={() => {
+                      setTab('lines')
+                      setTimeout(() => document.getElementById('line-input')?.focus(), 0)
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Below the search: the feature slides as a white card that sits over the top of the navy band,
-          the feature tiles in the band, then trails and rider reviews (app banner + footer follow in SiteLayout) */}
+      {/* Below the search: trails (Explore), promotions (ads), the feature slides as a white card that sits over
+          the top of the navy band, the feature tiles in the band, then rider reviews (app banner + footer follow in SiteLayout) */}
+      <TrailsSection />
+      <PromotionSection />
       <FeatureCarousel
         onPlan={() => {
           setTab('directions')
@@ -527,7 +606,6 @@ function Home() {
       <NavyBand overlap>
         <FeatureGrid />
       </NavyBand>
-      <TrailsSection />
       <ReviewsSection />
 
       {/* Line stations in the right-side panel; "Plan a trip here" fills the End box */}

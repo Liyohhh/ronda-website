@@ -583,7 +583,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
             ) : (
               <span className="text-xs uppercase tracking-wider text-white/60">{t('yourJourney')}</span>
             )}
-            <button onClick={onClose} aria-label="Close" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
+            <button onClick={onClose} aria-label={t('closeAria')} className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
               <Icon name="close" size={18} />
             </button>
           </div>

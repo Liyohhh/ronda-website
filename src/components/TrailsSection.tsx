@@ -4,6 +4,7 @@ import { useTrails } from '../hooks/useTrails'
 import TrailCard from './TrailCard'
 import CategoryPills, { type CategoryFilter } from './CategoryPills'
 import Icon from './Icon'
+import { isCategoryShown } from '../data/trails'
 
 // Home page: "Explore Trails" with category pills and a swipeable row of trail cards
 function TrailsSection() {
@@ -11,7 +12,7 @@ function TrailsSection() {
   const [category, setCategory] = useState<CategoryFilter>('all')
   const rowRef = useRef<HTMLUListElement>(null)
   const { data, error } = useTrails()
-  const all = data?.trails ?? []
+  const all = (data?.trails ?? []).filter((tr) => isCategoryShown(tr.category, lang))
   const trails = category === 'all' ? all : all.filter((tr) => tr.category === category)
 
   // arrows scroll one "page" of cards; in Arabic (RTL) the row runs the other way
@@ -33,7 +34,7 @@ function TrailsSection() {
   )
 
   return (
-    <section aria-labelledby="trails-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-12">
+    <section id="explore" aria-labelledby="trails-title" className="scroll-mt-24 max-w-6xl mx-auto px-4 sm:px-6 pt-12">
       <div className="flex items-end justify-between gap-4 mb-4">
         <div>
           <h2 id="trails-title" className="text-2xl md:text-3xl font-bold text-[#002472]">

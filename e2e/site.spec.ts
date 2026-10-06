@@ -4,7 +4,7 @@ import { expect, test } from './mocks'
 
 // Every public page loads without errors, the language switch works, and pages pass automated
 // accessibility checks (WCAG 2.1 A / AA rules that axe can test).
-const PAGES = ['/', '/about', '/help', '/services', '/trails', '/login', '/register', '/live', '/credits']
+const PAGES = ['/', '/about', '/help', '/help/general', '/help/policies', '/services', '/trails', '/trails/heritage', '/ronda-300', '/login', '/register', '/live', '/credits', '/no-such-page']
 
 for (const path of PAGES) {
   test(`${path} renders`, async ({ page, backend }) => {
@@ -38,6 +38,7 @@ const BASELINE: Record<string, string[]> = JSON.parse(readFileSync(new URL('./a1
 for (const path of PAGES) {
   test(`${path} has no new serious accessibility violations`, async ({ page, backend }, info) => {
     void backend
+    test.setTimeout(60_000) // axe on the full Home page can take a while when every test runs at once
     await page.goto(path)
     await expect(page.locator('h1:visible, h2:visible, [role="application"]').first()).toBeVisible()
     const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()

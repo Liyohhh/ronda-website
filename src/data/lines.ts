@@ -13,6 +13,7 @@ export type LineMode = 'MRT' | 'LRT' | 'MONORAIL' | 'BRT' | 'KTM' | 'ETS' | 'ERL
 export type Line = {
   id: string // stable slug, also the SVG filename
   name: string // what riders see
+  short?: string // tile label in the line picker ("Kelana Jaya"); a proper noun, not translated. Every rail line has one
   mode: LineMode
   code?: string // operator line code where one exists (KGL, PYL, ...)
   color: string // background, #RRGGBB
@@ -23,30 +24,37 @@ export type Line = {
 
 export const LINES: Line[] = [
   // Prasarana rapidKL rail (feed rapid-rail-kl)
-  { id: 'lrt-ampang', name: 'LRT Ampang Line', mode: 'LRT', code: 'AGL', color: '#E57200', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['AG'] } },
-  { id: 'lrt-sri-petaling', name: 'LRT Sri Petaling Line', mode: 'LRT', code: 'SPL', color: '#76232F', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PH'] } },
-  { id: 'lrt-kelana-jaya', name: 'LRT Kelana Jaya Line', mode: 'LRT', code: 'KJL', color: '#D50032', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KJ'] } },
-  { id: 'lrt-shah-alam', name: 'LRT Shah Alam Line', mode: 'LRT', code: 'SAL', color: '#00A9E0', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['SA'] } },
-  { id: 'mrt-kajang', name: 'MRT Kajang Line', mode: 'MRT', code: 'KGL', color: '#047940', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KGL'] } },
-  { id: 'mrt-putrajaya', name: 'MRT Putrajaya Line', mode: 'MRT', code: 'PYL', color: '#FFCD00', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PYL'] } },
-  { id: 'monorail', name: 'KL Monorail Line', mode: 'MONORAIL', code: 'MRL', color: '#84BD00', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['MR'] } },
-  { id: 'brt-sunway', name: 'BRT Sunway Line', mode: 'BRT', code: 'BRT', color: '#115740', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['BRT'] } },
+  { id: 'lrt-ampang', name: 'LRT Ampang Line', short: 'Ampang', mode: 'LRT', code: 'AGL', color: '#E57200', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['AG'] } },
+  { id: 'lrt-sri-petaling', name: 'LRT Sri Petaling Line', short: 'Sri Petaling', mode: 'LRT', code: 'SPL', color: '#76232F', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PH'] } },
+  { id: 'lrt-kelana-jaya', name: 'LRT Kelana Jaya Line', short: 'Kelana Jaya', mode: 'LRT', code: 'KJL', color: '#D50032', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KJ'] } },
+  { id: 'lrt-shah-alam', name: 'LRT Shah Alam Line', short: 'Shah Alam', mode: 'LRT', code: 'SAL', color: '#00A9E0', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['SA'] } },
+  { id: 'mrt-kajang', name: 'MRT Kajang Line', short: 'Kajang', mode: 'MRT', code: 'KGL', color: '#047940', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KGL'] } },
+  { id: 'mrt-putrajaya', name: 'MRT Putrajaya Line', short: 'Putrajaya', mode: 'MRT', code: 'PYL', color: '#FFCD00', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PYL'] } },
+  { id: 'monorail', name: 'KL Monorail Line', short: 'Monorail', mode: 'MONORAIL', code: 'MRL', color: '#84BD00', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['MR'] } },
+  { id: 'brt-sunway', name: 'BRT Sunway Line', short: 'BRT Sunway', mode: 'BRT', code: 'BRT', color: '#115740', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['BRT'] } },
 
   // Express Rail Link (feed erl): no route_color in the feed, colours to be confirmed with ERL
-  { id: 'erl-klia-ekspres', name: 'ERL KLIA Ekspres', mode: 'ERL', color: '#6B2C91', textColor: '#FFFFFF', colorSource: 'unverified', gtfs: { feedId: 'erl', routeIds: ['KE'] } },
-  { id: 'erl-klia-transit', name: 'ERL KLIA Transit', mode: 'ERL', color: '#00A19A', textColor: '#FFFFFF', colorSource: 'unverified', gtfs: { feedId: 'erl', routeIds: ['KT'] } },
+  { id: 'erl-klia-ekspres', name: 'ERL KLIA Ekspres', short: 'KLIA Ekspres', mode: 'ERL', color: '#6B2C91', textColor: '#FFFFFF', colorSource: 'unverified', gtfs: { feedId: 'erl', routeIds: ['KE'] } },
+  { id: 'erl-klia-transit', name: 'ERL KLIA Transit', short: 'KLIA Transit', mode: 'ERL', color: '#00A19A', textColor: '#FFFFFF', colorSource: 'unverified', gtfs: { feedId: 'erl', routeIds: ['KT'] } },
 
   // Keretapi Tanah Melayu (feed ktmb)
-  { id: 'ktm-port-klang', name: 'KTM Port Klang Line', mode: 'KTM', color: '#DC2420', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['KA15_KD19'] } },
-  { id: 'ktm-seremban', name: 'KTM Seremban Line', mode: 'KTM', color: '#3C5A9F', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['KC05_KB18'] } },
-  { id: 'ktm-shuttle-selatan', name: 'KTM Shuttle Selatan (JB Sentral – Paloh)', mode: 'KTM', color: '#0A3D7A', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['SS'] } },
-  { id: 'ktm-padang-besar', name: 'KTM Padang Besar Line', mode: 'KTM', color: '#018000', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_47300'] } },
-  { id: 'ktm-ipoh', name: 'KTM Ipoh Line', mode: 'KTM', color: '#1964B7', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_9000'] } },
-  { id: 'ktm-ets', name: 'KTM ETS', mode: 'ETS', color: '#FFC72C', textColor: '#000000', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['ETS'] } },
-  { id: 'ktm-intercity', name: 'KTM Intercity', mode: 'KTM', color: '#6E6E6E', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['ERT', 'SH', 'ST'] } },
+  { id: 'ktm-port-klang', name: 'KTM Port Klang Line', short: 'Port Klang', mode: 'KTM', color: '#DC2420', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['KA15_KD19'] } },
+  { id: 'ktm-seremban', name: 'KTM Seremban Line', short: 'Seremban', mode: 'KTM', color: '#3C5A9F', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['KC05_KB18'] } },
+  { id: 'ktm-shuttle-selatan', name: 'KTM Shuttle Selatan (JB Sentral – Paloh)', short: 'Shuttle Selatan', mode: 'KTM', color: '#0A3D7A', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['SS'] } },
+  { id: 'ktm-padang-besar', name: 'KTM Padang Besar Line', short: 'Padang Besar', mode: 'KTM', color: '#018000', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_47300'] } },
+  { id: 'ktm-ipoh', name: 'KTM Ipoh Line', short: 'Ipoh', mode: 'KTM', color: '#1964B7', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_9000'] } },
+  { id: 'ktm-ets', name: 'KTM ETS', short: 'ETS', mode: 'ETS', color: '#FFC72C', textColor: '#000000', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['ETS'] } },
+  { id: 'ktm-intercity', name: 'KTM Intercity', short: 'Intercity', mode: 'KTM', color: '#6E6E6E', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['ERT', 'SH', 'ST'] } },
 ]
 
 export const LINES_BY_ID: Record<string, Line> = Object.fromEntries(LINES.map((l) => [l.id, l]))
+
+// Rail lines grouped for the line picker (headings translated by `key`)
+export const LINE_GROUPS: { key: 'linesGroupRapid' | 'linesGroupKtm' | 'linesGroupAirport'; ids: string[] }[] = [
+  { key: 'linesGroupRapid', ids: ['lrt-ampang', 'lrt-sri-petaling', 'lrt-kelana-jaya', 'lrt-shah-alam', 'mrt-kajang', 'mrt-putrajaya', 'monorail', 'brt-sunway'] },
+  { key: 'linesGroupKtm', ids: ['ktm-port-klang', 'ktm-seremban', 'ktm-ets', 'ktm-intercity', 'ktm-padang-besar', 'ktm-ipoh', 'ktm-shuttle-selatan'] },
+  { key: 'linesGroupAirport', ids: ['erl-klia-ekspres', 'erl-klia-transit'] },
+]
 
 // Find a line from a GTFS route (e.g. a plan-trip leg's feed + route)
 export function lineForRoute(feedId: string, routeId: string): Line | undefined {

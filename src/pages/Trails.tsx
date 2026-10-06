@@ -2,18 +2,18 @@ import { useSearchParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import TrailCard from '../components/TrailCard'
 import CategoryPills, { type CategoryFilter } from '../components/CategoryPills'
-import { TRAIL_CATEGORIES } from '../data/trails'
+import { categoriesFor, isCategoryShown } from '../data/trails'
 import { useTrails } from '../hooks/useTrails'
 import { useLanguage } from '../hooks/useLanguage'
 
 // /trails: every trail, filterable by category (kept in the URL: /trails?category=food)
 function Trails() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [params, setParams] = useSearchParams()
   const raw = params.get('category')
-  const category: CategoryFilter = TRAIL_CATEGORIES.includes(raw as never) ? (raw as CategoryFilter) : 'all'
+  const category: CategoryFilter = categoriesFor(lang).includes(raw as never) ? (raw as CategoryFilter) : 'all'
   const { data, error } = useTrails()
-  const all = data?.trails ?? []
+  const all = (data?.trails ?? []).filter((tr) => isCategoryShown(tr.category, lang))
   const trails = category === 'all' ? all : all.filter((tr) => tr.category === category)
 
   const setCategory = (c: CategoryFilter) => setParams(c === 'all' ? {} : { category: c }, { replace: true })

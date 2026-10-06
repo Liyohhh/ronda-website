@@ -55,7 +55,7 @@ function Header() {
       {/* One row: logo + services on the left, language / help / account on the right.
           The row is the positioning box for the services dropdown, so it spans the full width. */}
       <div className="relative flex items-center h-16 px-4 sm:px-6 gap-3 lg:gap-6">
-        <Link to="/" className="flex items-center flex-shrink-0" aria-label="RONDA home">
+        <Link to="/" className="flex items-center flex-shrink-0" aria-label={t('homeAria')}>
           <BrandLogo size="sm" wordmarkClassName="hidden sm:block" />
         </Link>
 
@@ -76,6 +76,7 @@ function Header() {
               <button
                 onClick={() => setMenuOpen((o) => !o)}
                 aria-expanded={menuOpen}
+                aria-label={displayName || t('myDashboard')}
                 className={PILL}
               >
                 {avatarUrl ? (

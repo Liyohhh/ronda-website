@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { NAV_MENUS, type NavMenu } from '../data/serviceOptions'
 import Icon from './Icon'
@@ -9,11 +9,12 @@ type Key = NavMenu['key']
 // Header menus with hover panels. Sits inside the header row; the panel is positioned
 // against the nearest `relative` ancestor (the header row), so it spans the full width.
 function ServiceNav({ className = '' }: { className?: string }) {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [active, setActive] = useState<Key | null>(null)
   // Keeps the last panel's content rendered while it fades out
   const [shown, setShown] = useState<Key>('navTravel')
   const closeTimer = useRef<number | undefined>(undefined)
+  const navigate = useNavigate()
 
   const open = (key: Key) => {
     window.clearTimeout(closeTimer.current)
@@ -43,7 +44,17 @@ function ServiceNav({ className = '' }: { className?: string }) {
               type="button"
               onMouseEnter={() => open(m.key)}
               onFocus={() => open(m.key)}
-              onClick={() => (active === m.key ? setActive(null) : open(m.key))}
+              onClick={() => {
+                // Explore: a click goes to the trails on Home (hover / focus still opens the panel)
+                if (m.key === 'navExplore') {
+                  window.clearTimeout(closeTimer.current)
+                  setActive(null)
+                  navigate('/#explore')
+                  return
+                }
+                if (active === m.key) setActive(null)
+                else open(m.key)
+              }}
               aria-expanded={active === m.key}
               className={`py-3 border-b-2 font-medium transition-colors flex items-center gap-1 ${
                 active === m.key ? 'border-[#002472]' : 'border-transparent hover:border-[#002472]/40'
@@ -68,7 +79,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
             <div key={col.title}>
               <h3 className="text-sm font-semibold text-[#002472] mb-3">{t(col.title)}</h3>
               <ul className="space-y-2.5">
-                {col.items.map((item) => (
+                {col.items.filter((item) => !item.onlyLang || item.onlyLang === lang).map((item) => (
                   <li key={item.to}>
                     <Link to={item.to} onClick={close} className="block group">
                       <span className="block text-sm text-gray-800 group-hover:text-[#002472] group-hover:underline">

@@ -8,6 +8,12 @@ const fixture = (name: string) => JSON.parse(readFileSync(new URL(`./fixtures/${
 export const SEARCH = { klcc: fixture('search_klcc.json'), pasarSeni: fixture('search_pasar_seni.json') }
 export const PLAN = fixture('plan_klcc_pasar_seni.json')
 export const TRAILS = fixture('trails.json') // public.trails_data(), recorded from production
+// ai-chat answer in the shape the function returns (made-up place: the cards come from tools in real use)
+export const CHAT = {
+  reply: 'There is one hotel within 500 m of LRT KLCC.',
+  guest: false,
+  cards: [{ kind: 'hotel', name: 'Test Hotel', distance_m: 240, walk_min: 3, station: 'LRT KLCC', link: '/?to=LRT%20KLCC&toName=Test%20Hotel' }],
+}
 
 // made-up buses near KL Sentral (not real plates)
 export const LIVE = {
@@ -34,6 +40,7 @@ export const BUS_ROUTES = [
 
 export type Backend = {
   planTrip: (body: Record<string, unknown>) => { status?: number; json: unknown }
+  chat: (body: Record<string, unknown>) => { status?: number; json: unknown }
   calls: { path: string; body: unknown }[]
   unexpected: string[]
 }
@@ -41,7 +48,7 @@ export type Backend = {
 const PNG_1PX = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/6X4lb8AAAAASUVORK5CYII=', 'base64')
 
 async function mockBackend(page: Page): Promise<Backend> {
-  const be: Backend = { planTrip: () => ({ json: PLAN }), calls: [], unexpected: [] }
+  const be: Backend = { planTrip: () => ({ json: PLAN }), chat: () => ({ json: CHAT }), calls: [], unexpected: [] }
   const json = (route: Route, body: unknown, status = 200) =>
     route.fulfill({ status, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) })
 
@@ -66,6 +73,7 @@ async function mockBackend(page: Page): Promise<Backend> {
         return json(route, TRAILS)
       case '/rest/v1/rpc/bus_routes':
         return json(route, BUS_ROUTES)
+      case '/rest/v1/rpc/line_stations':
       case '/rest/v1/rpc/search_route_stops':
       case '/rest/v1/rpc/stops_in_bbox':
         return json(route, [])
@@ -75,11 +83,20 @@ async function mockBackend(page: Page): Promise<Backend> {
         const r = be.planTrip(body)
         return json(route, r.json, r.status ?? 200)
       }
+      case '/functions/v1/ai-chat': {
+        const r = be.chat(body)
+        return json(route, r.json, r.status ?? 200)
+      }
       case '/functions/v1/live':
         if (body?.action === 'vehicles') return json(route, LIVE)
         if (body?.action === 'approaching') return json(route, { buses: [] })
         return json(route, { arrivals: [], supported: false })
     }
+    // station positions (RONDA 300 "nearest stations with places"); positions from public.stops
+    if (url.pathname === '/rest/v1/stops') return json(route, [
+      { feed_id: 'rapid-rail-kl', stop_id: 'KG16', stop_lat: 3.142293265, stop_lon: 101.6955642 },
+      { feed_id: 'rapid-rail-kl', stop_id: 'KJ10', stop_lat: 3.158935, stop_lon: 101.713287 },
+    ])
     // plain table reads (bus route list etc.): empty
     if (url.pathname.startsWith('/rest/v1/') && req.method() === 'GET') return json(route, [])
     if (url.pathname.startsWith('/auth/v1/')) return json(route, {})

@@ -9,11 +9,29 @@ How the RONDA website is tested, how to run the tests, and the rules for adding 
 | Static | ESLint, TypeScript | `npm run lint`, `npm run typecheck` | Code rules, types (app, tests and config) |
 | Unit / component | Vitest + Testing Library (jsdom) | `src/**/*.test.ts(x)` | Pure logic (time, durations, search, route codes, live helpers), hooks, small components, translation completeness |
 | End-to-end | Playwright | `e2e/*.spec.ts` | User journeys on the production build, desktop and phone sizes |
-| Accessibility | axe-core in Playwright | `e2e/site.spec.ts` | WCAG 2.1 A/AA rules axe can check, on every public page |
+| Accessibility | axe-core in Playwright | `e2e/site.spec.ts`, `e2e/chat.spec.ts`, `e2e/journey.spec.ts` | WCAG 2.1 A/AA rules axe can check, on every public page (incl. `/ronda-300` and the 404 page), the open chat and the journey panel |
+| Links and buttons | Playwright crawler | `e2e/links.spec.ts` | Every internal link on every page in all 4 languages opens a real page and its `#section`; every visible button does something |
+| Contrast | Playwright + pixel maths | `node scripts/hero-contrast.mjs` (dev server running) | Home hero headline >= 3:1, subtitle >= 4.5:1 against the photo at 375 / 768 / 1440 px, worst pixel |
+| Live smoke (read-only) | Node | `node --experimental-strip-types scripts/smoke-live.ts` | The deployed site and public read-only backend calls answer; never writes |
+| Manual | People | `docs/UAT.md` | Four personas walk through the main journeys before a release |
 | Dependencies | `npm audit` | CI | Known vulnerabilities in production dependencies (high and above) |
 
-The backend (database functions, trip planner, live buses, geocoder) has its own unit, smoke and security
-suites in the database repository. Website tests never call the real backend.
+The backend (database functions, trip planner, live buses, geocoder, the `ai-chat` assistant) has its own unit,
+smoke and security suites in the database repository (`npm test` there runs every Edge Function test file,
+including `ai-chat` and the unchanged `plan-trip` suite). Website tests never call the real backend.
+
+## What the suites cover (Oct 2026)
+
+| Area | Unit / component | End-to-end |
+|---|---|---|
+| Home order, promotions ("Ad" label), no overlap at 375 / 768 / 1440 | `PromotionSection.test.tsx` | `home.spec.ts` |
+| Line picker A (grid) and B (strip), bus route search | `LineTiles.test.tsx` | `journey.spec.ts` (lines search) |
+| Slides: 5 slides, 5 s auto-advance, pause, reduced motion | `FeatureCarousel.test.tsx` (fake timers) | |
+| Feature tiles: links, colours >= 3:1, language menu | `FeatureGrid.test.tsx` | `links.spec.ts` |
+| Arabic-only halal trail category | `CategoryPills.test.tsx` | `trails.spec.ts` |
+| RONDA 300 page and header order, Explore -> `/#explore` | `ronda300.test.ts` | `ronda300.spec.ts` |
+| Help: 3 categories, articles in 4 languages, search, `/help/returns-refunds` -> `/help` | `Help.test.tsx` | `links.spec.ts` |
+| Assistant (chat): states, guest, CAPTCHA, flag off | `ChatWidget.test.tsx`, `SiteLayout.test.tsx` | `chat.spec.ts` (desktop + phone, en + ar) |
 
 ## Running
 

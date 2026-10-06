@@ -1,10 +1,20 @@
-import SiteLayout from '../components/SiteLayout'
+import DashboardPage from '../components/DashboardPage'
 
+// /dashboard (signed in): the rider's page. Saved places and trips are not built yet.
 function UserDashboard() {
   return (
-    <SiteLayout>
-      <h1 className="max-w-6xl mx-auto text-2xl font-bold px-4 sm:px-6 py-8">User Dashboard</h1>
-    </SiteLayout>
+    <DashboardPage
+      title="dash_userTitle"
+      intro="dash_userIntro"
+      tiles={[
+        { label: 'dash_plan', text: 'dash_planText', icon: 'route', to: '/#plan' },
+        { label: 'dash_live', text: 'dash_liveText', icon: 'train', to: '/live' },
+        { label: 'dash_r300', text: 'dash_r300Text', icon: 'myLocation', to: '/ronda-300' },
+        { label: 'dash_saved', text: 'dash_savedText', icon: 'bookmark' },
+        { label: 'dash_alerts', text: 'dash_alertsText', icon: 'notifications' },
+        { label: 'dash_help', text: 'dash_helpText', icon: 'helpOutline', to: '/help' },
+      ]}
+    />
   )
 }
 

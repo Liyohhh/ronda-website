@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright'
 import type { Page } from '@playwright/test'
 import { expect, test } from './mocks'
 
@@ -30,14 +31,14 @@ test('signed in without a role: admin and partner pages say no access', async ({
     await expect(page.getByRole('heading', { name: 'You do not have access to this page' })).toBeVisible()
   }
   await page.goto('/dashboard')
-  await expect(page.getByRole('heading', { name: 'User Dashboard' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'My RONDA', level: 1 })).toBeVisible()
 })
 
 test('merchant sees the partner page but not admin; admin sees both', async ({ page, backend }) => {
   void backend
   await signIn(page, 'merchant')
   await page.goto('/partner-dashboard')
-  await expect(page.getByRole('heading', { name: 'Partner Dashboard' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Partner dashboard', level: 1 })).toBeVisible()
   await page.goto('/admin')
   await expect(page.getByRole('heading', { name: 'You do not have access to this page' })).toBeVisible()
 })
@@ -46,9 +47,9 @@ test('admin sees admin and partner pages', async ({ page, backend }) => {
   void backend
   await signIn(page, 'admin')
   await page.goto('/admin')
-  await expect(page.getByRole('heading', { name: 'Admin' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Admin', level: 1 })).toBeVisible()
   await page.goto('/partner-dashboard')
-  await expect(page.getByRole('heading', { name: 'Partner Dashboard' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Partner dashboard', level: 1 })).toBeVisible()
 })
 
 test('a role in user_metadata (editable by the user) does not count', async ({ page, backend }) => {
@@ -59,4 +60,13 @@ test('a role in user_metadata (editable by the user) does not count', async ({ p
   })))
   await page.goto('/admin')
   await expect(page.getByRole('heading', { name: 'You do not have access to this page' })).toBeVisible()
+})
+
+test('signed-in dashboard: working links, no serious accessibility violations', async ({ page, backend }) => {
+  void backend
+  await signIn(page)
+  await page.goto('/dashboard')
+  await expect(page.getByRole('link', { name: /Plan a trip/ })).toHaveAttribute('href', '/#plan')
+  const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()
+  expect(violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([])
 })

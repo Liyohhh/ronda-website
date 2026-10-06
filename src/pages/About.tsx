@@ -8,7 +8,7 @@ import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import { busLine } from '../data/lines'
-import { trailDescKey, trailNameKey } from '../data/trails'
+import { isCategoryShown, trailDescKey, trailNameKey } from '../data/trails'
 import { useTrails } from '../hooks/useTrails'
 import Icon from '../components/Icon'
 import type { IconName } from '../data/icons'
@@ -73,8 +73,8 @@ function SectionTitle({ id, children }: { id: string; children: string }) {
 }
 
 function About() {
-  const { t } = useLanguage()
-  const trails = useTrails().data?.trails ?? []
+  const { t, lang } = useLanguage()
+  const trails = (useTrails().data?.trails ?? []).filter((tr) => isCategoryShown(tr.category, lang))
   // header menu links like /about#about-faq: scroll to that section (also when already on /about)
   const { hash } = useLocation()
   useEffect(() => {

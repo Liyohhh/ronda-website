@@ -3,7 +3,7 @@ import { LIVE, expect, test } from './mocks'
 test.describe('live bus map', () => {
   test('shows the buses in service and their count', async ({ page, backend }) => {
     await page.goto('/live')
-    await expect(page.getByRole('heading', { name: 'Live bus map' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Live map' })).toBeVisible()
     const inService = LIVE.vehicles.filter((v) => v.status !== 'off_trip').length
     await expect(page.getByText(`${inService} buses live`)).toBeVisible()
     await expect(page.locator('.ronda-bus:not(.ronda-train)')).toHaveCount(inService)

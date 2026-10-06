@@ -24,6 +24,11 @@ export const CATEGORY_STYLE: Record<TrailCategory, { from: string; to: string; i
     to: '#15803D',
     icon: 'parkOutline',
   },
+  'halal-fine-dining': {
+    from: '#001233',
+    to: '#86672a',
+    icon: 'restaurant',
+  },
   explore: {
     from: '#001233',
     to: '#A16207',

@@ -1,12 +1,12 @@
 import { useLanguage } from '../hooks/useLanguage'
-import { TRAIL_CATEGORIES, categoryKey, type TrailCategory } from '../data/trails'
+import { categoriesFor, categoryKey, type TrailCategory } from '../data/trails'
 
 export type CategoryFilter = TrailCategory | 'all'
 
 // "All / Food & Drink / Culture & Heritage / ..." filter pills
 function CategoryPills({ value, onChange }: { value: CategoryFilter; onChange: (v: CategoryFilter) => void }) {
-  const { t } = useLanguage()
-  const options: CategoryFilter[] = ['all', ...TRAIL_CATEGORIES]
+  const { t, lang } = useLanguage()
+  const options: CategoryFilter[] = ['all', ...categoriesFor(lang)]
   return (
     <div className="flex gap-2 overflow-x-auto [scrollbar-width:none] -mx-4 px-4 pb-1" role="group" aria-label={t('trailsTitle')}>
       {options.map((c) => {

@@ -3,17 +3,19 @@
 // Place and station names are proper nouns and stay the same in every language.
 
 import type { TranslationKey } from '../i18n/translations'
-import { TRAIL_CATEGORIES, categoryKey } from './trails'
+import type { Lang } from '../i18n/translations'
+import { ARABIC_ONLY_CATEGORIES, TRAIL_CATEGORIES, categoryKey } from './trails'
 
 // /?to=<stop name>&toName=<shown name> opens Home with the End box filled in
 const planTo = (stop: string, shown = stop) => `/?to=${encodeURIComponent(stop)}&toName=${encodeURIComponent(shown)}`
 // a place with no station of its own; coordinates from OpenStreetMap
 const planToPlace = (lat: number, lon: number, shown: string) => `/?toLat=${lat}&toLon=${lon}&toName=${encodeURIComponent(shown)}`
 
-export type NavItem = { to: string; name?: string; label?: TranslationKey; detail?: string; detailLabel?: TranslationKey }
+// onlyLang: the item is shown only in that language (e.g. the Arabic-only trail category)
+export type NavItem = { to: string; name?: string; label?: TranslationKey; detail?: string; detailLabel?: TranslationKey; onlyLang?: Lang }
 export type NavColumn = { title: TranslationKey; items: NavItem[] }
 export type NavMenu = {
-  key: 'navTravel' | 'navExplore' | 'navServices' | 'about'
+  key: 'navTravel' | 'navExplore' | 'navRonda300' | 'navServices' | 'about'
   columns: NavColumn[]
   promo: { title: TranslationKey; text: TranslationKey; cta: TranslationKey; to: string }
 }
@@ -51,7 +53,10 @@ export const NAV_MENUS: NavMenu[] = [
     columns: [
       {
         title: 'navTrailCats',
-        items: TRAIL_CATEGORIES.map((c) => ({ label: categoryKey(c), to: `/trails?category=${c}` })),
+        items: [
+          ...TRAIL_CATEGORIES.map((c) => ({ label: categoryKey(c), to: `/trails?category=${c}` })),
+          ...ARABIC_ONLY_CATEGORIES.map((c) => ({ label: categoryKey(c), to: `/trails?category=${c}`, onlyLang: 'ar' as const })),
+        ],
       },
       {
         title: 'navPopular',
@@ -64,6 +69,20 @@ export const NAV_MENUS: NavMenu[] = [
       },
     ],
     promo: { title: 'trailsTitle', text: 'trailsSubtitle', cta: 'navSeeTrails', to: '/trails' },
+  },
+  {
+    // RONDA 300: places within a short walk of each station (curated now, merchants later)
+    key: 'navRonda300',
+    columns: [
+      {
+        title: 'navRonda300',
+        items: [
+          { label: 'r3_navFind', detailLabel: 'r3_navFindD', to: '/ronda-300' },
+          { label: 'navTrailCats', detailLabel: 'trailsSubtitle', to: '/trails' },
+        ],
+      },
+    ],
+    promo: { title: 'navMerchantTitle', text: 'navMerchantText', cta: 'navMerchantCta', to: '/help/general#business' },
   },
   {
     // Chauffeur and private-car transfers (enquiries through the Help Centre)

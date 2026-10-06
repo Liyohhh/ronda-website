@@ -5,22 +5,16 @@ import type { TranslationKey } from '../i18n/translations'
 import Icon from './Icon'
 import PhotoCredit from './PhotoCredit'
 import { SLIDE_PHOTOS } from '../data/trailPhotos'
+import { SLIDES, type Slide } from '../data/slides'
 
 // "Travel made effortless" slides: a white card on the light page whose lower part sits over the top of
 // the navy band below (Home puts the band right after it). Photo on one side, the message on the other.
 // Arrows, dots, keyboard, and a gentle auto-advance that pauses on hover / focus and is off for people who
 // prefer reduced motion. Photos: Wikimedia Commons, credited on the slide and on the About page.
 
-const AUTO_MS = 8000
+export const AUTO_MS = 5000
 const GOLD_TEXT = '#86672a' // RONDA gold, dark enough for small text (4.5:1 on white and light tints)
 
-type Slide = { key: keyof typeof SLIDE_PHOTOS; n: 1 | 2 | 3 | 4; action: 'plan' | 'lines' | 'login' }
-const SLIDES: Slide[] = [
-  { key: 'plan', n: 1, action: 'plan' },
-  { key: 'ronda300', n: 2, action: 'lines' },
-  { key: 'fares', n: 3, action: 'plan' },
-  { key: 'saved', n: 4, action: 'login' },
-]
 const k = (n: number, part: string) => `s${n}_${part}` as TranslationKey
 
 function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () => void }) {
@@ -60,7 +54,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
       </>
     )
     const tab = active ? 0 : -1
-    if (s.action === 'login') return <Link to="/login" className={cls} tabIndex={tab}>{label}</Link>
+    if (typeof s.action === 'object') return <Link to={s.action.to} className={cls} tabIndex={tab}>{label}</Link>
     return (
       <button type="button" onClick={s.action === 'plan' ? onPlan : onLines} className={cls} tabIndex={tab}>
         {label}

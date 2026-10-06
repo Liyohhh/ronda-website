@@ -1,10 +1,18 @@
-import SiteLayout from '../components/SiteLayout'
+import DashboardPage from '../components/DashboardPage'
 
+// /admin (admin role): data work is done in the database repo for now; this page links to the public checks
 function Admin() {
   return (
-    <SiteLayout>
-      <h1 className="max-w-6xl mx-auto text-2xl font-bold px-4 sm:px-6 py-8">Admin</h1>
-    </SiteLayout>
+    <DashboardPage
+      title="dash_adminTitle"
+      intro="dash_adminIntro"
+      tiles={[
+        { label: 'dash_live', text: 'dash_liveText', icon: 'train', to: '/live' },
+        { label: 'dash_trails', text: 'dash_trailsText', icon: 'hiking', to: '/trails' },
+        { label: 'dash_credits', text: 'dash_creditsText', icon: 'descriptionOutline', to: '/credits' },
+        { label: 'dash_merchants', text: 'dash_merchantsText', icon: 'storefront' },
+      ]}
+    />
   )
 }
 
