@@ -61,6 +61,13 @@ widget, line tiles, feature tiles, promotions, Help page.
 - No independent penetration test yet; native-speaker review of Malay, Chinese and Arabic pending (`docs/UAT.md`).
 - Tests against the real domain wait for hosting day.
 
+## Test history (27 Sep - 7 Oct 2026)
+
+213 recorded test runs over 9 working days (planner unit tests, Edge Function tests, Vitest, Playwright, production
+smoke, regression, interchanges, load, live smoke, contrast, audit, lint). Failures during a day were defects found
+and fixed the same day; the last run of every suite on 7 Oct passed. Every run, with time and result, is in the
+testing workbook (sheets "Daily Test Summary" and "Test History (all runs)").
+
 ## How to repeat
 
 ```bash
