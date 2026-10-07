@@ -8,7 +8,7 @@ Website `main` at `a713772`; database repository at `80044b8`; production Supaba
 | Suite | Result |
 |---|---|
 | Website static checks (ESLint, TypeScript) | clean |
-| Website unit and component tests (Vitest) | **181 / 181 passed**, 23 files |
+| Website unit and component tests (Vitest) | **182 / 182 passed**, 23 files |
 | Website end-to-end tests (Playwright, desktop + phone) | **176 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
 | Edge Function unit tests (trip planner, live, assistant) | **221 / 221 checks**, 14 files |
 | Production smoke + security checks | **46 / 46** (48 / 48 after the KTM fare checks were added) |
@@ -63,7 +63,7 @@ widget, line tiles, feature tiles, promotions, Help page.
 
 ## Test history (27 Sep - 7 Oct 2026)
 
-218 recorded test runs over 9 working days (planner unit tests, Edge Function tests, Vitest, Playwright, production
+220 recorded test runs over 9 working days (planner unit tests, Edge Function tests, Vitest, Playwright, production
 smoke, regression, interchanges, load, live smoke, contrast, audit, lint). Failures during a day were defects found
 and fixed the same day; the last run of every suite on 7 Oct passed (full re-run at 14:29 on 7 Oct: same results; search p95 283 ms). Every run, with time and result, is in the
 testing workbook (sheets "Daily Test Summary" and "Test History (all runs)").
