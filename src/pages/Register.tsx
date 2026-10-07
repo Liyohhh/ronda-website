@@ -47,7 +47,7 @@ function Register() {
       footer={
         <>
           {t('haveAccount')}{' '}
-          <Link to="/login" className="text-[#1C2B4A] font-semibold hover:underline">
+          <Link to="/login" className="text-[#1F2F5C] font-semibold hover:underline">
             {t('login')}
           </Link>
         </>

@@ -27,7 +27,7 @@ function FeatureGrid() {
   const body = (f: Feature) => (
     <>
       {f.soon && (
-        <span className="absolute top-2 end-2 rounded-full bg-[#1C2B4A] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+        <span className="absolute top-2 end-2 rounded-full bg-[#1F2F5C] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
           {t('soon')}
         </span>
       )}

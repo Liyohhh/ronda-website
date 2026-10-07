@@ -351,7 +351,7 @@ function Home() {
       <section className="relative overflow-x-clip">
         {/* Photo behind the whole hero; the light strip in the card row hides its lower part,
             so the photo always ends exactly halfway down the search card (pure CSS, any card height) */}
-        <div className="absolute inset-0 overflow-hidden bg-[#16223B]" aria-hidden="true">
+        <div className="absolute inset-0 overflow-hidden bg-[#18243F]" aria-hidden="true">
           <picture>
             <source srcSet="/Image/banner-kl.webp" type="image/webp" />
             <img
@@ -361,7 +361,7 @@ function Home() {
               className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
             />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#16223B]/45 via-[#16223B]/25 to-[#16223B]/45" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#18243F]/45 via-[#18243F]/25 to-[#18243F]/45" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 pt-12 md:pt-16 text-center">
@@ -449,7 +449,7 @@ function Home() {
                           disabled={loc.status === 'locating'}
                           aria-label={t('useMyLocation')}
                           title={t('useMyLocation')}
-                          className="ms-2 w-9 h-9 rounded-full text-[#1C2B4A] hover:bg-[#1C2B4A]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
+                          className="ms-2 w-9 h-9 rounded-full text-[#1F2F5C] hover:bg-[#1F2F5C]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
                         >
                           <Icon name="myLocation" size={20} />
                         </button>
@@ -458,7 +458,7 @@ function Home() {
                       <button
                         onClick={handleSwap}
                         disabled={!start.trim() && !end.trim()}
-                        className="w-12 h-12 rounded-full bg-[#1C2B4A] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                        className="w-12 h-12 rounded-full bg-[#1F2F5C] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                         aria-label={t('swapAria')}
                       >
                         <Icon name="swapVert" size={22} />
@@ -523,7 +523,7 @@ function Home() {
                   <button
                     onClick={() => handleSearch()}
                     disabled={loading}
-                    className="w-14 h-14 rounded-full bg-teh-strong hover:bg-teh-dark text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                    className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-[#18243F] flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                     aria-label={t('searchAria')}
                   >
                     {loading ? (

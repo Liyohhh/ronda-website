@@ -33,7 +33,7 @@ function Footer() {
   ]
 
   return (
-    <footer className="bg-[#1C2B4A] text-white">
+    <footer className="bg-[#1F2F5C] text-white">
       {/* the app banner sits right above; a thin line separates the two */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 border-t border-white/10 grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>

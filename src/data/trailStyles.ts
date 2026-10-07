@@ -5,32 +5,32 @@ import type { IconName } from './icons'
 // tinted per category, plus an outline icon (24x24 paths).
 export const CATEGORY_STYLE: Record<TrailCategory, { from: string; to: string; icon: IconName }> = {
   food: {
-    from: '#1C2B4A',
+    from: '#1F2F5C',
     to: '#C2410C',
     icon: 'restaurant',
   },
   culture: {
-    from: '#16223B',
+    from: '#18243F',
     to: '#1D4ED8',
     icon: 'accountBalanceOutline',
   },
   shopping: {
-    from: '#1C2B4A',
+    from: '#1F2F5C',
     to: '#BE185D',
     icon: 'shoppingBagOutline',
   },
   nature: {
-    from: '#16223B',
+    from: '#18243F',
     to: '#15803D',
     icon: 'parkOutline',
   },
   'halal-fine-dining': {
-    from: '#16223B',
-    to: '#8E5320',
+    from: '#18243F',
+    to: '#8A5A3B',
     icon: 'restaurant',
   },
   explore: {
-    from: '#16223B',
+    from: '#18243F',
     to: '#A16207',
     icon: 'locationOnOutline',
   },

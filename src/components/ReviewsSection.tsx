@@ -9,7 +9,7 @@ function Stars({ rating }: { rating: number }) {
   return (
     <span className="flex gap-0.5" role="img" aria-label={`${rating} / 5`}>
       {[1, 2, 3, 4, 5].map((i) => (
-        <Icon key={i} name="star" size={16} className={i <= rating ? 'text-[#C27C3A]' : 'text-[#E5E7EB]'} />
+        <Icon key={i} name="star" size={16} className={i <= rating ? 'text-[#D99A1E]' : 'text-[#E5E7EB]'} />
       ))}
     </span>
   )
@@ -25,7 +25,7 @@ function ReviewCard({ review }: { review: Review }) {
         “{review.text}”
       </blockquote>
       <figcaption className="mt-4 flex items-center gap-3">
-        <span className="w-9 h-9 rounded-full bg-[#1C2B4A] text-white text-sm font-bold flex items-center justify-center" aria-hidden="true">
+        <span className="w-9 h-9 rounded-full bg-[#1F2F5C] text-white text-sm font-bold flex items-center justify-center" aria-hidden="true">
           {review.name.charAt(0)}
         </span>
         <span className="min-w-0">
@@ -44,7 +44,7 @@ function ReviewsSection() {
   const { t } = useLanguage()
   return (
     <section aria-labelledby="reviews-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-12">
-      <h2 id="reviews-title" className="text-2xl md:text-3xl font-bold text-[#1C2B4A]">
+      <h2 id="reviews-title" className="text-2xl md:text-3xl font-bold text-[#1F2F5C]">
         {t('reviewsTitle')}
       </h2>
 
@@ -57,7 +57,7 @@ function ReviewsSection() {
           ))}
         </ul>
       ) : (
-        <div className="mt-4 bg-[#1C2B4A] text-white rounded-3xl px-6 py-6 md:py-7 flex flex-col md:flex-row md:items-center gap-5">
+        <div className="mt-4 bg-[#1F2F5C] text-white rounded-3xl px-6 py-6 md:py-7 flex flex-col md:flex-row md:items-center gap-5">
           <div className="flex-1">
             <Stars rating={0} />
             <h3 className="mt-3 text-xl font-semibold">{t('reviewsEmptyTitle')}</h3>
@@ -65,7 +65,7 @@ function ReviewsSection() {
           </div>
           <Link
             to={FEEDBACK_HREF}
-            className="self-start md:self-center flex-shrink-0 inline-flex items-center h-11 px-6 rounded-full bg-white text-[#1C2B4A] font-semibold hover:bg-gray-100 transition-colors"
+            className="self-start md:self-center flex-shrink-0 inline-flex items-center h-11 px-6 rounded-full bg-white text-[#1F2F5C] font-semibold hover:bg-gray-100 transition-colors"
           >
             {t('reviewsCta')}
           </Link>

@@ -18,7 +18,7 @@ function CategoryPills({ value, onChange }: { value: CategoryFilter; onChange: (
             onClick={() => onChange(c)}
             aria-pressed={active}
             className={`h-9 px-4 rounded-full text-sm font-medium whitespace-nowrap border transition-colors ${
-              active ? 'bg-[#1C2B4A] border-[#1C2B4A] text-white' : 'bg-white border-gray-200 text-[#1C2B4A] hover:border-[#1C2B4A]/40'
+              active ? 'bg-[#1F2F5C] border-[#1F2F5C] text-white' : 'bg-white border-gray-200 text-[#1F2F5C] hover:border-[#1F2F5C]/40'
             }`}
           >
             {c === 'all' ? t('allCategories') : t(categoryKey(c))}

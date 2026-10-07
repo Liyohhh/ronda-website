@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
-/* Kopitiam theme (8 Oct 2026): warm neutrals instead of blue-tinted greys, so the navy reads as a choice, not a fog.
-   Greys lean warm (condensed-milk cream to roasted brown); the darkest stop is the kopi-O navy used for text.
-   Accent colours live as tokens below: teh tarik (main actions, highlights) and kaya pandan (small tags only). */
+/* Batik kunyit theme (8 Oct 2026), from Terengganu batik: indigo cloth, kain cream, turmeric (kunyit) dye, soga-bark brown.
+   Greys are warm (cream to soga brown) instead of blue-tinted; the darkest stop is the deep indigo used for text.
+   Tokens: navy (bands), cream (light bands), accent = kunyit (main actions, highlights; dark text on it),
+   accent-light (kunyit text on navy), accent-text (kunyit-family text on light backgrounds), soga (small tags only). */
 @theme {
   --color-gray-50: #fbf7f0;
   --color-gray-100: #f4eee4;
@@ -13,15 +14,15 @@
   --color-gray-600: #5a5349;
   --color-gray-700: #3f3a34;
   --color-gray-800: #2a2722;
-  --color-gray-900: #16223b;
-  --color-kopi: #1c2b4a;
-  --color-kopi-deep: #16223b;
-  --color-susu: #fbf4e6;
-  --color-teh: #c27c3a;
-  --color-teh-strong: #a8642a;
-  --color-teh-dark: #8e5320;
-  --color-teh-light: #e6ae74;
-  --color-pandan: #6fa34a;
+  --color-gray-900: #18243f;
+  --color-navy: #1f2f5c;
+  --color-navy-deep: #18243f;
+  --color-cream: #f7f0e1;
+  --color-accent: #d99a1e;
+  --color-accent-hover: #c4870f;
+  --color-accent-light: #f0c062;
+  --color-accent-text: #8a5a3b;
+  --color-soga: #8a5a3b;
 }
 
 /* The site is designed light-only: keep native controls (inputs, scrollbars) light too */
@@ -42,8 +43,8 @@ html {
 }
 
 body {
-  background: #fdfaf4;
-  color: #16223b;
+  background: #fcf8f0;
+  color: #18243F;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -90,7 +91,7 @@ body {
   display: block;
   width: 14px;
   height: 14px;
-  border: 2px solid #1C2B4A;
+  border: 2px solid #1F2F5C;
   border-radius: 9999px;
   background: #fff;
   cursor: pointer;

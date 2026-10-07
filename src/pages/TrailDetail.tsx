@@ -23,7 +23,7 @@ const planHref = (s: Station) => `/?to=${encodeURIComponent(s.search)}&toName=${
 function BackLink() {
   const { t } = useLanguage()
   return (
-    <Link to="/trails" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1C2B4A] hover:underline">
+    <Link to="/trails" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1F2F5C] hover:underline">
       <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
       {t('backToTrails')}
     </Link>
@@ -50,7 +50,7 @@ function TrailDetail() {
     return (
       <SiteLayout>
         <div className="max-w-xl mx-auto px-4 py-20 text-center">
-          <div className="mx-auto w-14 h-14 rounded-full bg-[#1C2B4A]/10 text-[#1C2B4A] flex items-center justify-center" aria-hidden="true">
+          <div className="mx-auto w-14 h-14 rounded-full bg-[#1F2F5C]/10 text-[#1F2F5C] flex items-center justify-center" aria-hidden="true">
             <Icon name="searchOff" size={26} />
           </div>
           <h1 className="mt-4 text-2xl font-bold text-gray-900">{t('trailNotFound')}</h1>
@@ -68,7 +68,7 @@ function TrailDetail() {
       {/* Cover banner */}
       <section className="relative h-56 md:h-72 overflow-hidden">
         <TrailCover trail={trail} />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#16223B]/90 via-[#16223B]/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#18243F]/90 via-[#18243F]/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-6 text-white">
             <span className="inline-block bg-white/15 backdrop-blur text-[11px] font-bold uppercase tracking-wide px-3 py-1 rounded-full">
@@ -100,14 +100,14 @@ function TrailDetail() {
             return (
               <li key={`${stop.placeId}-${i}`} className="relative flex gap-4 pb-6 last:pb-0">
                 {/* numbered dot + connecting line */}
-                {!last && <span className="absolute start-4 top-9 bottom-0 w-0.5 -translate-x-1/2 rtl:translate-x-1/2 bg-[#1C2B4A]/15" aria-hidden="true" />}
-                <span className="relative z-10 w-8 h-8 rounded-full bg-[#1C2B4A] text-white text-sm font-bold flex items-center justify-center flex-shrink-0">
+                {!last && <span className="absolute start-4 top-9 bottom-0 w-0.5 -translate-x-1/2 rtl:translate-x-1/2 bg-[#1F2F5C]/15" aria-hidden="true" />}
+                <span className="relative z-10 w-8 h-8 rounded-full bg-[#1F2F5C] text-white text-sm font-bold flex items-center justify-center flex-shrink-0">
                   {i + 1}
                 </span>
 
                 <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-4">
                   {newDay && (
-                    <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#8E5320] bg-[#C27C3A]/15 px-2 py-0.5 rounded">
+                    <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#8A5A3B] bg-[#D99A1E]/15 px-2 py-0.5 rounded">
                       {t(weekdayKey(stop.day!))}
                     </div>
                   )}
@@ -134,7 +134,7 @@ function TrailDetail() {
                     {place.station && (
                       <Link
                         to={planHref(place.station)}
-                        className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#1C2B4A] text-white text-sm font-semibold hover:bg-[#14203A] transition-colors"
+                        className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#1F2F5C] text-white text-sm font-semibold hover:bg-[#152038] transition-colors"
                       >
                         <Icon name="locationOnOutline" size={16} />
                         {t('planTripHere')}
