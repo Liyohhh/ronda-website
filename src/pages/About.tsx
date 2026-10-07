@@ -31,7 +31,7 @@ const STEPS: { title: TranslationKey; text: TranslationKey; soon?: TranslationKe
 ]
 
 // Networks available now: official names with their line badges (ids from src/data/lines.ts)
-const NETWORKS_NOW: { name: string; badge: string | 'bus' }[] = [
+const NETWORKS_NOW: { name: string; badge: string | 'bus'; note?: TranslationKey }[] = [
   { name: 'MRT Kajang Line', badge: 'mrt-kajang' },
   { name: 'MRT Putrajaya Line', badge: 'mrt-putrajaya' },
   { name: 'LRT Ampang Line', badge: 'lrt-ampang' },
@@ -46,11 +46,13 @@ const NETWORKS_NOW: { name: string; badge: string | 'bus' }[] = [
   { name: 'KLIA Transit', badge: 'erl-klia-transit' },
   { name: 'Rapid KL Bus', badge: 'bus' },
   { name: 'MRT Feeder Bus', badge: 'bus' },
+  // run by Rapid Bus, so already in its data: Nadi Putra P101-P108 (+ feeders T509, T511); Smart Selangor AJ, KJ, MPS, SA
+  { name: 'Nadi Putra (Putrajaya)', badge: 'bus' },
+  { name: 'Smart Selangor', badge: 'bus', note: 'someRoutes' },
 ]
 const NETWORKS_SOON: { name: string; note?: TranslationKey }[] = [
-  { name: 'Nadi Putra (Putrajaya)' },
   { name: 'GoKL City Bus' },
-  { name: 'Smart Selangor' },
+  { name: 'Smart Selangor', note: 'otherRoutes' },
   { name: 'Hop-On Hop-Off KL' },
   { name: 'ECRL', note: 'whenItOpens' },
 ]
@@ -141,7 +143,10 @@ function About() {
                 {NETWORKS_NOW.map((n) => (
                   <li key={n.name} className="flex items-center gap-3">
                     <LineBadge line={n.badge === 'bus' ? busLine(null, n.name) : n.badge} size={30} decorative />
-                    <span className="text-gray-800">{n.name}</span>
+                    <span className="text-gray-800">
+                      {n.name}
+                      {n.note && <span className="text-gray-500"> ({t(n.note)})</span>}
+                    </span>
                   </li>
                 ))}
               </ul>
