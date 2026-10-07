@@ -13,6 +13,7 @@ function UserDashboard() {
         { label: 'dash_saved', text: 'dash_savedText', icon: 'bookmark' },
         { label: 'dash_alerts', text: 'dash_alertsText', icon: 'notifications' },
         { label: 'dash_help', text: 'dash_helpText', icon: 'helpOutline', to: '/help' },
+        { label: 'dash_account', text: 'dash_accountText', icon: 'personOutline', to: '/account' },
       ]}
     />
   )

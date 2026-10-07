@@ -98,6 +98,13 @@ function Header() {
                   >
                     {t('myDashboard')}
                   </Link>
+                  <Link
+                    to="/account"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-4 py-2.5 hover:bg-gray-50"
+                  >
+                    {t('accountLink')}
+                  </Link>
                   <button
                     onClick={handleSignOut}
                     className="w-full text-start px-4 py-2.5 hover:bg-gray-50"

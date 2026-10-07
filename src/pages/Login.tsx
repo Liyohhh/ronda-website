@@ -67,6 +67,9 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <p className="-mt-1 mb-2 text-end text-sm">
+          <Link to="/forgot-password" className="text-[#002472] font-medium hover:underline">{t('forgotPasswordLink')}</Link>
+        </p>
         <SubmitButton busy={busy}>{t('continueBtn')}</SubmitButton>
       </form>
     </AuthLayout>

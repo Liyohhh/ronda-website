@@ -41,6 +41,7 @@ export const BUS_ROUTES = [
 export type Backend = {
   planTrip: (body: Record<string, unknown>) => { status?: number; json: unknown }
   chat: (body: Record<string, unknown>) => { status?: number; json: unknown }
+  deleteAccount: () => { status?: number; json: unknown }
   calls: { path: string; body: unknown }[]
   unexpected: string[]
 }
@@ -48,7 +49,7 @@ export type Backend = {
 const PNG_1PX = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/6X4lb8AAAAASUVORK5CYII=', 'base64')
 
 async function mockBackend(page: Page): Promise<Backend> {
-  const be: Backend = { planTrip: () => ({ json: PLAN }), chat: () => ({ json: CHAT }), calls: [], unexpected: [] }
+  const be: Backend = { planTrip: () => ({ json: PLAN }), chat: () => ({ json: CHAT }), deleteAccount: () => ({ json: { deleted: true } }), calls: [], unexpected: [] }
   const json = (route: Route, body: unknown, status = 200) =>
     route.fulfill({ status, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) })
 
@@ -87,6 +88,17 @@ async function mockBackend(page: Page): Promise<Backend> {
         const r = be.chat(body)
         return json(route, r.json, r.status ?? 200)
       }
+      case '/functions/v1/delete-account': {
+        const r = be.deleteAccount()
+        return json(route, r.json, r.status ?? 200)
+      }
+      // account changes (name / password): echo a user back, as Supabase Auth does
+      case '/auth/v1/user':
+        if (req.method() === 'PUT') return json(route, { id: '00000000-0000-4000-8000-000000000001', aud: 'authenticated', email: 'tester@example.test',
+          app_metadata: { provider: 'email' }, user_metadata: body?.data ?? {}, identities: [{ provider: 'email' }], created_at: '2026-10-01T00:00:00Z' })
+        break
+      case '/auth/v1/logout':
+        return route.fulfill({ status: 204, headers: { 'access-control-allow-origin': '*' } })
       case '/functions/v1/live':
         if (body?.action === 'vehicles') return json(route, LIVE)
         if (body?.action === 'approaching') return json(route, { buses: [] })

@@ -12,9 +12,10 @@ type Props = {
   title: string
   children: ReactNode // the form
   footer: ReactNode // "Don't have an account? Register"
+  social?: boolean // Google / Apple / Facebook buttons (not on the password reset pages)
 }
 
-function AuthLayout({ promoTitle, promoText, title, children, footer }: Props) {
+function AuthLayout({ promoTitle, promoText, title, children, footer, social = true }: Props) {
   const { t } = useLanguage()
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -46,13 +47,16 @@ function AuthLayout({ promoTitle, promoText, title, children, footer }: Props) {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">{title}</h2>
             {children}
 
-            <div className="flex items-center gap-3 my-6" aria-hidden="true">
-              <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-gray-500 text-xs uppercase tracking-wider">{t('orLabel')}</span>
-              <div className="flex-1 h-px bg-gray-200" />
-            </div>
-
-            <SocialLogin />
+            {social && (
+              <>
+                <div className="flex items-center gap-3 my-6" aria-hidden="true">
+                  <div className="flex-1 h-px bg-gray-200" />
+                  <span className="text-gray-500 text-xs uppercase tracking-wider">{t('orLabel')}</span>
+                  <div className="flex-1 h-px bg-gray-200" />
+                </div>
+                <SocialLogin />
+              </>
+            )}
 
             <p className="text-center text-sm text-gray-500 mt-6">{footer}</p>
           </div>
