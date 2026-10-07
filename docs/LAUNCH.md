@@ -4,6 +4,10 @@
 
 - [ ] Buy the domain (`.com` on Cloudflare Registrar is quickest; `.com.my` needs SSM documents).
 - [ ] Create the Cloudflare account (add a card if asked; Pages and R2 free tiers apply).
+- [ ] Supabase -> Organization Ronda -> Billing: upgrade to **Pro** (US$25 / about RM102 a month); then Project ->
+      Settings -> Compute: **Small** (extra about RM20 a month). The Free plan pauses idle projects and its quotas
+      (500k function calls, 5 GB egress) are below a 50k-user month (about 2.7M calls, 80 GB). Spend cap: off, check
+      Usage weekly for the first month.
 - [ ] Supabase -> Authentication -> turn on leaked password protection.
 - [ ] Supabase -> Project Settings -> Vault: secret `discord_webhook_url` (alerts to Discord).
 - [ ] When the `@ronda.com` business address exists: set `VITE_CONTACT_EMAIL` on Pages (Help shows it).
