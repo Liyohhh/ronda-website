@@ -70,7 +70,7 @@ function Register() {
           label={t('password')}
           type="password"
           autoComplete="new-password"
-          minLength={6}
+          minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -79,7 +79,7 @@ function Register() {
           label={t('confirmPassword')}
           type="password"
           autoComplete="new-password"
-          minLength={6}
+          minLength={8}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
