@@ -9,8 +9,8 @@ Website `main` at `a713772`; database repository at `80044b8`; production Supaba
 |---|---|
 | Website static checks (ESLint, TypeScript) | clean |
 | Website unit and component tests (Vitest) | **183 / 183 passed**, 23 files |
-| Website end-to-end tests (Playwright, desktop + phone) | **178 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
-| Edge Function unit tests (trip planner, live, assistant) | **221 / 221 checks**, 14 files |
+| Website end-to-end tests (Playwright, desktop + phone) | **192 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
+| Edge Function unit tests (trip planner, live, assistant, delete account) | **236 / 236 checks**, 15 files |
 | Production smoke + security checks | **46 / 46** (48 / 48 after the KTM fare checks were added) |
 | Trip-planner regression matrix (production) | **134 cases, 0 regressions** (2 improved) |
 | Interchanges (production) | **36 / 36** change where they should |
@@ -18,7 +18,7 @@ Website `main` at `a713772`; database repository at `80044b8`; production Supaba
 | Read-only live smoke (`scripts/smoke-live.ts`) | **13 / 13** |
 | Production build | builds; CSP, sitemap and trail texts generated |
 
-## Website end-to-end (178)
+## Website end-to-end (192)
 
 | Area | What is proven |
 |---|---|
@@ -31,6 +31,7 @@ Website `main` at `a713772`; database repository at `80044b8`; production Supaba
 | Help | 3 categories, articles, search, removed category redirects |
 | Live map | buses and trains drawn, counts, stops |
 | Sign-in pages | signed-out redirect, no-access page, signed-in dashboard |
+| Accounts | forgot password (same answer for any email), reset password (rules, old link), account page (name, password, sign out everywhere), delete account (DELETE to confirm; failure keeps you signed in) |
 | Assistant (flag on in tests) | answers with cards, guest without CAPTCHA, rate limit, Escape, Arabic, phone sheet, hidden behind side panels |
 | Links and buttons | every internal link on 16 pages in all 4 languages opens a real page and its section; every visible button does something |
 | Accessibility (axe, WCAG 2.1 AA) | every public page incl. RONDA 300 and the 404 page, the open chat, the journey panel, the dashboard: **0 serious or critical issues**, baseline empty |
@@ -63,7 +64,7 @@ widget, line tiles, feature tiles, promotions, Help page.
 
 ## Test history (27 Sep - 7 Oct 2026)
 
-226 recorded test runs over 9 working days (planner unit tests, Edge Function tests, Vitest, Playwright, production
+238 recorded test runs over 9 working days (planner unit tests, Edge Function tests, Vitest, Playwright, production
 smoke, regression, interchanges, load, live smoke, contrast, audit, lint). Failures during a day were defects found
 and fixed the same day; the last run of every suite on 7 Oct passed (full re-run at 14:29 on 7 Oct: same results; search p95 283 ms). Every run, with time and result, is in the
 testing workbook (sheets "Daily Test Summary" and "Test History (all runs)").
