@@ -2,7 +2,9 @@
 
 ## Owner (blocking)
 
-- [ ] Buy the domain (`.com` on Cloudflare Registrar is quickest; `.com.my` needs SSM documents).
+- [x] Domain bought (GoDaddy; stays there). Email @ronda.com on Exabytes.
+- [ ] Point the domain's nameservers (GoDaddy -> Nameservers) to the two Cloudflare gives; **first copy the Exabytes
+      email records (MX, SPF/TXT, DKIM, autodiscover) into Cloudflare DNS**, or email stops.
 - [ ] Create the Cloudflare account (add a card if asked; Pages and R2 free tiers apply).
 - [ ] Supabase -> Organization Ronda -> Billing: upgrade to **Pro** (US$25 / about RM102 a month); then Project ->
       Settings -> Compute: **Small** (extra about RM20 a month). The Free plan pauses idle projects and its quotas
