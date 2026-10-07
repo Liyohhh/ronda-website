@@ -37,7 +37,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
 
   return (
     <nav className={className} onMouseLeave={scheduleClose} aria-label="Main">
-      <ul className="flex items-stretch gap-6 text-sm text-[#1F2F5C] whitespace-nowrap">
+      <ul className="flex items-stretch gap-6 text-sm text-[#0E5C63] whitespace-nowrap">
         {NAV_MENUS.map((m) => (
           <li key={m.key} className="flex">
             <button
@@ -57,7 +57,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
               }}
               aria-expanded={active === m.key}
               className={`py-3 border-b-2 font-medium transition-colors flex items-center gap-1 ${
-                active === m.key ? 'border-[#1F2F5C]' : 'border-transparent hover:border-[#1F2F5C]/40'
+                active === m.key ? 'border-[#0E5C63]' : 'border-transparent hover:border-[#0E5C63]/40'
               }`}
             >
               {t(m.key)}
@@ -77,12 +77,12 @@ function ServiceNav({ className = '' }: { className?: string }) {
         <div className={`max-w-6xl mx-auto px-6 py-7 grid grid-cols-1 gap-8 ${menu.columns.length >= 3 ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
           {menu.columns.map((col) => (
             <div key={col.title}>
-              <h3 className="text-sm font-semibold text-[#1F2F5C] mb-3">{t(col.title)}</h3>
+              <h3 className="text-sm font-semibold text-[#0E5C63] mb-3">{t(col.title)}</h3>
               <ul className="space-y-2.5">
                 {col.items.filter((item) => !item.onlyLang || item.onlyLang === lang).map((item) => (
                   <li key={item.to}>
                     <Link to={item.to} onClick={close} className="block group">
-                      <span className="block text-sm text-gray-800 group-hover:text-[#1F2F5C] group-hover:underline">
+                      <span className="block text-sm text-gray-800 group-hover:text-[#0E5C63] group-hover:underline">
                         {item.label ? t(item.label) : item.name}
                       </span>
                       {(item.detail || item.detailLabel) && (
@@ -95,7 +95,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
             </div>
           ))}
 
-          <div className={`rounded-2xl bg-[#1F2F5C] text-white p-6 flex flex-col justify-between ${menu.columns.length === 1 ? 'md:col-span-2' : ''}`}>
+          <div className={`rounded-2xl bg-[#08333A] text-white p-6 flex flex-col justify-between ${menu.columns.length === 1 ? 'md:col-span-2' : ''}`}>
             <div>
               <h3 className="font-semibold text-lg mb-2">{t(menu.promo.title)}</h3>
               <p className="text-sm text-white/70">{t(menu.promo.text)}</p>
@@ -103,7 +103,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
             <Link
               to={menu.promo.to}
               onClick={close}
-              className="mt-6 self-start bg-white text-[#1F2F5C] px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-100"
+              className="mt-6 self-start bg-white text-[#0E5C63] px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-100"
             >
               {t(menu.promo.cta)}
             </Link>

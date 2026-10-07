@@ -51,7 +51,7 @@ function Popover({ label, icon, children, open, setOpen }: { label: string; icon
 // up / down arrow for the time stepper
 function Step({ dir, onClick, label }: { dir: 1 | -1; onClick: () => void; label: string }) {
   return (
-    <button type="button" onClick={onClick} aria-label={label} className="w-10 h-7 rounded-lg text-gray-500 hover:text-[#1F2F5C] hover:bg-gray-100 flex items-center justify-center">
+    <button type="button" onClick={onClick} aria-label={label} className="w-10 h-7 rounded-lg text-gray-500 hover:text-[#0E5C63] hover:bg-gray-100 flex items-center justify-center">
       <Icon name={dir === 1 ? 'expandLess' : 'expandMore'} size={16} />
     </button>
   )
@@ -111,11 +111,11 @@ function DepartPicker({ value, onChange, onLeaveNow }: Props) {
       <Popover label={dateLabel} icon={calIcon} open={dateOpen} setOpen={(o) => { setDateOpen(o); if (o) setMonth(draft.date.slice(0, 7)) }}>
         <div className="w-64" role="group" aria-label={t('departDate')}>
           <div className="flex items-center justify-between mb-2">
-            <button type="button" onClick={() => shiftMonth(-1)} disabled={month <= today.slice(0, 7)} aria-label={t('scrollPrev')} className="w-8 h-8 rounded-full text-[#1F2F5C] hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center">
+            <button type="button" onClick={() => shiftMonth(-1)} disabled={month <= today.slice(0, 7)} aria-label={t('scrollPrev')} className="w-8 h-8 rounded-full text-[#0E5C63] hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center">
               <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
             </button>
             <span className="text-sm font-semibold text-gray-900">{first.toLocaleDateString(lang, { month: 'long', year: 'numeric', timeZone: 'UTC' })}</span>
-            <button type="button" onClick={() => shiftMonth(1)} disabled={month >= last.slice(0, 7)} aria-label={t('scrollNext')} className="w-8 h-8 rounded-full text-[#1F2F5C] hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center">
+            <button type="button" onClick={() => shiftMonth(1)} disabled={month >= last.slice(0, 7)} aria-label={t('scrollNext')} className="w-8 h-8 rounded-full text-[#0E5C63] hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center">
               <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
             </button>
           </div>
@@ -137,7 +137,7 @@ function DepartPicker({ value, onChange, onLeaveNow }: Props) {
                     update({ ...draft, date: d }, 0)
                   }}
                   className={`h-8 rounded-full text-sm tabular-nums disabled:text-gray-300 disabled:hover:bg-transparent ${
-                    d === draft.date ? 'bg-[#1F2F5C] text-white font-semibold' : d === today ? 'text-[#1F2F5C] font-semibold ring-1 ring-[#1F2F5C]/30 hover:bg-gray-100' : 'text-gray-800 hover:bg-gray-100'
+                    d === draft.date ? 'bg-[#0E5C63] text-white font-semibold' : d === today ? 'text-[#0E5C63] font-semibold ring-1 ring-[#0E5C63]/30 hover:bg-gray-100' : 'text-gray-800 hover:bg-gray-100'
                   }`}
                 >
                   {Number(d.slice(8))}
@@ -168,7 +168,7 @@ function DepartPicker({ value, onChange, onLeaveNow }: Props) {
                 type="button"
                 aria-pressed={t12.ap === ap}
                 onClick={() => t12.ap !== ap && update({ ...draft, time: from12h(t12.h, t12.m, ap) })}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${t12.ap === ap ? 'bg-[#1F2F5C] text-white' : 'text-gray-500 hover:text-gray-800'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${t12.ap === ap ? 'bg-[#0E5C63] text-white' : 'text-gray-500 hover:text-gray-800'}`}
               >
                 {ap}
               </button>

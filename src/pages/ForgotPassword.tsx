@@ -36,7 +36,7 @@ function ForgotPassword() {
       title={t('forgotTitle')}
       social={false}
       footer={
-        <Link to="/login" className="text-blue-batik font-semibold hover:underline">
+        <Link to="/login" className="text-link font-semibold hover:underline">
           {t('backToLogin')}
         </Link>
       }

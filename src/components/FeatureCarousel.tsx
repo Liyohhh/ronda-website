@@ -13,7 +13,7 @@ import { SLIDES, type Slide } from '../data/slides'
 // prefer reduced motion. Photos: Wikimedia Commons, credited on the slide and on the About page.
 
 export const AUTO_MS = 5000
-const GOLD_TEXT = '#8A5A3B' // soga brown (batik), dark enough for small text (4.5:1 on white and light tints)
+const GOLD_TEXT = '#B23A22' // soga brown (batik), dark enough for small text (4.5:1 on white and light tints)
 
 const k = (n: number, part: string) => `s${n}_${part}` as TranslationKey
 
@@ -38,7 +38,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
       type="button"
       onClick={() => go(index + dir)}
       aria-label={dir === 1 ? t('scrollNext') : t('scrollPrev')}
-      className={`absolute top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg ring-1 ring-gray-200 text-[#1F2F5C] hover:bg-gray-50 hidden md:flex items-center justify-center ${
+      className={`absolute top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg ring-1 ring-gray-200 text-[#0E5C63] hover:bg-gray-50 hidden md:flex items-center justify-center ${
         dir === 1 ? '-end-6' : '-start-6'
       }`}
     >
@@ -46,7 +46,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
     </button>
   )
   const cta = (s: Slide, active: boolean) => {
-    const cls = 'inline-flex items-center gap-1.5 rounded-full bg-blue-batik px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-blue-batik-hover transition-colors'
+    const cls = 'inline-flex items-center gap-1.5 rounded-full bg-link px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-link-hover transition-colors'
     const label = (
       <>
         {t(k(s.n, 'cta'))}
@@ -77,14 +77,14 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
         if (e.key === 'ArrowLeft') go(index + (rtl ? 1 : -1))
       }}
     >
-      <h2 id="slides-title" className="text-center text-2xl md:text-3xl font-bold text-[#1F2F5C]">
+      <h2 id="slides-title" className="text-center text-2xl md:text-3xl font-bold text-[#0E5C63]">
         {t('slidesTitle')}
       </h2>
 
       <div className="relative mt-8">
         {arrow(-1)}
         {arrow(1)}
-        <div className="overflow-hidden rounded-[2rem] bg-white shadow-2xl shadow-[#18243F]/15 ring-1 ring-gray-100">
+        <div className="overflow-hidden rounded-[2rem] bg-white shadow-2xl shadow-[#08333A]/15 ring-1 ring-gray-100">
           <div
             className="flex transition-transform duration-700 ease-out motion-reduce:transition-none"
             style={{ transform: `translateX(${(rtl ? 1 : -1) * index * 100}%)` }}
@@ -117,12 +117,12 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
                     <p className="text-sm font-semibold" style={{ color: GOLD_TEXT }}>
                       {t(k(s.n, 'tag'))}
                     </p>
-                    <h3 className="mt-2 text-2xl md:text-4xl font-bold leading-tight text-[#1F2F5C]">{t(k(s.n, 'title'))}</h3>
+                    <h3 className="mt-2 text-2xl md:text-4xl font-bold leading-tight text-[#0E5C63]">{t(k(s.n, 'title'))}</h3>
                     <p className="mt-4 text-gray-600 leading-relaxed">{t(k(s.n, 'body'))}</p>
                     <ul className="mt-5 space-y-2.5 text-sm md:text-base text-start inline-block md:block">
                       {[1, 2, 3].map((p) => (
                         <li key={p} className="flex items-start gap-3 text-gray-800">
-                          <span className="mt-0.5 w-6 h-6 rounded-full bg-blue-batik/10 text-blue-batik flex items-center justify-center flex-shrink-0">
+                          <span className="mt-0.5 w-6 h-6 rounded-full bg-link/10 text-link flex items-center justify-center flex-shrink-0">
                             <Icon name="check" size={16} />
                           </span>
                           {t(k(s.n, `p${p}`))}
@@ -144,7 +144,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
                 onClick={() => go(i)}
                 aria-label={t('goToSlide').replace('{n}', String(i + 1))}
                 aria-current={i === index}
-                className={`h-2.5 rounded-full transition-all ${i === index ? 'w-8 bg-blue-batik' : 'w-2.5 bg-gray-300 hover:bg-gray-400'}`}
+                className={`h-2.5 rounded-full transition-all ${i === index ? 'w-8 bg-link' : 'w-2.5 bg-gray-300 hover:bg-gray-400'}`}
               />
             ))}
           </div>

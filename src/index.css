@@ -1,31 +1,31 @@
 @import "tailwindcss";
 
-/* Batik kunyit theme (8 Oct 2026), from Terengganu batik: indigo cloth, kain cream, turmeric (kunyit) dye, soga-bark brown.
-   Greys are warm (cream to soga brown) instead of blue-tinted; the darkest stop is the deep indigo used for text.
-   Tokens: navy (bands), cream (light bands), accent = kunyit (main actions, highlights; dark text on it),
-   accent-light (kunyit text on navy), accent-text (kunyit-family text on light backgrounds), soga (small tags only),
-   blue-batik (a livelier second blue for buttons, links and icons; deep indigo stays for header, footer and text). */
+/* Selat dan senja theme (8 Oct 2026), from the Strait of Malacca at sunset: deep sea teal, sea foam, senja coral, sand.
+   Greys lean slightly sea-green instead of blue; the darkest stop is the deep teal ink used for text.
+   Tokens: navy = deep sea teal (header button, bands), cream = sea foam (light bands), accent = senja coral (main actions;
+   dark ink text on it, since coral is a mid tone), accent-light (coral text on dark teal), accent-text (dark coral text on
+   light backgrounds), soga = sand (small tags), link = brighter teal for links, secondary buttons and icons. */
 @theme {
-  --color-gray-50: #fbf7f0;
-  --color-gray-100: #f4eee4;
-  --color-gray-200: #e8e0d3;
-  --color-gray-300: #d5cabb;
-  --color-gray-400: #a39887;
-  --color-gray-500: #736b5f;
-  --color-gray-600: #5a5349;
-  --color-gray-700: #3f3a34;
-  --color-gray-800: #2a2722;
-  --color-gray-900: #18243f;
-  --color-navy: #1f2f5c;
-  --color-navy-deep: #18243f;
-  --color-cream: #f7f0e1;
-  --color-accent: #d99a1e;
-  --color-accent-hover: #c4870f;
-  --color-accent-light: #f0c062;
-  --color-accent-text: #8a5a3b;
-  --color-soga: #8a5a3b;
-  --color-blue-batik: #2f5da8;
-  --color-blue-batik-hover: #264d8c;
+  --color-gray-50: #f6faf9;
+  --color-gray-100: #ebf2f0;
+  --color-gray-200: #dbe5e2;
+  --color-gray-300: #c1d0cc;
+  --color-gray-400: #8ba19c;
+  --color-gray-500: #5d716d;
+  --color-gray-600: #4a5c58;
+  --color-gray-700: #354543;
+  --color-gray-800: #223130;
+  --color-gray-900: #08333a;
+  --color-navy: #0e5c63;
+  --color-navy-deep: #08333a;
+  --color-cream: #eef6f3;
+  --color-accent: #f27a5e;
+  --color-accent-hover: #f59379;
+  --color-accent-light: #ffc2b3;
+  --color-accent-text: #b23a22;
+  --color-soga: #f2c14e;
+  --color-link: #0f7a80;
+  --color-link-hover: #0b6469;
 }
 
 /* The site is designed light-only: keep native controls (inputs, scrollbars) light too */
@@ -46,8 +46,8 @@ html {
 }
 
 body {
-  background: #fcf8f0;
-  color: #18243F;
+  background: #f9fbfa;
+  color: #08333A;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -94,7 +94,7 @@ body {
   display: block;
   width: 14px;
   height: 14px;
-  border: 2px solid #1F2F5C;
+  border: 2px solid #0E5C63;
   border-radius: 9999px;
   background: #fff;
   cursor: pointer;

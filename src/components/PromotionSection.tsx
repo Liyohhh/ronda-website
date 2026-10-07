@@ -6,11 +6,11 @@ import { useLanguage } from '../hooks/useLanguage'
 
 // Home page: promotions (ads) as ad-style banners: one wide banner, then a row of smaller ones that scrolls
 // sideways on small screens. Every banner carries a visible "Ad" label; data in src/data/promotions.ts.
-// Colours (Batik kunyit palette): indigo batik, soga brown, daun green, merah bata; white text passes 4.5:1 on every stop.
-const THEME: Record<PromoTheme | 'kunyit', string> = {
-  kunyit: 'from-[#F0C062] to-[#D99A1E]',
-  blue: 'from-[#18243F] to-[#2C3F73]',
-  gold: 'from-[#5E3A22] to-[#8A5A3B]',
+// Colours (Selat dan senja palette): senja coral (dark text), deep sea teal, daun green, merah bata; text passes 4.5:1 on every stop.
+const THEME: Record<PromoTheme | 'senja', string> = {
+  senja: 'from-[#FFC2B3] to-[#F27A5E]',
+  blue: 'from-[#08333A] to-[#1B6E75]',
+  gold: 'from-[#0A464C] to-[#0E5C63]',
   teal: 'from-[#2F5A1E] to-[#47722C]',
   coral: 'from-[#7A2A22] to-[#A23B2C]',
 }
@@ -63,14 +63,14 @@ function PromotionSection() {
 
   const f = PROMO_FEATURE
   return (
-    // a kain-cream band behind the section, so the page alternates light and warm instead of one flat colour
+    // a sea-foam band behind the section, so the page alternates light and warm instead of one flat colour
     <section aria-labelledby="promo-title" className="mt-12 bg-cream py-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 id="promo-title" className="text-2xl md:text-3xl font-bold text-[#1F2F5C]">{t('promoTitle')}</h2>
+      <h2 id="promo-title" className="text-2xl md:text-3xl font-bold text-[#0E5C63]">{t('promoTitle')}</h2>
       <p className="mt-1 text-gray-500">{t('promoSubtitle')}</p>
 
       {/* wide banner */}
-      <div data-promo={f.id} className={`relative mt-5 overflow-hidden rounded-2xl bg-gradient-to-br ${THEME.kunyit} p-5 sm:p-7 shadow-sm transition hover:shadow-lg`}>
+      <div data-promo={f.id} className={`relative mt-5 overflow-hidden rounded-2xl bg-gradient-to-br ${THEME.senja} p-5 sm:p-7 shadow-sm transition hover:shadow-lg`}>
         <Sparkle className="pointer-events-none absolute top-4 end-[42%] h-5 w-5 text-white/80" />
         <Sparkle className="pointer-events-none absolute bottom-6 start-[38%] h-3 w-3 text-white/70" />
         <PercentTicket className="pointer-events-none absolute -top-1 end-6 h-9 w-12 rotate-12 opacity-90" />
@@ -78,13 +78,13 @@ function PromotionSection() {
         <div className="relative grid items-center gap-5 md:grid-cols-[1fr_1.5fr]">
           <div>
             <AdLabel text={t('promoAdLabel')} />
-            <h3 className="mt-3 text-3xl sm:text-4xl font-black leading-tight text-[#18243F]">
+            <h3 className="mt-3 text-3xl sm:text-4xl font-black leading-tight text-[#08333A]">
               <Link to={f.to} className={STRETCH}>{t(f.title)}</Link>
             </h3>
             <p className="mt-3 inline-block -skew-x-6 bg-[#E3242B] px-3 py-1 text-sm font-bold text-white shadow">
               <span className="inline-block skew-x-6">{t(f.ribbon)}</span>
             </p>
-            <p className="mt-3 flex items-center gap-1.5 text-sm text-[#18243F]">
+            <p className="mt-3 flex items-center gap-1.5 text-sm text-[#08333A]">
               <PinArt className="h-4 w-3 shrink-0" />
               {t(f.foot)}
             </p>
@@ -93,7 +93,7 @@ function PromotionSection() {
             {f.tickets.map((k) => (
               <li key={k} className="overflow-hidden rounded-xl bg-white text-center shadow-md">
                 <div className="h-2.5 bg-accent" />
-                <p className="px-2 py-3 sm:py-5 text-xs sm:text-base font-extrabold leading-snug text-[#18243F]">{t(k)}</p>
+                <p className="px-2 py-3 sm:py-5 text-xs sm:text-base font-extrabold leading-snug text-[#08333A]">{t(k)}</p>
               </li>
             ))}
           </ul>
@@ -121,13 +121,13 @@ function PromotionSection() {
         </ul>
         {canPrev && (
           <button type="button" onClick={() => scroll(-1)} aria-label={t('promoPrev')}
-            className="absolute start-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#1F2F5C] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
+            className="absolute start-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#0E5C63] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
             <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 rtl:rotate-180"><path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
         )}
         {canNext && (
           <button type="button" onClick={() => scroll(1)} aria-label={t('promoNext')}
-            className="absolute end-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#1F2F5C] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
+            className="absolute end-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#0E5C63] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
             <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 rtl:rotate-180"><path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
         )}

@@ -29,7 +29,7 @@ maplibregl.addProtocol('pmtiles', new Protocol().tile)
 
 const KL: [number, number] = [101.6869, 3.139] // lon, lat
 const STOPS_ZOOM = 16
-const NAVY = '#1F2F5C'
+const NAVY = '#0E5C63'
 const ME = '#2563EB'
 
 const STATUS: { key: Exclude<BusStatus, null>; label: TranslationKey; color: string }[] = [
@@ -340,7 +340,7 @@ function LiveMap() {
 
         {/* controls */}
         <section className="absolute z-[500] top-3 start-3 end-3 md:end-auto md:w-[340px] bg-white rounded-2xl shadow-xl border border-gray-200 p-4">
-          <h1 className="text-lg font-bold text-[#1F2F5C]">{t('liveMapTitle')}</h1>
+          <h1 className="text-lg font-bold text-[#0E5C63]">{t('liveMapTitle')}</h1>
           <p className="text-sm text-gray-600" aria-live="polite">
             {error && !buses.length ? t('liveError') : fetchedAt ? t('liveBusesCount').replace('{n}', String(shown.length)) : t('liveLoading')}
             {fetchedAt && shownTrains.length > 0 && <span> · {t('liveTrainsCount').replace('{n}', String(shownTrains.length))}</span>}
@@ -352,14 +352,14 @@ function LiveMap() {
               onChange={(e) => setFilter(e.target.value)}
               placeholder={t('liveFilterPh')}
               aria-label={t('liveFilterPh')}
-              className="flex-1 min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#1F2F5C]"
+              className="flex-1 min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#0E5C63]"
             />
             <button
               type="button"
               onClick={locate}
               disabled={loc.status === 'locating'}
               aria-label={t('liveNearMe')}
-              className="inline-flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-[#1F2F5C] hover:border-[#1F2F5C]/50 whitespace-nowrap"
+              className="inline-flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-[#0E5C63] hover:border-[#0E5C63]/50 whitespace-nowrap"
             >
               <Icon name="myLocation" size={16} />
               <span className="hidden sm:inline">{t('liveNearMe')}</span>
@@ -371,7 +371,7 @@ function LiveMap() {
             </p>
           )}
           <label className="mt-2 flex items-center gap-2 text-sm text-gray-700">
-            <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#1F2F5C]" />
+            <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#0E5C63]" />
             {t('liveShowOffTrip')}
           </label>
           <ul className="mt-3 hidden md:flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-600">

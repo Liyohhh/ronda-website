@@ -46,16 +46,16 @@ function Credits() {
   return (
     <SiteLayout>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-        <h1 className="text-3xl font-bold text-[#1F2F5C]">{t('creditsTitle')}</h1>
+        <h1 className="text-3xl font-bold text-[#0E5C63]">{t('creditsTitle')}</h1>
         <p className="mt-3 text-gray-600">{t('creditsIntro')}</p>
         {SECTIONS.map((s) => (
           <section key={s.title} className="mt-8" aria-labelledby={`credits-${s.title}`}>
-            <h2 id={`credits-${s.title}`} className="text-lg font-semibold text-[#1F2F5C]">{t(s.title)}</h2>
+            <h2 id={`credits-${s.title}`} className="text-lg font-semibold text-[#0E5C63]">{t(s.title)}</h2>
             {s.body && <p className="mt-1 text-sm text-gray-600">{t(s.body)}</p>}
             <ul className="mt-2 space-y-1 text-sm">
               {s.sources.map((src) => (
                 <li key={src.name}>
-                  <a href={src.url} target="_blank" rel="noreferrer" className="text-[#1F2F5C] underline">{src.name}</a>
+                  <a href={src.url} target="_blank" rel="noreferrer" className="text-[#0E5C63] underline">{src.name}</a>
                   {src.licence && (
                     <>
                       {' · '}
@@ -68,9 +68,9 @@ function Credits() {
           </section>
         ))}
         <section className="mt-8" aria-labelledby="credits-photos">
-          <h2 id="credits-photos" className="text-lg font-semibold text-[#1F2F5C]">{t('creditsPhotos')}</h2>
+          <h2 id="credits-photos" className="text-lg font-semibold text-[#0E5C63]">{t('creditsPhotos')}</h2>
           <p className="mt-1 text-sm text-gray-600">
-            {t('creditsPhotosBody')} <Link to="/about#about-credits" className="text-[#1F2F5C] underline">/about</Link>
+            {t('creditsPhotosBody')} <Link to="/about#about-credits" className="text-[#0E5C63] underline">/about</Link>
           </p>
         </section>
       </div>

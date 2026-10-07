@@ -346,13 +346,13 @@ function Home() {
 
   return (
     <SiteLayout>
-      {/* Hero: KL skyline photo, lighter than before (Batik palette): a light indigo wash plus a warm kunyit tint so the
-          dusk reads golden, not grey; a soft scrim only behind the text keeps it readable (measured at 375 / 768 / 1440 px
-          with scripts/hero-contrast.mjs); kunyit brush stroke under the headline; the search card overlaps its bottom */}
+      {/* Hero: KL skyline photo, lighter than before (Batik palette): a light sea-teal wash plus a warm coral (senja) tint so
+          the dusk reads golden, not grey; a soft scrim only behind the text keeps it readable (measured at 375 / 768 / 1440 px
+          with scripts/hero-contrast.mjs); coral brush stroke under the headline; the search card overlaps its bottom */}
       <section className="relative overflow-x-clip">
         {/* Photo behind the whole hero; the light strip in the card row hides its lower part,
             so the photo always ends exactly halfway down the search card (pure CSS, any card height) */}
-        <div className="absolute inset-0 overflow-hidden bg-[#18243F]" aria-hidden="true">
+        <div className="absolute inset-0 overflow-hidden bg-[#08333A]" aria-hidden="true">
           <picture>
             <source srcSet="/Image/banner-kl.webp" type="image/webp" />
             <img
@@ -362,24 +362,24 @@ function Home() {
               className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
             />
           </picture>
-          <div className="absolute inset-0 bg-[#D99A1E]/15 mix-blend-soft-light" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#18243F]/30 via-[#18243F]/5 to-[#18243F]/25" />
+          <div className="absolute inset-0 bg-[#F27A5E]/15 mix-blend-soft-light" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#08333A]/30 via-[#08333A]/5 to-[#08333A]/25" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 pt-12 md:pt-16 text-center">
           <div className="relative inline-block px-4 py-2">
             {/* local scrim: darkens only behind the text, fading out at the edges */}
             <div
-              className="absolute -inset-x-10 -inset-y-10 md:-inset-x-24 md:-inset-y-12 bg-[radial-gradient(ellipse_at_center,rgb(24_36_63/0.86)_0%,rgb(24_36_63/0.76)_55%,transparent_82%)]"
+              className="absolute -inset-x-10 -inset-y-10 md:-inset-x-24 md:-inset-y-12 bg-[radial-gradient(ellipse_at_center,rgb(8_51_58/0.86)_0%,rgb(8_51_58/0.76)_55%,transparent_82%)]"
               aria-hidden="true"
             />
-            <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(24_36_63/0.7)]">
+            <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(8_51_58/0.7)]">
               {t('bannerTitle')}
               <svg className="absolute -bottom-3 md:-bottom-5 inset-x-[8%] w-[84%] h-3 md:h-4 text-accent" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
                 <path d="M2 8 C 60 2, 140 2, 200 6 S 280 10, 298 4" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
               </svg>
             </h1>
-            <p className="relative mt-7 text-lg md:text-2xl text-white/95 [text-shadow:0_1px_12px_rgb(24_36_63/0.8)]">
+            <p className="relative mt-7 text-lg md:text-2xl text-white/95 [text-shadow:0_1px_12px_rgb(8_51_58/0.8)]">
               {t('bannerSubtitle')}
             </p>
           </div>
@@ -388,7 +388,7 @@ function Home() {
         {/* Search card: half on the photo, half on the light page below it */}
         <div className="relative z-20 mt-10 px-4 flex justify-center">
           <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-gray-50" aria-hidden="true">
-            {/* soga and kunyit stripes where the photo ends, like the border of a batik cloth */}
+            {/* coral stripes where the photo ends, like the border of a batik cloth */}
             <div className="absolute inset-x-0 top-0 h-1.5 bg-[repeating-linear-gradient(90deg,#8A5A3B_0_28px,#D99A1E_28px_56px)]" />
           </div>
           <div id="plan" className="relative w-full max-w-6xl bg-white rounded-[2rem] shadow-2xl px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
@@ -457,7 +457,7 @@ function Home() {
                           disabled={loc.status === 'locating'}
                           aria-label={t('useMyLocation')}
                           title={t('useMyLocation')}
-                          className="ms-2 w-9 h-9 rounded-full text-[#1F2F5C] hover:bg-[#1F2F5C]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
+                          className="ms-2 w-9 h-9 rounded-full text-[#0E5C63] hover:bg-[#0E5C63]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
                         >
                           <Icon name="myLocation" size={20} />
                         </button>
@@ -466,7 +466,7 @@ function Home() {
                       <button
                         onClick={handleSwap}
                         disabled={!start.trim() && !end.trim()}
-                        className="w-12 h-12 rounded-full bg-[#1F2F5C] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                        className="w-12 h-12 rounded-full bg-[#0E5C63] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                         aria-label={t('swapAria')}
                       >
                         <Icon name="swapVert" size={22} />
@@ -531,7 +531,7 @@ function Home() {
                   <button
                     onClick={() => handleSearch()}
                     disabled={loading}
-                    className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-[#18243F] flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                    className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-[#08333A] flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                     aria-label={t('searchAria')}
                   >
                     {loading ? (

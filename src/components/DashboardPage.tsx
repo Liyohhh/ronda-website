@@ -12,7 +12,7 @@ function DashboardPage({ title, intro, tiles }: { title: TranslationKey; intro: 
   const { t } = useLanguage()
   return (
     <SiteLayout>
-      <section className="bg-[#1F2F5C] text-white">
+      <section className="bg-[#08333A] text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
           <h1 className="text-3xl font-bold">{t(title)}</h1>
           <p className="mt-2 max-w-2xl text-white/80">{t(intro)}</p>
@@ -23,7 +23,7 @@ function DashboardPage({ title, intro, tiles }: { title: TranslationKey; intro: 
           {tiles.map((d) => {
             const body = (
               <>
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1F2F5C]/10 text-[#1F2F5C]" aria-hidden="true">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0E5C63]/10 text-[#0E5C63]" aria-hidden="true">
                   <Icon name={d.icon} size={22} />
                 </span>
                 <span className="mt-3 flex items-center gap-2 font-semibold text-gray-900">
@@ -36,7 +36,7 @@ function DashboardPage({ title, intro, tiles }: { title: TranslationKey; intro: 
             return (
               <li key={d.label}>
                 {d.to ? (
-                  <Link to={d.to} className="block h-full rounded-2xl border border-gray-200 bg-white p-5 hover:border-[#1F2F5C]/40 hover:shadow-sm">{body}</Link>
+                  <Link to={d.to} className="block h-full rounded-2xl border border-gray-200 bg-white p-5 hover:border-[#0E5C63]/40 hover:shadow-sm">{body}</Link>
                 ) : (
                   <div className="h-full rounded-2xl border border-dashed border-gray-300 bg-white/60 p-5">{body}</div>
                 )}
