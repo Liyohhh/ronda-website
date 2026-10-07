@@ -4,22 +4,32 @@ import PromotionSection from './PromotionSection'
 import { PROMOTIONS } from '../data/promotions'
 import { renderWithLang } from '../test/render'
 
+const banners = (c: HTMLElement) => Array.from(c.querySelectorAll<HTMLElement>('[data-promo]'))
+
 describe('PromotionSection', () => {
-  it('three cards, each a link with a visible Ad label and a photo credit', () => {
-    renderWithLang(<PromotionSection />)
-    const cards = screen.getAllByRole('listitem')
-    expect(cards).toHaveLength(PROMOTIONS.length)
-    for (const card of cards) {
-      expect(within(card).getByText('Ad')).toBeVisible()
-      expect(within(card).getAllByRole('link').length).toBeGreaterThanOrEqual(2) // the card + the credit
+  it('a wide banner plus the smaller banners, each a link with a visible Ad label', () => {
+    const { container } = renderWithLang(<PromotionSection />)
+    const all = banners(container)
+    expect(all).toHaveLength(PROMOTIONS.length + 1)
+    for (const b of all) {
+      expect(within(b).getByText('Ad')).toBeVisible()
+      expect(within(b).getAllByRole('link')).toHaveLength(1)
     }
     expect(screen.getByRole('link', { name: 'Advertise with RONDA' })).toHaveAttribute('href', '/help/general#business')
     expect(screen.getByRole('link', { name: 'List your business in RONDA 300' })).toHaveAttribute('href', '/ronda-300')
+    expect(screen.getByRole('link', { name: 'Explore Trails' })).toHaveAttribute('href', '/trails')
+    expect(screen.getByText('Ad places opening soon')).toBeInTheDocument()
+  })
+
+  it('pictures are drawings, not photos, and hidden from screen readers', () => {
+    const { container } = renderWithLang(<PromotionSection />)
+    expect(container.querySelectorAll('img')).toHaveLength(0)
+    for (const svg of container.querySelectorAll('[data-promo] svg')) expect(svg).toHaveAttribute('aria-hidden', 'true')
   })
 
   it('Arabic labels', () => {
-    renderWithLang(<PromotionSection />, { lang: 'ar' })
+    const { container } = renderWithLang(<PromotionSection />, { lang: 'ar' })
     expect(screen.getByRole('heading', { name: 'العروض' })).toBeInTheDocument()
-    expect(screen.getAllByText('إعلان')).toHaveLength(3)
+    expect(screen.getAllByText('إعلان')).toHaveLength(banners(container).length)
   })
 })

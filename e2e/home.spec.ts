@@ -15,8 +15,8 @@ test('home sections come in the agreed order', async ({ page, backend }) => {
 test('every promotion is labelled as an ad', async ({ page, backend }) => {
   void backend
   await page.goto('/')
-  const cards = page.locator('section[aria-labelledby="promo-title"] li')
-  await expect(cards).toHaveCount(3)
+  const cards = page.locator('section[aria-labelledby="promo-title"] [data-promo]')
+  await expect(cards).toHaveCount(4)
   for (const card of await cards.all()) await expect(card.getByText('Ad', { exact: true })).toBeVisible()
 })
 
