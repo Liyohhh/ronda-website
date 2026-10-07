@@ -6,12 +6,12 @@ import { useLanguage } from '../hooks/useLanguage'
 
 // Home page: promotions (ads) as ad-style banners: one wide banner, then a row of smaller ones that scrolls
 // sideways on small screens. Every banner carries a visible "Ad" label; data in src/data/promotions.ts.
-// Colours: white text passes 4.5:1 on every stop of each gradient.
+// Colours (Kopitiam palette): kopi-O navy, teh tarik, kaya pandan, merah bata; white text passes 4.5:1 on every stop.
 const THEME: Record<PromoTheme, string> = {
-  blue: 'from-[#0B3AA8] to-[#2563EB]',
-  gold: 'from-[#7C2D12] to-[#C2410C]',
-  teal: 'from-[#115E59] to-[#0F766E]',
-  coral: 'from-[#9F1239] to-[#E11D48]',
+  blue: 'from-[#16223B] to-[#2A3E66]',
+  gold: 'from-[#7A4318] to-[#A8642A]',
+  teal: 'from-[#2F5A1E] to-[#47722C]',
+  coral: 'from-[#7A2A22] to-[#A23B2C]',
 }
 
 // the whole banner is the link (stretched over it)
@@ -62,8 +62,10 @@ function PromotionSection() {
 
   const f = PROMO_FEATURE
   return (
-    <section aria-labelledby="promo-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-12">
-      <h2 id="promo-title" className="text-2xl md:text-3xl font-bold text-[#002472]">{t('promoTitle')}</h2>
+    // a cream (susu) band behind the section, so the page alternates light and warm instead of one flat colour
+    <section aria-labelledby="promo-title" className="mt-12 bg-susu py-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 id="promo-title" className="text-2xl md:text-3xl font-bold text-[#1C2B4A]">{t('promoTitle')}</h2>
       <p className="mt-1 text-gray-500">{t('promoSubtitle')}</p>
 
       {/* wide banner */}
@@ -75,7 +77,7 @@ function PromotionSection() {
         <div className="relative grid items-center gap-5 md:grid-cols-[1fr_1.5fr]">
           <div>
             <AdLabel text={t('promoAdLabel')} />
-            <h3 className="mt-3 text-3xl sm:text-4xl font-black leading-tight text-white [text-shadow:0_3px_0_#0B2A6F]">
+            <h3 className="mt-3 text-3xl sm:text-4xl font-black leading-tight text-white [text-shadow:0_3px_0_#16223B]">
               <Link to={f.to} className={STRETCH}>{t(f.title)}</Link>
             </h3>
             <p className="mt-3 inline-block -skew-x-6 bg-[#E3242B] px-3 py-1 text-sm font-bold text-white shadow">
@@ -89,8 +91,8 @@ function PromotionSection() {
           <ul className="grid grid-cols-3 gap-2 sm:gap-3 md:pe-10">
             {f.tickets.map((k) => (
               <li key={k} className="overflow-hidden rounded-xl bg-white text-center shadow-md">
-                <div className="h-2.5 bg-[#F59E0B]" />
-                <p className="px-2 py-3 sm:py-5 text-xs sm:text-base font-extrabold leading-snug text-[#0B2A6F]">{t(k)}</p>
+                <div className="h-2.5 bg-teh" />
+                <p className="px-2 py-3 sm:py-5 text-xs sm:text-base font-extrabold leading-snug text-[#16223B]">{t(k)}</p>
               </li>
             ))}
           </ul>
@@ -118,16 +120,17 @@ function PromotionSection() {
         </ul>
         {canPrev && (
           <button type="button" onClick={() => scroll(-1)} aria-label={t('promoPrev')}
-            className="absolute start-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#002472] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
+            className="absolute start-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#1C2B4A] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
             <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 rtl:rotate-180"><path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
         )}
         {canNext && (
           <button type="button" onClick={() => scroll(1)} aria-label={t('promoNext')}
-            className="absolute end-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#002472] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
+            className="absolute end-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#1C2B4A] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
             <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 rtl:rotate-180"><path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
         )}
+      </div>
       </div>
     </section>
   )

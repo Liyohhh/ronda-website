@@ -47,7 +47,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
 
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={line.name}>
-      <div onClick={onClose} className="absolute inset-0 bg-[#001233]/30 backdrop-blur-[2px] transition-opacity duration-200 starting:opacity-0" />
+      <div onClick={onClose} className="absolute inset-0 bg-[#16223B]/30 backdrop-blur-[2px] transition-opacity duration-200 starting:opacity-0" />
       <div
         className={`absolute bg-gray-50 shadow-2xl flex flex-col transition-all duration-300 ease-out
           inset-x-0 bottom-0 max-h-[90vh] rounded-t-3xl overflow-hidden starting:translate-y-full
@@ -55,7 +55,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
           md:starting:translate-y-0 md:starting:translate-x-full rtl:md:starting:-translate-x-full`}
       >
         {/* Header in RONDA navy: the line's logo and name, then every line as a tab (the picked one underlined in its colour) */}
-        <div className="bg-[#002472] text-white">
+        <div className="bg-[#1C2B4A] text-white">
           <div className="px-5 pt-5 pb-4 md:pt-6">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs uppercase tracking-wider text-white/60">{t('lines')}</span>
@@ -106,7 +106,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
         <div className="flex-1 overflow-y-auto p-4">
           {!current && (
             <div className="flex justify-center py-16">
-              <div className="w-8 h-8 border-2 border-[#002472]/20 border-t-[#002472] rounded-full animate-spin" aria-label={t('loading')} />
+              <div className="w-8 h-8 border-2 border-[#1C2B4A]/20 border-t-[#1C2B4A] rounded-full animate-spin" aria-label={t('loading')} />
             </div>
           )}
           {current?.error && <div className="bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{t('lineLoadError')}</div>}
@@ -134,7 +134,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
                       <button
                         type="button"
                         onClick={() => onPlan(s)}
-                        className="rounded-full border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#002472] hover:border-[#002472]/50 whitespace-nowrap"
+                        className="rounded-full border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#1C2B4A] hover:border-[#1C2B4A]/50 whitespace-nowrap"
                       >
                         {t('planTripHere')}
                       </button>

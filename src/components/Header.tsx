@@ -61,7 +61,7 @@ function Header() {
 
         <ServiceNav className="hidden lg:flex self-stretch" />
 
-        <div className="ms-auto flex items-center gap-0.5 sm:gap-1 text-sm font-medium text-[#002472]">
+        <div className="ms-auto flex items-center gap-0.5 sm:gap-1 text-sm font-medium text-[#1C2B4A]">
           <LanguageMenu compact />
 
           {/* Help */}
@@ -82,7 +82,7 @@ function Header() {
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="" className="w-7 h-7 rounded-full object-cover" />
                 ) : (
-                  <span className="w-7 h-7 rounded-full bg-[#002472] text-white flex items-center justify-center">
+                  <span className="w-7 h-7 rounded-full bg-[#1C2B4A] text-white flex items-center justify-center">
                     <UserIcon size={16} />
                   </span>
                 )}
@@ -122,7 +122,7 @@ function Header() {
               </Link>
               <Link
                 to="/register"
-                className="ms-1 h-9 px-3 sm:px-4 inline-flex items-center rounded-full bg-[#002472] text-white font-semibold whitespace-nowrap hover:bg-[#001a55] transition-colors"
+                className="ms-1 h-9 px-3 sm:px-4 inline-flex items-center rounded-full bg-[#1C2B4A] text-white font-semibold whitespace-nowrap hover:bg-[#14203A] transition-colors"
               >
                 {t('signUp')}
               </Link>
@@ -139,7 +139,7 @@ function Header() {
 
 // Shared look for the right-side controls: same height, padding, hover and icon gap
 const PILL =
-  'h-9 px-3 inline-flex items-center gap-1.5 rounded-full hover:bg-[#002472]/5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#002472]/40'
+  'h-9 px-3 inline-flex items-center gap-1.5 rounded-full hover:bg-[#1C2B4A]/5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#1C2B4A]/40'
 
 function HelpIcon() {
   return (

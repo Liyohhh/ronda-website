@@ -21,7 +21,7 @@ const LINES: [string, string, [number, number][]][] = [
 // resting on the edge of the band
 function NavyBand({ children, overlap = false }: { children: ReactNode; overlap?: boolean }) {
   return (
-    <div className={`relative overflow-hidden bg-gradient-to-b from-[#001233] via-[#002472] to-[#0b2c80] text-white ${overlap ? '-mt-40 md:-mt-52' : ''}`}>
+    <div className={`relative overflow-hidden bg-gradient-to-b from-[#16223B] via-[#1C2B4A] to-[#24375C] text-white ${overlap ? '-mt-40 md:-mt-52' : ''}`}>
       {/* shapes, behind everything */}
       <svg className="pointer-events-none absolute inset-0 w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <g fill="none" stroke="#ffffff" strokeOpacity="0.06" strokeWidth="1.5">
@@ -36,12 +36,12 @@ function NavyBand({ children, overlap = false }: { children: ReactNode; overlap?
         </g>
         <g opacity="0.35">
           {LINES.flatMap(([c, , stops]) =>
-            stops.map(([x, y]) => <circle key={`${c}${x}`} cx={x} cy={y} r="7" fill="#001a55" stroke={c} strokeWidth="4" />),
+            stops.map(([x, y]) => <circle key={`${c}${x}`} cx={x} cy={y} r="7" fill="#14203A" stroke={c} strokeWidth="4" />),
           )}
         </g>
       </svg>
       <div className="pointer-events-none absolute -top-40 -start-40 w-[520px] h-[520px] rounded-full bg-[#1747b8]/35 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute top-1/3 -end-32 w-[560px] h-[560px] rounded-full bg-[#C9A45C]/12 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute top-1/3 -end-32 w-[560px] h-[560px] rounded-full bg-[#C27C3A]/12 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute bottom-10 start-1/4 w-[520px] h-[520px] rounded-full bg-[#1747b8]/25 blur-3xl" aria-hidden="true" />
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"

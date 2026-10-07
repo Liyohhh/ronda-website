@@ -14,10 +14,10 @@ export function HelpLayout({ children }: { children: ReactNode }) {
       subheader={
         <div className="border-b border-gray-200 bg-gray-50">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 h-11 flex items-center justify-between text-sm">
-            <Link to="/help" className="font-semibold text-[#002472]">
+            <Link to="/help" className="font-semibold text-[#1C2B4A]">
               RONDA {t('helpCentre')}
             </Link>
-            <Link to="/help/policies" className="font-medium text-gray-600 hover:text-[#002472]">
+            <Link to="/help/policies" className="font-medium text-gray-600 hover:text-[#1C2B4A]">
               {t('policies')}
             </Link>
           </div>
@@ -36,7 +36,7 @@ export function CategoryIcon({ icon }: { icon: HelpCategory['icon'] }) {
     policies: 'descriptionOutline',
   }
   return (
-    <span className="w-10 h-10 rounded-full bg-[#002472]/10 text-[#002472] flex items-center justify-center flex-shrink-0">
+    <span className="w-10 h-10 rounded-full bg-[#1C2B4A]/10 text-[#1C2B4A] flex items-center justify-center flex-shrink-0">
       <Icon name={names[icon]} size={20} />
     </span>
   )

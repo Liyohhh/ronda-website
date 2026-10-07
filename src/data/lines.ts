@@ -172,7 +172,7 @@ export function matchLines(query: string, extra: Line[] = []): Line[] {
 
 // Buses aren't in LINES (hundreds of routes). Their badge uses the route's own GTFS colour when the
 // operator publishes one (Rapid KL stage buses do), otherwise RONDA navy (MRT feeder buses, bus stops).
-export const BUS_FALLBACK_COLOR = '#002472'
+export const BUS_FALLBACK_COLOR = '#1C2B4A'
 
 export function busLine(color?: string | null, name = 'Bus'): Line {
   const c = color ? (color.startsWith('#') ? color : `#${color}`) : BUS_FALLBACK_COLOR
