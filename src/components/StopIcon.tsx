@@ -21,7 +21,7 @@ function StopIcon({ kind }: { kind: StopIconKind }) {
   return (
     <span
       className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
-        solid ? 'bg-[#0E5C63] text-white' : 'bg-[#0E5C63]/10 text-[#0E5C63]'
+        solid ? 'bg-[#8E3424] text-white' : 'bg-[#8E3424]/10 text-[#8E3424]'
       }`}
     >
       <Icon name={NAMES[kind]} size={18} />

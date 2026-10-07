@@ -27,7 +27,7 @@ function FeatureGrid() {
   const body = (f: Feature) => (
     <>
       {f.soon && (
-        <span className="absolute top-2 end-2 rounded-full bg-[#0E5C63] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+        <span className="absolute top-2 end-2 rounded-full bg-[#8E3424] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
           {t('soon')}
         </span>
       )}
@@ -38,7 +38,7 @@ function FeatureGrid() {
   return (
     <section aria-labelledby="features-title" className="relative">
       <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 lg:px-20 pt-6 pb-8 md:pb-10">
-        <h2 id="features-title" className="text-center text-2xl md:text-3xl font-bold text-[#08333A]">
+        <h2 id="features-title" className="text-center text-2xl md:text-3xl font-bold text-[#5E1F15]">
           {t('featuresTitle')}
         </h2>
         <ul className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4" data-testid="feature-tiles">

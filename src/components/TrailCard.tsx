@@ -11,11 +11,11 @@ function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Re
   return (
     <Link
       to={`/trails/${trail.slug}`}
-      className={`group flex flex-col bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0E5C63] ${className}`}
+      className={`group flex flex-col bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#8E3424] ${className}`}
     >
       <div className="relative aspect-[16/10] overflow-hidden">
         <TrailCover trail={trail} className="group-hover:scale-105 transition-transform duration-300" />
-        <span className="absolute top-0 start-0 bg-[#08333A]/90 text-white text-[11px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-ee-xl">
+        <span className="absolute top-0 start-0 bg-[#5E1F15]/90 text-white text-[11px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-ee-xl">
           {t(categoryKey(trail.category))}
         </span>
       </div>
@@ -23,7 +23,7 @@ function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Re
         <h3 className="font-semibold text-gray-900 leading-snug">{t(trailNameKey(trail))}</h3>
         <p className="mt-1 text-sm text-gray-500 line-clamp-2">{t(trailDescKey(trail))}</p>
         <div className="mt-auto pt-3 flex items-center gap-2 text-xs text-gray-600">
-          <span className="font-semibold text-[#0E5C63] whitespace-nowrap">{t('stopsCount').replace('{n}', String(trail.stops.length))}</span>
+          <span className="font-semibold text-[#8E3424] whitespace-nowrap">{t('stopsCount').replace('{n}', String(trail.stops.length))}</span>
           {station && (
             <>
               <span className="text-gray-300" aria-hidden="true">·</span>

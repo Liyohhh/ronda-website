@@ -51,11 +51,11 @@ function PhoneMockup() {
     <div className="w-[230px] rounded-[2.4rem] bg-[#0b0f1a] p-2.5 shadow-2xl ring-1 ring-white/10" aria-hidden="true">
       <div className="relative rounded-[1.9rem] overflow-hidden bg-gray-50 h-[440px]">
         <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-[#0b0f1a]" />
-        <div className="bg-[#08333A] px-4 pt-10 pb-4">
+        <div className="bg-[#5E1F15] px-4 pt-10 pb-4">
           <BrandLogo tone="light" size="sm" />
           <div className="mt-3 rounded-xl bg-white px-3 py-2 space-y-1.5">
-            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full border-2 border-[#0E5C63]" />KL Sentral</div>
-            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full bg-[#F27A5E]" />KLCC</div>
+            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full border-2 border-[#8E3424]" />KL Sentral</div>
+            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full bg-[#E3A21A]" />KLCC</div>
           </div>
         </div>
         <div className="p-3 space-y-2">
@@ -92,14 +92,14 @@ function AppDownloadBanner() {
     // Full width, and its bottom fades into the footer's navy so the two read as one block.
     // The phone sits outside the clipped background so it can rise above the banner.
     <section id="download" aria-labelledby="download-title" className="relative mt-24 text-white">
-      <div className="absolute inset-0 overflow-hidden bg-[#08333A]">
+      <div className="absolute inset-0 overflow-hidden bg-[#5E1F15]">
         {/* KL skyline, darkened so the text reads */}
         <picture>
           <source srcSet="/Image/banner-kl.webp" type="image/webp" />
           <img src="/Image/banner-kl.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[center_40%]" />
         </picture>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#08333A]/95 via-[#08333A]/80 to-[#08333A]/60" />
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-[#0E5C63]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#5E1F15]/95 via-[#5E1F15]/80 to-[#5E1F15]/60" />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-[#8E3424]" />
       </div>
 
       <div className="relative max-w-6xl mx-auto grid gap-8 md:grid-cols-[1.1fr_auto_auto] items-center px-4 sm:px-6">

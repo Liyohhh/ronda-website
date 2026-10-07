@@ -93,7 +93,7 @@ function AccountForms({ user }: { user: User }) {
 
   return (
     <SiteLayout>
-      <section className="bg-[#08333A] text-white">
+      <section className="bg-[#5E1F15] text-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
           <h1 className="text-3xl font-bold">{t('accountTitle')}</h1>
           <p className="mt-2 text-white/80">{t('accountIntro')}</p>
@@ -107,7 +107,7 @@ function AccountForms({ user }: { user: User }) {
           </p>
           <form onSubmit={saveName}>
             <AuthField label={t('fullName')} type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
-            <button type="submit" disabled={busy !== ''} className={`${btn} bg-[#0E5C63] text-white hover:bg-[#062A30]`}>{t('accountSaveName')}</button>
+            <button type="submit" disabled={busy !== ''} className={`${btn} bg-[#8E3424] text-white hover:bg-[#4C190F]`}>{t('accountSaveName')}</button>
             {nameMsg && <Note kind={nameMsg.kind}>{nameMsg.text}</Note>}
           </form>
         </Card>
@@ -118,7 +118,7 @@ function AccountForms({ user }: { user: User }) {
               <h3 className="mb-2 font-medium text-gray-900">{t('accountPassword')}</h3>
               <AuthField label={t('newPassword')} type="password" autoComplete="new-password" minLength={8} value={pw} onChange={(e) => setPw(e.target.value)} required />
               <AuthField label={t('confirmPassword')} type="password" autoComplete="new-password" minLength={8} value={pw2} onChange={(e) => setPw2(e.target.value)} required />
-              <button type="submit" disabled={busy !== ''} className={`${btn} bg-[#0E5C63] text-white hover:bg-[#062A30]`}>{t('resetSave')}</button>
+              <button type="submit" disabled={busy !== ''} className={`${btn} bg-[#8E3424] text-white hover:bg-[#4C190F]`}>{t('resetSave')}</button>
               {pwMsg && <Note kind={pwMsg.kind}>{pwMsg.text}</Note>}
             </form>
           )}

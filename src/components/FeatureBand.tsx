@@ -21,10 +21,10 @@ const LINES: [string, string, [number, number][]][] = [
 // resting on the edge of the band
 function FeatureBand({ children, overlap = false }: { children: ReactNode; overlap?: boolean }) {
   return (
-    <div className={`relative overflow-hidden bg-cream text-[#08333A] ${overlap ? '-mt-40 md:-mt-52' : ''}`}>
+    <div className={`relative overflow-hidden bg-cream text-[#5E1F15] ${overlap ? '-mt-40 md:-mt-52' : ''}`}>
       {/* shapes, behind everything */}
       <svg className="pointer-events-none absolute inset-0 w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <g fill="none" stroke="#0E5C63" strokeOpacity="0.07" strokeWidth="1.5">
+        <g fill="none" stroke="#8E3424" strokeOpacity="0.07" strokeWidth="1.5">
           {CONTOURS.map((d) => (
             <path key={d} d={d} />
           ))}
@@ -36,16 +36,16 @@ function FeatureBand({ children, overlap = false }: { children: ReactNode; overl
         </g>
         <g opacity="0.35">
           {LINES.flatMap(([c, , stops]) =>
-            stops.map(([x, y]) => <circle key={`${c}${x}`} cx={x} cy={y} r="7" fill="#062A30" stroke={c} strokeWidth="4" />),
+            stops.map(([x, y]) => <circle key={`${c}${x}`} cx={x} cy={y} r="7" fill="#4C190F" stroke={c} strokeWidth="4" />),
           )}
         </g>
       </svg>
-      <div className="pointer-events-none absolute -top-40 -start-40 w-[520px] h-[520px] rounded-full bg-[#F27A5E]/15 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute top-1/3 -end-32 w-[560px] h-[560px] rounded-full bg-[#0F7A80]/10 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute bottom-10 start-1/4 w-[520px] h-[520px] rounded-full bg-[#F27A5E]/12 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -top-40 -start-40 w-[520px] h-[520px] rounded-full bg-[#E3A21A]/15 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute top-1/3 -end-32 w-[560px] h-[560px] rounded-full bg-[#17736E]/10 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute bottom-10 start-1/4 w-[520px] h-[520px] rounded-full bg-[#E3A21A]/12 blur-3xl" aria-hidden="true" />
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
-        style={{ backgroundImage: 'radial-gradient(#0E5C63 1px, transparent 1px)', backgroundSize: '22px 22px' }}
+        style={{ backgroundImage: 'radial-gradient(#8E3424 1px, transparent 1px)', backgroundSize: '22px 22px' }}
         aria-hidden="true"
       />
 
