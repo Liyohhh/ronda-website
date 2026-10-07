@@ -63,9 +63,9 @@ widget, line tiles, feature tiles, promotions, Help page.
 
 ## Test history (27 Sep - 7 Oct 2026)
 
-213 recorded test runs over 9 working days (planner unit tests, Edge Function tests, Vitest, Playwright, production
+218 recorded test runs over 9 working days (planner unit tests, Edge Function tests, Vitest, Playwright, production
 smoke, regression, interchanges, load, live smoke, contrast, audit, lint). Failures during a day were defects found
-and fixed the same day; the last run of every suite on 7 Oct passed. Every run, with time and result, is in the
+and fixed the same day; the last run of every suite on 7 Oct passed (full re-run at 14:29 on 7 Oct: same results; search p95 283 ms). Every run, with time and result, is in the
 testing workbook (sheets "Daily Test Summary" and "Test History (all runs)").
 
 ## How to repeat
