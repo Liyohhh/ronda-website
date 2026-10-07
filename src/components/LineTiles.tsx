@@ -6,9 +6,8 @@ import { routeEnds } from '../data/busRoutes'
 import { useLanguage } from '../hooks/useLanguage'
 
 // The line picker without typing: every rail line as a tile (official badge + short name), grouped, plus a
-// "Bus routes" tile, because ~2,000 bus routes can't be tiles. Two previews (Home ?lines=a / ?lines=b):
-//   LineGrid  (A): grouped grid inside the Lines tab
-//   LineStrip (B): one scrollable row under the search card, on both tabs
+// "Bus routes" tile, because ~2,000 bus routes can't be tiles. Home shows it in the Lines search dropdown
+// as soon as the box is pressed (before anything is typed).
 
 const tileClass =
   'flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-start text-sm font-medium text-gray-900 ' +
@@ -69,8 +68,9 @@ export function BusRouteSearch({ buses, onPick }: { buses: Line[]; onPick: (l: L
   )
 }
 
-// Option A: grouped grid, shown in the Lines tab
-export function LineGrid({ buses, onPick }: { buses: Line[]; onPick: (l: Line) => void }) {
+// Grouped grid. onBus: what the "Bus routes" tile does (Home: ask for a bus route in its own search box);
+// without it the tile opens a bus-only search under the grid.
+export function LineGrid({ buses, onPick, onBus }: { buses: Line[]; onPick: (l: Line) => void; onBus?: () => void }) {
   const { t } = useLanguage()
   const [busOpen, setBusOpen] = useState(false)
   return (
@@ -85,29 +85,10 @@ export function LineGrid({ buses, onPick }: { buses: Line[]; onPick: (l: Line) =
       ))}
       <section className="mt-3" aria-label={t('busRoutesTile')}>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-          <BusTile open={busOpen} onClick={() => setBusOpen((o) => !o)} />
+          <BusTile open={busOpen} onClick={onBus ?? (() => setBusOpen((o) => !o))} />
         </div>
         {busOpen && <BusRouteSearch buses={buses} onPick={onPick} />}
       </section>
     </div>
-  )
-}
-
-// Option B: one row of every rail line, scrollable sideways; the bus tile opens the Lines tab search
-export function LineStrip({ onPick, onBus }: { onPick: (l: Line) => void; onBus: () => void }) {
-  const { t } = useLanguage()
-  return (
-    <nav aria-label={t('allLinesLabel')} data-testid="line-strip" className="mt-4">
-      <ul className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin]">
-        {LINE_GROUPS.flatMap((g) => g.ids).map((id) => (
-          <li key={id} className="flex-shrink-0">
-            <LineTile line={LINES_BY_ID[id]} onPick={onPick} className="whitespace-nowrap" />
-          </li>
-        ))}
-        <li className="flex-shrink-0">
-          <BusTile open={false} onClick={onBus} className="whitespace-nowrap" />
-        </li>
-      </ul>
-    </nav>
   )
 }

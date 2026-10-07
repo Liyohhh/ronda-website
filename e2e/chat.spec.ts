@@ -87,6 +87,7 @@ test('the launcher hides while a side panel is open, so it never covers it', asy
   void backend
   await page.goto('/?tab=lines')
   await expect(launcher(page)).toBeVisible()
+  await page.getByRole('combobox', { name: 'Line', exact: true }).click()
   await page.getByTestId('line-grid').getByRole('button', { name: 'LRT Kelana Jaya Line' }).click()
   await expect(launcher(page)).toBeHidden()
 })

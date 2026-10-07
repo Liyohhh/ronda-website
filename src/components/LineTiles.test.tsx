@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { LineGrid, LineStrip } from './LineTiles'
+import { LineGrid } from './LineTiles'
 import { LINE_GROUPS, LINES, busLine, type Line } from '../data/lines'
 import { renderWithLang } from '../test/render'
 
@@ -57,15 +57,12 @@ describe('LineGrid (option A)', () => {
   })
 })
 
-describe('LineStrip (option B)', () => {
-  it('one row with every rail line and a bus tile', () => {
+describe('LineGrid with onBus (Home search dropdown)', () => {
+  it('the Bus routes tile hands over to the caller instead of opening its own search', () => {
     const onPick = vi.fn(), onBus = vi.fn()
-    renderWithLang(<LineStrip onPick={onPick} onBus={onBus} />)
-    const strip = screen.getByRole('navigation', { name: 'All lines' })
-    expect(within(strip).getAllByRole('button')).toHaveLength(LINES.length + 1)
-    fireEvent.click(within(strip).getByRole('button', { name: 'MRT Kajang Line' }))
-    expect(onPick).toHaveBeenCalledWith(expect.objectContaining({ id: 'mrt-kajang' }))
-    fireEvent.click(within(strip).getByRole('button', { name: /Bus routes/ }))
+    renderWithLang(<LineGrid buses={[]} onPick={onPick} onBus={onBus} />)
+    fireEvent.click(screen.getByRole('button', { name: /Bus routes/ }))
     expect(onBus).toHaveBeenCalled()
+    expect(screen.queryByRole('searchbox')).toBeNull()
   })
 })

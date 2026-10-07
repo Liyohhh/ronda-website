@@ -83,27 +83,47 @@ test.describe('plan a journey', () => {
 })
 
 test.describe('lines search', () => {
-  test('option A (default): the Bus routes tile finds a route code, however it is typed', async ({ page, backend }) => {
+  test('pressing the Line box shows every line as a tile; picking one opens it', async ({ page, backend }) => {
     void backend
     await page.goto('/')
     await page.getByRole('button', { name: 'Lines', exact: true }).click()
-    await page.getByTestId('line-grid').getByRole('button', { name: /Bus routes/ }).click()
-    const box = page.getByRole('searchbox')
-    for (const typed of ['T352', 't 0352']) {
-      await box.fill(typed)
-      await expect(page.getByRole('button', { name: /T352/ }).first()).toBeVisible()
-    }
+    await page.getByRole('combobox', { name: 'Line', exact: true }).click()
+    const panel = page.getByRole('region', { name: 'All lines' })
+    await expect(panel.getByRole('button', { name: 'LRT Kelana Jaya Line' })).toBeVisible()
+    await panel.getByRole('button', { name: 'LRT Kelana Jaya Line' }).click()
+    await expect(panel).toBeHidden()
+    await expect(page.getByRole('dialog')).toBeVisible()
   })
 
-  test('option B (?lines=b): the Line box finds a route code, however it is typed', async ({ page, backend }) => {
+  test('the Bus routes tile asks for a route; the box finds it however it is typed', async ({ page, backend }) => {
     void backend
-    await page.goto('/?lines=b')
+    await page.goto('/')
     await page.getByRole('button', { name: 'Lines', exact: true }).click()
     const box = page.getByRole('combobox', { name: 'Line', exact: true })
+    await box.click()
+    await page.getByRole('region', { name: 'All lines' }).getByRole('button', { name: /Bus routes/ }).click()
+    await expect(box).toBeFocused()
+    await expect(box).toHaveAttribute('placeholder', 'Search a bus route, e.g. T410')
     for (const typed of ['T352', 't 0352']) {
       await box.fill(typed)
       await expect(page.locator('#line-list').getByText('T352', { exact: true }).first()).toBeVisible()
     }
+  })
+
+  test('the tiles close with Escape or a click elsewhere', async ({ page, backend }) => {
+    void backend
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Lines', exact: true }).click()
+    const box = page.getByRole('combobox', { name: 'Line', exact: true })
+    const panel = page.getByRole('region', { name: 'All lines' })
+    await box.click()
+    await expect(panel).toBeVisible()
+    await box.press('Escape')
+    await expect(panel).toBeHidden()
+    await box.click()
+    await expect(panel).toBeVisible()
+    await page.locator('#promo-title').click()
+    await expect(panel).toBeHidden()
   })
 })
 

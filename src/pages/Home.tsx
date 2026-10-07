@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 're
 import { useLocation, useSearchParams } from 'react-router-dom'
 import LinePicker from '../components/LinePicker'
 import LinePanel from '../components/LinePanel'
-import { LineGrid, LineStrip } from '../components/LineTiles'
+import { LineGrid } from '../components/LineTiles'
 import { matchLines, type Line } from '../data/lines'
 import { useBusRoutes } from '../data/busRoutes'
 import { supabase } from '../services/supabase'
@@ -28,9 +28,6 @@ function Home() {
   const { t } = useLanguage()
   // /?tab=lines opens the Lines tab (the "All lines" link on line pages)
   const [tab, setTab] = useState<'directions' | 'lines'>(() => (new URLSearchParams(window.location.search).get('tab') === 'lines' ? 'lines' : 'directions'))
-  // Line picker preview (W3): ?lines=a grid in the Lines tab (default), ?lines=b strip under the search card.
-  // Temporary: remove the losing option and this switch once one is chosen.
-  const [linesUi] = useState<'a' | 'b'>(() => (new URLSearchParams(window.location.search).get('lines') === 'b' ? 'b' : 'a'))
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
   const [startStop, setStartStop] = useState<Pick | null>(null)
@@ -113,6 +110,7 @@ function Home() {
   const [line, setLine] = useState('')
   // Lines tab: dropdown open, keyboard-highlighted row, and the line shown in the side panel
   const [lineListOpen, setLineListOpen] = useState(false)
+  const [busHint, setBusHint] = useState(false) // "Bus routes" tile pressed: the box asks for a bus route
   const [lineHi, setLineHi] = useState(-1)
   const [pickedLine, setPickedLine] = useState<Line | null>(null)
   const busLines = useBusRoutes() // every bus route, searchable in the Lines tab
@@ -408,18 +406,15 @@ function Home() {
               </div>
             </div>
 
-            {/* Lines tab, option A: every line as a tile, no typing needed */}
-            {tab === 'lines' && linesUi === 'a' ? (
-              <div className="flex justify-center mt-4">
-                <div className="w-full max-w-5xl">
-                  <LineGrid buses={busLines} onPick={pickLine} />
-                </div>
-              </div>
-            ) : (
-            <>
             {/* Search bar + suggestions dropdown */}
             <div className="flex justify-center mt-4 relative">
-              <div className="w-full max-w-5xl relative">
+              <div
+                className="w-full max-w-5xl relative"
+                onBlur={(e) => {
+                  // Lines tab: the dropdown stays open while focus moves inside it (box -> tiles)
+                  if (tab === 'lines' && !e.currentTarget.contains(e.relatedTarget as Node | null)) setLineListOpen(false)
+                }}
+              >
                 <div className="bg-white rounded-full shadow-lg border flex items-center pe-2.5">
                   {tab === 'directions' ? (
                     <>
@@ -511,15 +506,14 @@ function Home() {
                           }}
                           onFocus={() => setLineListOpen(true)}
                           onClick={() => setLineListOpen(true)}
-                          onBlur={() => setLineListOpen(false)}
                           onKeyDown={onLineKey}
                           role="combobox"
                           aria-expanded={lineListOpen}
-                          aria-controls="line-list"
+                          aria-controls={line.trim() ? 'line-list' : 'line-panel'}
                           aria-activedescendant={lineListOpen && lineHi >= 0 ? `line-list-${lineHi}` : undefined}
                           autoComplete="off"
                           aria-label={t('line')}
-                          placeholder={t('linePh')}
+                          placeholder={busHint ? t('busSearchPh') : t('linePh')}
                           className="w-full text-lg outline-none"
                         />
                       </div>
@@ -553,7 +547,19 @@ function Home() {
                   />
                 )}
 
-                {/* Lines tab: every line, filtered as you type */}
+                {/* Lines tab: every line as a tile as soon as the box is pressed; typing filters them (rail + bus) */}
+                {tab === 'lines' && lineListOpen && line.trim() === '' && (
+                  <div id="line-panel" role="region" aria-label={t('allLinesLabel')} className="absolute inset-x-0 top-full z-30 mt-2 max-h-[70vh] overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
+                    <LineGrid
+                      buses={busLines}
+                      onPick={pickLine}
+                      onBus={() => {
+                        setBusHint(true)
+                        document.getElementById('line-input')?.focus()
+                      }}
+                    />
+                  </div>
+                )}
                 {tab === 'lines' && lineListOpen && line.trim() !== '' && (
                   <LinePicker id="line-list" query={line} buses={busLines} highlighted={lineHi} onHover={setLineHi} onPick={pickLine} />
                 )}
@@ -567,23 +573,6 @@ function Home() {
                 )}
               </div>
             </div>
-            </>
-            )}
-
-            {/* Lines, option B: every line in one row under the search, on both tabs */}
-            {linesUi === 'b' && (
-              <div className="flex justify-center">
-                <div className="w-full max-w-5xl min-w-0">
-                  <LineStrip
-                    onPick={pickLine}
-                    onBus={() => {
-                      setTab('lines')
-                      setTimeout(() => document.getElementById('line-input')?.focus(), 0)
-                    }}
-                  />
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </section>
