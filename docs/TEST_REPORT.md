@@ -8,8 +8,8 @@ Website `main` at `a713772`; database repository at `80044b8`; production Supaba
 | Suite | Result |
 |---|---|
 | Website static checks (ESLint, TypeScript) | clean |
-| Website unit and component tests (Vitest) | **182 / 182 passed**, 23 files |
-| Website end-to-end tests (Playwright, desktop + phone) | **176 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
+| Website unit and component tests (Vitest) | **183 / 183 passed**, 23 files |
+| Website end-to-end tests (Playwright, desktop + phone) | **178 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
 | Edge Function unit tests (trip planner, live, assistant) | **221 / 221 checks**, 14 files |
 | Production smoke + security checks | **46 / 46** (48 / 48 after the KTM fare checks were added) |
 | Trip-planner regression matrix (production) | **134 cases, 0 regressions** (2 improved) |
@@ -18,13 +18,13 @@ Website `main` at `a713772`; database repository at `80044b8`; production Supaba
 | Read-only live smoke (`scripts/smoke-live.ts`) | **13 / 13** |
 | Production build | builds; CSP, sitemap and trail texts generated |
 
-## Website end-to-end (176)
+## Website end-to-end (178)
 
 | Area | What is proven |
 |---|---|
 | Journeys | search by code, typo and name; plan a trip; journey panel; errors; out-of-reach; Enter keys |
-| Lines | grid (option A) and strip (option B); bus route search finds T352 / T410 |
-| Home | section order; promotions marked "Ad"; no overlap or sideways scroll at 375 / 768 / 1440 px |
+| Lines | pressing the Line box shows every line as a tile; picking opens it; Escape / click elsewhere closes; Bus routes tile then T352 found however typed |
+| Home | section order; promotion banners marked "Ad" (arrows scroll the row on small screens); no overlap or sideways scroll at 375 / 768 / 1440 px |
 | Menu | Hub, Explore, RONDA 300, Services, About; Explore goes to the trails |
 | Trails | Arabic-only halal category hidden in English, shown and filterable in Arabic |
 | RONDA 300 | station with places; station without places shows the nearest stations that have some |
