@@ -3,7 +3,8 @@
 /* Batik kunyit theme (8 Oct 2026), from Terengganu batik: indigo cloth, kain cream, turmeric (kunyit) dye, soga-bark brown.
    Greys are warm (cream to soga brown) instead of blue-tinted; the darkest stop is the deep indigo used for text.
    Tokens: navy (bands), cream (light bands), accent = kunyit (main actions, highlights; dark text on it),
-   accent-light (kunyit text on navy), accent-text (kunyit-family text on light backgrounds), soga (small tags only). */
+   accent-light (kunyit text on navy), accent-text (kunyit-family text on light backgrounds), soga (small tags only),
+   blue-batik (a livelier second blue for buttons, links and icons; deep indigo stays for header, footer and text). */
 @theme {
   --color-gray-50: #fbf7f0;
   --color-gray-100: #f4eee4;
@@ -23,6 +24,8 @@
   --color-accent-light: #f0c062;
   --color-accent-text: #8a5a3b;
   --color-soga: #8a5a3b;
+  --color-blue-batik: #2f5da8;
+  --color-blue-batik-hover: #264d8c;
 }
 
 /* The site is designed light-only: keep native controls (inputs, scrollbars) light too */

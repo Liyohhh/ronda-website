@@ -7,7 +7,8 @@ import { useLanguage } from '../hooks/useLanguage'
 // Home page: promotions (ads) as ad-style banners: one wide banner, then a row of smaller ones that scrolls
 // sideways on small screens. Every banner carries a visible "Ad" label; data in src/data/promotions.ts.
 // Colours (Batik kunyit palette): indigo batik, soga brown, daun green, merah bata; white text passes 4.5:1 on every stop.
-const THEME: Record<PromoTheme, string> = {
+const THEME: Record<PromoTheme | 'kunyit', string> = {
+  kunyit: 'from-[#F0C062] to-[#D99A1E]',
   blue: 'from-[#18243F] to-[#2C3F73]',
   gold: 'from-[#5E3A22] to-[#8A5A3B]',
   teal: 'from-[#2F5A1E] to-[#47722C]',
@@ -69,7 +70,7 @@ function PromotionSection() {
       <p className="mt-1 text-gray-500">{t('promoSubtitle')}</p>
 
       {/* wide banner */}
-      <div data-promo={f.id} className={`relative mt-5 overflow-hidden rounded-2xl bg-gradient-to-br ${THEME.blue} p-5 sm:p-7 shadow-sm transition hover:shadow-lg`}>
+      <div data-promo={f.id} className={`relative mt-5 overflow-hidden rounded-2xl bg-gradient-to-br ${THEME.kunyit} p-5 sm:p-7 shadow-sm transition hover:shadow-lg`}>
         <Sparkle className="pointer-events-none absolute top-4 end-[42%] h-5 w-5 text-white/80" />
         <Sparkle className="pointer-events-none absolute bottom-6 start-[38%] h-3 w-3 text-white/70" />
         <PercentTicket className="pointer-events-none absolute -top-1 end-6 h-9 w-12 rotate-12 opacity-90" />
@@ -77,13 +78,13 @@ function PromotionSection() {
         <div className="relative grid items-center gap-5 md:grid-cols-[1fr_1.5fr]">
           <div>
             <AdLabel text={t('promoAdLabel')} />
-            <h3 className="mt-3 text-3xl sm:text-4xl font-black leading-tight text-white [text-shadow:0_3px_0_#18243F]">
+            <h3 className="mt-3 text-3xl sm:text-4xl font-black leading-tight text-[#18243F]">
               <Link to={f.to} className={STRETCH}>{t(f.title)}</Link>
             </h3>
             <p className="mt-3 inline-block -skew-x-6 bg-[#E3242B] px-3 py-1 text-sm font-bold text-white shadow">
               <span className="inline-block skew-x-6">{t(f.ribbon)}</span>
             </p>
-            <p className="mt-3 flex items-center gap-1.5 text-sm text-white/90">
+            <p className="mt-3 flex items-center gap-1.5 text-sm text-[#18243F]">
               <PinArt className="h-4 w-3 shrink-0" />
               {t(f.foot)}
             </p>

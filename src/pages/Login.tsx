@@ -39,7 +39,7 @@ function Login() {
       footer={
         <>
           {t('noAccount')}{' '}
-          <Link to="/register" className="text-[#1F2F5C] font-semibold hover:underline">
+          <Link to="/register" className="text-blue-batik font-semibold hover:underline">
             {t('signUp')}
           </Link>
         </>
@@ -68,7 +68,7 @@ function Login() {
           required
         />
         <p className="-mt-1 mb-2 text-end text-sm">
-          <Link to="/forgot-password" className="text-[#1F2F5C] font-medium hover:underline">{t('forgotPasswordLink')}</Link>
+          <Link to="/forgot-password" className="text-blue-batik font-medium hover:underline">{t('forgotPasswordLink')}</Link>
         </p>
         <SubmitButton busy={busy}>{t('continueBtn')}</SubmitButton>
       </form>

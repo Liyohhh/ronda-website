@@ -46,7 +46,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
     </button>
   )
   const cta = (s: Slide, active: boolean) => {
-    const cls = 'inline-flex items-center gap-1.5 rounded-full bg-[#1F2F5C] px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-[#2C3F73] transition-colors'
+    const cls = 'inline-flex items-center gap-1.5 rounded-full bg-blue-batik px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-blue-batik-hover transition-colors'
     const label = (
       <>
         {t(k(s.n, 'cta'))}
@@ -122,7 +122,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
                     <ul className="mt-5 space-y-2.5 text-sm md:text-base text-start inline-block md:block">
                       {[1, 2, 3].map((p) => (
                         <li key={p} className="flex items-start gap-3 text-gray-800">
-                          <span className="mt-0.5 w-6 h-6 rounded-full bg-[#1F2F5C]/8 text-[#1F2F5C] flex items-center justify-center flex-shrink-0">
+                          <span className="mt-0.5 w-6 h-6 rounded-full bg-blue-batik/10 text-blue-batik flex items-center justify-center flex-shrink-0">
                             <Icon name="check" size={16} />
                           </span>
                           {t(k(s.n, `p${p}`))}
@@ -144,7 +144,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
                 onClick={() => go(i)}
                 aria-label={t('goToSlide').replace('{n}', String(i + 1))}
                 aria-current={i === index}
-                className={`h-2.5 rounded-full transition-all ${i === index ? 'w-8 bg-[#1F2F5C]' : 'w-2.5 bg-gray-300 hover:bg-gray-400'}`}
+                className={`h-2.5 rounded-full transition-all ${i === index ? 'w-8 bg-blue-batik' : 'w-2.5 bg-gray-300 hover:bg-gray-400'}`}
               />
             ))}
           </div>

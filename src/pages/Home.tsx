@@ -10,7 +10,7 @@ import SiteLayout from '../components/SiteLayout'
 import TrailsSection from '../components/TrailsSection'
 import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
-import NavyBand from '../components/NavyBand'
+import FeatureBand from '../components/FeatureBand'
 import ReviewsSection from '../components/ReviewsSection'
 import PromotionSection from '../components/PromotionSection'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
@@ -346,41 +346,44 @@ function Home() {
 
   return (
     <SiteLayout>
-      {/* Hero: KL skyline, only lightly darkened so the photo shows; a soft scrim behind the headline keeps the text
-          readable (contrast measured at 375 / 768 / 1440 px); the search card overlaps its bottom */}
+      {/* Hero: kain cream with a faint kawung batik pattern (indigo ovals, kunyit centres), indigo headline with a
+          kunyit brush stroke under it; the search card overlaps its bottom */}
       <section className="relative overflow-x-clip">
-        {/* Photo behind the whole hero; the light strip in the card row hides its lower part,
-            so the photo always ends exactly halfway down the search card (pure CSS, any card height) */}
-        <div className="absolute inset-0 overflow-hidden bg-[#18243F]" aria-hidden="true">
-          <picture>
-            <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-            <img
-              src="/Image/banner-kl.jpg"
-              alt=""
-              fetchPriority="high"
-              className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
-            />
-          </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#18243F]/45 via-[#18243F]/25 to-[#18243F]/45" />
+        <div className="absolute inset-0 overflow-hidden bg-cream" aria-hidden="true">
+          <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="kawung" width="56" height="56" patternUnits="userSpaceOnUse">
+                <g fill="none" stroke="#1F2F5C" strokeOpacity="0.09" strokeWidth="1.5">
+                  <ellipse cx="28" cy="13" rx="7" ry="12" />
+                  <ellipse cx="28" cy="43" rx="7" ry="12" />
+                  <ellipse cx="13" cy="28" rx="12" ry="7" />
+                  <ellipse cx="43" cy="28" rx="12" ry="7" />
+                </g>
+                <circle cx="28" cy="28" r="2.2" fill="#D99A1E" fillOpacity="0.45" />
+              </pattern>
+              <radialGradient id="kawung-fade" cx="50%" cy="38%" r="60%">
+                <stop offset="0%" stopColor="#F7F0E1" stopOpacity="0.95" />
+                <stop offset="70%" stopColor="#F7F0E1" stopOpacity="0.2" />
+              </radialGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#kawung)" />
+            <rect width="100%" height="100%" fill="url(#kawung-fade)" />
+          </svg>
+          {/* soga and kunyit stripes along the bottom edge, like the border of a batik cloth */}
+          <div className="absolute inset-x-0 bottom-0 h-2 bg-[repeating-linear-gradient(90deg,#8A5A3B_0_28px,#D99A1E_28px_56px)] opacity-60" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 pt-12 md:pt-16 text-center">
-          <div className="relative inline-block px-4 py-2">
-            {/* local scrim: darkens only behind the text, fading out at the edges */}
-            <div
-              className="absolute -inset-x-10 -inset-y-8 md:-inset-x-24 md:-inset-y-10 bg-[radial-gradient(ellipse_at_center,rgb(0_18_51/0.75)_0%,rgb(0_18_51/0.62)_50%,transparent_78%)]"
-              aria-hidden="true"
-            />
-            <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(0_18_51/0.7)]">
-              {t('bannerTitle')}
-            </h1>
-            <p className="relative mt-4 text-lg md:text-2xl text-white/95 [text-shadow:0_1px_12px_rgb(0_18_51/0.8)]">
-              {t('bannerSubtitle')}
-            </p>
-          </div>
+          <h1 className="relative inline-block text-4xl md:text-6xl font-extrabold tracking-tight text-[#18243F]">
+            {t('bannerTitle')}
+            <svg className="absolute -bottom-3 md:-bottom-4 inset-x-[8%] w-[84%] h-3 md:h-4 text-accent" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M2 8 C 60 2, 140 2, 200 6 S 280 10, 298 4" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+            </svg>
+          </h1>
+          <p className="relative mt-7 text-lg md:text-2xl text-gray-700">{t('bannerSubtitle')}</p>
         </div>
 
-        {/* Search card: half on the photo, half on the light page below it */}
+        {/* Search card: half on the cream hero, half on the light page below it */}
         <div className="relative z-20 mt-10 px-4 flex justify-center">
           <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-gray-50" aria-hidden="true" />
           <div id="plan" className="relative w-full max-w-6xl bg-white rounded-[2rem] shadow-2xl px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
@@ -592,9 +595,9 @@ function Home() {
           window.scrollTo({ top: 0, behavior: 'smooth' })
         }}
       />
-      <NavyBand overlap>
+      <FeatureBand overlap>
         <FeatureGrid />
-      </NavyBand>
+      </FeatureBand>
       <ReviewsSection />
 
       {/* Line stations in the right-side panel; "Plan a trip here" fills the End box */}

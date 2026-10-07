@@ -37,7 +37,7 @@ function ResetPassword() {
       title={t('resetTitle')}
       social={false}
       footer={
-        <Link to="/login" className="text-[#1F2F5C] font-semibold hover:underline">
+        <Link to="/login" className="text-blue-batik font-semibold hover:underline">
           {t('backToLogin')}
         </Link>
       }
