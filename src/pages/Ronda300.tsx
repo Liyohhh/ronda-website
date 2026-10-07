@@ -69,7 +69,7 @@ function Ronda300() {
 
   return (
     <SiteLayout>
-      <section className="bg-[#08333A] text-white">
+      <section className="bg-[#0B3A2C] text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
           <p className="text-sm font-semibold text-accent-light">{t('r3_tag')}</p>
           <h1 className="mt-1 text-3xl md:text-4xl font-bold">RONDA 300</h1>
@@ -79,9 +79,9 @@ function Ronda300() {
       </section>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <label htmlFor="r300-input" className="block text-sm font-semibold text-[#0E5C63]">{t('r3_searchLabel')}</label>
+        <label htmlFor="r300-input" className="block text-sm font-semibold text-[#0F4D3A]">{t('r3_searchLabel')}</label>
         <div className="relative mt-2 max-w-xl">
-          <div className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 focus-within:border-[#0E5C63]">
+          <div className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 focus-within:border-[#0F4D3A]">
             <Icon name="search" size={20} className="text-gray-500" />
             <input
               id="r300-input"
@@ -120,7 +120,7 @@ function Ronda300() {
               <p className="text-gray-800">{t('r3_none').replace('{station}', picked.name)}</p>
               {nearest && nearest.length > 0 && (
                 <>
-                  <h2 className="mt-6 text-lg font-semibold text-[#0E5C63]">{t('r3_nearest')}</h2>
+                  <h2 className="mt-6 text-lg font-semibold text-[#0F4D3A]">{t('r3_nearest')}</h2>
                   {nearest.map((g) => (
                     <StationBlock key={g.station.search} group={g} heading={`${g.station.name} · ${t('r3_away').replace('{km}', (g.distance / 1000).toFixed(1))}`} />
                   ))}
@@ -130,12 +130,12 @@ function Ronda300() {
           )}
         </div>
 
-        <section aria-labelledby="r3-merchant" className="mt-12 rounded-2xl bg-[#08333A] text-white p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 justify-between">
+        <section aria-labelledby="r3-merchant" className="mt-12 rounded-2xl bg-[#0B3A2C] text-white p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 justify-between">
           <div>
             <h2 id="r3-merchant" className="text-xl font-semibold">{t('navMerchantTitle')}</h2>
             <p className="mt-1 text-white/75">{t('navMerchantText')}</p>
           </div>
-          <Link to="/help/general#business" className="self-start md:self-auto bg-white text-[#0E5C63] px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-100">
+          <Link to="/help/general#business" className="self-start md:self-auto bg-white text-[#0F4D3A] px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-100">
             {t('navMerchantCta')}
           </Link>
         </section>
@@ -157,7 +157,7 @@ function StationBlock({ group, heading }: { group: { station: Station; places: P
           <li key={p.id} className="rounded-2xl border border-gray-200 bg-white p-4">
             <p className="font-medium text-gray-900">{p.name}</p>
             <p className="mt-1 text-sm text-gray-600">{t(placeBlurbKey(p.id) as TranslationKey)}</p>
-            <Link to={planToPlace(group.station, p.name)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#0E5C63] hover:underline">
+            <Link to={planToPlace(group.station, p.name)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#0F4D3A] hover:underline">
               {t('planTripHere')}
               <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
             </Link>

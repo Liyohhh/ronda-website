@@ -1,31 +1,31 @@
 @import "tailwindcss";
 
-/* Selat dan senja theme (8 Oct 2026), from the Strait of Malacca at sunset: deep sea teal, sea foam, senja coral, sand.
-   Greys lean slightly sea-green instead of blue; the darkest stop is the deep teal ink used for text.
-   Tokens: navy = deep sea teal (header button, bands), cream = sea foam (light bands), accent = senja coral (main actions;
-   dark ink text on it, since coral is a mid tone), accent-light (coral text on dark teal), accent-text (dark coral text on
-   light backgrounds), soga = sand (small tags), link = brighter teal for links, secondary buttons and icons. */
+/* Hutan hujan theme (8 Oct 2026), from the rainforest of Taman Negara: deep forest green, river sand, kunyit, bunga raya.
+   Greys are warm neutrals; the darkest stop is the deep anchor colour used for text.
+   Tokens: navy = anchor (buttons, badges, logo), navy-deep (large bands, text), cream (light bands), accent (main actions,
+   dark text on it), accent-light (accent text on dark bands), accent-text (accent-family text on light backgrounds),
+   soga (small tags), link (links, secondary buttons and icons). */
 @theme {
-  --color-gray-50: #f6faf9;
-  --color-gray-100: #ebf2f0;
-  --color-gray-200: #dbe5e2;
-  --color-gray-300: #c1d0cc;
-  --color-gray-400: #8ba19c;
-  --color-gray-500: #5d716d;
-  --color-gray-600: #4a5c58;
-  --color-gray-700: #354543;
-  --color-gray-800: #223130;
-  --color-gray-900: #08333a;
-  --color-navy: #0e5c63;
-  --color-navy-deep: #08333a;
-  --color-cream: #eef6f3;
-  --color-accent: #f27a5e;
-  --color-accent-hover: #f59379;
-  --color-accent-light: #ffc2b3;
-  --color-accent-text: #b23a22;
-  --color-soga: #f2c14e;
-  --color-link: #0f7a80;
-  --color-link-hover: #0b6469;
+  --color-gray-50: #fbf8f2;
+  --color-gray-100: #f3eee5;
+  --color-gray-200: #e6dfd3;
+  --color-gray-300: #d2c9ba;
+  --color-gray-400: #a09686;
+  --color-gray-500: #716a5e;
+  --color-gray-600: #585248;
+  --color-gray-700: #3e3933;
+  --color-gray-800: #2a2621;
+  --color-gray-900: #0b3a2c;
+  --color-navy: #0f4d3a;
+  --color-navy-deep: #0b3a2c;
+  --color-cream: #f4f1e8;
+  --color-accent: #e3a21a;
+  --color-accent-hover: #edb43f;
+  --color-accent-light: #f3c45a;
+  --color-accent-text: #8a5a0f;
+  --color-soga: #d7263d;
+  --color-link: #1f7a55;
+  --color-link-hover: #186445;
 }
 
 /* The site is designed light-only: keep native controls (inputs, scrollbars) light too */
@@ -46,8 +46,8 @@ html {
 }
 
 body {
-  background: #f9fbfa;
-  color: #08333A;
+  background: #faf9f4;
+  color: #0B3A2C;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -94,7 +94,7 @@ body {
   display: block;
   width: 14px;
   height: 14px;
-  border: 2px solid #0E5C63;
+  border: 2px solid #0F4D3A;
   border-radius: 9999px;
   background: #fff;
   cursor: pointer;

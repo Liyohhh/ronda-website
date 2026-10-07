@@ -49,7 +49,7 @@ function ResetPassword() {
       ) : !session ? (
         <div>
           <p role="alert" className="text-amber-900 bg-amber-50 text-sm rounded-lg px-3 py-2 mb-4">{t('resetNoLink')}</p>
-          <Link to="/forgot-password" className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#0E5C63] font-semibold text-white hover:bg-[#062A30]">
+          <Link to="/forgot-password" className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#0F4D3A] font-semibold text-white hover:bg-[#082E23]">
             {t('resetRequestNew')}
           </Link>
         </div>

@@ -108,7 +108,7 @@ type Props = {
 
 type SortKey = 'fastest' | 'priceLow' | 'priceHigh' | 'transfers' | 'walking'
 
-const GOLD = '#F27A5E'
+const GOLD = '#E3A21A'
 
 // ---------- helpers ----------
 
@@ -246,13 +246,13 @@ function Highlight({ tags }: { tags?: Tag[] }) {
   const { t } = useLanguage()
   const has = (x: Tag) => tags?.includes(x)
   const pick: [TranslationKey, string] | null = has('fastest')
-    ? ['tagFastest', 'bg-[#0E5C63] text-white']
+    ? ['tagFastest', 'bg-[#0F4D3A] text-white']
     : has('least_walking')
       ? ['hlEasiest', 'bg-emerald-600 text-white']
       : has('fewest_changes')
-        ? ['tagFewestChanges', 'bg-[#F27A5E] text-[#08333A]']
+        ? ['tagFewestChanges', 'bg-[#E3A21A] text-[#0B3A2C]']
         : has('cheapest')
-          ? ['tagCheapest', 'bg-[#F27A5E] text-[#08333A]']
+          ? ['tagCheapest', 'bg-[#E3A21A] text-[#0B3A2C]']
           : null
   if (!pick) return null
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${pick[1]}`}>{t(pick[0])}</span>
@@ -267,7 +267,7 @@ function Tags({ tags }: { tags?: Tag[] }) {
         <span
           key={tag}
           className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-            tag === 'uses_airport_rail' ? 'bg-amber-50 text-amber-800' : tag === 'no_exit' ? 'bg-emerald-50 text-emerald-800' : 'bg-[#0E5C63]/8 text-[#0E5C63]'
+            tag === 'uses_airport_rail' ? 'bg-amber-50 text-amber-800' : tag === 'no_exit' ? 'bg-emerald-50 text-emerald-800' : 'bg-[#0F4D3A]/8 text-[#0F4D3A]'
           }`}
         >
           {t(TAG_LABEL[tag])}
@@ -280,7 +280,7 @@ function Tags({ tags }: { tags?: Tag[] }) {
 // Material Icons "accessible" (Apache 2.0), same set as the app
 function WheelchairIcon({ label }: { label: string }) {
   return (
-    <Icon name="accessible" size={16} className="inline-block text-[#0E5C63]" label={label} />
+    <Icon name="accessible" size={16} className="inline-block text-[#0F4D3A]" label={label} />
   )
 }
 
@@ -291,7 +291,7 @@ function EntranceLine({ entrance, kind }: { entrance: Entrance; kind: 'enter' | 
     ? t(kind === 'enter' ? 'enterAt' : 'exitAt').replace('{ref}', entrance.ref)
     : t(kind === 'enter' ? 'enterStation' : 'exitStation')
   return (
-    <div className="mt-1 inline-flex items-center gap-1.5 rounded-lg bg-[#0E5C63]/5 px-2 py-1 text-sm font-medium text-[#0E5C63]">
+    <div className="mt-1 inline-flex items-center gap-1.5 rounded-lg bg-[#0F4D3A]/5 px-2 py-1 text-sm font-medium text-[#0F4D3A]">
       {text}
       {entrance.wheelchair && <WheelchairIcon label={t('stepFree')} />}
     </div>
@@ -423,7 +423,7 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
           type="button"
           onClick={() => setOpen(!open)}
           aria-expanded={open}
-          className="mt-2 inline-flex items-center gap-1 text-sm text-gray-600 hover:text-[#0E5C63]"
+          className="mt-2 inline-flex items-center gap-1 text-sm text-gray-600 hover:text-[#0F4D3A]"
         >
           <Icon name="chevronRight" size={14} className={`transition-transform ${open ? 'rotate-90' : 'rtl:rotate-180'}`} />
           {(n === 1 ? t('rideOneStop') : t('rideStops').replace('{n}', String(n))).replace('{dur}', formatDuration(leg.duration_min, t))}
@@ -521,7 +521,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
       <li key={`${o.departure}-${o.arrival}-${o.hops.join()}-${i}`}>
         <button
           onClick={() => setDetail(o)}
-          className="w-full text-start bg-white rounded-2xl border border-gray-200 p-4 hover:border-[#0E5C63]/50 hover:shadow-md transition"
+          className="w-full text-start bg-white rounded-2xl border border-gray-200 p-4 hover:border-[#0F4D3A]/50 hover:shadow-md transition"
         >
           <div className="flex items-baseline justify-between gap-3">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -532,7 +532,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                 <Tags tags={o.tags} />
               </div>
               {o.next_day && (
-                <span className="ms-2 align-middle inline-block rounded-full bg-[#0E5C63]/10 text-[#0E5C63] text-[11px] font-semibold px-2 py-0.5">
+                <span className="ms-2 align-middle inline-block rounded-full bg-[#0F4D3A]/10 text-[#0F4D3A] text-[11px] font-semibold px-2 py-0.5">
                   {t('tomorrow')}
                 </span>
               )}
@@ -563,7 +563,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={t('yourJourney')}>
       {/* Backdrop */}
-      <div onClick={onClose} className="absolute inset-0 bg-[#08333A]/30 backdrop-blur-[2px] transition-opacity duration-200 starting:opacity-0" />
+      <div onClick={onClose} className="absolute inset-0 bg-[#0B3A2C]/30 backdrop-blur-[2px] transition-opacity duration-200 starting:opacity-0" />
 
       {/* Side panel on desktop, bottom sheet on mobile */}
       <div
@@ -573,7 +573,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
           md:starting:translate-y-0 md:starting:translate-x-full rtl:md:starting:-translate-x-full`}
       >
         {/* From / to */}
-        <div className="bg-[#08333A] text-white px-5 pt-5 pb-5 md:pt-6">
+        <div className="bg-[#0B3A2C] text-white px-5 pt-5 pb-5 md:pt-6">
           <div className="flex items-center justify-between mb-4">
             {detail ? (
               <button onClick={() => setDetail(null)} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/85 hover:text-white">
@@ -641,7 +641,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     onClick={() => r !== resident && onResidentChange(r)}
                     aria-pressed={r === resident}
                     className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
-                      r === resident ? 'bg-white text-[#0E5C63]' : 'text-white/80 hover:text-white'
+                      r === resident ? 'bg-white text-[#0F4D3A]' : 'text-white/80 hover:text-white'
                     }`}
                   >
                     {r === 'citizen' ? t('fareMalaysian') : t('fareTourist')}
@@ -660,7 +660,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     aria-pressed={p === payment}
                     title={p === 'cashless' ? t('payCashlessHint') : undefined}
                     className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
-                      p === payment ? 'bg-white text-[#0E5C63]' : 'text-white/80 hover:text-white'
+                      p === payment ? 'bg-white text-[#0F4D3A]' : 'text-white/80 hover:text-white'
                     }`}
                   >
                     {p === 'cashless' ? t('payCashless') : t('payCash')}
@@ -685,7 +685,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     disabled={disabled}
                     aria-pressed={active}
                     className={`h-9 px-4 rounded-full text-sm font-medium whitespace-nowrap border transition-colors disabled:opacity-40 ${
-                      active ? 'bg-[#0E5C63] border-[#0E5C63] text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-[#0E5C63]/50'
+                      active ? 'bg-[#0F4D3A] border-[#0F4D3A] text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-[#0F4D3A]/50'
                     }`}
                   >
                     {p.label}
@@ -699,7 +699,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
         <div className="flex-1 overflow-y-auto">
           {loading && (
             <div className="flex flex-col items-center justify-center py-16 text-gray-500 text-sm gap-3">
-              <div className="w-8 h-8 border-2 border-[#0E5C63]/20 border-t-[#0E5C63] rounded-full animate-spin" />
+              <div className="w-8 h-8 border-2 border-[#0F4D3A]/20 border-t-[#0F4D3A] rounded-full animate-spin" />
               {t('findingRoutes')}
             </div>
           )}
@@ -722,7 +722,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     type="button"
                     onClick={() => setShowMore(!showMore)}
                     aria-expanded={showMore}
-                    className="w-full rounded-2xl border border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:border-[#0E5C63]/50 hover:text-[#0E5C63]"
+                    className="w-full rounded-2xl border border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:border-[#0F4D3A]/50 hover:text-[#0F4D3A]"
                   >
                     {showMore ? t('hideMoreOptions') : t('moreOptions').replace('{n}', String(sortedMore.length))}
                   </button>
@@ -745,7 +745,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                       <Tags tags={detail.tags} />
                     </div>
                     {detail.next_day && (
-                      <span className="ms-2 align-middle inline-block rounded-full bg-[#0E5C63]/10 text-[#0E5C63] text-[11px] font-semibold px-2 py-0.5">
+                      <span className="ms-2 align-middle inline-block rounded-full bg-[#0F4D3A]/10 text-[#0F4D3A] text-[11px] font-semibold px-2 py-0.5">
                         {t('tomorrow')}
                       </span>
                     )}

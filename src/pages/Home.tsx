@@ -352,7 +352,7 @@ function Home() {
       <section className="relative overflow-x-clip">
         {/* Photo behind the whole hero; the light strip in the card row hides its lower part,
             so the photo always ends exactly halfway down the search card (pure CSS, any card height) */}
-        <div className="absolute inset-0 overflow-hidden bg-[#08333A]" aria-hidden="true">
+        <div className="absolute inset-0 overflow-hidden bg-[#0B3A2C]" aria-hidden="true">
           <picture>
             <source srcSet="/Image/banner-kl.webp" type="image/webp" />
             <img
@@ -362,24 +362,24 @@ function Home() {
               className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
             />
           </picture>
-          <div className="absolute inset-0 bg-[#F27A5E]/15 mix-blend-soft-light" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#08333A]/30 via-[#08333A]/5 to-[#08333A]/25" />
+          <div className="absolute inset-0 bg-[#E3A21A]/15 mix-blend-soft-light" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B3A2C]/30 via-[#0B3A2C]/5 to-[#0B3A2C]/25" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 pt-12 md:pt-16 text-center">
           <div className="relative inline-block px-4 py-2">
             {/* local scrim: darkens only behind the text, fading out at the edges */}
             <div
-              className="absolute -inset-x-10 -inset-y-10 md:-inset-x-24 md:-inset-y-12 bg-[radial-gradient(ellipse_at_center,rgb(8_51_58/0.86)_0%,rgb(8_51_58/0.76)_55%,transparent_82%)]"
+              className="absolute -inset-x-10 -inset-y-10 md:-inset-x-24 md:-inset-y-12 bg-[radial-gradient(ellipse_at_center,rgb(11_58_44/0.86)_0%,rgb(11_58_44/0.76)_55%,transparent_82%)]"
               aria-hidden="true"
             />
-            <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(8_51_58/0.7)]">
+            <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(11_58_44/0.7)]">
               {t('bannerTitle')}
               <svg className="absolute -bottom-3 md:-bottom-5 inset-x-[8%] w-[84%] h-3 md:h-4 text-accent" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
                 <path d="M2 8 C 60 2, 140 2, 200 6 S 280 10, 298 4" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
               </svg>
             </h1>
-            <p className="relative mt-7 text-lg md:text-2xl text-white/95 [text-shadow:0_1px_12px_rgb(8_51_58/0.8)]">
+            <p className="relative mt-7 text-lg md:text-2xl text-white/95 [text-shadow:0_1px_12px_rgb(11_58_44/0.8)]">
               {t('bannerSubtitle')}
             </p>
           </div>
@@ -457,7 +457,7 @@ function Home() {
                           disabled={loc.status === 'locating'}
                           aria-label={t('useMyLocation')}
                           title={t('useMyLocation')}
-                          className="ms-2 w-9 h-9 rounded-full text-[#0E5C63] hover:bg-[#0E5C63]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
+                          className="ms-2 w-9 h-9 rounded-full text-[#0F4D3A] hover:bg-[#0F4D3A]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
                         >
                           <Icon name="myLocation" size={20} />
                         </button>
@@ -466,7 +466,7 @@ function Home() {
                       <button
                         onClick={handleSwap}
                         disabled={!start.trim() && !end.trim()}
-                        className="w-12 h-12 rounded-full bg-[#0E5C63] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                        className="w-12 h-12 rounded-full bg-[#0F4D3A] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                         aria-label={t('swapAria')}
                       >
                         <Icon name="swapVert" size={22} />
@@ -531,7 +531,7 @@ function Home() {
                   <button
                     onClick={() => handleSearch()}
                     disabled={loading}
-                    className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-[#08333A] flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                    className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-[#0B3A2C] flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                     aria-label={t('searchAria')}
                   >
                     {loading ? (

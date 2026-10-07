@@ -27,7 +27,7 @@ function TrailsSection() {
       type="button"
       onClick={() => scroll(dir)}
       aria-label={dir === 1 ? t('scrollNext') : t('scrollPrev')}
-      className="hidden md:flex w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md items-center justify-center text-[#0E5C63] hover:bg-gray-50"
+      className="hidden md:flex w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md items-center justify-center text-[#0F4D3A] hover:bg-gray-50"
     >
       <Icon name={dir === 1 ? 'chevronRight' : 'chevronLeft'} size={18} className="rtl:rotate-180" />
     </button>
@@ -37,7 +37,7 @@ function TrailsSection() {
     <section id="explore" aria-labelledby="trails-title" className="scroll-mt-24 max-w-6xl mx-auto px-4 sm:px-6 pt-12">
       <div className="flex items-end justify-between gap-4 mb-4">
         <div>
-          <h2 id="trails-title" className="text-2xl md:text-3xl font-bold text-[#0E5C63]">
+          <h2 id="trails-title" className="text-2xl md:text-3xl font-bold text-[#0F4D3A]">
             {t('trailsTitle')}
           </h2>
           <p className="mt-1 text-gray-500">{t('trailsSubtitle')}</p>

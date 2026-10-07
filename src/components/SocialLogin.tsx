@@ -158,7 +158,7 @@ function SocialLogin() {
             className="w-12 h-11 border border-gray-300 rounded-lg flex items-center justify-center bg-white hover:bg-gray-50 hover:border-gray-400 transition disabled:opacity-60"
           >
             {busy === s.id ? (
-              <span className="w-4 h-4 border-2 border-gray-300 border-t-[#0E5C63] rounded-full animate-spin" />
+              <span className="w-4 h-4 border-2 border-gray-300 border-t-[#0F4D3A] rounded-full animate-spin" />
             ) : (
               s.icon
             )}

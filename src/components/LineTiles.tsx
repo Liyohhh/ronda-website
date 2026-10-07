@@ -11,7 +11,7 @@ import { useLanguage } from '../hooks/useLanguage'
 
 const tileClass =
   'flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-start text-sm font-medium text-gray-900 ' +
-  'hover:border-[#0E5C63]/40 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E5C63]'
+  'hover:border-[#0F4D3A]/40 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0F4D3A]'
 
 export function LineTile({ line, onPick, className = '' }: { line: Line; onPick: (l: Line) => void; className?: string }) {
   return (
@@ -46,7 +46,7 @@ export function BusRouteSearch({ buses, onPick }: { buses: Line[]; onPick: (l: L
         autoFocus
         aria-label={t('busSearchPh')}
         placeholder={t('busSearchPh')}
-        className="w-full rounded-full border border-gray-300 px-5 py-3 text-base outline-none focus:border-[#0E5C63]"
+        className="w-full rounded-full border border-gray-300 px-5 py-3 text-base outline-none focus:border-[#0F4D3A]"
       />
       {q.trim() !== '' && (
         found.length === 0 ? (
