@@ -370,7 +370,7 @@ function Home() {
           <div className="relative inline-block px-4 py-2">
             {/* local scrim: darkens only behind the text, fading out at the edges */}
             <div
-              className="absolute -inset-x-10 -inset-y-10 md:-inset-x-24 md:-inset-y-12 bg-[radial-gradient(ellipse_at_center,rgb(94_31_21/0.86)_0%,rgb(94_31_21/0.76)_55%,transparent_82%)]"
+              className="absolute -inset-x-10 -inset-y-10 md:-inset-x-24 md:-inset-y-12 bg-[radial-gradient(ellipse_at_center,rgb(94_31_21/0.92)_0%,rgb(94_31_21/0.84)_55%,transparent_82%)]"
               aria-hidden="true"
             />
             <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(94_31_21/0.7)]">
