@@ -6,10 +6,10 @@
 - [ ] Point the domain's nameservers (GoDaddy -> Nameservers) to the two Cloudflare gives; **first copy the Exabytes
       email records (MX, SPF/TXT, DKIM, autodiscover) into Cloudflare DNS**, or email stops.
 - [ ] Create the Cloudflare account (add a card if asked; Pages and R2 free tiers apply).
-- [ ] Supabase -> Organization Ronda -> Billing: upgrade to **Pro** (US$25 / about RM102 a month); then Project ->
-      Settings -> Compute: **Small** (extra about RM20 a month). The Free plan pauses idle projects and its quotas
-      (500k function calls, 5 GB egress) are below a 50k-user month (about 2.7M calls, 80 GB). Spend cap: off, check
-      Usage weekly for the first month.
+- [ ] Supabase production setup (full scale from launch, owner decision 7 Oct 2026), about RM1,418 a month:
+      Billing -> **Pro**; Project -> Settings -> Compute and Disk -> **Large** (2 dedicated vCPU, 8 GB; under 2 min
+      downtime, do it 8 Oct); Add-ons -> **PITR 7 days**; Database -> Read Replicas -> **1 replica** (Singapore);
+      Billing -> Spend cap **off** (PITR is not covered by it anyway). Re-run the load test afterwards.
 - [ ] Supabase -> Authentication -> turn on leaked password protection.
 - [ ] Supabase -> Project Settings -> Vault: secret `discord_webhook_url` (alerts to Discord).
 - [ ] When the `@ronda.com` business address exists: set `VITE_CONTACT_EMAIL` on Pages (Help shows it).
