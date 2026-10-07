@@ -11,7 +11,7 @@ Website `main` at `a713772`; database repository at `80044b8`; production Supaba
 | Website unit and component tests (Vitest) | **181 / 181 passed**, 23 files |
 | Website end-to-end tests (Playwright, desktop + phone) | **176 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
 | Edge Function unit tests (trip planner, live, assistant) | **221 / 221 checks**, 14 files |
-| Production smoke + security checks | **46 / 46** |
+| Production smoke + security checks | **46 / 46** (48 / 48 after the KTM fare checks were added) |
 | Trip-planner regression matrix (production) | **134 cases, 0 regressions** (2 improved) |
 | Interchanges (production) | **36 / 36** change where they should |
 | Load test (production) | **pass**: plan p95 1.3 s, live p95 0.68 s, 0 errors |
@@ -53,7 +53,9 @@ widget, line tiles, feature tiles, promotions, Help page.
 
 ## Known gaps (not test failures)
 
-- KTM fares are not in the database yet, so KTM trips show no price (see the KTMB status note).
+- KTM Komuter (Klang Valley) fares were added on 7 Oct after this report (smoke 48 / 48, regression 0 regressions);
+  ETS / Intercity (flexible fares), Northern Komuter, Shuttle Selatan, Abdullah Hukum and Kajang 2 stay unpriced.
+- KTMB's published timetable ends 21 Oct 2026; an alert is open until KTMB publishes the next one.
 - Live KTM positions: the official open feed carries ETS / intercity trainsets only (7 trains at 13:15 on 7 Oct),
   no Komuter.
 - No independent penetration test yet; native-speaker review of Malay, Chinese and Arabic pending (`docs/UAT.md`).
