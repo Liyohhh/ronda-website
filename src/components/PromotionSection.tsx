@@ -8,9 +8,9 @@ import { useLanguage } from '../hooks/useLanguage'
 // sideways on small screens. Every banner carries a visible "Ad" label; data in src/data/promotions.ts.
 // Colours (Selat dan senja palette): senja coral (dark text), deep sea teal, daun green, merah bata; text passes 4.5:1 on every stop.
 const THEME: Record<PromoTheme | 'senja', string> = {
-  senja: 'from-[#FFC2B3] to-[#F27A5E]',
-  blue: 'from-[#08333A] to-[#1B6E75]',
-  gold: 'from-[#0A464C] to-[#0E5C63]',
+  senja: 'from-[#E2C27A] to-[#C9A04A]',
+  blue: 'from-[#3E1027] to-[#6E2649]',
+  gold: 'from-[#4C1530] to-[#5B1A3A]',
   teal: 'from-[#2F5A1E] to-[#47722C]',
   coral: 'from-[#7A2A22] to-[#A23B2C]',
 }
@@ -66,7 +66,7 @@ function PromotionSection() {
     // a sea-foam band behind the section, so the page alternates light and warm instead of one flat colour
     <section aria-labelledby="promo-title" className="mt-12 bg-cream py-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 id="promo-title" className="text-2xl md:text-3xl font-bold text-[#0E5C63]">{t('promoTitle')}</h2>
+      <h2 id="promo-title" className="text-2xl md:text-3xl font-bold text-[#5B1A3A]">{t('promoTitle')}</h2>
       <p className="mt-1 text-gray-500">{t('promoSubtitle')}</p>
 
       {/* wide banner */}
@@ -78,13 +78,13 @@ function PromotionSection() {
         <div className="relative grid items-center gap-5 md:grid-cols-[1fr_1.5fr]">
           <div>
             <AdLabel text={t('promoAdLabel')} />
-            <h3 className="mt-3 text-3xl sm:text-4xl font-black leading-tight text-[#08333A]">
+            <h3 className="mt-3 text-3xl sm:text-4xl font-black leading-tight text-[#3E1027]">
               <Link to={f.to} className={STRETCH}>{t(f.title)}</Link>
             </h3>
             <p className="mt-3 inline-block -skew-x-6 bg-[#E3242B] px-3 py-1 text-sm font-bold text-white shadow">
               <span className="inline-block skew-x-6">{t(f.ribbon)}</span>
             </p>
-            <p className="mt-3 flex items-center gap-1.5 text-sm text-[#08333A]">
+            <p className="mt-3 flex items-center gap-1.5 text-sm text-[#3E1027]">
               <PinArt className="h-4 w-3 shrink-0" />
               {t(f.foot)}
             </p>
@@ -93,7 +93,7 @@ function PromotionSection() {
             {f.tickets.map((k) => (
               <li key={k} className="overflow-hidden rounded-xl bg-white text-center shadow-md">
                 <div className="h-2.5 bg-accent" />
-                <p className="px-2 py-3 sm:py-5 text-xs sm:text-base font-extrabold leading-snug text-[#08333A]">{t(k)}</p>
+                <p className="px-2 py-3 sm:py-5 text-xs sm:text-base font-extrabold leading-snug text-[#3E1027]">{t(k)}</p>
               </li>
             ))}
           </ul>
@@ -121,13 +121,13 @@ function PromotionSection() {
         </ul>
         {canPrev && (
           <button type="button" onClick={() => scroll(-1)} aria-label={t('promoPrev')}
-            className="absolute start-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#0E5C63] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
+            className="absolute start-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#5B1A3A] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
             <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 rtl:rotate-180"><path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
         )}
         {canNext && (
           <button type="button" onClick={() => scroll(1)} aria-label={t('promoNext')}
-            className="absolute end-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#0E5C63] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
+            className="absolute end-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#5B1A3A] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
             <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 rtl:rotate-180"><path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
         )}

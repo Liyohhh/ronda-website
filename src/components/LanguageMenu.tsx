@@ -73,8 +73,8 @@ function LanguageMenu({ variant = 'pill', compact = false }: Props) {
 
   const buttonClass =
     variant === 'pill'
-      ? 'h-9 px-3 rounded-full hover:bg-[#0E5C63]/5'
-      : 'h-9 px-3 rounded-lg border border-gray-300 bg-white hover:border-[#0E5C63]/40'
+      ? 'h-9 px-3 rounded-full hover:bg-[#5B1A3A]/5'
+      : 'h-9 px-3 rounded-lg border border-gray-300 bg-white hover:border-[#5B1A3A]/40'
 
   return (
     <div ref={rootRef} className="relative">
@@ -92,7 +92,7 @@ function LanguageMenu({ variant = 'pill', compact = false }: Props) {
         aria-expanded={open}
         aria-controls={listId}
         aria-label={`Language: ${current.label}`}
-        className={`${buttonClass} inline-flex items-center gap-1.5 text-sm font-medium text-[#0E5C63] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0E5C63]/40`}
+        className={`${buttonClass} inline-flex items-center gap-1.5 text-sm font-medium text-[#5B1A3A] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5B1A3A]/40`}
       >
         <Icon name="language" size={20} />
         <span className={compact ? 'hidden sm:inline' : ''}>{current.label}</span>
@@ -122,8 +122,8 @@ function LanguageMenu({ variant = 'pill', compact = false }: Props) {
                 onMouseEnter={() => setFocus(i)}
                 onClick={() => choose(l.code)}
                 className={`mx-1.5 px-3 py-2 rounded-lg flex items-center justify-between gap-3 cursor-pointer text-sm ${
-                  selected ? 'text-[#0E5C63] font-semibold' : 'text-gray-700'
-                } ${i === focus ? 'bg-[#0E5C63]/[0.06]' : ''}`}
+                  selected ? 'text-[#5B1A3A] font-semibold' : 'text-gray-700'
+                } ${i === focus ? 'bg-[#5B1A3A]/[0.06]' : ''}`}
               >
                 {l.label}
                 {selected && (

@@ -20,7 +20,7 @@ function SiteLayout({ children, subheader }: { children: ReactNode; subheader?: 
       {CHAT_ENABLED && (
         <Suspense fallback={null}>
           {/* room under the footer so the chat launcher never covers its last line */}
-          <div className="h-20 bg-[#08333A]" aria-hidden="true" />
+          <div className="h-20 bg-[#3E1027]" aria-hidden="true" />
           <ChatWidget />
         </Suspense>
       )}

@@ -19,9 +19,9 @@ function RequireAuth({ role, children }: Props) {
     return (
       <SiteLayout>
         <div className="max-w-xl mx-auto px-4 sm:px-6 py-16 text-center">
-          <h1 className="text-2xl font-bold text-[#0E5C63]">{t('notAllowedTitle')}</h1>
+          <h1 className="text-2xl font-bold text-[#5B1A3A]">{t('notAllowedTitle')}</h1>
           <p className="mt-3 text-gray-600">{t('notAllowedBody')}</p>
-          <Link to="/" className="mt-6 inline-block rounded-full bg-[#0E5C63] px-6 py-2.5 text-sm font-semibold text-white">
+          <Link to="/" className="mt-6 inline-block rounded-full bg-[#5B1A3A] px-6 py-2.5 text-sm font-semibold text-white">
             {t('backToHome')}
           </Link>
         </div>

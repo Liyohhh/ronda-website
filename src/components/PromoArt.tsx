@@ -21,8 +21,8 @@ export function TrainArt({ className = '' }: { className?: string }) {
       <rect x="84" y="24" width="34" height="24" rx="5" fill="#9CC8FF" />
       <circle cx="50" cy="76" r="4" fill="#FFC72C" />
       <circle cx="110" cy="76" r="4" fill="#FFC72C" />
-      <rect x="44" y="84" width="14" height="8" rx="2" fill="#08333A" />
-      <rect x="102" y="84" width="14" height="8" rx="2" fill="#08333A" />
+      <rect x="44" y="84" width="14" height="8" rx="2" fill="#3E1027" />
+      <rect x="102" y="84" width="14" height="8" rx="2" fill="#3E1027" />
     </svg>
   )
 }
@@ -79,7 +79,7 @@ function Trail() {
       <path d="M10 26l36-12 40 12 44-12v82l-44 12-40-12-36 12z" fill="#ffffff" />
       <path d="M46 14v82M86 26v82" stroke="#F3C7BE" strokeWidth="2" />
       <path d="M24 88C40 70 50 80 66 60s34-6 50-30" stroke="#E3242B" strokeWidth="4" strokeDasharray="7 6" fill="none" strokeLinecap="round" />
-      <circle cx="24" cy="88" r="7" fill="#08333A" />
+      <circle cx="24" cy="88" r="7" fill="#3E1027" />
       <g transform="translate(104 4)"><path d="M12 34S0 20 0 12a12 12 0 0 1 24 0c0 8-12 22-12 22z" fill="#E3242B" /><circle cx="12" cy="12" r="4" fill="#ffffff" /></g>
     </svg>
   )

@@ -20,7 +20,7 @@ function Trails() {
 
   return (
     <SiteLayout>
-      <section className="bg-[#08333A] text-white">
+      <section className="bg-[#3E1027] text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
           <h1 className="text-3xl md:text-4xl font-bold">{t('trailsTitle')}</h1>
           <p className="mt-2 text-white/75 max-w-xl">{t('trailsSubtitle')}</p>

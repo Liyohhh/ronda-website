@@ -13,7 +13,7 @@ import { SLIDES, type Slide } from '../data/slides'
 // prefer reduced motion. Photos: Wikimedia Commons, credited on the slide and on the About page.
 
 export const AUTO_MS = 5000
-const GOLD_TEXT = '#B23A22' // soga brown (batik), dark enough for small text (4.5:1 on white and light tints)
+const GOLD_TEXT = '#7A5A12' // soga brown (batik), dark enough for small text (4.5:1 on white and light tints)
 
 const k = (n: number, part: string) => `s${n}_${part}` as TranslationKey
 
@@ -38,7 +38,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
       type="button"
       onClick={() => go(index + dir)}
       aria-label={dir === 1 ? t('scrollNext') : t('scrollPrev')}
-      className={`absolute top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg ring-1 ring-gray-200 text-[#0E5C63] hover:bg-gray-50 hidden md:flex items-center justify-center ${
+      className={`absolute top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg ring-1 ring-gray-200 text-[#5B1A3A] hover:bg-gray-50 hidden md:flex items-center justify-center ${
         dir === 1 ? '-end-6' : '-start-6'
       }`}
     >
@@ -77,14 +77,14 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
         if (e.key === 'ArrowLeft') go(index + (rtl ? 1 : -1))
       }}
     >
-      <h2 id="slides-title" className="text-center text-2xl md:text-3xl font-bold text-[#0E5C63]">
+      <h2 id="slides-title" className="text-center text-2xl md:text-3xl font-bold text-[#5B1A3A]">
         {t('slidesTitle')}
       </h2>
 
       <div className="relative mt-8">
         {arrow(-1)}
         {arrow(1)}
-        <div className="overflow-hidden rounded-[2rem] bg-white shadow-2xl shadow-[#08333A]/15 ring-1 ring-gray-100">
+        <div className="overflow-hidden rounded-[2rem] bg-white shadow-2xl shadow-[#3E1027]/15 ring-1 ring-gray-100">
           <div
             className="flex transition-transform duration-700 ease-out motion-reduce:transition-none"
             style={{ transform: `translateX(${(rtl ? 1 : -1) * index * 100}%)` }}
@@ -117,7 +117,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
                     <p className="text-sm font-semibold" style={{ color: GOLD_TEXT }}>
                       {t(k(s.n, 'tag'))}
                     </p>
-                    <h3 className="mt-2 text-2xl md:text-4xl font-bold leading-tight text-[#0E5C63]">{t(k(s.n, 'title'))}</h3>
+                    <h3 className="mt-2 text-2xl md:text-4xl font-bold leading-tight text-[#5B1A3A]">{t(k(s.n, 'title'))}</h3>
                     <p className="mt-4 text-gray-600 leading-relaxed">{t(k(s.n, 'body'))}</p>
                     <ul className="mt-5 space-y-2.5 text-sm md:text-base text-start inline-block md:block">
                       {[1, 2, 3].map((p) => (

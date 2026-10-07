@@ -20,7 +20,7 @@ function CardView({ c }: { c: ChatCard }) {
   return (
     <li className="rounded-xl border border-gray-200 bg-white p-3 text-sm">
       <div className="flex items-start gap-2">
-        <span className="mt-0.5 text-[#0E5C63]" aria-hidden="true"><Icon name={icon} size={18} /></span>
+        <span className="mt-0.5 text-[#5B1A3A]" aria-hidden="true"><Icon name={icon} size={18} /></span>
         <div className="min-w-0 flex-1">
           <p className="font-semibold text-gray-900">{c.name}</p>
           <p className="text-xs text-gray-600">
@@ -33,9 +33,9 @@ function CardView({ c }: { c: ChatCard }) {
             </p>
           )}
           {c.link && (internal ? (
-            <Link to={c.link} className="mt-1 inline-block text-xs font-semibold text-[#0E5C63] underline">{c.kind === 'trip' ? t('chat_openPlan') : t('planTripHere')}</Link>
+            <Link to={c.link} className="mt-1 inline-block text-xs font-semibold text-[#5B1A3A] underline">{c.kind === 'trip' ? t('chat_openPlan') : t('planTripHere')}</Link>
           ) : (
-            <a href={c.link} target="_blank" rel="noopener noreferrer nofollow" className="mt-1 inline-block text-xs font-semibold text-[#0E5C63] underline">{t('chat_openSite')}</a>
+            <a href={c.link} target="_blank" rel="noopener noreferrer nofollow" className="mt-1 inline-block text-xs font-semibold text-[#5B1A3A] underline">{t('chat_openSite')}</a>
           ))}
         </div>
       </div>
@@ -132,7 +132,7 @@ function ChatWidget() {
           aria-haspopup="dialog"
           aria-label={t('chat_open')}
           data-chat-launcher
-          className="fixed bottom-4 end-4 z-40 flex items-center gap-2 rounded-full bg-[#0E5C63] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-2 ring-[#F27A5E] hover:bg-[#1B6E75] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E5C63] [body[data-side-panel]_&]:hidden"
+          className="fixed bottom-4 end-4 z-40 flex items-center gap-2 rounded-full bg-[#5B1A3A] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-2 ring-[#C9A04A] hover:bg-[#6E2649] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5B1A3A] [body[data-side-panel]_&]:hidden"
         >
           <Icon name="chat" size={20} />
           <span className="hidden sm:inline">{t('chat_title')}</span>
@@ -147,9 +147,9 @@ function ChatWidget() {
           onKeyDown={(e) => e.key === 'Escape' && close()}
           className="fixed inset-0 z-50 flex flex-col bg-white sm:inset-auto sm:bottom-4 sm:end-4 sm:h-[560px] sm:max-h-[calc(100vh-2rem)] sm:w-[380px] sm:rounded-2xl sm:shadow-2xl sm:ring-1 sm:ring-black/10"
         >
-          <header className="flex items-center gap-2 bg-[#08333A] px-4 py-3 text-white sm:rounded-t-2xl">
+          <header className="flex items-center gap-2 bg-[#3E1027] px-4 py-3 text-white sm:rounded-t-2xl">
             <h2 id="chat-title" className="font-semibold">{t('chat_title')}</h2>
-            <span className="rounded bg-[#F27A5E] px-1.5 py-0.5 text-[10px] font-bold text-[#08333A]">AI</span>
+            <span className="rounded bg-[#C9A04A] px-1.5 py-0.5 text-[10px] font-bold text-[#3E1027]">AI</span>
             <button type="button" onClick={newChat} className="ms-auto rounded-full px-3 py-1 text-xs font-semibold text-white/90 ring-1 ring-white/40 hover:bg-white/10">{t('chat_new')}</button>
             <button type="button" onClick={close} aria-label={t('chat_close')} className="rounded-full p-1 hover:bg-white/10"><Icon name="close" size={20} /></button>
           </header>
@@ -162,7 +162,7 @@ function ChatWidget() {
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {STARTERS.map((k) => (
                     <li key={k}>
-                      <button type="button" onClick={() => void send(t(k))} className="rounded-full border border-[#0E5C63]/30 px-3 py-1.5 text-xs text-[#0E5C63] hover:bg-[#0E5C63]/5">{t(k)}</button>
+                      <button type="button" onClick={() => void send(t(k))} className="rounded-full border border-[#5B1A3A]/30 px-3 py-1.5 text-xs text-[#5B1A3A] hover:bg-[#5B1A3A]/5">{t(k)}</button>
                     </li>
                   ))}
                 </ul>
@@ -171,7 +171,7 @@ function ChatWidget() {
             <ol className="mt-3 space-y-3">
               {msgs.map((m, i) => (
                 <li key={i} className={m.role === 'user' ? 'flex justify-end' : ''}>
-                  <div className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm ${m.role === 'user' ? 'bg-[#0E5C63] text-white' : 'bg-gray-100 text-gray-900'}`}>
+                  <div className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm ${m.role === 'user' ? 'bg-[#5B1A3A] text-white' : 'bg-gray-100 text-gray-900'}`}>
                     <span className="sr-only">{m.role === 'user' ? t('chat_you') : t('chat_title')}: </span>
                     {m.content}
                   </div>
@@ -193,10 +193,10 @@ function ChatWidget() {
             )}
             {notice && <p className="mt-3 text-sm text-red-700" role="alert">{notice}</p>}
             {status === 'error' && (
-              <button type="button" onClick={retry} className="mt-2 rounded-full bg-[#0E5C63] px-4 py-1.5 text-xs font-semibold text-white">{t('chat_retry')}</button>
+              <button type="button" onClick={retry} className="mt-2 rounded-full bg-[#5B1A3A] px-4 py-1.5 text-xs font-semibold text-white">{t('chat_retry')}</button>
             )}
             {guest && msgs.length > 0 && (
-              <p className="mt-3 text-xs text-gray-600">{t('chat_guestHint')} <Link to="/login" className="font-semibold text-[#0E5C63] underline">{t('login')}</Link></p>
+              <p className="mt-3 text-xs text-gray-600">{t('chat_guestHint')} <Link to="/login" className="font-semibold text-[#5B1A3A] underline">{t('login')}</Link></p>
             )}
           </div>
 
@@ -212,9 +212,9 @@ function ChatWidget() {
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={onKey}
                 placeholder={t('chat_placeholder')}
-                className="min-h-[44px] flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#0E5C63]"
+                className="min-h-[44px] flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#5B1A3A]"
               />
-              <button type="submit" disabled={!text.trim() || status === 'loading'} aria-label={t('chat_send')} className="h-11 w-11 flex-shrink-0 rounded-full bg-[#0E5C63] text-white disabled:opacity-50 flex items-center justify-center">
+              <button type="submit" disabled={!text.trim() || status === 'loading'} aria-label={t('chat_send')} className="h-11 w-11 flex-shrink-0 rounded-full bg-[#5B1A3A] text-white disabled:opacity-50 flex items-center justify-center">
                 <Icon name="chevronRight" size={22} className="rtl:rotate-180" />
               </button>
             </div>

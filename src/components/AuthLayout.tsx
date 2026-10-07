@@ -28,12 +28,12 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
 
       <div className="flex flex-1">
         {/* Brand panel */}
-        <aside className="relative hidden md:flex md:w-1/2 overflow-hidden bg-[#08333A] text-white">
+        <aside className="relative hidden md:flex md:w-1/2 overflow-hidden bg-[#3E1027] text-white">
           <picture>
             <source srcSet="/Image/banner-kl.webp" type="image/webp" />
             <img src="/Image/banner-kl.jpg" alt="" className="absolute inset-0 w-full h-full object-cover object-[45%_center] opacity-35" />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#08333A] via-[#0E5C63]/85 to-[#0E5C63]/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#3E1027] via-[#5B1A3A]/85 to-[#5B1A3A]/70" />
           <div className="relative flex flex-col justify-center px-12 lg:px-16">
             <BrandLogo tone="light" size="lg" className="mb-8" />
             <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4">{promoTitle}</h1>
@@ -76,7 +76,7 @@ export function AuthField({
       <span className="block text-sm font-medium text-gray-700 mb-1">{label}</span>
       <input
         {...input}
-        className="w-full h-11 border border-gray-300 rounded-lg px-3 bg-white text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#0E5C63] focus:ring-2 focus:ring-[#0E5C63]/15 transition"
+        className="w-full h-11 border border-gray-300 rounded-lg px-3 bg-white text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#5B1A3A] focus:ring-2 focus:ring-[#5B1A3A]/15 transition"
       />
     </label>
   )
@@ -88,9 +88,9 @@ export function SubmitButton({ busy, children }: { busy: boolean; children: Reac
     <button
       type="submit"
       disabled={busy}
-      className="w-full h-11 mt-2 bg-accent text-[#08333A] rounded-lg font-semibold hover:bg-accent-hover disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-2"
+      className="w-full h-11 mt-2 bg-accent text-[#3E1027] rounded-lg font-semibold hover:bg-accent-hover disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-2"
     >
-      {busy && <span className="w-4 h-4 border-2 border-[#08333A]/30 border-t-[#08333A] rounded-full animate-spin" />}
+      {busy && <span className="w-4 h-4 border-2 border-[#3E1027]/30 border-t-[#3E1027] rounded-full animate-spin" />}
       {busy ? t('pleaseWait') : children}
     </button>
   )
