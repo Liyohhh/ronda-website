@@ -370,7 +370,7 @@ function Home() {
           <div className="relative inline-block px-4 py-2">
             {/* local scrim: darkens only behind the text, fading out at the edges */}
             <div
-              className="absolute -inset-x-24 -inset-y-20 md:-inset-x-48 md:-inset-y-24 bg-[radial-gradient(closest-side,rgb(24_36_63/0.88)_0%,rgb(24_36_63/0.82)_58%,rgb(24_36_63/0.45)_80%,transparent_100%)]"
+              className="absolute -inset-x-16 -inset-y-14 md:-inset-x-32 md:-inset-y-16 bg-[radial-gradient(closest-side,rgb(24_36_63/0.66)_0%,rgb(24_36_63/0.62)_62%,rgb(24_36_63/0.36)_84%,transparent_100%)]"
               aria-hidden="true"
             />
             <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(24_36_63/0.7)]">
@@ -379,7 +379,7 @@ function Home() {
                 <path d="M2 8 C 60 2, 140 2, 200 6 S 280 10, 298 4" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
               </svg>
             </h1>
-            <p className="relative mt-7 text-lg md:text-2xl text-white/95 [text-shadow:0_1px_12px_rgb(24_36_63/0.8)]">
+            <p className="relative mt-7 text-xl font-bold md:text-2xl md:font-medium text-white/95 [text-shadow:0_1px_12px_rgb(24_36_63/0.8)]">
               {t('bannerSubtitle')}
             </p>
           </div>
