@@ -386,7 +386,7 @@ function Home() {
         </div>
 
         {/* Search card: half on the photo, half on the light page below it */}
-        <div className="relative z-20 mt-10 px-4 flex justify-center">
+        <div className="relative z-20 mt-16 md:mt-32 px-4 flex justify-center">
           <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-gray-50" aria-hidden="true">
             {/* soga and kunyit stripes where the photo ends, like the border of a batik cloth */}
             <div className="absolute inset-x-0 top-0 h-1.5 bg-[repeating-linear-gradient(90deg,#8A5A3B_0_28px,#D99A1E_28px_56px)]" />
