@@ -38,7 +38,7 @@ function FeatureGrid() {
   return (
     <section aria-labelledby="features-title" className="relative">
       <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 lg:px-20 pt-6 pb-8 md:pb-10">
-        <h2 id="features-title" className="text-center text-2xl md:text-3xl font-bold text-[#18243F]">
+        <h2 id="features-title" className="text-center text-2xl md:text-3xl font-bold text-white">
           {t('featuresTitle')}
         </h2>
         <ul className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4" data-testid="feature-tiles">

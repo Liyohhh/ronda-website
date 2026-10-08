@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
-// Full-width kain-cream band on the home page (was navy until the Batik palette, 8 Oct 2026). It ends in a soft wave into
-// the light page. Behind the content: flowing contour lines, faint "metro map" curves in the real line colours, glows, dots.
+// Full-width indigo band on the home page (Batik palette). It ends in a soft wave into the light page. Behind the content:
+// flowing contour lines, faint "metro map" curves in the real line colours, glows and a dot grid.
 
 // contour lines: gentle S-curves stacked like a topographic map
 const CONTOURS = Array.from({ length: 9 }, (_, i) => {
@@ -21,10 +21,10 @@ const LINES: [string, string, [number, number][]][] = [
 // resting on the edge of the band
 function FeatureBand({ children, overlap = false }: { children: ReactNode; overlap?: boolean }) {
   return (
-    <div className={`relative overflow-hidden bg-cream text-[#18243F] ${overlap ? '-mt-40 md:-mt-52' : ''}`}>
+    <div className={`relative overflow-hidden bg-gradient-to-b from-[#18243F] via-[#1F2F5C] to-[#263A6B] text-white ${overlap ? '-mt-40 md:-mt-52' : ''}`}>
       {/* shapes, behind everything */}
       <svg className="pointer-events-none absolute inset-0 w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <g fill="none" stroke="#1F2F5C" strokeOpacity="0.07" strokeWidth="1.5">
+        <g fill="none" stroke="#ffffff" strokeOpacity="0.06" strokeWidth="1.5">
           {CONTOURS.map((d) => (
             <path key={d} d={d} />
           ))}
@@ -40,12 +40,12 @@ function FeatureBand({ children, overlap = false }: { children: ReactNode; overl
           )}
         </g>
       </svg>
-      <div className="pointer-events-none absolute -top-40 -start-40 w-[520px] h-[520px] rounded-full bg-[#D99A1E]/15 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute top-1/3 -end-32 w-[560px] h-[560px] rounded-full bg-[#2F5DA8]/10 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute bottom-10 start-1/4 w-[520px] h-[520px] rounded-full bg-[#D99A1E]/12 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -top-40 -start-40 w-[520px] h-[520px] rounded-full bg-[#2F5DA8]/35 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute top-1/3 -end-32 w-[560px] h-[560px] rounded-full bg-[#D99A1E]/12 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute bottom-10 start-1/4 w-[520px] h-[520px] rounded-full bg-[#2F5DA8]/25 blur-3xl" aria-hidden="true" />
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
-        style={{ backgroundImage: 'radial-gradient(#1F2F5C 1px, transparent 1px)', backgroundSize: '22px 22px' }}
+        style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '22px 22px' }}
         aria-hidden="true"
       />
 
