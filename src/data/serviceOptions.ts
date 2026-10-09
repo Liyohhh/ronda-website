@@ -15,7 +15,7 @@ const planToPlace = (lat: number, lon: number, shown: string) => `/?toLat=${lat}
 export type NavItem = { to: string; name?: string; label?: TranslationKey; detail?: string; detailLabel?: TranslationKey; onlyLang?: Lang }
 export type NavColumn = { title: TranslationKey; items: NavItem[] }
 export type NavMenu = {
-  key: 'navTravel' | 'navExplore' | 'navRonda300' | 'navServices' | 'about'
+  key: 'navTravel' | 'navRonda300' | 'navServices' | 'about'
   columns: NavColumn[]
   promo: { title: TranslationKey; text: TranslationKey; cta: TranslationKey; to: string }
 }
@@ -49,8 +49,17 @@ export const NAV_MENUS: NavMenu[] = [
     promo: { title: 'navPlanTitle', text: 'navPlanText', cta: 'navPlanCta', to: '/' },
   },
   {
-    key: 'navExplore',
+    // RONDA 300 (was "Explore" + a separate RONDA 300 menu): places within a short walk of each station, the trails,
+    // trail categories and popular places. A click on the menu name goes to the RONDA 300 section on Home.
+    key: 'navRonda300',
     columns: [
+      {
+        title: 'navRonda300',
+        items: [
+          { label: 'r3_navFind', detailLabel: 'r3_navFindD', to: '/ronda-300' },
+          { label: 'navSeeTrails', detailLabel: 'trailsSubtitle', to: '/trails' },
+        ],
+      },
       {
         title: 'navTrailCats',
         items: [
@@ -65,20 +74,6 @@ export const NAV_MENUS: NavMenu[] = [
           { name: 'Pavilion Kuala Lumpur', detail: 'MRT Bukit Bintang', to: planTo('MRT Bukit Bintang', 'Pavilion Kuala Lumpur') },
           { name: 'Batu Caves', detail: 'KTM Batu Caves', to: planTo('KTM Batu Caves', 'Batu Caves') },
           { name: 'Central Market (Pasar Seni)', detail: 'MRT Pasar Seni', to: planTo('MRT Pasar Seni', 'Central Market (Pasar Seni)') },
-        ],
-      },
-    ],
-    promo: { title: 'trailsTitle', text: 'trailsSubtitle', cta: 'navSeeTrails', to: '/trails' },
-  },
-  {
-    // RONDA 300: places within a short walk of each station (curated now, merchants later)
-    key: 'navRonda300',
-    columns: [
-      {
-        title: 'navRonda300',
-        items: [
-          { label: 'r3_navFind', detailLabel: 'r3_navFindD', to: '/ronda-300' },
-          { label: 'navTrailCats', detailLabel: 'trailsSubtitle', to: '/trails' },
         ],
       },
     ],

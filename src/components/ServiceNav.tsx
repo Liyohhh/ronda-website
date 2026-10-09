@@ -45,8 +45,8 @@ function ServiceNav({ className = '' }: { className?: string }) {
               onMouseEnter={() => open(m.key)}
               onFocus={() => open(m.key)}
               onClick={() => {
-                // Explore: a click goes to the trails on Home (hover / focus still opens the panel)
-                if (m.key === 'navExplore') {
+                // RONDA 300: a click goes to its section on Home (hover / focus still opens the panel)
+                if (m.key === 'navRonda300') {
                   window.clearTimeout(closeTimer.current)
                   setActive(null)
                   navigate('/#explore')

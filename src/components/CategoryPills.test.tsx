@@ -24,8 +24,8 @@ describe('Arabic-only trail category', () => {
     expect(onChange).toHaveBeenCalledWith('halal-fine-dining')
   })
 
-  it('Explore menu marks the item as Arabic-only', () => {
-    const items = NAV_MENUS.find((m) => m.key === 'navExplore')!.columns[0].items
+  it('RONDA 300 menu marks the item as Arabic-only', () => {
+    const items = NAV_MENUS.find((m) => m.key === 'navRonda300')!.columns.find((c) => c.title === 'navTrailCats')!.items
     expect(items.find((i) => i.to.endsWith('halal-fine-dining'))?.onlyLang).toBe('ar')
   })
 })
