@@ -14,7 +14,7 @@ test('English: no halal fine-dining pill, card or menu item', async ({ page, bac
   await expect(page.getByRole('button', { name: 'All', pressed: true })).toBeVisible()
 })
 
-test('Arabic: the halal pill filters to the halal trail, on /trails and on Home', async ({ page, backend }) => {
+test('Arabic: the halal pill filters to the halal trail on /trails; Home lists the trail', async ({ page, backend }) => {
   void backend
   await page.addInitScript(() => localStorage.setItem('ronda-lang', 'ar'))
   await page.goto('/trails')
@@ -22,5 +22,6 @@ test('Arabic: the halal pill filters to the halal trail, on /trails and on Home'
   await expect(page).toHaveURL(/category=halal-fine-dining/)
   await expect(page.getByText('مطاعم الفنادق الحلال')).toBeVisible()
   await page.goto('/')
-  await expect(page.locator('#explore').getByRole('button', { name: AR_PILL })).toBeVisible()
+  // Home has category cards and a Featured trails row (no pills): the halal trail is in the row
+  await expect(page.locator('#explore a[href="/trails/halal-fine-dining"]')).toBeVisible()
 })
