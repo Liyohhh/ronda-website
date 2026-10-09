@@ -60,7 +60,7 @@ function TrailsSection() {
           className="mt-4 flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] -mx-4 px-4 pb-4"
         >
           {trails.map((trail) => (
-            <li key={trail.slug} className="snap-start flex-shrink-0 w-[78%] sm:w-[46%] md:w-[31%] lg:w-[23.5%] flex">
+            <li key={trail.slug} className="snap-start flex-shrink-0 w-[85%] sm:w-[60%] md:w-[46%] lg:w-[36%] flex">
               <TrailCard trail={trail} places={data.places} className="w-full" />
             </li>
           ))}

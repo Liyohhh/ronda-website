@@ -37,7 +37,7 @@ function Trails() {
             {t('noTrailsInCategory')}
           </div>
         ) : (
-          <ul className="mt-6 grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <ul className="mt-6 grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {trails.map((trail) => (
               <li key={trail.slug} className="flex">
                 <TrailCard trail={trail} places={data.places} className="w-full" />
