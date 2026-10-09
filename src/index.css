@@ -124,3 +124,22 @@ body {
   border-radius: 9999px;
   padding: 1px;
 }
+
+/* Sign-in panel slideshow (AuthLayout): four KL photos, 7 s each in a 28 s loop; each fades in, drifts and zooms
+   slowly, then fades into the next. With reduced motion only the first photo shows, still. */
+@keyframes auth-show {
+  0% { opacity: 0; transform: scale(1.02) translate3d(0, 0, 0); }
+  5% { opacity: 1; }
+  25% { opacity: 1; }
+  32% { opacity: 0; transform: scale(1.14) translate3d(-2%, -1%, 0); }
+  100% { opacity: 0; transform: scale(1.14) translate3d(-2%, -1%, 0); }
+}
+.auth-show {
+  opacity: 0;
+  animation: auth-show 28s linear infinite;
+  will-change: opacity, transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-show { animation: none; }
+  .auth-show:first-child { opacity: 1; }
+}

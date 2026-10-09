@@ -4,8 +4,13 @@ import BrandLogo from './BrandLogo'
 import LanguageMenu from './LanguageMenu'
 import SocialLogin from './SocialLogin'
 import { useLanguage } from '../hooks/useLanguage'
+import { SLIDE_PHOTOS } from '../data/trailPhotos'
 
 // Shared frame for Login / Register: slim top bar, brand panel on the left (desktop), form on the right.
+
+// Brand panel slideshow: KL skyline (our own banner photo), then three Commons photos already used and credited on
+// the home page slides and the About page. Animation in index.css (.auth-show).
+const SHOW = ['/Image/banner-kl.jpg', SLIDE_PHOTOS.ronda300.src, SLIDE_PHOTOS.fares.src, SLIDE_PHOTOS.saved.src]
 type Props = {
   promoTitle: string
   promoText: string
@@ -27,17 +32,26 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
       </header>
 
       <div className="flex flex-1">
-        {/* Brand panel: the KL photo at full strength; a navy fade rises from the bottom only, behind the text */}
+        {/* Brand panel: a slow slideshow of KL photos at full strength; a navy fade rises from the bottom only, behind the text */}
         <aside className="relative hidden md:flex md:w-1/2 overflow-hidden bg-[#1F2F5C] text-white">
-          <picture>
-            <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-            <img src="/Image/banner-kl.jpg" alt="" className="absolute inset-0 w-full h-full object-cover object-[45%_center]" />
-          </picture>
+          <div aria-hidden="true" className="absolute inset-0">
+            {SHOW.map((src, i) => (
+              <img
+                key={src}
+                src={src}
+                alt=""
+                loading={i === 0 ? 'eager' : 'lazy'}
+                className="auth-show absolute inset-0 w-full h-full object-cover object-[45%_center]"
+                style={{ animationDelay: `${i * 7}s` }}
+              />
+            ))}
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#18243F] via-[#18243F]/60 via-45% to-transparent to-75%" />
           <div className="relative flex flex-col justify-end w-full px-12 lg:px-16 pb-16">
             <BrandLogo tone="light" size="lg" className="mb-6" />
             <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 [text-shadow:0_2px_8px_rgb(0_0_0/0.35)]">{promoTitle}</h1>
             <p className="text-white/90 text-lg max-w-md">{promoText}</p>
+            <Link to="/about#about-credits" className="absolute bottom-3 end-4 text-[11px] text-white/70 hover:underline">{t('photoCredits')}</Link>
           </div>
         </aside>
 
