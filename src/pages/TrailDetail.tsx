@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
+import PlaceHours from '../components/PlaceHours'
 import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
 import { CATEGORY_STYLE } from '../data/trailStyles'
@@ -18,6 +19,9 @@ import {
   weekdayKey,
   type Station,
 } from '../data/trails'
+
+// Rapid KL stop ids are the station codes riders see (KJ10, KG18A); other feeds use internal numbers
+const stationCode = (s: Station) => (s.feedId === 'rapid-rail-kl' && s.stopId ? s.stopId : null)
 
 // Home opens with the End box filled in: /?to=<exact search name>&toName=<shown name>
 const planHref = (s: Station) => `/?to=${encodeURIComponent(s.search)}&toName=${encodeURIComponent(s.name)}`
@@ -107,8 +111,8 @@ function TrailDetail() {
                   {i + 1}
                 </span>
 
-                <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-3 flex flex-col sm:flex-row gap-4">
-                  {/* photo on the left (category cover when the place has no free photo), details on the right */}
+                <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-3 flex flex-col sm:flex-row-reverse gap-4">
+                  {/* details on the left, photo on the right (category cover when the place has no free photo); photo on top on a phone */}
                   <div className="relative flex-shrink-0 w-full sm:w-52 md:w-60 aspect-[4/3] rounded-xl overflow-hidden">
                     {PLACE_PHOTOS[place.id] ? (
                       <>
@@ -128,32 +132,46 @@ function TrailDetail() {
                     )}
                   </div>
 
-                  <div className="flex-1 min-w-0 flex flex-col sm:py-1 sm:pe-1">
+                  <div className="flex-1 min-w-0 flex flex-col sm:py-1 sm:ps-1">
                     {newDay && (
                       <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#8A5A3B] bg-[#D99A1E]/15 px-2 py-0.5 rounded">
                         {t(weekdayKey(stop.day!))}
                       </div>
                     )}
                     <h3 className="text-lg font-semibold text-gray-900 leading-snug">{place.name}</h3>
-                    <p className="mt-1 text-sm text-gray-600 leading-relaxed">{t(placeBlurbKey(place.id))}</p>
+                    {place.address && <p className="mt-0.5 text-xs text-gray-500">{place.address}</p>}
+                    <p className="mt-1.5 text-sm text-gray-600 leading-relaxed">{t(placeBlurbKey(place.id))}</p>
 
-                    <div className="mt-auto pt-3 flex flex-wrap items-center justify-between gap-3">
-                      {place.station ? (
-                        <div className="flex items-center gap-2 text-sm min-w-0">
+                    {/* where to get off, and the walk from there */}
+                    {place.station ? (
+                      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
+                        <span className="inline-flex items-center gap-1.5 min-w-0">
+                          <span className="text-gray-500">{t('getOffAt')}</span>
                           <span className="flex -space-x-1 rtl:space-x-reverse">
                             {place.station.lineIds.map((id) => (
                               <span key={id} className="rounded-md ring-2 ring-white">
-                                <LineBadge line={id} size={22} decorative />
+                                <LineBadge line={id} size={20} decorative />
                               </span>
                             ))}
                           </span>
-                          <span className="text-gray-500">{t('nearestStation')}:</span>
                           <span className="font-medium text-gray-900 truncate">{place.station.name}</span>
-                        </div>
-                      ) : (
-                        <span className="text-sm text-gray-500 italic">{t('stationTbc')}</span>
-                      )}
+                          {stationCode(place.station) && (
+                            <span className="text-xs font-semibold text-gray-600 border border-gray-300 rounded px-1">{stationCode(place.station)}</span>
+                          )}
+                        </span>
+                        {place.walkMeters != null && (
+                          <span className="inline-flex items-center gap-1 text-gray-600">
+                            <Icon name="directionsWalk" size={16} className="text-[#15803D]" />
+                            {t('walkFromStation').replace('{m}', String(place.walkMeters)).replace('{n}', String(Math.max(1, Math.round(place.walkMeters / 80))))}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="mt-3 text-sm text-gray-500 italic">{t('stationTbc')}</p>
+                    )}
 
+                    <div className="mt-auto pt-3 flex flex-wrap items-end justify-between gap-3">
+                      {place.openingHours ? <PlaceHours hours={place.openingHours} /> : <span />}
                       {place.station && (
                         <Link
                           to={planHref(place.station)}
@@ -170,6 +188,9 @@ function TrailDetail() {
             )
           })}
         </ol>
+        <p className="mt-6 text-xs text-gray-500">
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="hover:underline">{t('placeInfoCredit')}</a>
+        </p>
       </div>
     </SiteLayout>
   )

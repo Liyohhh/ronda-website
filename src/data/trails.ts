@@ -26,6 +26,10 @@ export type Place = {
   name: string
   station: Station | null
   todo?: string
+  // from OpenStreetMap (trail_places.address / opening_hours / walk_m); absent when OSM has none
+  address?: string
+  openingHours?: string // OSM opening_hours syntax, e.g. "Mo-Su 10:00-22:00"
+  walkMeters?: number // walk from the station along footpaths
 }
 
 export type Weekday = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
