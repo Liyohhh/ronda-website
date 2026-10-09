@@ -132,7 +132,7 @@ function ChatWidget() {
           aria-haspopup="dialog"
           aria-label={t('chat_open')}
           data-chat-launcher
-          className="fixed bottom-4 end-4 z-40 flex items-center gap-2 rounded-full bg-[#1F2F5C] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-2 ring-[#D99A1E] hover:bg-[#2C3F73] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1F2F5C] [body[data-side-panel]_&]:hidden"
+          className="fixed bottom-4 end-4 z-40 flex items-center gap-2 rounded-full bg-[#1F2F5C] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-2 ring-[#8EC0FF] hover:bg-[#2C3F73] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1F2F5C] [body[data-side-panel]_&]:hidden"
         >
           <Icon name="chat" size={20} />
           <span className="hidden sm:inline">{t('chat_title')}</span>
@@ -149,7 +149,7 @@ function ChatWidget() {
         >
           <header className="flex items-center gap-2 bg-[#1F2F5C] px-4 py-3 text-white sm:rounded-t-2xl">
             <h2 id="chat-title" className="font-semibold">{t('chat_title')}</h2>
-            <span className="rounded bg-[#D99A1E] px-1.5 py-0.5 text-[10px] font-bold text-[#18243F]">AI</span>
+            <span className="rounded bg-[#2563EB] px-1.5 py-0.5 text-[10px] font-bold text-white">AI</span>
             <button type="button" onClick={newChat} className="ms-auto rounded-full px-3 py-1 text-xs font-semibold text-white/90 ring-1 ring-white/40 hover:bg-white/10">{t('chat_new')}</button>
             <button type="button" onClick={close} aria-label={t('chat_close')} className="rounded-full p-1 hover:bg-white/10"><Icon name="close" size={20} /></button>
           </header>

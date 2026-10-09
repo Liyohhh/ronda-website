@@ -134,7 +134,7 @@ function TrailDetail() {
 
                   <div className="flex-1 min-w-0 flex flex-col sm:py-1 sm:ps-1">
                     {newDay && (
-                      <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#8A5A3B] bg-[#D99A1E]/15 px-2 py-0.5 rounded">
+                      <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#1D4ED8] bg-[#2563EB]/10 px-2 py-0.5 rounded">
                         {t(weekdayKey(stop.day!))}
                       </div>
                     )}

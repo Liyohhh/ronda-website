@@ -13,7 +13,7 @@ import { SLIDES, type Slide } from '../data/slides'
 // prefer reduced motion. Photos: Wikimedia Commons, credited on the slide and on the About page.
 
 export const AUTO_MS = 5000
-const GOLD_TEXT = '#8A5A3B' // soga brown (batik), dark enough for small text (4.5:1 on white and light tints)
+const GOLD_TEXT = '#1D4ED8' // royal blue, dark enough for small text (4.5:1 on white and light tints)
 
 const k = (n: number, part: string) => `s${n}_${part}` as TranslationKey
 

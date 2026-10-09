@@ -345,9 +345,9 @@ function Home() {
 
   return (
     <SiteLayout>
-      {/* Hero: KL skyline photo, lighter than before (Batik palette): a light indigo wash plus a warm kunyit tint so the
-          dusk reads golden, not grey; a soft scrim only behind the text keeps it readable (measured at 375 / 768 / 1440 px
-          with scripts/hero-contrast.mjs); kunyit brush stroke under the headline; the search card overlaps its bottom */}
+      {/* Hero: KL skyline photo, light (clean blue theme): a light indigo wash plus a soft cobalt tint; a soft scrim only
+          behind the text keeps it readable (measured at 375 / 768 / 1440 px with scripts/hero-contrast.mjs); sky-blue
+          brush stroke under the headline; the search card overlaps its bottom */}
       <section className="relative overflow-x-clip">
         {/* Photo behind the whole hero; the light strip in the card row hides its lower part,
             so the photo always ends exactly halfway down the search card (pure CSS, any card height) */}
@@ -361,7 +361,7 @@ function Home() {
               className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
             />
           </picture>
-          <div className="absolute inset-0 bg-[#D99A1E]/15 mix-blend-soft-light" />
+          <div className="absolute inset-0 bg-[#2563EB]/10 mix-blend-soft-light" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#18243F]/30 via-[#18243F]/5 to-[#18243F]/25" />
         </div>
 
@@ -374,7 +374,7 @@ function Home() {
             />
             <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(24_36_63/0.7)]">
               {t('bannerTitle')}
-              <svg className="absolute -bottom-3 md:-bottom-5 inset-x-[8%] w-[84%] h-3 md:h-4 text-accent" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
+              <svg className="absolute -bottom-3 md:-bottom-5 inset-x-[8%] w-[84%] h-3 md:h-4 text-accent-light" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
                 <path d="M2 8 C 60 2, 140 2, 200 6 S 280 10, 298 4" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
               </svg>
             </h1>
@@ -387,8 +387,8 @@ function Home() {
         {/* Search card: half on the photo, half on the light page below it */}
         <div className="relative z-20 mt-16 md:mt-32 px-4 flex justify-center">
           <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-gray-50" aria-hidden="true">
-            {/* soga and kunyit stripes where the photo ends, like the border of a batik cloth */}
-            <div className="absolute inset-x-0 top-0 h-1.5 bg-[repeating-linear-gradient(90deg,#8A5A3B_0_28px,#D99A1E_28px_56px)]" />
+            {/* two-blue stripe where the photo ends */}
+            <div className="absolute inset-x-0 top-0 h-1.5 bg-[repeating-linear-gradient(90deg,#1F2F5C_0_28px,#2563EB_28px_56px)]" />
           </div>
           <div id="plan" className="relative w-full max-w-6xl bg-white rounded-[2rem] shadow-2xl px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
             {/* Tab switcher */}
@@ -530,7 +530,7 @@ function Home() {
                   <button
                     onClick={() => handleSearch()}
                     disabled={loading}
-                    className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-[#18243F] flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                    className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                     aria-label={t('searchAria')}
                   >
                     {loading ? (

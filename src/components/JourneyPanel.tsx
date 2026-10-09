@@ -108,7 +108,7 @@ type Props = {
 
 type SortKey = 'fastest' | 'priceLow' | 'priceHigh' | 'transfers' | 'walking'
 
-const GOLD = '#D99A1E'
+const GOLD = '#2563EB'
 
 // ---------- helpers ----------
 
@@ -250,9 +250,9 @@ function Highlight({ tags }: { tags?: Tag[] }) {
     : has('least_walking')
       ? ['hlEasiest', 'bg-emerald-600 text-white']
       : has('fewest_changes')
-        ? ['tagFewestChanges', 'bg-[#D99A1E] text-[#18243F]']
+        ? ['tagFewestChanges', 'bg-[#E8F0FE] text-[#1D4ED8]']
         : has('cheapest')
-          ? ['tagCheapest', 'bg-[#D99A1E] text-[#18243F]']
+          ? ['tagCheapest', 'bg-[#E8F0FE] text-[#1D4ED8]']
           : null
   if (!pick) return null
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${pick[1]}`}>{t(pick[0])}</span>

@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
-/* Batik blue theme (9 Oct 2026): indigo batik navy on cool light grey, with turmeric (kunyit) as the one bright accent.
-   Greys are cool and slightly blue (replacing the warm kain-cream greys of 8 Oct); the darkest stop is the deep indigo
-   used for text. Tokens: navy (bands), band (light grey section bands), accent = kunyit (main actions, highlights;
-   dark text on it), accent-light (kunyit text on navy), accent-text (kunyit-family text on light backgrounds),
-   soga (small tags only), blue-batik (a livelier second blue for buttons, links and icons). */
+/* Clean blue theme (9 Oct 2026): RONDA navy on cool light grey, one crisp cobalt blue for actions, and a range of
+   blues (royal, ocean, teal-blue, indigo, slate) where variety is needed. No warm colours except where colour carries
+   meaning (official line colours, open / closed, live bus status, brand logos).
+   Tokens: navy (bands, text), band (light grey section bands), accent = cobalt (main actions; white text on it),
+   accent-light (sky blue for highlights on navy), accent-text (blue text on light backgrounds), blue-batik (links and icons). */
 @theme {
   --color-gray-50: #f5f7fa;
   --color-gray-100: #eef1f6;
@@ -19,13 +19,12 @@
   --color-navy: #1f2f5c;
   --color-navy-deep: #18243f;
   --color-band: #eaeef4;
-  --color-accent: #d99a1e;
-  --color-accent-hover: #c4870f;
-  --color-accent-light: #f0c062;
-  --color-accent-text: #8a5a3b;
-  --color-soga: #8a5a3b;
-  --color-blue-batik: #2f5da8;
-  --color-blue-batik-hover: #264d8c;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-light: #8ec0ff;
+  --color-accent-text: #1d4ed8;
+  --color-blue-batik: #1d4ed8;
+  --color-blue-batik-hover: #1e40af;
 }
 
 /* The site is designed light-only: keep native controls (inputs, scrollbars) light too */

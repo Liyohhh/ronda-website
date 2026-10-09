@@ -9,7 +9,7 @@ function NotFound() {
   return (
     <SiteLayout>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-center">
-        <p className="text-sm font-semibold text-[#8A5A3B]">404</p>
+        <p className="text-sm font-semibold text-[#2563EB]">404</p>
         <h1 className="mt-2 text-3xl md:text-4xl font-bold text-[#1F2F5C]">{t('nf_title')}</h1>
         <p className="mt-4 text-gray-600">
           {t('nf_text')} <span className="font-mono text-gray-800 break-all" dir="ltr">{pathname}</span>

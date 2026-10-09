@@ -38,7 +38,7 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
           {body}
         </span>
       )}
-      {!href && <span className="text-xs font-medium text-[#E7C98F] uppercase tracking-wider">{soon}</span>}
+      {!href && <span className="text-xs font-medium text-accent-light uppercase tracking-wider">{soon}</span>}
     </div>
   )
 }
@@ -55,7 +55,7 @@ function PhoneMockup() {
           <BrandLogo tone="light" size="sm" />
           <div className="mt-3 rounded-xl bg-white px-3 py-2 space-y-1.5">
             <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full border-2 border-[#1F2F5C]" />KL Sentral</div>
-            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full bg-[#D99A1E]" />KLCC</div>
+            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full bg-[#2563EB]" />KLCC</div>
           </div>
         </div>
         <div className="p-3 space-y-2">

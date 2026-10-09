@@ -88,7 +88,7 @@ export function SubmitButton({ busy, children }: { busy: boolean; children: Reac
     <button
       type="submit"
       disabled={busy}
-      className="w-full h-11 mt-2 bg-accent text-[#18243F] rounded-lg font-semibold hover:bg-accent-hover disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-2"
+      className="w-full h-11 mt-2 bg-accent text-white rounded-lg font-semibold hover:bg-accent-hover disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-2"
     >
       {busy && <span className="w-4 h-4 border-2 border-[#18243F]/30 border-t-[#18243F] rounded-full animate-spin" />}
       {busy ? t('pleaseWait') : children}

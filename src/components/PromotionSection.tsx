@@ -90,7 +90,7 @@ function PromotionSection() {
               ))}
             </ul>
             <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
-              <span aria-hidden="true" className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-accent text-sm font-bold text-[#18243F] shadow">
+              <span aria-hidden="true" className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-accent text-sm font-bold text-white shadow">
                 {t(f.cta)}
                 <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
               </span>

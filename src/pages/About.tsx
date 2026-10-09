@@ -62,7 +62,7 @@ const NETWORKS_SOON: { name: string; note?: TranslationKey }[] = [
 function SoonBadge() {
   const { t } = useLanguage()
   return (
-    <span className="inline-block text-[10px] font-bold uppercase tracking-wide text-[#8A5A3B] bg-[#D99A1E]/15 px-2 py-0.5 rounded-full">
+    <span className="inline-block text-[10px] font-bold uppercase tracking-wide text-[#1D4ED8] bg-[#2563EB]/10 px-2 py-0.5 rounded-full">
       {t('soon')}
     </span>
   )
@@ -160,7 +160,7 @@ function About() {
               <ul className="mt-4 space-y-3">
                 {NETWORKS_SOON.map((n) => (
                   <li key={n.name} className="flex items-center gap-3 text-gray-600">
-                    <span className="w-2 h-2 rounded-full bg-[#D99A1E] flex-shrink-0" aria-hidden="true" />
+                    <span className="w-2 h-2 rounded-full bg-[#2563EB] flex-shrink-0" aria-hidden="true" />
                     <span>
                       {n.name}
                       {n.note && <span className="text-gray-500"> ({t(n.note)})</span>}
