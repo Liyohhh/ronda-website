@@ -1,24 +1,24 @@
 @import "tailwindcss";
 
-/* Batik kunyit theme (8 Oct 2026), from Terengganu batik: indigo cloth, kain cream, turmeric (kunyit) dye, soga-bark brown.
-   Greys are warm (cream to soga brown) instead of blue-tinted; the darkest stop is the deep indigo used for text.
-   Tokens: navy (bands), cream (light bands), accent = kunyit (main actions, highlights; dark text on it),
-   accent-light (kunyit text on navy), accent-text (kunyit-family text on light backgrounds), soga (small tags only),
-   blue-batik (a livelier second blue for buttons, links and icons; deep indigo stays for header, footer and text). */
+/* Batik blue theme (9 Oct 2026): indigo batik navy on cool light grey, with turmeric (kunyit) as the one bright accent.
+   Greys are cool and slightly blue (replacing the warm kain-cream greys of 8 Oct); the darkest stop is the deep indigo
+   used for text. Tokens: navy (bands), band (light grey section bands), accent = kunyit (main actions, highlights;
+   dark text on it), accent-light (kunyit text on navy), accent-text (kunyit-family text on light backgrounds),
+   soga (small tags only), blue-batik (a livelier second blue for buttons, links and icons). */
 @theme {
-  --color-gray-50: #fbf7f0;
-  --color-gray-100: #f4eee4;
-  --color-gray-200: #e8e0d3;
-  --color-gray-300: #d5cabb;
-  --color-gray-400: #a39887;
-  --color-gray-500: #736b5f;
-  --color-gray-600: #5a5349;
-  --color-gray-700: #3f3a34;
-  --color-gray-800: #2a2722;
+  --color-gray-50: #f5f7fa;
+  --color-gray-100: #eef1f6;
+  --color-gray-200: #e1e6ee;
+  --color-gray-300: #cbd3df;
+  --color-gray-400: #97a2b3;
+  --color-gray-500: #5b6779;
+  --color-gray-600: #475467;
+  --color-gray-700: #344054;
+  --color-gray-800: #1f2937;
   --color-gray-900: #18243f;
   --color-navy: #1f2f5c;
   --color-navy-deep: #18243f;
-  --color-cream: #f7f0e1;
+  --color-band: #eaeef4;
   --color-accent: #d99a1e;
   --color-accent-hover: #c4870f;
   --color-accent-light: #f0c062;
@@ -46,7 +46,7 @@ html {
 }
 
 body {
-  background: #fcf8f0;
+  background: #f7f9fc;
   color: #18243F;
 }
 

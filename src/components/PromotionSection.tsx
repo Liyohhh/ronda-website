@@ -57,8 +57,8 @@ function PromotionSection() {
 
   const f = PROMO_FEATURE
   return (
-    // a kain-cream band behind the section, so the page alternates light and warm instead of one flat colour
-    <section aria-labelledby="promo-title" className="mt-12 bg-cream py-10">
+    // a light grey band behind the section, so the page alternates instead of one flat colour
+    <section aria-labelledby="promo-title" className="mt-12 bg-band py-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
