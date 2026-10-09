@@ -29,7 +29,7 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
       </header>
 
       <div className="flex flex-1">
-        {/* Brand panel: KL night timelapse at full strength; text at the top over a navy fade, the city lights below */}
+        {/* Brand panel: KL sunset timelapse at full strength; the sky stays clear at the top, text at the bottom over a navy fade */}
         <aside className="relative hidden md:flex md:w-1/2 overflow-hidden bg-[#1F2F5C] text-white">
           <picture>
             <source srcSet="/Image/banner-kl.webp" type="image/webp" />
@@ -43,13 +43,13 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
             playsInline
             preload="auto"
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover object-[50%_75%] brightness-125 contrast-110 saturate-125 motion-reduce:hidden"
+            className="absolute inset-0 w-full h-full object-cover object-[12%_50%] motion-reduce:hidden"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#18243F]/90 via-[#18243F]/40 via-40% to-transparent to-65%" />
-          <div className="relative flex flex-col justify-start w-full px-12 lg:px-16 pt-16">
+          <div className="absolute inset-0 bg-gradient-to-t from-[#18243F]/95 via-[#18243F]/75 via-35% to-transparent to-65%" />
+          <div className="relative flex flex-col justify-end w-full px-12 lg:px-16 pb-16">
             <BrandLogo tone="light" size="lg" className="mb-6" />
             <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 [text-shadow:0_2px_8px_rgb(0_0_0/0.35)]">{promoTitle}</h1>
-            <p className="text-white/90 text-lg max-w-md">{promoText}</p>
+            <p className="text-white text-lg max-w-md [text-shadow:0_1px_6px_rgb(0_0_0/0.55)]">{promoText}</p>
             <a href={AUTH_VIDEO.page} target="_blank" rel="noopener noreferrer" className="absolute bottom-3 end-4 rounded bg-black/45 px-2 py-0.5 text-[11px] text-white/85 hover:underline">
               {t('videoLabel')}: {AUTH_VIDEO.author} · Pexels
             </a>

@@ -235,7 +235,7 @@ function About() {
               </li>
             ))}
             <li>
-              {t('videoLabel')}, Kuala Lumpur at night:{' '}
+              {t('videoLabel')}, sunset over Kuala Lumpur:{' '}
               <a href={AUTH_VIDEO.page} target="_blank" rel="noopener noreferrer" className="hover:underline">{AUTH_VIDEO.author}</a> · Pexels
             </li>
             {Object.entries(SLIDE_PHOTOS).map(([k, ph]) => (
