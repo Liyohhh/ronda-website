@@ -27,17 +27,17 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
       </header>
 
       <div className="flex flex-1">
-        {/* Brand panel */}
+        {/* Brand panel: the KL photo at full strength; a navy fade rises from the bottom only, behind the text */}
         <aside className="relative hidden md:flex md:w-1/2 overflow-hidden bg-[#1F2F5C] text-white">
           <picture>
             <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-            <img src="/Image/banner-kl.jpg" alt="" className="absolute inset-0 w-full h-full object-cover object-[45%_center] opacity-35" />
+            <img src="/Image/banner-kl.jpg" alt="" className="absolute inset-0 w-full h-full object-cover object-[45%_center]" />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#18243F] via-[#1F2F5C]/85 to-[#1F2F5C]/70" />
-          <div className="relative flex flex-col justify-center px-12 lg:px-16">
-            <BrandLogo tone="light" size="lg" className="mb-8" />
-            <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4">{promoTitle}</h1>
-            <p className="text-white/75 text-lg max-w-md">{promoText}</p>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#18243F] via-[#18243F]/60 via-45% to-transparent to-75%" />
+          <div className="relative flex flex-col justify-end w-full px-12 lg:px-16 pb-16">
+            <BrandLogo tone="light" size="lg" className="mb-6" />
+            <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 [text-shadow:0_2px_8px_rgb(0_0_0/0.35)]">{promoTitle}</h1>
+            <p className="text-white/90 text-lg max-w-md">{promoText}</p>
           </div>
         </aside>
 
