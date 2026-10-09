@@ -11,7 +11,6 @@ import TrailsSection from '../components/TrailsSection'
 import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
 import FeatureBand from '../components/FeatureBand'
-import ReviewsSection from '../components/ReviewsSection'
 import PromotionSection from '../components/PromotionSection'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
 import { outOfReachMessage } from '../data/outOfReach'
@@ -586,7 +585,7 @@ function Home() {
       </section>
 
       {/* Below the search: trails (Explore), promotions (ads), the feature slides as a white card that sits over
-          the top of the navy band, the feature tiles in the band, then rider reviews (app banner + footer follow in SiteLayout) */}
+          the top of the navy band, then the feature tiles in the band (app banner + footer follow in SiteLayout) */}
       <TrailsSection />
       <PromotionSection />
       <FeatureCarousel
@@ -603,7 +602,6 @@ function Home() {
       <FeatureBand overlap>
         <FeatureGrid />
       </FeatureBand>
-      <ReviewsSection />
 
       {/* Line stations in the right-side panel; "Plan a trip here" fills the End box */}
       {pickedLine && (
