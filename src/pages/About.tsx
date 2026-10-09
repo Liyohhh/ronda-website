@@ -7,6 +7,7 @@ import PhotoCredit from '../components/PhotoCredit'
 import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
 import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
+import { AUTH_VIDEO } from '../data/authVideo'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import { busLine } from '../data/lines'
@@ -233,6 +234,10 @@ function About() {
                 {p.photo.alt}: <PhotoCredit photo={p.photo} />
               </li>
             ))}
+            <li>
+              {t('videoLabel')}, Kuala Lumpur at night:{' '}
+              <a href={AUTH_VIDEO.page} target="_blank" rel="noopener noreferrer" className="hover:underline">{AUTH_VIDEO.author}</a> · Pexels
+            </li>
             {Object.entries(SLIDE_PHOTOS).map(([k, ph]) => (
               <li key={k}>
                 {ph.alt}: <PhotoCredit photo={ph} />
