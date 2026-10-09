@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
-import PlaceHours from '../components/PlaceHours'
+import { HoursStatus, HoursWeek } from '../components/PlaceHours'
 import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
 import { CATEGORY_STYLE } from '../data/trailStyles'
@@ -113,10 +113,10 @@ function TrailDetail() {
 
                 <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-3 flex flex-col sm:flex-row-reverse gap-4">
                   {/* details on the left, photo on the right (category cover when the place has no free photo); photo on top on a phone */}
-                  <div className="relative flex-shrink-0 w-full sm:w-52 md:w-60 aspect-[4/3] rounded-xl overflow-hidden">
+                  <div className="relative flex-shrink-0 w-full aspect-[4/3] sm:aspect-auto sm:w-56 md:w-64 sm:min-h-44 rounded-xl overflow-hidden">
                     {PLACE_PHOTOS[place.id] ? (
                       <>
-                        <img src={PLACE_PHOTOS[place.id].src} alt={place.name} loading="lazy" className="w-full h-full object-cover" />
+                        <img src={PLACE_PHOTOS[place.id].src} alt={place.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
                         <p className="absolute inset-x-0 bottom-0 px-2 py-1 text-[9px] leading-tight text-white/90 bg-gradient-to-t from-black/60 to-transparent truncate">
                           {t('photoLabel')}: <PhotoCredit photo={PLACE_PHOTOS[place.id]} />
                         </p>
@@ -124,7 +124,7 @@ function TrailDetail() {
                     ) : (
                       <div
                         aria-hidden="true"
-                        className="w-full h-full flex items-center justify-center"
+                        className="absolute inset-0 flex items-center justify-center"
                         style={{ backgroundImage: `linear-gradient(135deg, ${CATEGORY_STYLE[trail.category].from} 10%, ${CATEGORY_STYLE[trail.category].to})` }}
                       >
                         <Icon name={CATEGORY_STYLE[trail.category].icon} size={44} className="text-white/85" />
@@ -140,39 +140,47 @@ function TrailDetail() {
                     )}
                     <h3 className="text-lg font-semibold text-gray-900 leading-snug">{place.name}</h3>
                     {place.address && <p className="mt-0.5 text-xs text-gray-500">{place.address}</p>}
-                    <p className="mt-1.5 text-sm text-gray-600 leading-relaxed">{t(placeBlurbKey(place.id))}</p>
+                    <p className="mt-2 text-sm text-gray-600 leading-relaxed">{t(placeBlurbKey(place.id))}</p>
 
-                    {/* where to get off, and the walk from there */}
-                    {place.station ? (
-                      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
-                        <span className="inline-flex items-center gap-1.5 min-w-0">
-                          <span className="text-gray-500">{t('getOffAt')}</span>
-                          <span className="flex -space-x-1 rtl:space-x-reverse">
+                    {/* facts, one per row with an icon: where to get off, the walk from there, the week's hours */}
+                    <ul className="mt-3 space-y-1.5 text-sm text-gray-700">
+                      {place.station ? (
+                        <li className="flex items-center gap-2 min-w-0">
+                          <span className="flex -space-x-1 rtl:space-x-reverse flex-shrink-0">
                             {place.station.lineIds.map((id) => (
                               <span key={id} className="rounded-md ring-2 ring-white">
                                 <LineBadge line={id} size={20} decorative />
                               </span>
                             ))}
                           </span>
-                          <span className="font-medium text-gray-900 truncate">{place.station.name}</span>
-                          {stationCode(place.station) && (
-                            <span className="text-xs font-semibold text-gray-600 border border-gray-300 rounded px-1">{stationCode(place.station)}</span>
-                          )}
-                        </span>
-                        {place.walkMeters != null && (
-                          <span className="inline-flex items-center gap-1 text-gray-600">
-                            <Icon name="directionsWalk" size={16} className="text-[#15803D]" />
-                            {t('walkFromStation').replace('{m}', String(place.walkMeters)).replace('{n}', String(Math.max(1, Math.round(place.walkMeters / 80))))}
+                          <span className="truncate">
+                            <span className="text-gray-500">{t('getOffAt')}</span>{' '}
+                            <span className="font-semibold text-gray-900">{place.station.name}</span>
                           </span>
-                        )}
-                      </div>
-                    ) : (
-                      <p className="mt-3 text-sm text-gray-500 italic">{t('stationTbc')}</p>
-                    )}
+                          {stationCode(place.station) && (
+                            <span className="flex-shrink-0 text-[11px] font-semibold text-gray-600 border border-gray-300 rounded px-1">{stationCode(place.station)}</span>
+                          )}
+                        </li>
+                      ) : (
+                        <li className="text-gray-500 italic">{t('stationTbc')}</li>
+                      )}
+                      {place.station && place.walkMeters != null && (
+                        <li className="flex items-center gap-2">
+                          <span className="w-5 flex justify-center flex-shrink-0"><Icon name="directionsWalk" size={18} className="text-gray-500" /></span>
+                          {t('walkFromStation').replace('{m}', String(place.walkMeters)).replace('{n}', String(Math.max(1, Math.round(place.walkMeters / 80))))}
+                        </li>
+                      )}
+                      {place.openingHours && (
+                        <li className="flex items-center gap-2">
+                          <span className="w-5 flex justify-center flex-shrink-0"><Icon name="scheduleOutline" size={18} className="text-gray-500" /></span>
+                          <HoursWeek hours={place.openingHours} />
+                        </li>
+                      )}
+                    </ul>
 
-                    <div className="mt-auto pt-3 flex flex-wrap items-end justify-between gap-3">
-                      {place.openingHours ? <PlaceHours hours={place.openingHours} /> : <span />}
-                      {place.station && (
+                    {/* footer: plan button, and whether it's open right now */}
+                    <div className="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                      {place.station ? (
                         <Link
                           to={planHref(place.station)}
                           className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#1F2F5C] text-white text-sm font-semibold hover:bg-[#152038] transition-colors"
@@ -180,7 +188,10 @@ function TrailDetail() {
                           <Icon name="locationOnOutline" size={16} />
                           {t('planTripHere')}
                         </Link>
+                      ) : (
+                        <span />
                       )}
+                      {place.openingHours && <HoursStatus hours={place.openingHours} />}
                     </div>
                   </div>
                 </div>
