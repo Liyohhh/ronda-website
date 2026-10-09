@@ -1,30 +1,33 @@
 import { fireEvent, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import PromotionSection from './PromotionSection'
-import { PROMOTIONS } from '../data/promotions'
+import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { renderWithLang } from '../test/render'
 
 const banners = (c: HTMLElement) => Array.from(c.querySelectorAll<HTMLElement>('[data-promo]'))
 
 describe('PromotionSection', () => {
-  it('a wide banner plus the smaller banners, each a link with a visible Ad label', () => {
+  it('a wide banner plus the smaller cards, each one link (besides the photo credit) with a visible Ad label', () => {
     const { container } = renderWithLang(<PromotionSection />)
     const all = banners(container)
     expect(all).toHaveLength(PROMOTIONS.length + 1)
     for (const b of all) {
       expect(within(b).getByText('Ad')).toBeVisible()
-      expect(within(b).getAllByRole('link')).toHaveLength(1)
+      const links = within(b).getAllByRole('link').filter((a) => !a.closest('p')?.textContent?.startsWith('Photo'))
+      expect(links).toHaveLength(1)
     }
     expect(screen.getByRole('link', { name: 'Advertise with RONDA' })).toHaveAttribute('href', '/help/general#business')
     expect(screen.getByRole('link', { name: 'List your business in RONDA 300' })).toHaveAttribute('href', '/ronda-300')
-    expect(screen.getByRole('link', { name: 'Explore Trails' })).toHaveAttribute('href', '/trails')
+    expect(screen.getByRole('link', { name: 'Offers for riders' })).toHaveAttribute('href', '/help/general#business')
     expect(screen.getByText('Ad places opening soon')).toBeInTheDocument()
   })
 
-  it('pictures are drawings, not photos, and hidden from screen readers', () => {
+  it('photos are decorative (the text says it all) and each one is credited', () => {
     const { container } = renderWithLang(<PromotionSection />)
-    expect(container.querySelectorAll('img')).toHaveLength(0)
-    for (const svg of container.querySelectorAll('[data-promo] svg')) expect(svg).toHaveAttribute('aria-hidden', 'true')
+    const imgs = container.querySelectorAll('[data-promo] img')
+    expect(imgs).toHaveLength(PROMOTIONS.length + 1)
+    for (const img of imgs) expect(img).toHaveAttribute('alt', '')
+    for (const p of [PROMO_FEATURE, ...PROMOTIONS]) expect(screen.getAllByRole('link', { name: p.photo.author }).length).toBeGreaterThan(0)
   })
 
   it('arrows appear when the row is wider than the screen and scroll it one banner at a time', () => {

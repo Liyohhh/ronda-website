@@ -1,26 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import PromoArtwork, { PercentTicket, PinArt, Sparkle, TrainArt } from './PromoArt'
-import { PROMO_FEATURE, PROMOTIONS, type PromoTheme } from '../data/promotions'
+import Icon from './Icon'
+import PhotoCredit from './PhotoCredit'
+import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { useLanguage } from '../hooks/useLanguage'
 
-// Home page: promotions (ads) as ad-style banners: one wide banner, then a row of smaller ones that scrolls
-// sideways on small screens. Every banner carries a visible "Ad" label; data in src/data/promotions.ts.
-// Colours (Batik kunyit palette): indigo batik, soga brown, daun green, merah bata; white text passes 4.5:1 on every stop.
-const THEME: Record<PromoTheme | 'kunyit', string> = {
-  kunyit: 'from-[#F0C062] to-[#D99A1E]',
-  blue: 'from-[#18243F] to-[#2C3F73]',
-  gold: 'from-[#5E3A22] to-[#8A5A3B]',
-  teal: 'from-[#2F5A1E] to-[#47722C]',
-  coral: 'from-[#7A2A22] to-[#A23B2C]',
-}
+// Home page: promotions (ads), in the same style as Explore Trails: one wide photo banner with a navy fade,
+// then a row of white photo cards that scrolls sideways on small screens. Every banner carries one quiet "Ad" tag
+// in the same corner; the only bright colour is the banner's button. Data in src/data/promotions.ts.
 
-// the whole banner is the link (stretched over it)
-const STRETCH = 'after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-4 focus-visible:after:outline-offset-2 focus-visible:after:outline-[#FFC72C]'
+// the whole card is the link (stretched over it)
+const STRETCH = 'after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-4 focus-visible:after:outline-offset-2 focus-visible:after:outline-[#1F2F5C]'
 
-function AdLabel({ text }: { text: string }) {
+function AdTag({ text }: { text: string }) {
   return (
-    <span className="inline-block rounded-md bg-white/95 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-gray-900 shadow">
+    <span className="inline-block rounded bg-white/90 px-1.5 py-0.5 text-[11px] font-semibold text-gray-700 shadow-sm">
       {text}
     </span>
   )
@@ -66,72 +60,82 @@ function PromotionSection() {
     // a kain-cream band behind the section, so the page alternates light and warm instead of one flat colour
     <section aria-labelledby="promo-title" className="mt-12 bg-cream py-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 id="promo-title" className="text-2xl md:text-3xl font-bold text-[#1F2F5C]">{t('promoTitle')}</h2>
-      <p className="mt-1 text-gray-500">{t('promoSubtitle')}</p>
-
-      {/* wide banner */}
-      <div data-promo={f.id} className={`relative mt-5 overflow-hidden rounded-2xl bg-gradient-to-br ${THEME.kunyit} p-5 sm:p-7 shadow-sm transition hover:shadow-lg`}>
-        <Sparkle className="pointer-events-none absolute top-4 end-[42%] h-5 w-5 text-white/80" />
-        <Sparkle className="pointer-events-none absolute bottom-6 start-[38%] h-3 w-3 text-white/70" />
-        <PercentTicket className="pointer-events-none absolute -top-1 end-6 h-9 w-12 rotate-12 opacity-90" />
-        <TrainArt className="pointer-events-none absolute -bottom-3 end-2 hidden h-24 w-36 md:block" />
-        <div className="relative grid items-center gap-5 md:grid-cols-[1fr_1.5fr]">
+        <div className="mb-5 flex items-end justify-between gap-4">
           <div>
-            <AdLabel text={t('promoAdLabel')} />
-            <h3 className="mt-3 text-3xl sm:text-4xl font-black leading-tight text-[#18243F]">
+            <h2 id="promo-title" className="text-2xl md:text-3xl font-bold text-[#1F2F5C]">{t('promoTitle')}</h2>
+            <p className="mt-1 text-gray-500">{t('promoSubtitle')}</p>
+          </div>
+          <Link
+            to={f.to}
+            className="hidden sm:inline-flex flex-shrink-0 items-center gap-1 h-9 px-4 rounded-full border border-gray-300 bg-white text-sm font-semibold text-[#1F2F5C] hover:bg-gray-50"
+          >
+            {t('promoAdvertiseLink')}
+            <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+          </Link>
+        </div>
+
+        {/* wide banner: photo, navy fade from the text side */}
+        <div data-promo={f.id} className="relative overflow-hidden rounded-2xl bg-[#18243F] shadow-sm transition hover:shadow-lg">
+          <img src={f.photo.src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l from-[#18243F] via-[#18243F]/85 to-[#18243F]/10 max-md:bg-[#18243F]/80 max-md:bg-none" />
+          <div className="relative p-6 sm:p-8 md:w-3/5">
+            <AdTag text={t('promoAdLabel')} />
+            <h3 className="mt-3 text-3xl sm:text-4xl font-bold leading-tight text-white">
               <Link to={f.to} className={STRETCH}>{t(f.title)}</Link>
             </h3>
-            <p className="mt-3 inline-block -skew-x-6 bg-[#E3242B] px-3 py-1 text-sm font-bold text-white shadow">
-              <span className="inline-block skew-x-6">{t(f.ribbon)}</span>
-            </p>
-            <p className="mt-3 flex items-center gap-1.5 text-sm text-[#18243F]">
-              <PinArt className="h-4 w-3 shrink-0" />
-              {t(f.foot)}
-            </p>
+            <p className="mt-2 text-white/85">{t(f.text)}</p>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {f.tickets.map((k) => (
+                <li key={k} className="rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-[#18243F]">{t(k)}</li>
+              ))}
+            </ul>
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span aria-hidden="true" className="inline-flex items-center gap-1.5 h-10 px-5 rounded-full bg-accent text-sm font-bold text-[#18243F] shadow">
+                {t(f.cta)}
+                <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+              </span>
+              <span className="text-sm text-white/80">{t(f.note)}</span>
+            </div>
           </div>
-          <ul className="grid grid-cols-3 gap-2 sm:gap-3 md:pe-10">
-            {f.tickets.map((k) => (
-              <li key={k} className="overflow-hidden rounded-xl bg-white text-center shadow-md">
-                <div className="h-2.5 bg-accent" />
-                <p className="px-2 py-3 sm:py-5 text-xs sm:text-base font-extrabold leading-snug text-[#18243F]">{t(k)}</p>
+          <p className="absolute bottom-1.5 end-3 text-[10px] text-white/70 [&_a]:relative [&_a]:z-10">
+            {t('photoLabel')}: <PhotoCredit photo={f.photo} />
+          </p>
+        </div>
+
+        {/* smaller cards: photo on top, white body */}
+        <div className="relative mt-4">
+          <ul ref={rowRef} className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] lg:grid lg:grid-cols-3 lg:overflow-visible lg:pb-0">
+            {PROMOTIONS.map((p) => (
+              <li key={p.id} data-promo={p.id} className="relative flex min-w-[80%] snap-start flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg sm:min-w-[55%] lg:min-w-0">
+                <div className="relative h-36 overflow-hidden">
+                  <img src={p.photo.src} alt="" loading="lazy" className="h-full w-full object-cover" />
+                  <span className="absolute top-2 start-2"><AdTag text={t('promoAdLabel')} /></span>
+                  <p className="absolute inset-x-0 bottom-0 truncate bg-gradient-to-t from-black/60 to-transparent px-2 py-1 text-[9px] text-white/90 [&_a]:relative [&_a]:z-10">
+                    {t('photoLabel')}: <PhotoCredit photo={p.photo} />
+                  </p>
+                </div>
+                <div className="flex flex-1 flex-col p-4">
+                  <h3 className="font-semibold leading-snug text-gray-900">
+                    <Link to={p.to} className={STRETCH}>{t(p.title)}</Link>
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-600">{t(p.text)}</p>
+                </div>
               </li>
             ))}
           </ul>
+          {canPrev && (
+            <button type="button" onClick={() => scroll(-1)} aria-label={t('promoPrev')}
+              className="absolute start-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#1F2F5C] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
+              <Icon name="chevronLeft" size={20} className="rtl:rotate-180" />
+            </button>
+          )}
+          {canNext && (
+            <button type="button" onClick={() => scroll(1)} aria-label={t('promoNext')}
+              className="absolute end-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#1F2F5C] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
+              <Icon name="chevronRight" size={20} className="rtl:rotate-180" />
+            </button>
+          )}
         </div>
-      </div>
-
-      {/* smaller banners */}
-      <div className="relative mt-4">
-        <ul ref={rowRef} className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] lg:grid lg:grid-cols-3 lg:overflow-visible lg:pb-0">
-          {PROMOTIONS.map((p) => (
-            <li key={p.id} data-promo={p.id} className={`relative flex min-w-[85%] snap-start overflow-hidden rounded-2xl bg-gradient-to-br ${THEME[p.theme]} p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg sm:min-w-[60%] lg:min-w-0`}>
-              <div className="flex w-3/5 flex-col">
-                <div><AdLabel text={t('promoAdLabel')} /></div>
-                <h3 className="mt-2 text-lg font-extrabold leading-snug text-white">
-                  <Link to={p.to} className={STRETCH}>{t(p.title)}</Link>
-                </h3>
-                {p.big && <p className="text-4xl font-black leading-none text-[#FFC72C] [text-shadow:0_2px_0_rgba(0,0,0,.25)]"><span dir="ltr">{p.big}</span></p>}
-                <p className="mt-2 text-sm text-white/95">{t(p.text)}</p>
-              </div>
-              <div className="pointer-events-none ms-auto flex w-2/5 items-center">
-                <PromoArtwork art={p.art} />
-              </div>
-            </li>
-          ))}
-        </ul>
-        {canPrev && (
-          <button type="button" onClick={() => scroll(-1)} aria-label={t('promoPrev')}
-            className="absolute start-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#1F2F5C] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
-            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 rtl:rotate-180"><path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </button>
-        )}
-        {canNext && (
-          <button type="button" onClick={() => scroll(1)} aria-label={t('promoNext')}
-            className="absolute end-1 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white text-[#1F2F5C] shadow-lg ring-1 ring-gray-200 hover:bg-gray-50 lg:hidden">
-            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 rtl:rotate-180"><path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </button>
-        )}
-      </div>
       </div>
     </section>
   )

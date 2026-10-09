@@ -6,6 +6,7 @@ import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
 import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
+import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import { busLine } from '../data/lines'
@@ -212,7 +213,7 @@ function About() {
           </div>
         </section>
 
-        {/* Credits for the trail, trail-stop and home-page photos (CC BY / BY-SA need them) */}
+        {/* Credits for the trail, trail-stop, promotion and home-page photos (CC BY / BY-SA need them) */}
         <section aria-labelledby="about-credits" className="pt-14 pb-4 max-w-3xl">
           <h2 id="about-credits" className="text-lg font-semibold text-[#1F2F5C]">{t('photoCredits')}</h2>
           <p className="mt-1 text-sm text-gray-500">{t('photoCreditsIntro')}</p>
@@ -225,6 +226,11 @@ function About() {
             {Object.entries(PLACE_PHOTOS).filter(([id]) => places[id]).map(([id, ph]) => (
               <li key={id}>
                 {places[id].name}: <PhotoCredit photo={ph} />
+              </li>
+            ))}
+            {[PROMO_FEATURE, ...PROMOTIONS].map((p) => (
+              <li key={`promo-${p.id}`}>
+                {p.photo.alt}: <PhotoCredit photo={p.photo} />
               </li>
             ))}
             {Object.entries(SLIDE_PHOTOS).map(([k, ph]) => (
