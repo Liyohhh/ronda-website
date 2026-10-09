@@ -3,6 +3,8 @@ import SiteLayout from '../components/SiteLayout'
 import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
 import { TRAIL_PHOTOS } from '../data/trailPhotos'
+import { PLACE_PHOTOS } from '../data/placePhotos'
+import { CATEGORY_STYLE } from '../data/trailStyles'
 import LineBadge from '../components/LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
@@ -105,41 +107,63 @@ function TrailDetail() {
                   {i + 1}
                 </span>
 
-                <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-4">
-                  {newDay && (
-                    <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#8A5A3B] bg-[#D99A1E]/15 px-2 py-0.5 rounded">
-                      {t(weekdayKey(stop.day!))}
-                    </div>
-                  )}
-                  <h3 className="font-semibold text-gray-900">{place.name}</h3>
-                  <p className="mt-1 text-sm text-gray-600">{t(placeBlurbKey(place.id))}</p>
-
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                    {place.station ? (
-                      <div className="flex items-center gap-2 text-sm min-w-0">
-                        <span className="flex -space-x-1 rtl:space-x-reverse">
-                          {place.station.lineIds.map((id) => (
-                            <span key={id} className="rounded-md ring-2 ring-white">
-                              <LineBadge line={id} size={22} decorative />
-                            </span>
-                          ))}
-                        </span>
-                        <span className="text-gray-500">{t('nearestStation')}:</span>
-                        <span className="font-medium text-gray-900 truncate">{place.station.name}</span>
-                      </div>
+                <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-3 flex flex-col sm:flex-row gap-4">
+                  {/* photo on the left (category cover when the place has no free photo), details on the right */}
+                  <div className="relative flex-shrink-0 w-full sm:w-52 md:w-60 aspect-[4/3] rounded-xl overflow-hidden">
+                    {PLACE_PHOTOS[place.id] ? (
+                      <>
+                        <img src={PLACE_PHOTOS[place.id].src} alt={place.name} loading="lazy" className="w-full h-full object-cover" />
+                        <p className="absolute inset-x-0 bottom-0 px-2 py-1 text-[9px] leading-tight text-white/90 bg-gradient-to-t from-black/60 to-transparent truncate">
+                          {t('photoLabel')}: <PhotoCredit photo={PLACE_PHOTOS[place.id]} />
+                        </p>
+                      </>
                     ) : (
-                      <span className="text-sm text-gray-500 italic">{t('stationTbc')}</span>
-                    )}
-
-                    {place.station && (
-                      <Link
-                        to={planHref(place.station)}
-                        className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#1F2F5C] text-white text-sm font-semibold hover:bg-[#152038] transition-colors"
+                      <div
+                        aria-hidden="true"
+                        className="w-full h-full flex items-center justify-center"
+                        style={{ backgroundImage: `linear-gradient(135deg, ${CATEGORY_STYLE[trail.category].from} 10%, ${CATEGORY_STYLE[trail.category].to})` }}
                       >
-                        <Icon name="locationOnOutline" size={16} />
-                        {t('planTripHere')}
-                      </Link>
+                        <Icon name={CATEGORY_STYLE[trail.category].icon} size={44} className="text-white/85" />
+                      </div>
                     )}
+                  </div>
+
+                  <div className="flex-1 min-w-0 flex flex-col sm:py-1 sm:pe-1">
+                    {newDay && (
+                      <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#8A5A3B] bg-[#D99A1E]/15 px-2 py-0.5 rounded">
+                        {t(weekdayKey(stop.day!))}
+                      </div>
+                    )}
+                    <h3 className="text-lg font-semibold text-gray-900 leading-snug">{place.name}</h3>
+                    <p className="mt-1 text-sm text-gray-600 leading-relaxed">{t(placeBlurbKey(place.id))}</p>
+
+                    <div className="mt-auto pt-3 flex flex-wrap items-center justify-between gap-3">
+                      {place.station ? (
+                        <div className="flex items-center gap-2 text-sm min-w-0">
+                          <span className="flex -space-x-1 rtl:space-x-reverse">
+                            {place.station.lineIds.map((id) => (
+                              <span key={id} className="rounded-md ring-2 ring-white">
+                                <LineBadge line={id} size={22} decorative />
+                              </span>
+                            ))}
+                          </span>
+                          <span className="text-gray-500">{t('nearestStation')}:</span>
+                          <span className="font-medium text-gray-900 truncate">{place.station.name}</span>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-500 italic">{t('stationTbc')}</span>
+                      )}
+
+                      {place.station && (
+                        <Link
+                          to={planHref(place.station)}
+                          className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#1F2F5C] text-white text-sm font-semibold hover:bg-[#152038] transition-colors"
+                        >
+                          <Icon name="locationOnOutline" size={16} />
+                          {t('planTripHere')}
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
               </li>
