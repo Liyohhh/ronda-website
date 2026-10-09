@@ -5,7 +5,7 @@ import PhotoCredit from './PhotoCredit'
 import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { useLanguage } from '../hooks/useLanguage'
 
-// Home page: promotions (ads), in the same style as Explore Trails: one wide photo banner with a navy fade,
+// Home page: promotions (ads), in the same style as the RONDA 300 trails above: one wide photo banner with a navy fade,
 // then a row of white photo cards that scrolls sideways on small screens. Every banner carries one quiet "Ad" tag
 // in the same corner; the only bright colour is the banner's button. Data in src/data/promotions.ts.
 

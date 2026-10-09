@@ -8,9 +8,7 @@ import { useBusRoutes } from '../data/busRoutes'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
 import TrailsSection from '../components/TrailsSection'
-import FeatureCarousel from '../components/FeatureCarousel'
-import FeatureGrid from '../components/FeatureGrid'
-import FeatureBand from '../components/FeatureBand'
+import FeaturesSection from '../components/FeaturesSection'
 import PromotionSection from '../components/PromotionSection'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
 import { outOfReachMessage } from '../data/outOfReach'
@@ -395,6 +393,8 @@ function Home() {
             <div className="flex justify-center">
               <div className="flex bg-gray-100 rounded-full p-1">
                 <button
+                  type="button"
+                  aria-pressed={tab === 'directions'}
                   onClick={() => setTab('directions')}
                   className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
                     tab === 'directions' ? 'bg-white text-black shadow' : 'text-gray-500'
@@ -403,6 +403,8 @@ function Home() {
                   {t('directions')}
                 </button>
                 <button
+                  type="button"
+                  aria-pressed={tab === 'lines'}
                   onClick={() => setTab('lines')}
                   className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
                     tab === 'lines' ? 'bg-white text-black shadow' : 'text-gray-500'
@@ -584,24 +586,11 @@ function Home() {
         </div>
       </section>
 
-      {/* Below the search: trails (Explore), promotions (ads), the feature slides as a white card that sits over
-          the top of the navy band, then the feature tiles in the band (app banner + footer follow in SiteLayout) */}
+      {/* Below the search, all on the light page: trails (Explore), promotions (ads), then "Everything you need"
+          (RONDA 300 highlighted, feature cards); the navy app banner and footer follow in SiteLayout */}
       <TrailsSection />
       <PromotionSection />
-      <FeatureCarousel
-        onPlan={() => {
-          setTab('directions')
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-          setTimeout(() => document.getElementById('start-input')?.focus({ preventScroll: true }), 400)
-        }}
-        onLines={() => {
-          setTab('lines')
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        }}
-      />
-      <FeatureBand overlap>
-        <FeatureGrid />
-      </FeatureBand>
+      <FeaturesSection />
 
       {/* Line stations in the right-side panel; "Plan a trip here" fills the End box */}
       {pickedLine && (

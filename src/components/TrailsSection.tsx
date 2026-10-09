@@ -8,7 +8,7 @@ import { categoryKey, firstStation, isCategoryShown, trailNameKey, type Trail, t
 import { CATEGORY_STYLE } from '../data/trailStyles'
 import { TRAIL_PHOTOS } from '../data/trailPhotos'
 
-// Home page "Explore Trails": three big category cards (the categories with the most trails: photo, trail names as
+// Home page "RONDA 300" (trails are part of RONDA 300; "Explore stations" opens the RONDA 300 page): three big category cards (the categories with the most trails: photo, trail names as
 // tags, count; they open /trails?category=…), then a swipeable "Featured trails" row of small cards.
 function TrailsSection() {
   const { t, lang } = useLanguage()
@@ -40,11 +40,20 @@ function TrailsSection() {
 
   return (
     <section id="explore" aria-labelledby="trails-title" className="scroll-mt-24 max-w-6xl mx-auto px-4 sm:px-6 pt-12">
-      <div className="mb-5">
-        <h2 id="trails-title" className="text-2xl md:text-3xl font-bold text-[#1F2F5C]">
-          {t('trailsTitle')}
-        </h2>
-        <p className="mt-1 text-gray-500">{t('trailsSubtitle')}</p>
+      <div className="mb-5 flex items-end justify-between gap-4">
+        <div>
+          <h2 id="trails-title" className="text-2xl md:text-3xl font-bold text-[#1F2F5C]">
+            {t('s2_title')}
+          </h2>
+          <p className="mt-1 text-gray-500">{t('r3_homeSub')}</p>
+        </div>
+        <Link
+          to="/ronda-300"
+          className="hidden sm:inline-flex flex-shrink-0 items-center gap-1 h-9 px-4 rounded-full border border-gray-300 bg-white text-sm font-semibold text-[#1F2F5C] hover:bg-gray-50"
+        >
+          {t('s2_cta')}
+          <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+        </Link>
       </div>
 
       {!data ? (

@@ -65,6 +65,7 @@ test.describe('links and buttons', () => {
           const b = document.querySelectorAll<HTMLButtonElement>('button')[k]
           if (!b || b.disabled || b.closest('[inert], [aria-hidden="true"]') || !(b.offsetWidth || b.offsetHeight) || getComputedStyle(b).visibility === 'hidden') return 'skip'
           if (b.type === 'submit' && b.form) return 'skip' // form submits are covered by the journey tests
+          if (b.getAttribute('aria-pressed') === 'true') return 'skip' // already the selected tab: nothing to change
           const href = location.href
           let changed = 0
           const mo = new MutationObserver((m) => { changed += m.length })
