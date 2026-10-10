@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import BackButton from '../components/BackButton'
 import TrailCard from '../components/TrailCard'
 import CategoryPills, { type CategoryFilter } from '../components/CategoryPills'
 import { categoriesFor, isCategoryShown } from '../data/trails'
@@ -22,6 +23,9 @@ function Trails() {
     <SiteLayout>
       <section className="bg-[#1F2F5C] text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
+          <div className="mb-5">
+            <BackButton to="/" label={t('backToHome')} onDark />
+          </div>
           <h1 className="text-3xl md:text-4xl font-bold">{t('trailsTitle')}</h1>
           <p className="mt-2 text-white/75 max-w-xl">{t('trailsSubtitle')}</p>
         </div>

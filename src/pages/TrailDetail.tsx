@@ -10,9 +10,12 @@ import { CATEGORY_STYLE } from '../data/trailStyles'
 import LineBadge from '../components/LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
+import BackButton from '../components/BackButton'
 import { useTrails } from '../hooks/useTrails'
 import {
   categoryKey,
+  cuisineKey,
+  dietKey,
   findTrail,
   placeBlurbKey,
   trailDescKey,
@@ -29,12 +32,7 @@ const planHref = (s: Station) => `/?to=${encodeURIComponent(s.search)}&toName=${
 
 function BackLink() {
   const { t } = useLanguage()
-  return (
-    <Link to="/trails" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1F2F5C] hover:underline">
-      <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
-      {t('backToTrails')}
-    </Link>
-  )
+  return <BackButton to="/trails" label={t('backToTrails')} />
 }
 
 function TrailDetail() {
@@ -155,6 +153,29 @@ function TrailDetail() {
                     )}
                     <h3 className="text-lg font-semibold text-gray-900 leading-snug">{place.name}</h3>
                     {place.address && <p className="mt-0.5 text-xs text-gray-500">{place.address}</p>}
+                    {(place.cuisine || place.dietary) && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {place.cuisine && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#E8F0FE] px-2.5 py-0.5 text-xs font-semibold text-[#1D4ED8]">
+                            <Icon name="restaurant" size={13} />
+                            {t(cuisineKey(place.cuisine))}
+                          </span>
+                        )}
+                        {place.dietary && (
+                          <span
+                            className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                              place.dietary === 'halal' || place.dietary === 'muslim_friendly'
+                                ? 'bg-[#E7F6EC] text-[#15803D]'
+                                : place.dietary === 'non_halal'
+                                  ? 'bg-[#FDE9E9] text-[#B91C1C]'
+                                  : 'bg-[#FDF3E2] text-[#92400E]'
+                            }`}
+                          >
+                            {t(dietKey(place.dietary))}
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <p className="mt-2 text-sm text-gray-600 leading-relaxed">{t(placeBlurbKey(place.id))}</p>
 
                     {/* facts, one per row with an icon: where to get off, the walk from there, the week's hours */}

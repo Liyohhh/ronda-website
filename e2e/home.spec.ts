@@ -1,7 +1,7 @@
 import { expect, test } from './mocks'
 
-// Home page order under the search card: Trails (Explore) -> Promotions -> slides -> "Everything you need"
-const ORDER = ['trails-title', 'promo-title', 'slides-title', 'features-title']
+// Home page order under the search card: RONDA 300 trails -> Promotions -> Services -> slides -> "Everything you need"
+const ORDER = ['trails-title', 'promo-title', 'services-title', 'slides-title', 'features-title']
 
 test('home sections come in the agreed order', async ({ page, backend }) => {
   void backend

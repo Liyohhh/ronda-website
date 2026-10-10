@@ -1,6 +1,7 @@
 import { useEffect, useState, type KeyboardEvent } from 'react'
 import { Link } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import BackButton from '../components/BackButton'
 import SuggestionList from '../components/SuggestionList'
 import LineBadge from '../components/LineBadge'
 import Icon from '../components/Icon'
@@ -71,6 +72,9 @@ function Ronda300() {
     <SiteLayout>
       <section className="bg-[#1F2F5C] text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
+          <div className="mb-5">
+            <BackButton to="/" label={t('backToHome')} onDark />
+          </div>
           <p className="text-sm font-semibold text-accent-light">{t('r3_tag')}</p>
           <h1 className="mt-1 text-3xl md:text-4xl font-bold">RONDA 300</h1>
           <p className="mt-3 text-white/80 max-w-2xl">{t('r3_intro')}</p>

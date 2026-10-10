@@ -9,10 +9,10 @@
 
 import type { Lang, TranslationKey } from '../i18n/translations'
 
-export type TrailCategory = 'food' | 'culture' | 'shopping' | 'nature' | 'explore' | 'halal-fine-dining'
+export type TrailCategory = 'food' | 'culture' | 'shopping' | 'nature' | 'family' | 'explore' | 'events' | 'halal-fine-dining'
 
 // shown in every language
-export const TRAIL_CATEGORIES: TrailCategory[] = ['food', 'culture', 'shopping', 'nature', 'explore']
+export const TRAIL_CATEGORIES: TrailCategory[] = ['food', 'culture', 'shopping', 'nature', 'family', 'explore', 'events']
 // shown only when the site is in Arabic (pills, trail lists, the Explore menu); hidden in the other languages
 export const ARABIC_ONLY_CATEGORIES: TrailCategory[] = ['halal-fine-dining']
 
@@ -30,7 +30,14 @@ export type Place = {
   address?: string
   openingHours?: string // OSM opening_hours syntax, e.g. "Mo-Su 10:00-22:00"
   walkMeters?: number // walk from the station along footpaths
+  cuisine?: Cuisine // kind of food (translated as cuisine_<key>)
+  dietary?: Dietary // halal = JAKIM-certified, muslim_friendly = Malay Muslim stalls, mixed = halal and non-halal stalls
 }
+
+export type Cuisine = 'malay' | 'chinese' | 'indian' | 'nyonya' | 'thai' | 'french' | 'italian' | 'international' | 'malaysian_contemporary' | 'innovative' | 'cafe' | 'street_food'
+export type Dietary = 'halal' | 'muslim_friendly' | 'mixed' | 'non_halal'
+export const cuisineKey = (c: Cuisine) => `cuisine_${c}` as TranslationKey
+export const dietKey = (d: Dietary) => `diet_${d}` as TranslationKey
 
 export type Weekday = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 

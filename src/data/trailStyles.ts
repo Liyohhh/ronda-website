@@ -30,6 +30,16 @@ export const CATEGORY_STYLE: Record<TrailCategory, { from: string; to: string; i
     to: '#334155',
     icon: 'restaurant',
   },
+  family: {
+    from: '#18243F',
+    to: '#0284C7',
+    icon: 'favorite',
+  },
+  events: {
+    from: '#18243F',
+    to: '#3B5BDB',
+    icon: 'event',
+  },
   explore: {
     from: '#18243F',
     to: '#4338CA',
