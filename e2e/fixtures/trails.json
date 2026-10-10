@@ -1,35 +1,65 @@
 {
  "places": [
   {
-   "id": "bangsar",
-   "name": "Bangsar",
+   "id": "aeonMaluri",
+   "name": "AEON Taman Maluri Shopping Centre",
+   "address": "Jalan Jejaka, Taman Maluri, 55100 Kuala Lumpur",
    "station": {
-    "name": "LRT Bangsar",
+    "name": "MRT Maluri",
     "feedId": "rapid-rail-kl",
-    "search": "LRT Bangsar - Bank Rakyat",
-    "stopId": "KJ16",
+    "search": "MRT Maluri",
+    "stopId": "KG22",
     "lineIds": [
-     "lrt-kelana-jaya"
+     "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 550
   },
   {
-   "id": "bangsarCafes",
-   "name": "Bangsar cafés",
+   "id": "akar",
+   "name": "Akar",
+   "address": "109 Jalan Aminuddin Baki, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+   "cuisine": "malaysian_contemporary",
    "station": {
-    "name": "LRT Bangsar",
+    "name": "MRT Bandar Utama",
     "feedId": "rapid-rail-kl",
-    "search": "LRT Bangsar - Bank Rakyat",
-    "stopId": "KJ16",
+    "search": "MRT Bandar Utama",
+    "stopId": "KG09",
     "lineIds": [
-     "lrt-kelana-jaya"
+     "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 1030
   },
   {
-   "id": "bangsarMarket",
-   "name": "Bangsar Baru Night Market",
-   "todo": "Nearest station not confirmed (LRT Bangsar is some distance away)"
+   "id": "aquaria",
+   "name": "Aquaria KLCC",
+   "address": "Kuala Lumpur Convention Centre, Jalan Pinang, 50450 Kuala Lumpur",
+   "station": {
+    "name": "Monorail Raja Chulan",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Raja Chulan",
+    "stopId": "MR7",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 740
+  },
+  {
+   "id": "axiataArena",
+   "name": "Axiata Arena (Unifi Arena)",
+   "address": "Kompleks Sukan Negara, Bukit Jalil, 57000 Kuala Lumpur",
+   "station": {
+    "name": "LRT Bukit Jalil",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Bukit Jalil",
+    "stopId": "SP17",
+    "lineIds": [
+     "lrt-sri-petaling"
+    ]
+   },
+   "walkMeters": 820
   },
   {
    "id": "batuCaves",
@@ -42,7 +72,8 @@
     "lineIds": [
      "ktm-seremban"
     ]
-   }
+   },
+   "walkMeters": 440
   },
   {
    "id": "batuCavesSteps",
@@ -55,11 +86,46 @@
     "lineIds": [
      "ktm-seremban"
     ]
-   }
+   },
+   "walkMeters": 440
+  },
+  {
+   "id": "batuSkatepark",
+   "name": "Taman Metropolitan Batu Skate Park",
+   "address": "Taman Metropolitan Batu, Jalan Ipoh, 51200 Kuala Lumpur",
+   "station": {
+    "name": "KTM Taman Wahyu",
+    "feedId": "ktmb",
+    "search": "KTM Taman Wahyu",
+    "stopId": "50500",
+    "lineIds": [
+     "ktm-seremban"
+    ]
+   },
+   "walkMeters": 1590
+  },
+  {
+   "id": "beta",
+   "name": "Beta",
+   "address": "Lot 3 & 4, Ground Floor, Cormar Suites, 10 Jalan Perak, 50450 Kuala Lumpur",
+   "cuisine": "malaysian_contemporary",
+   "station": {
+    "name": "Monorail Raja Chulan",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Raja Chulan",
+    "stopId": "MR7",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 770
   },
   {
    "id": "brickfields",
-   "name": "Brickfields (Little India)",
+   "name": "Brickfields Little India (Jalan Tun Sambanthan)",
+   "address": "Jalan Tun Sambanthan, Brickfields, 50470 Kuala Lumpur",
+   "cuisine": "indian",
+   "dietary": "mixed",
    "station": {
     "name": "Monorail KL Sentral",
     "feedId": "rapid-rail-kl",
@@ -71,21 +137,58 @@
    }
   },
   {
-   "id": "brickfieldsDeepavali",
-   "name": "Brickfields (Deepavali)",
+   "id": "bukitBintangWalk",
+   "name": "Bukit Bintang Walk (Jalan Bukit Bintang)",
+   "address": "Jalan Bukit Bintang, 55100 Kuala Lumpur",
    "station": {
-    "name": "Monorail KL Sentral",
+    "name": "MRT Bukit Bintang",
     "feedId": "rapid-rail-kl",
-    "search": "Monorail KL Sentral",
-    "stopId": "MR1",
+    "search": "MRT Bukit Bintang",
+    "stopId": "KG18A",
     "lineIds": [
-     "monorail"
+     "mrt-kajang"
     ]
    }
   },
   {
    "id": "centralMarket",
    "name": "Central Market (Pasar Seni)",
+   "address": "Jalan Hang Kasturi, Kuala Lumpur",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 470,
+   "openingHours": "Mo-Su 10:00-22:00"
+  },
+  {
+   "id": "chimByChefNoom",
+   "name": "Chim by Chef Noom",
+   "address": "L2-03, TSLAW Tower, 39 Jalan Kamuning, Imbi, 55100 Kuala Lumpur",
+   "cuisine": "thai",
+   "station": {
+    "name": "MRT Tun Razak Exchange (TRX)",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Tun Razak Exchange",
+    "stopId": "KG20",
+    "lineIds": [
+     "mrt-kajang",
+     "mrt-putrajaya"
+    ]
+   },
+   "walkMeters": 240
+  },
+  {
+   "id": "chinatown1974",
+   "name": "Chinatown 1974",
+   "todo": "Exact building on Jalan Petaling to confirm",
+   "address": "Jalan Petaling, 50000 Kuala Lumpur",
+   "cuisine": "chinese",
    "station": {
     "name": "MRT Pasar Seni",
     "feedId": "rapid-rail-kl",
@@ -97,47 +200,28 @@
    }
   },
   {
-   "id": "chinatownCafes",
-   "name": "Chinatown cafés (Petaling Street area)",
+   "id": "cindai",
+   "name": "Cindai, Perdana Kuala Lumpur City Centre",
+   "todo": "Opening hours not verified (owner survey)",
+   "address": "10 Jalan Binjai, Kuala Lumpur",
+   "dietary": "halal",
    "station": {
-    "name": "MRT Pasar Seni",
+    "name": "MRT Persiaran KLCC",
     "feedId": "rapid-rail-kl",
-    "search": "MRT Pasar Seni",
-    "stopId": "KG16",
+    "search": "MRT Persiaran KLCC",
+    "stopId": "PY21",
     "lineIds": [
-     "mrt-kajang"
+     "mrt-putrajaya"
     ]
-   }
-  },
-  {
-   "id": "chinatownCny",
-   "name": "Chinatown (Chinese New Year)",
-   "station": {
-    "name": "MRT Pasar Seni",
-    "feedId": "rapid-rail-kl",
-    "search": "MRT Pasar Seni",
-    "stopId": "KG16",
-    "lineIds": [
-     "mrt-kajang"
-    ]
-   }
-  },
-  {
-   "id": "chowKitMarket",
-   "name": "Chow Kit Market",
-   "station": {
-    "name": "Monorail Chow Kit",
-    "feedId": "rapid-rail-kl",
-    "search": "Monorail Chow Kit",
-    "stopId": "MR10",
-    "lineIds": [
-     "monorail"
-    ]
-   }
+   },
+   "walkMeters": 130
   },
   {
    "id": "connaughtMarket",
-   "name": "Taman Connaught Night Market",
+   "name": "Taman Connaught Night Market (Jalan Cerdas)",
+   "address": "Jalan Cerdas, Taman Connaught, 56000 Kuala Lumpur",
+   "cuisine": "street_food",
+   "dietary": "mixed",
    "station": {
     "name": "MRT Taman Connaught",
     "feedId": "rapid-rail-kl",
@@ -149,6 +233,54 @@
    }
   },
   {
+   "id": "dcDarrenChin",
+   "name": "DC. by Darren Chin",
+   "todo": "Position is the street (Persiaran Zaaba), not the building",
+   "address": "44 Persiaran Zaaba, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+   "cuisine": "french",
+   "station": {
+    "name": "MRT Bandar Utama",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Bandar Utama",
+    "stopId": "KG09",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   }
+  },
+  {
+   "id": "dewakan",
+   "name": "Dewakan",
+   "address": "48F Skyviews, Naza Tower, Platinum Park, 10 Persiaran KLCC, 50088 Kuala Lumpur",
+   "cuisine": "malaysian_contemporary",
+   "station": {
+    "name": "MRT Persiaran KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Persiaran KLCC",
+    "stopId": "PY21",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
+   },
+   "walkMeters": 370
+  },
+  {
+   "id": "feeka",
+   "name": "Feeka Coffee Roasters",
+   "address": "19 Jalan Mesui, 50200 Kuala Lumpur",
+   "cuisine": "cafe",
+   "station": {
+    "name": "Monorail Raja Chulan",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Raja Chulan",
+    "stopId": "MR7",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 520
+  },
+  {
    "id": "frim",
    "name": "FRIM (Forest Research Institute Malaysia)",
    "todo": "Nearest station not confirmed; likely needs a bus or ride-hailing"
@@ -156,6 +288,7 @@
   {
    "id": "guanDi",
    "name": "Guan Di Temple",
+   "address": "168 Jalan Tun H.S. Lee, Kuala Lumpur",
    "station": {
     "name": "MRT Pasar Seni",
     "feedId": "rapid-rail-kl",
@@ -164,7 +297,8 @@
     "lineIds": [
      "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 300
   },
   {
    "id": "heliLounge",
@@ -177,12 +311,14 @@
     "lineIds": [
      "monorail"
     ]
-   }
+   },
+   "walkMeters": 320
   },
   {
    "id": "iamm",
    "name": "Islamic Arts Museum Malaysia",
    "todo": "Confirm nearest station (KTM Kuala Lumpur vs MRT Muzium Negara) and walking route",
+   "address": "Jalan Lembah, Kuala Lumpur",
    "station": {
     "name": "KTM Kuala Lumpur",
     "feedId": "ktmb",
@@ -193,11 +329,30 @@
      "ktm-seremban",
      "ktm-ets"
     ]
+   },
+   "walkMeters": 660,
+   "openingHours": "Mo-Su 10:00-18:00"
+  },
+  {
+   "id": "istanaKehakiman",
+   "name": "Istana Kehakiman (Palace of Justice)",
+   "address": "Persiaran Perdana, Presint 3, 62506 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Putrajaya Sentral",
+    "stopId": "PY41",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
    }
   },
   {
    "id": "jalanAlor",
    "name": "Jalan Alor",
+   "address": "Jalan Alor, Bukit Bintang, 50200 Kuala Lumpur",
+   "cuisine": "chinese",
+   "dietary": "mixed",
    "station": {
     "name": "MRT Bukit Bintang",
     "feedId": "rapid-rail-kl",
@@ -206,11 +361,16 @@
     "lineIds": [
      "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 380,
+   "openingHours": "Mo-Su 16:00-02:00"
   },
   {
-   "id": "kampungBaru",
-   "name": "Kampung Baru",
+   "id": "kampungBaruFood",
+   "name": "Jalan Raja Muda Musa, Kampung Baru",
+   "address": "Jalan Raja Muda Musa, Kampung Baru, 50300 Kuala Lumpur",
+   "cuisine": "malay",
+   "dietary": "muslim_friendly",
    "station": {
     "name": "LRT Kampung Baru",
     "feedId": "rapid-rail-kl",
@@ -222,17 +382,51 @@
    }
   },
   {
-   "id": "kampungBaruRaya",
-   "name": "Kampung Baru (Hari Raya)",
+   "id": "kidzania",
+   "name": "KidZania Kuala Lumpur, Curve NX",
+   "address": "Curve NX, 18 Jalan PJU 7/5, Mutiara Damansara, 47810 Petaling Jaya",
    "station": {
-    "name": "LRT Kampung Baru",
+    "name": "MRT Mutiara Damansara",
     "feedId": "rapid-rail-kl",
-    "search": "LRT Kampung Baru - Cbp Coopbank Pertama",
-    "stopId": "KJ11",
+    "search": "MRT Mutiara Damansara",
+    "stopId": "KG08",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 810
+  },
+  {
+   "id": "klBirdPark",
+   "name": "KL Bird Park (Taman Burung)",
+   "address": "920 Jalan Cenderawasih, Tasik Perdana, 50480 Kuala Lumpur",
+   "station": {
+    "name": "KTM Kuala Lumpur",
+    "feedId": "ktmb",
+    "search": "KTM/ETS Kuala Lumpur",
+    "stopId": "19000",
+    "lineIds": [
+     "ktm-port-klang",
+     "ktm-seremban",
+     "ktm-ets"
+    ]
+   },
+   "walkMeters": 1470
+  },
+  {
+   "id": "klccConvention",
+   "name": "Kuala Lumpur Convention Centre",
+   "address": "Kuala Lumpur City Centre, Jalan Pinang, 50088 Kuala Lumpur",
+   "station": {
+    "name": "LRT KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT KLCC",
+    "stopId": "KJ10",
     "lineIds": [
      "lrt-kelana-jaya"
     ]
-   }
+   },
+   "walkMeters": 720
   },
   {
    "id": "klccPark",
@@ -245,7 +439,8 @@
     "lineIds": [
      "lrt-kelana-jaya"
     ]
-   }
+   },
+   "openingHours": "07:00-22:00"
   },
   {
    "id": "klForestEcoPark",
@@ -264,6 +459,8 @@
    "id": "klTowerRevolving",
    "name": "Atmosphere 360 (KL Tower)",
    "todo": "Confirm nearest station (Monorail Bukit Nanas vs Raja Chulan)",
+   "address": "2 Jalan Puncak, 50250 Kuala Lumpur",
+   "cuisine": "international",
    "station": {
     "name": "Monorail Bukit Nanas",
     "feedId": "rapid-rail-kl",
@@ -272,7 +469,8 @@
     "lineIds": [
      "monorail"
     ]
-   }
+   },
+   "walkMeters": 1260
   },
   {
    "id": "kwaiChaiHong",
@@ -285,11 +483,49 @@
     "lineIds": [
      "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 380,
+   "openingHours": "Mo-Su 09:00-24:00"
+  },
+  {
+   "id": "lalaportBbcc",
+   "name": "Mitsui Shopping Park LaLaport BBCC",
+   "address": "2 Jalan Hang Tuah, 55100 Kuala Lumpur",
+   "station": {
+    "name": "Monorail Hang Tuah",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Hang Tuah",
+    "stopId": "MR4",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 200
+  },
+  {
+   "id": "lokl",
+   "name": "LOKL Coffee Co",
+   "address": "30 Jalan Tun H.S. Lee, 50000 Kuala Lumpur",
+   "cuisine": "cafe",
+   "station": {
+    "name": "LRT Masjid Jamek",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Masjid Jamek",
+    "stopId": "AG7",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling",
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 260
   },
   {
    "id": "lorongTarMarket",
    "name": "Lorong Tuanku Abdul Rahman Night Market",
+   "address": "Lorong Tuanku Abdul Rahman, 50100 Kuala Lumpur",
+   "cuisine": "malay",
+   "dietary": "muslim_friendly",
    "station": {
     "name": "Monorail Medan Tuanku",
     "feedId": "rapid-rail-kl",
@@ -303,6 +539,7 @@
   {
    "id": "lot10",
    "name": "Lot 10",
+   "address": "50 Jalan Sultan Ismail, 50200 Kuala Lumpur",
    "station": {
     "name": "MRT Bukit Bintang",
     "feedId": "rapid-rail-kl",
@@ -311,11 +548,49 @@
     "lineIds": [
      "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 310,
+   "openingHours": "Mo-Su 10:00-22:00"
+  },
+  {
+   "id": "lot10Hutong",
+   "name": "Lot 10 Hutong",
+   "address": "Lower Ground, Lot 10, 50 Jalan Sultan Ismail, 50250 Kuala Lumpur",
+   "cuisine": "chinese",
+   "dietary": "mixed",
+   "station": {
+    "name": "MRT Bukit Bintang",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Bukit Bintang",
+    "stopId": "KG18A",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 130
+  },
+  {
+   "id": "madamZee",
+   "name": "Madam Zee, Ancasa Hotel Kuala Lumpur",
+   "todo": "Opening hours not verified (owner survey)",
+   "address": "Jalan Pudu, Kuala Lumpur",
+   "dietary": "halal",
+   "station": {
+    "name": "LRT Plaza Rakyat",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Plaza Rakyat",
+    "stopId": "AG8",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling"
+    ]
+   },
+   "walkMeters": 840
   },
   {
    "id": "marinis",
    "name": "Marini's on 57",
+   "cuisine": "italian",
    "station": {
     "name": "LRT KLCC",
     "feedId": "rapid-rail-kl",
@@ -324,11 +599,29 @@
     "lineIds": [
      "lrt-kelana-jaya"
     ]
+   },
+   "walkMeters": 480,
+   "openingHours": "Mo-Th 19:00-23:00; Fr,Sa 18:30-24:00"
+  },
+  {
+   "id": "masjidBesi",
+   "name": "Masjid Tuanku Mizan Zainal Abidin (Iron Mosque)",
+   "todo": "From MRT Putrajaya Sentral, bus P101 or P105 to \"Perbadanan Putrajaya (Utara)\"",
+   "address": "Persiaran Seri Perdana, Presint 3, 62100 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Putrajaya Sentral",
+    "stopId": "PY41",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
    }
   },
   {
-   "id": "masjidJamek",
-   "name": "Masjid Jamek Sultan Abdul Samad",
+   "id": "masjidIndia",
+   "name": "Masjid India",
+   "address": "Jalan Masjid India, 50100 Kuala Lumpur",
    "station": {
     "name": "LRT Masjid Jamek",
     "feedId": "rapid-rail-kl",
@@ -339,7 +632,104 @@
      "lrt-sri-petaling",
      "lrt-kelana-jaya"
     ]
+   },
+   "walkMeters": 410
+  },
+  {
+   "id": "masjidJamek",
+   "name": "Masjid Jamek Sultan Abdul Samad",
+   "address": "Jalan Tun Perak, 50050 Kuala Lumpur",
+   "station": {
+    "name": "LRT Masjid Jamek",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Masjid Jamek",
+    "stopId": "AG7",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling",
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 150
+  },
+  {
+   "id": "masjidNegara",
+   "name": "Masjid Negara (National Mosque)",
+   "address": "Jalan Perdana, 50480 Kuala Lumpur",
+   "station": {
+    "name": "KTM Kuala Lumpur",
+    "feedId": "ktmb",
+    "search": "KTM/ETS Kuala Lumpur",
+    "stopId": "19000",
+    "lineIds": [
+     "ktm-port-klang",
+     "ktm-seremban",
+     "ktm-ets"
+    ]
+   },
+   "walkMeters": 770
+  },
+  {
+   "id": "masjidPutra",
+   "name": "Masjid Putra (Pink Mosque)",
+   "todo": "From MRT Putrajaya Sentral, bus P101 to \"Putra Square\"",
+   "address": "Persiaran Persekutuan, Presint 1, 62000 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Putrajaya Sentral",
+    "stopId": "PY41",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
    }
+  },
+  {
+   "id": "masjidShahAlam",
+   "name": "Masjid Sultan Salahuddin Abdul Aziz Shah (Blue Mosque)",
+   "todo": "About 1 km from LRT Dato' Menteri; bus T762 stops at \"Masjid Ssaas\"",
+   "address": "Persiaran Masjid, Seksyen 14, 40000 Shah Alam",
+   "station": {
+    "name": "LRT Dato' Menteri",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Dato' Menteri - Sa Sentral",
+    "stopId": "SA12",
+    "lineIds": [
+     "lrt-shah-alam"
+    ]
+   },
+   "walkMeters": 1540
+  },
+  {
+   "id": "merchantsLane",
+   "name": "Merchant's Lane",
+   "address": "Level 1, 150 Jalan Petaling, 50000 Kuala Lumpur",
+   "cuisine": "cafe",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 450
+  },
+  {
+   "id": "merdeka118",
+   "name": "Merdeka 118",
+   "address": "Presint Merdeka 118, 50118 Kuala Lumpur",
+   "station": {
+    "name": "MRT Merdeka",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Merdeka",
+    "stopId": "KG17",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 230
   },
   {
    "id": "merdekaSquare",
@@ -354,11 +744,13 @@
      "lrt-sri-petaling",
      "lrt-kelana-jaya"
     ]
-   }
+   },
+   "walkMeters": 520
   },
   {
    "id": "midValley",
    "name": "Mid Valley Megamall",
+   "address": "Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur",
    "station": {
     "name": "KTM Mid Valley",
     "feedId": "ktmb",
@@ -367,11 +759,62 @@
     "lineIds": [
      "ktm-seremban"
     ]
+   },
+   "walkMeters": 430,
+   "openingHours": "10:00-22:00"
+  },
+  {
+   "id": "mitec",
+   "name": "MITEC (Malaysia International Trade and Exhibition Centre)",
+   "todo": "About 1.9 km on foot from KTM Segambut",
+   "address": "Kompleks Kerajaan, Jalan Duta, 50480 Kuala Lumpur",
+   "station": {
+    "name": "KTM Segambut",
+    "feedId": "ktmb",
+    "search": "KTM Segambut",
+    "stopId": "18700",
+    "lineIds": [
+     "ktm-port-klang"
+    ]
+   },
+   "walkMeters": 1910
+  },
+  {
+   "id": "mitsuiOutlet",
+   "name": "Mitsui Outlet Park KLIA Sepang",
+   "todo": "About 4 km from KLIA T2: bus BTG1 stops at \"Mitsui\"",
+   "address": "Persiaran Komersial, 64000 KLIA, Sepang",
+   "station": {
+    "name": "ERL KLIA T2",
+    "feedId": "erl",
+    "search": "ERL KLIA T2",
+    "stopId": "KLIA_T2",
+    "lineIds": [
+     "erl-klia-ekspres",
+     "erl-klia-transit"
+    ]
    }
+  },
+  {
+   "id": "molina",
+   "name": "Molina",
+   "address": "51F, THE FACE Style, 1020 Jalan Sultan Ismail, 50250 Kuala Lumpur",
+   "cuisine": "innovative",
+   "station": {
+    "name": "LRT Dang Wangi",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Dang Wangi",
+    "stopId": "KJ12",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 650
   },
   {
    "id": "muziumNegara",
    "name": "National Museum (Muzium Negara)",
+   "address": "Jalan Damansara, 50566 Kuala Lumpur",
    "station": {
     "name": "MRT Muzium Negara",
     "feedId": "rapid-rail-kl",
@@ -380,12 +823,45 @@
     "lineIds": [
      "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 40,
+   "openingHours": "09:00-17:00"
+  },
+  {
+   "id": "mvec",
+   "name": "Mid Valley Exhibition Centre (MVEC)",
+   "address": "Mid Valley City, Lingkaran Syed Putra, 59200 Kuala Lumpur",
+   "station": {
+    "name": "KTM Mid Valley",
+    "feedId": "ktmb",
+    "search": "KTM Perhentian Midvalley",
+    "stopId": "19205",
+    "lineIds": [
+     "ktm-seremban"
+    ]
+   },
+   "walkMeters": 380
+  },
+  {
+   "id": "mytown",
+   "name": "MyTOWN Shopping Centre",
+   "address": "6 Jalan Cochrane, 55100 Kuala Lumpur",
+   "station": {
+    "name": "MRT Cochrane",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Cochrane",
+    "stopId": "KG21",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 330
   },
   {
    "id": "nationalArtGallery",
    "name": "National Art Gallery (Balai Seni Negara)",
    "todo": "Confirm nearest station",
+   "address": "2 Jalan Temerloh, 53200 Kuala Lumpur",
    "station": {
     "name": "Monorail Titiwangsa",
     "feedId": "rapid-rail-kl",
@@ -394,7 +870,55 @@
     "lineIds": [
      "monorail"
     ]
-   }
+   },
+   "walkMeters": 1650,
+   "openingHours": "Mo-Fr 09:00-19:00"
+  },
+  {
+   "id": "nationalStadium",
+   "name": "National Stadium Bukit Jalil",
+   "address": "Kompleks Sukan Negara, Bukit Jalil, 57000 Kuala Lumpur",
+   "station": {
+    "name": "LRT Bukit Jalil",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Bukit Jalil",
+    "stopId": "SP17",
+    "lineIds": [
+     "lrt-sri-petaling"
+    ]
+   },
+   "walkMeters": 580
+  },
+  {
+   "id": "nuSentral",
+   "name": "NU Sentral",
+   "address": "201 Jalan Tun Sambanthan, 50470 Kuala Lumpur",
+   "station": {
+    "name": "Monorail KL Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail KL Sentral",
+    "stopId": "MR1",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 140
+  },
+  {
+   "id": "oldChina",
+   "name": "Old China Café",
+   "address": "11 Jalan Balai Polis, 50000 Kuala Lumpur",
+   "cuisine": "nyonya",
+   "station": {
+    "name": "MRT Pasar Seni",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Pasar Seni",
+    "stopId": "KG16",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 350
   },
   {
    "id": "oldKlStation",
@@ -414,6 +938,7 @@
   {
    "id": "pavilion",
    "name": "Pavilion Kuala Lumpur",
+   "address": "168 Jalan Bukit Bintang, Kuala Lumpur",
    "station": {
     "name": "MRT Bukit Bintang",
     "feedId": "rapid-rail-kl",
@@ -422,7 +947,9 @@
     "lineIds": [
      "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 410,
+   "openingHours": "Mo-Su 10:00-22:00"
   },
   {
    "id": "perdanaBotanical",
@@ -435,11 +962,30 @@
     "lineIds": [
      "mrt-kajang"
     ]
+   },
+   "openingHours": "07:00-20:00"
+  },
+  {
+   "id": "perdanaPutra",
+   "name": "Perdana Putra",
+   "todo": "Bus P101 from MRT Putrajaya Sentral",
+   "address": "Persiaran Perdana, Presint 1, 62502 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Putrajaya Sentral",
+    "stopId": "PY41",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
    }
   },
   {
    "id": "petalingStreet",
-   "name": "Petaling Street",
+   "name": "Petaling Street (Jalan Petaling)",
+   "address": "Jalan Petaling, 50000 Kuala Lumpur",
+   "cuisine": "chinese",
+   "dietary": "mixed",
    "station": {
     "name": "MRT Pasar Seni",
     "feedId": "rapid-rail-kl",
@@ -448,11 +994,14 @@
     "lineIds": [
      "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 400,
+   "openingHours": "11:00-24:00"
   },
   {
    "id": "petrosains",
    "name": "Petrosains",
+   "address": "Suria KLCC, Jalan Ampang, 50088 Kuala Lumpur",
    "station": {
     "name": "LRT KLCC",
     "feedId": "rapid-rail-kl",
@@ -460,6 +1009,68 @@
     "stopId": "KJ10",
     "lineIds": [
      "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 330
+  },
+  {
+   "id": "planetarium",
+   "name": "Planetarium Negara",
+   "address": "Jalan Perdana, Tasik Perdana, 50480 Kuala Lumpur",
+   "station": {
+    "name": "MRT Muzium Negara",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Muzium Negara",
+    "stopId": "KG15",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 510
+  },
+  {
+   "id": "pulp",
+   "name": "Pulp by Papa Palheta, APW Bangsar",
+   "address": "APW, 29 Jalan Riong, Bangsar, 59100 Kuala Lumpur",
+   "cuisine": "cafe",
+   "station": {
+    "name": "LRT Abdullah Hukum",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Abdullah Hukum",
+    "stopId": "KJ17",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 980
+  },
+  {
+   "id": "putraBridge",
+   "name": "Putra Bridge (Jambatan Putra)",
+   "todo": "Bus P101 to \"Putra Square\"",
+   "address": "Persiaran Persekutuan, 62000 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Putrajaya Sentral",
+    "stopId": "PY41",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
+   }
+  },
+  {
+   "id": "putrajayaChallengePark",
+   "name": "Putrajaya Challenge Park (Taman Cabaran)",
+   "todo": "Bus P104; about 800 m from the stop",
+   "address": "Jalan P5, Presint 5, 62200 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Putrajaya Sentral",
+    "stopId": "PY41",
+    "lineIds": [
+     "mrt-putrajaya"
     ]
    }
   },
@@ -476,7 +1087,8 @@
      "lrt-sri-petaling",
      "lrt-kelana-jaya"
     ]
-   }
+   },
+   "walkMeters": 320
   },
   {
    "id": "salomaLink",
@@ -489,12 +1101,37 @@
     "lineIds": [
      "lrt-kelana-jaya"
     ]
+   },
+   "walkMeters": 360
+  },
+  {
+   "id": "seriWawasan",
+   "name": "Seri Wawasan Bridge",
+   "address": "Persiaran Seri Perdana, 62000 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Putrajaya Sentral",
+    "stopId": "PY41",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
    }
   },
   {
-   "id": "section17Cafes",
-   "name": "Section 17, Petaling Jaya",
-   "todo": "Nearest station not confirmed"
+   "id": "shahAlamExtremePark",
+   "name": "Shah Alam Extreme Park",
+   "todo": "Position is the \"MBSA Extreme Park\" bus stop beside the park",
+   "address": "Jalan Lompat Pagar 13/37, Seksyen 13, 40100 Shah Alam",
+   "station": {
+    "name": "LRT Stadium Shah Alam",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Stadium Shah Alam",
+    "stopId": "SA10",
+    "lineIds": [
+     "lrt-shah-alam"
+    ]
+   }
   },
   {
    "id": "skybarTraders",
@@ -507,11 +1144,13 @@
     "lineIds": [
      "lrt-kelana-jaya"
     ]
-   }
+   },
+   "walkMeters": 920
   },
   {
    "id": "sriMahamariamman",
    "name": "Sri Mahamariamman Temple",
+   "address": "163 Jalan Tun H.S. Lee, 50000 Kuala Lumpur",
    "station": {
     "name": "MRT Pasar Seni",
     "feedId": "rapid-rail-kl",
@@ -520,25 +1159,16 @@
     "lineIds": [
      "mrt-kajang"
     ]
-   }
-  },
-  {
-   "id": "ss15Cafes",
-   "name": "SS15, Subang Jaya",
-   "station": {
-    "name": "LRT SS15",
-    "feedId": "rapid-rail-kl",
-    "search": "LRT Ss 15",
-    "stopId": "KJ29",
-    "lineIds": [
-     "lrt-kelana-jaya"
-    ]
-   }
+   },
+   "walkMeters": 260
   },
   {
    "id": "ss2Market",
    "name": "SS2 Night Market, Petaling Jaya",
-   "todo": "Nearest station not confirmed"
+   "todo": "Nearest station not confirmed",
+   "address": "SS2, 47300 Petaling Jaya",
+   "cuisine": "street_food",
+   "dietary": "mixed"
   },
   {
    "id": "stadiumMerdeka",
@@ -551,7 +1181,23 @@
     "lineIds": [
      "mrt-kajang"
     ]
-   }
+   },
+   "walkMeters": 500
+  },
+  {
+   "id": "starhill",
+   "name": "The Starhill",
+   "address": "181 Jalan Bukit Bintang, 55100 Kuala Lumpur",
+   "station": {
+    "name": "Monorail Bukit Bintang",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Bukit Bintang",
+    "stopId": "MR6",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 410
   },
   {
    "id": "stMarys",
@@ -566,11 +1212,30 @@
      "lrt-sri-petaling",
      "lrt-kelana-jaya"
     ]
-   }
+   },
+   "walkMeters": 480
+  },
+  {
+   "id": "suasana27",
+   "name": "Suasana @27, TAMU Hotel & Suites",
+   "todo": "Opening hours not verified (owner survey)",
+   "address": "120 Jalan Raja Abdullah, 50300 Kuala Lumpur",
+   "dietary": "halal",
+   "station": {
+    "name": "LRT Kampung Baru",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Kampung Baru - Cbp Coopbank Pertama",
+    "stopId": "KJ11",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 650
   },
   {
    "id": "sultanAbdulSamad",
    "name": "Sultan Abdul Samad Building",
+   "address": "Jalan Raja, 50050 Kuala Lumpur",
    "station": {
     "name": "LRT Masjid Jamek",
     "feedId": "rapid-rail-kl",
@@ -581,11 +1246,13 @@
      "lrt-sri-petaling",
      "lrt-kelana-jaya"
     ]
-   }
+   },
+   "walkMeters": 460
   },
   {
-   "id": "sunwayPyramid",
-   "name": "Sunway Pyramid",
+   "id": "sunwayConvention",
+   "name": "Sunway Pyramid Convention Centre",
+   "address": "Sunway Pyramid, 3 Jalan PJS 11/15, Bandar Sunway, 47500 Petaling Jaya",
    "station": {
     "name": "BRT Sunway Lagoon",
     "feedId": "rapid-rail-kl",
@@ -597,6 +1264,37 @@
    }
   },
   {
+   "id": "sunwayPyramid",
+   "name": "Sunway Pyramid",
+   "address": "3 Jalan PJS 11/15, 47500 Petaling Jaya",
+   "station": {
+    "name": "BRT Sunway Lagoon",
+    "feedId": "rapid-rail-kl",
+    "search": "BRT Sunway Lagoon",
+    "stopId": "BRT3",
+    "lineIds": [
+     "brt-sunway"
+    ]
+   },
+   "walkMeters": 880,
+   "openingHours": "PH,Mo-Su 10:00-22:00"
+  },
+  {
+   "id": "sunwayVelocity",
+   "name": "Sunway Velocity Mall",
+   "address": "Lingkaran SV, 55100 Kuala Lumpur",
+   "station": {
+    "name": "MRT Maluri",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Maluri",
+    "stopId": "KG22",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 1140
+  },
+  {
    "id": "suriaKlcc",
    "name": "Suria KLCC",
    "station": {
@@ -606,6 +1304,52 @@
     "stopId": "KJ10",
     "lineIds": [
      "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 330,
+   "openingHours": "Mo-Su 10:00-22:00"
+  },
+  {
+   "id": "tamanBotaniPutrajaya",
+   "name": "Taman Botani Putrajaya",
+   "todo": "Bus P101 to \"Taman Botani Putrajaya\"",
+   "address": "Presint 1, 62000 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Putrajaya Sentral",
+    "stopId": "PY41",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
+   }
+  },
+  {
+   "id": "tamanSaujanaHijau",
+   "name": "Taman Saujana Hijau",
+   "todo": "Bus P102 to \"Balai Polis Presint 11 (Opp)\"",
+   "address": "Presint 11, 62300 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Putrajaya Sentral",
+    "stopId": "PY41",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
+   }
+  },
+  {
+   "id": "tamanTasikShahAlam",
+   "name": "Taman Tasik Shah Alam",
+   "address": "Persiaran Tasik, Seksyen 14, 40000 Shah Alam",
+   "station": {
+    "name": "LRT Dato' Menteri",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Dato' Menteri - Sa Sentral",
+    "stopId": "SA12",
+    "lineIds": [
+     "lrt-shah-alam"
     ]
    }
   },
@@ -625,8 +1369,25 @@
    }
   },
   {
+   "id": "terraDining",
+   "name": "Terra Dining",
+   "address": "91 Jalan Aminuddin Baki, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+   "cuisine": "malaysian_contemporary",
+   "station": {
+    "name": "MRT Bandar Utama",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Bandar Utama",
+    "stopId": "KG09",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 950
+  },
+  {
    "id": "textileMuseum",
    "name": "National Textile Museum",
+   "address": "26 Jalan Sultan Hishamuddin, 50050 Kuala Lumpur",
    "station": {
     "name": "LRT Masjid Jamek",
     "feedId": "rapid-rail-kl",
@@ -637,7 +1398,9 @@
      "lrt-sri-petaling",
      "lrt-kelana-jaya"
     ]
-   }
+   },
+   "walkMeters": 530,
+   "openingHours": "09:00-17:00"
   },
   {
    "id": "theanHou",
@@ -650,6 +1413,85 @@
     "stopId": "KJ16",
     "lineIds": [
      "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 1870
+  },
+  {
+   "id": "thirty8",
+   "name": "THIRTY8, Grand Hyatt Kuala Lumpur",
+   "address": "38th Floor, Grand Hyatt Kuala Lumpur, 12 Jalan Pinang, 50450 Kuala Lumpur",
+   "cuisine": "international",
+   "station": {
+    "name": "Monorail Raja Chulan",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Raja Chulan",
+    "stopId": "MR7",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 690
+  },
+  {
+   "id": "titiwangsa",
+   "name": "Taman Tasik Titiwangsa",
+   "address": "Jalan Temerloh, Titiwangsa, 53200 Kuala Lumpur",
+   "station": {
+    "name": "MRT Hospital Kuala Lumpur",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Hospital Kuala Lumpur",
+    "stopId": "PY18",
+    "lineIds": [
+     "mrt-putrajaya"
+    ]
+   }
+  },
+  {
+   "id": "trxCityPark",
+   "name": "TRX City Park",
+   "address": "Level 3, The Exchange TRX, 55188 Kuala Lumpur",
+   "station": {
+    "name": "MRT Tun Razak Exchange (TRX)",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Tun Razak Exchange",
+    "stopId": "KG20",
+    "lineIds": [
+     "mrt-kajang",
+     "mrt-putrajaya"
+    ]
+   },
+   "walkMeters": 380
+  },
+  {
+   "id": "trxExchange",
+   "name": "The Exchange TRX",
+   "address": "Persiaran TRX, 55188 Kuala Lumpur",
+   "station": {
+    "name": "MRT Tun Razak Exchange (TRX)",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Tun Razak Exchange",
+    "stopId": "KG20",
+    "lineIds": [
+     "mrt-kajang",
+     "mrt-putrajaya"
+    ]
+   },
+   "walkMeters": 330
+  },
+  {
+   "id": "ttdiMarket",
+   "name": "TTDI Night Market (Pasar Malam TTDI)",
+   "address": "Jalan Tun Mohd Fuad 2, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+   "cuisine": "street_food",
+   "dietary": "mixed",
+   "station": {
+    "name": "MRT Taman Tun Dr Ismail",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Taman Tun Dr Ismail",
+    "stopId": "KG10",
+    "lineIds": [
+     "mrt-kajang"
     ]
    }
   },
@@ -664,25 +1506,46 @@
     "lineIds": [
      "lrt-kelana-jaya"
     ]
-   }
+   },
+   "walkMeters": 380
   },
   {
-   "id": "cindai",
-   "name": "Cindai, Perdana Kuala Lumpur City Centre",
+   "id": "urbanSkatePark",
+   "name": "KL Urban Skate Park (Ampang Park)",
+   "address": "Jalan Ampang (former Ampang Park site), 50450 Kuala Lumpur",
    "station": {
-    "name": "MRT Persiaran KLCC",
+    "name": "LRT Ampang Park",
     "feedId": "rapid-rail-kl",
-    "search": "MRT Persiaran KLCC",
-    "stopId": "PY21",
+    "search": "LRT Ampang Park",
+    "stopId": "KJ9",
     "lineIds": [
-     "mrt-putrajaya"
+     "lrt-kelana-jaya"
     ]
    },
-   "todo": "Opening hours not verified (owner survey)"
+   "walkMeters": 260
+  },
+  {
+   "id": "vcr",
+   "name": "VCR",
+   "address": "2 Jalan Galloway, 50150 Kuala Lumpur",
+   "cuisine": "cafe",
+   "station": {
+    "name": "Monorail Hang Tuah",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Hang Tuah",
+    "stopId": "MR4",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 650
   },
   {
    "id": "warisanCafe",
    "name": "Warisan Cafe, The Royale Chulan Kuala Lumpur",
+   "todo": "Opening hours not verified (owner survey)",
+   "address": "5 Jalan Conlay, 50450 Kuala Lumpur",
+   "dietary": "halal",
    "station": {
     "name": "MRT Conlay",
     "feedId": "rapid-rail-kl",
@@ -692,11 +1555,14 @@
      "mrt-putrajaya"
     ]
    },
-   "todo": "Opening hours not verified (owner survey)"
+   "walkMeters": 310
   },
   {
    "id": "westinLivingRoom",
    "name": "The Living Room, The Westin Kuala Lumpur",
+   "todo": "Opening hours not verified (owner survey)",
+   "address": "199 Jalan Bukit Bintang, 55100 Kuala Lumpur",
+   "dietary": "halal",
    "station": {
     "name": "Monorail Bukit Bintang",
     "feedId": "rapid-rail-kl",
@@ -706,79 +1572,99 @@
      "monorail"
     ]
    },
-   "todo": "Opening hours not verified (owner survey)"
+   "walkMeters": 510
   },
   {
-   "id": "madamZee",
-   "name": "Madam Zee, Ancasa Hotel Kuala Lumpur",
+   "id": "wtcKl",
+   "name": "World Trade Centre Kuala Lumpur",
+   "address": "41 Jalan Tun Ismail, 50480 Kuala Lumpur",
    "station": {
-    "name": "LRT Plaza Rakyat",
+    "name": "LRT PWTC",
     "feedId": "rapid-rail-kl",
-    "search": "LRT Plaza Rakyat",
-    "stopId": "AG8",
+    "search": "LRT Pwtc",
+    "stopId": "AG4",
     "lineIds": [
      "lrt-ampang",
      "lrt-sri-petaling"
     ]
    },
-   "todo": "Opening hours not verified (owner survey)"
+   "walkMeters": 570
   },
   {
-   "id": "suasana27",
-   "name": "Suasana @27, TAMU Hotel & Suites",
+   "id": "zooNegara",
+   "name": "Zoo Negara",
+   "todo": "About 2.6 km from LRT Sri Rampai; buses 220 and 253 stop at \"Zoo Negara\"",
+   "address": "Hulu Kelang, 68000 Ampang, Selangor",
    "station": {
-    "name": "LRT Kampung Baru",
+    "name": "LRT Sri Rampai",
     "feedId": "rapid-rail-kl",
-    "search": "LRT Kampung Baru - Cbp Coopbank Pertama",
-    "stopId": "KJ11",
+    "search": "LRT Sri Rampai",
+    "stopId": "KJ4",
     "lineIds": [
      "lrt-kelana-jaya"
     ]
-   },
-   "todo": "Opening hours not verified (owner survey)"
+   }
   }
  ],
  "trails": [
-  {
-   "key": "shopping",
-   "slug": "shopping",
-   "stops": [
-    {
-     "placeId": "pavilion"
-    },
-    {
-     "placeId": "lot10"
-    },
-    {
-     "placeId": "suriaKlcc"
-    },
-    {
-     "placeId": "midValley"
-    },
-    {
-     "placeId": "sunwayPyramid"
-    }
-   ],
-   "category": "shopping"
-  },
   {
    "key": "heritage",
    "slug": "heritage",
    "stops": [
     {
-     "placeId": "sultanAbdulSamad"
+     "placeId": "masjidJamek"
     },
     {
      "placeId": "merdekaSquare"
     },
     {
+     "placeId": "sultanAbdulSamad"
+    },
+    {
      "placeId": "centralMarket"
     },
     {
-     "placeId": "oldKlStation"
+     "placeId": "stadiumMerdeka"
     },
     {
-     "placeId": "stadiumMerdeka"
+     "placeId": "oldKlStation"
+    }
+   ],
+   "category": "culture"
+  },
+  {
+   "key": "harmony",
+   "slug": "cultural-harmony",
+   "stops": [
+    {
+     "placeId": "masjidIndia"
+    },
+    {
+     "placeId": "masjidJamek"
+    },
+    {
+     "placeId": "stMarys"
+    },
+    {
+     "placeId": "sriMahamariamman"
+    },
+    {
+     "placeId": "guanDi"
+    },
+    {
+     "placeId": "masjidNegara"
+    },
+    {
+     "placeId": "theanHou"
+    },
+    {
+     "placeId": "masjidPutra"
+    },
+    {
+     "placeId": "masjidBesi"
+    },
+    {
+     "placeId": "masjidShahAlam"
     }
    ],
    "category": "culture"
@@ -788,57 +1674,19 @@
    "slug": "museum",
    "stops": [
     {
-     "placeId": "muziumNegara"
+     "placeId": "textileMuseum"
     },
     {
      "placeId": "iamm"
     },
     {
-     "placeId": "textileMuseum"
+     "placeId": "muziumNegara"
     },
     {
      "placeId": "nationalArtGallery"
-    },
-    {
-     "placeId": "petrosains"
     }
    ],
    "category": "culture"
-  },
-  {
-   "key": "nature",
-   "slug": "nature",
-   "stops": [
-    {
-     "placeId": "klForestEcoPark"
-    },
-    {
-     "placeId": "perdanaBotanical"
-    },
-    {
-     "placeId": "batuCaves"
-    },
-    {
-     "placeId": "frim"
-    }
-   ],
-   "category": "nature"
-  },
-  {
-   "key": "food",
-   "slug": "food-hawker",
-   "stops": [
-    {
-     "placeId": "jalanAlor"
-    },
-    {
-     "placeId": "petalingStreet"
-    },
-    {
-     "placeId": "bangsar"
-    }
-   ],
-   "category": "food"
   },
   {
    "key": "streetArt",
@@ -854,9 +1702,55 @@
    "category": "culture"
   },
   {
-   "key": "nightMarket",
-   "slug": "night-market",
+   "key": "putrajaya",
+   "slug": "putrajaya",
    "stops": [
+    {
+     "placeId": "perdanaPutra"
+    },
+    {
+     "placeId": "masjidPutra"
+    },
+    {
+     "placeId": "putraBridge"
+    },
+    {
+     "placeId": "istanaKehakiman"
+    },
+    {
+     "placeId": "masjidBesi"
+    },
+    {
+     "placeId": "seriWawasan"
+    },
+    {
+     "placeId": "tamanBotaniPutrajaya"
+    },
+    {
+     "placeId": "tamanSaujanaHijau"
+    }
+   ],
+   "category": "explore"
+  },
+  {
+   "key": "food",
+   "slug": "food-hawker",
+   "stops": [
+    {
+     "placeId": "jalanAlor"
+    },
+    {
+     "placeId": "lot10Hutong"
+    },
+    {
+     "placeId": "petalingStreet"
+    },
+    {
+     "placeId": "kampungBaruFood"
+    },
+    {
+     "placeId": "brickfields"
+    },
     {
      "day": "mon",
      "placeId": "ss2Market"
@@ -871,64 +1765,222 @@
     },
     {
      "day": "sun",
-     "placeId": "bangsarMarket"
+     "placeId": "ttdiMarket"
     }
    ],
    "category": "food"
   },
   {
-   "key": "harmony",
-   "slug": "cultural-harmony",
+   "key": "michelin",
+   "slug": "michelin",
    "stops": [
     {
-     "placeId": "masjidJamek"
+     "placeId": "dewakan"
     },
     {
-     "placeId": "stMarys"
+     "placeId": "molina"
     },
     {
-     "placeId": "sriMahamariamman"
+     "placeId": "beta"
     },
     {
-     "placeId": "guanDi"
+     "placeId": "chimByChefNoom"
+    },
+    {
+     "placeId": "akar"
+    },
+    {
+     "placeId": "terraDining"
+    },
+    {
+     "placeId": "dcDarrenChin"
     }
    ],
-   "category": "culture"
+   "category": "food"
+  },
+  {
+   "key": "rooftop",
+   "slug": "rooftop-dining",
+   "stops": [
+    {
+     "placeId": "marinis"
+    },
+    {
+     "placeId": "skybarTraders"
+    },
+    {
+     "placeId": "thirty8"
+    },
+    {
+     "placeId": "klTowerRevolving"
+    },
+    {
+     "placeId": "heliLounge"
+    }
+   ],
+   "category": "food"
   },
   {
    "key": "cafe",
    "slug": "cafe-hopping",
    "stops": [
     {
-     "placeId": "chinatownCafes"
+     "placeId": "lokl"
     },
     {
-     "placeId": "bangsarCafes"
+     "placeId": "oldChina"
     },
     {
-     "placeId": "section17Cafes"
+     "placeId": "chinatown1974"
     },
     {
-     "placeId": "ss15Cafes"
+     "placeId": "merchantsLane"
+    },
+    {
+     "placeId": "vcr"
+    },
+    {
+     "placeId": "feeka"
+    },
+    {
+     "placeId": "pulp"
     }
    ],
    "category": "food"
   },
   {
-   "key": "hiddenGems",
-   "slug": "hidden-gems",
+   "key": "shopping",
+   "slug": "shopping",
    "stops": [
     {
-     "placeId": "kampungBaru"
+     "placeId": "suriaKlcc"
     },
     {
-     "placeId": "chowKitMarket"
+     "placeId": "pavilion"
     },
     {
-     "placeId": "theanHou"
+     "placeId": "bukitBintangWalk"
     },
     {
-     "placeId": "brickfields"
+     "placeId": "lot10"
+    },
+    {
+     "placeId": "starhill"
+    },
+    {
+     "placeId": "trxExchange"
+    }
+   ],
+   "category": "shopping"
+  },
+  {
+   "key": "mallHopping",
+   "slug": "mall-hopping",
+   "stops": [
+    {
+     "placeId": "nuSentral"
+    },
+    {
+     "placeId": "midValley"
+    },
+    {
+     "placeId": "lalaportBbcc"
+    },
+    {
+     "placeId": "mytown"
+    },
+    {
+     "placeId": "sunwayVelocity"
+    },
+    {
+     "placeId": "aeonMaluri"
+    },
+    {
+     "placeId": "sunwayPyramid"
+    },
+    {
+     "placeId": "mitsuiOutlet"
+    }
+   ],
+   "category": "shopping"
+  },
+  {
+   "key": "nature",
+   "slug": "nature",
+   "stops": [
+    {
+     "placeId": "klccPark"
+    },
+    {
+     "placeId": "klForestEcoPark"
+    },
+    {
+     "placeId": "tamanTugu"
+    },
+    {
+     "placeId": "perdanaBotanical"
+    },
+    {
+     "placeId": "klBirdPark"
+    },
+    {
+     "placeId": "titiwangsa"
+    },
+    {
+     "placeId": "batuCaves"
+    },
+    {
+     "placeId": "frim"
+    },
+    {
+     "placeId": "tamanTasikShahAlam"
+    }
+   ],
+   "category": "nature"
+  },
+  {
+   "key": "kids",
+   "slug": "kids",
+   "stops": [
+    {
+     "placeId": "petrosains"
+    },
+    {
+     "placeId": "aquaria"
+    },
+    {
+     "placeId": "klccPark"
+    },
+    {
+     "placeId": "klBirdPark"
+    },
+    {
+     "placeId": "planetarium"
+    },
+    {
+     "placeId": "kidzania"
+    },
+    {
+     "placeId": "zooNegara"
+    }
+   ],
+   "category": "family"
+  },
+  {
+   "key": "extreme",
+   "slug": "extreme-park",
+   "stops": [
+    {
+     "placeId": "urbanSkatePark"
+    },
+    {
+     "placeId": "batuSkatepark"
+    },
+    {
+     "placeId": "shahAlamExtremePark"
+    },
+    {
+     "placeId": "putrajayaChallengePark"
     }
    ],
    "category": "explore"
@@ -941,99 +1993,57 @@
      "placeId": "twinTowers"
     },
     {
-     "placeId": "batuCavesSteps"
-    },
-    {
      "placeId": "salomaLink"
     },
     {
-     "placeId": "merdekaSquare"
-    },
-    {
      "placeId": "kwaiChaiHong"
+    },
+    {
+     "placeId": "riverOfLife"
+    },
+    {
+     "placeId": "merdeka118"
+    },
+    {
+     "placeId": "trxCityPark"
+    },
+    {
+     "placeId": "batuCavesSteps"
     }
    ],
    "category": "explore"
   },
   {
-   "key": "budget",
-   "slug": "student-budget",
+   "key": "events",
+   "slug": "events",
    "stops": [
     {
-     "placeId": "klccPark"
+     "placeId": "klccConvention"
     },
     {
-     "placeId": "centralMarket"
+     "placeId": "wtcKl"
     },
     {
-     "placeId": "batuCaves"
+     "placeId": "mitec"
     },
     {
-     "todo": "Confirm entry fee",
-     "placeId": "muziumNegara"
+     "placeId": "mvec"
     },
     {
-     "todo": "Confirm whether the canopy walk is free",
-     "placeId": "klForestEcoPark"
+     "placeId": "axiataArena"
+    },
+    {
+     "placeId": "nationalStadium"
+    },
+    {
+     "placeId": "sunwayConvention"
     }
    ],
-   "category": "explore"
+   "category": "events"
   },
   {
-   "key": "wellness",
-   "slug": "wellness-park",
-   "stops": [
-    {
-     "placeId": "klccPark"
-    },
-    {
-     "placeId": "perdanaBotanical"
-    },
-    {
-     "placeId": "tamanTugu"
-    }
-   ],
-   "category": "nature"
-  },
-  {
-   "key": "festive",
-   "slug": "festive",
-   "stops": [
-    {
-     "placeId": "kampungBaruRaya"
-    },
-    {
-     "placeId": "chinatownCny"
-    },
-    {
-     "placeId": "brickfieldsDeepavali"
-    }
-   ],
-   "category": "culture"
-  },
-  {
-   "key": "rooftop",
-   "slug": "rooftop-dining",
-   "stops": [
-    {
-     "placeId": "heliLounge"
-    },
-    {
-     "placeId": "marinis"
-    },
-    {
-     "placeId": "skybarTraders"
-    },
-    {
-     "placeId": "klTowerRevolving"
-    }
-   ],
-   "category": "food"
-  },
-  {
-   "slug": "halal-fine-dining",
    "key": "halalFine",
-   "category": "halal-fine-dining",
+   "slug": "halal-fine-dining",
    "stops": [
     {
      "placeId": "cindai"
@@ -1050,7 +2060,8 @@
     {
      "placeId": "suasana27"
     }
-   ]
+   ],
+   "category": "halal-fine-dining"
   }
  ]
 }

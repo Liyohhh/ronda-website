@@ -43,7 +43,7 @@ export type Weekday = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 
 export type TrailStop = {
   placeId: string
-  day?: Weekday // night-market trail: which evening it runs
+  day?: Weekday // night markets on the hawker trail: which evening each runs
   todo?: string
 }
 

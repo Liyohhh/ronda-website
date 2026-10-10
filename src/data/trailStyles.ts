@@ -32,7 +32,7 @@ export const CATEGORY_STYLE: Record<TrailCategory, { from: string; to: string; i
   },
   family: {
     from: '#18243F',
-    to: '#0284C7',
+    to: '#0369A1',
     icon: 'favorite',
   },
   events: {
