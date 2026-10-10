@@ -24,3 +24,13 @@ export const TRAIL_PHOTOS: Record<string, TrailPhoto> = {
   festive: { src: commons('d/d7', 'Thean_Hou_Temple%2C_2023_%2803%29.jpg'), author: 'Bahnfrend', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Thean_Hou_Temple,_2023_(03).jpg' },
   'rooftop-dining': { src: commons('c/cc', 'Kuala_Lumpur_Skyline_at_dusk_1.jpg'), author: 'Walkerssk', license: 'CC0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/', page: 'https://commons.wikimedia.org/wiki/File:Kuala_Lumpur_Skyline_at_dusk_1.jpg' },
 }
+
+// Home page slides ("Travel made effortless"): iconic KL places, same licence rules and credits as above.
+// Checked through the Commons API (author + licence) on 4 Oct 2026.
+export const SLIDE_PHOTOS: Record<'plan' | 'ronda300' | 'fares' | 'saved' | 'airport', TrailPhoto & { alt: string }> = {
+  plan: { src: commons('a/aa', 'Kuala_Lumpur_Malaysia_Skyline-03.jpg'), alt: 'Kuala Lumpur skyline with the Petronas Twin Towers and KL Tower', author: 'CEphoto, Uwe Aranas', license: 'CC BY-SA 3.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0', page: 'https://commons.wikimedia.org/wiki/File:Kuala_Lumpur_Malaysia_Skyline-03.jpg' },
+  ronda300: { src: commons('3/3c', 'Merdeka_Square_Kuala_Lumpur_Malaysia.jpg'), alt: 'Memorial arches at Merdeka Square, Kuala Lumpur', author: 'Philip Nalangan', license: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0', page: 'https://commons.wikimedia.org/wiki/File:Merdeka_Square_Kuala_Lumpur_Malaysia.jpg' },
+  fares: { src: commons('6/67', 'Kuala_Lumpur._Jamek_Mosque._2019-12-08_17-34-20.jpg'), alt: 'Masjid Jamek Sultan Abdul Samad, Kuala Lumpur', author: 'Shesmax', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Kuala_Lumpur._Jamek_Mosque._2019-12-08_17-34-20.jpg' },
+  saved: { src: commons('7/73', 'Murugan_statue_Batu_Caves_01.jpg'), alt: 'Murugan statue and steps at Batu Caves', author: 'Aumars', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Murugan_statue_Batu_Caves_01.jpg' },
+  airport: { src: commons('5/5c', 'KLIA_Terminal_1_05112025_10.jpg'), alt: 'Check-in hall at KLIA Terminal 1', author: 'Rulwarih', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:KLIA_Terminal_1_05112025_10.jpg' },
+}

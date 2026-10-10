@@ -1,7 +1,7 @@
 import { expect, test } from './mocks'
 
-// Home page order under the search card: Trails (Explore) -> Promotions -> "Everything you need"
-const ORDER = ['trails-title', 'promo-title', 'features-title']
+// Home page order under the search card: Trails (Explore) -> Promotions -> slides -> "Everything you need"
+const ORDER = ['trails-title', 'promo-title', 'slides-title', 'features-title']
 
 test('home sections come in the agreed order', async ({ page, backend }) => {
   void backend
@@ -31,7 +31,7 @@ for (const width of [375, 768, 1440]) {
       return (await sec.boundingBox())!
     }))
     for (let i = 1; i < boxes.length; i++) {
-      // each section starts at or below where the one before it ends
+      // each section starts at or below where the one before it ends (the navy band's overlap sits inside the slides card's own padding)
       expect(boxes[i].y, `${ORDER[i]} vs ${ORDER[i - 1]}`).toBeGreaterThanOrEqual(boxes[i - 1].y + boxes[i - 1].height - 1)
     }
     const doc = await page.evaluate(() => document.documentElement.scrollWidth)

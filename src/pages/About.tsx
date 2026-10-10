@@ -4,7 +4,7 @@ import SiteLayout from '../components/SiteLayout'
 import LineBadge from '../components/LineBadge'
 import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
-import { TRAIL_PHOTOS } from '../data/trailPhotos'
+import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
 import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { AUTH_VIDEO } from '../data/authVideo'
@@ -238,6 +238,11 @@ function About() {
               {t('videoLabel')}, sunset over Kuala Lumpur:{' '}
               <a href={AUTH_VIDEO.page} target="_blank" rel="noopener noreferrer" className="hover:underline">{AUTH_VIDEO.author}</a> · Pexels
             </li>
+            {Object.entries(SLIDE_PHOTOS).map(([k, ph]) => (
+              <li key={k}>
+                {ph.alt}: <PhotoCredit photo={ph} />
+              </li>
+            ))}
           </ul>
         </section>
       </div>
