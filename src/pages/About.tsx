@@ -22,7 +22,7 @@ import type { IconName } from '../data/icons'
 const FEATURES: { title: TranslationKey; text: TranslationKey; icon: IconName; soon?: boolean }[] = [
   { title: 'feat_directions', text: 'aboutDirectionsText', icon: 'routeOutline' },
   { title: 'feat_trails', text: 'aboutTrailsText', icon: 'hiking' },
-  { title: 'feat_ronda300', text: 'aboutRonda300Text', icon: 'adjust', soon: true },
+  { title: 'feat_ronda300', text: 'aboutRonda300Text', icon: 'adjust' },
   { title: 'aboutAirportTitle', text: 'aboutAirportText', icon: 'flight' },
   { title: 'aboutMultiTitle', text: 'aboutMultiText', icon: 'translate' },
 ]
