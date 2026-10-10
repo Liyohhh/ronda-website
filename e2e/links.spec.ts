@@ -36,6 +36,12 @@ test.describe('links and buttons', () => {
       }
       const broken: string[] = []
       for (const h of [...hrefs].sort()) {
+        // links to files (trail map pictures, PDFs): the file must exist; there is no page to open
+        if (/\.(jpe?g|png|webp|pdf|svg)$/i.test(h)) {
+          const res = await page.request.get(h)
+          if (!res.ok() || !/^(image|application\/pdf)/.test(res.headers()['content-type'] ?? '')) broken.push(`${h}: file missing`)
+          continue
+        }
         await gotoIn(page, h, lang)
         const title = (await page.locator('h1').first().textContent().catch(() => '')) ?? ''
         if (NOT_FOUND.includes(title.trim()) && !h.startsWith('/no-such-page')) broken.push(`${h}: not found`)
