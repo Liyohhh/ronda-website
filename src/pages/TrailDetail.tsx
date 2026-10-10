@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
-import TrailMap from '../components/TrailMap'
+import { TRAIL_MAPS } from '../data/trailMaps'
 import { HoursStatus, HoursWeek } from '../components/PlaceHours'
 import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
@@ -96,10 +96,17 @@ function TrailDetail() {
         <BackLink />
       </div>
 
-      {/* the map uses the full page width; the stop list below stays in the reading column */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
-        <TrailMap trail={trail} places={data.places} />
-      </div>
+      {/* trail map picture, full page width; tap to open it full size */}
+      {TRAIL_MAPS[trail.slug] && (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
+          <a href={TRAIL_MAPS[trail.slug].jpg} target="_blank" rel="noopener" className="block overflow-hidden rounded-2xl border border-gray-200 shadow-sm">
+            <picture>
+              <source srcSet={TRAIL_MAPS[trail.slug].webp} type="image/webp" />
+              <img src={TRAIL_MAPS[trail.slug].jpg} alt={TRAIL_MAPS[trail.slug].alt} width={1800} height={1200} loading="lazy" className="block w-full h-auto" />
+            </picture>
+          </a>
+        </div>
+      )}
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-8">
         <h2 className="mt-6 text-lg font-semibold text-gray-900">
