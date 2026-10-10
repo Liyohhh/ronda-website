@@ -29,7 +29,9 @@ function TrailsSection() {
       type="button"
       onClick={() => scroll(dir)}
       aria-label={dir === 1 ? t('scrollNext') : t('scrollPrev')}
-      className="hidden md:flex w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md items-center justify-center text-[#1F2F5C] hover:bg-gray-50"
+      className={`hidden md:flex absolute top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white border border-gray-200 shadow-lg items-center justify-center text-[#1F2F5C] hover:bg-gray-50 ${
+        dir === 1 ? '-end-5' : '-start-5'
+      }`}
     >
       <Icon name={dir === 1 ? 'chevronRight' : 'chevronLeft'} size={18} className="rtl:rotate-180" />
     </button>
@@ -44,9 +46,7 @@ function TrailsSection() {
           </h2>
           <p className="mt-1 text-gray-500">{t('r3_homeSub')}</p>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {arrow(-1)}
-          {arrow(1)}
+        <div className="flex items-center flex-shrink-0">
           <Link
             to="/ronda-300"
             className="hidden sm:inline-flex items-center gap-1 h-10 px-4 rounded-full border border-gray-200 bg-white text-sm font-semibold text-[#1F2F5C] shadow-sm hover:bg-gray-50"
@@ -64,16 +64,21 @@ function TrailsSection() {
       ) : trails.length === 0 ? (
         <p className="mt-6 text-gray-500">{t('noTrailsInCategory')}</p>
       ) : (
-        <ul
-          ref={rowRef}
-          className="mt-4 flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scroll-px-4 [scrollbar-width:none] -mx-4 px-4 pb-4"
-        >
-          {trails.map((trail) => (
-            <li key={trail.slug} className="snap-start flex-shrink-0 w-[78%] sm:w-[46%] md:w-[31%] lg:w-[23.5%] flex">
-              <TrailCardClassic trail={trail} places={data.places} className="w-full" />
-            </li>
-          ))}
-        </ul>
+        // arrows sit on the left and right edges of the card row (desktop); phones swipe
+        <div className="relative">
+          {arrow(-1)}
+          {arrow(1)}
+          <ul
+            ref={rowRef}
+            className="mt-4 flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scroll-px-4 [scrollbar-width:none] -mx-4 px-4 pb-4"
+          >
+            {trails.map((trail) => (
+              <li key={trail.slug} className="snap-start flex-shrink-0 w-[78%] sm:w-[46%] md:w-[31%] lg:w-[23.5%] flex">
+                <TrailCardClassic trail={trail} places={data.places} className="w-full" />
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </section>
   )
