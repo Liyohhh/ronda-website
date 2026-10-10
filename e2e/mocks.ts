@@ -72,6 +72,8 @@ async function mockBackend(page: Page): Promise<Backend> {
       }
       case '/rest/v1/rpc/trails_data':
         return json(route, TRAILS)
+      case '/rest/v1/rpc/trail_route': // no walking route in the tests: the trail map stays hidden (no map tiles needed)
+        return json(route, { start: null, end: null, stops: [], legs: [] })
       case '/rest/v1/rpc/bus_routes':
         return json(route, BUS_ROUTES)
       case '/rest/v1/rpc/line_stations':

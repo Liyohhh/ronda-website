@@ -35,3 +35,21 @@ export const mapConfig = () => ({
   pmtilesUrl: (import.meta.env.VITE_MAP_PMTILES_URL as string | undefined) || undefined,
   assetsUrl: (import.meta.env.VITE_MAP_ASSETS_URL as string | undefined) || DEFAULT_ASSETS,
 })
+
+// A quieter map for trail maps: soft paper ground, white roads, gentle parks and water, so the walking route and
+// the stops stand out (same colours as the printable trail maps).
+const SOFT = {
+  background: '#F4F5F7', earth: '#F4F5F7', park_a: '#DDE8D6', park_b: '#D3E1CB', wood_a: '#D8E4CF', wood_b: '#CEDDC4', scrub_a: '#E2E9DB', scrub_b: '#DAE3D2',
+  glacier: '#F4F5F7', sand: '#ECEAE3', beach: '#ECEAE3', zoo: '#E1E8D9', military: '#EBEBEA', hospital: '#F0E9E8', industrial: '#ECECEC', school: '#EFEDE8',
+  pedestrian: '#EFF0F2', aerodrome: '#ECECEC', water: '#BFD5E0', buildings: '#E3E5EA',
+  highway: '#FFFFFF', major: '#FFFFFF', minor_a: '#FBFBFC', minor_b: '#FBFBFC', other: '#F7F8F9', link: '#FFFFFF',
+  highway_casing_late: '#DCDFE5', highway_casing_early: '#DCDFE5', major_casing_late: '#DCDFE5', major_casing_early: '#DCDFE5', minor_casing: '#E2E5EA',
+  railway: '#C3C8D1', boundaries: '#C3C8D1', roads_label_minor: '#858C99', roads_label_major: '#737A87', roads_label_minor_halo: '#FBFBFC', roads_label_major_halo: '#FFFFFF',
+  ocean_label: '#6A93A6', city_label: '#555C69', subplace_label: '#858C99', address_label: '#A0A6B0', state_label: '#979DA8', country_label: '#979DA8',
+}
+
+export function softMapStyle(lang: string, pmtilesUrl?: string, assetsUrl = DEFAULT_ASSETS): StyleSpecification {
+  const base = mapStyle(lang, pmtilesUrl, assetsUrl)
+  if (!pmtilesUrl) return base
+  return { ...base, layers: layers('protomaps', { ...namedFlavor('light'), ...SOFT }, { lang: labelLang(lang) }) }
+}

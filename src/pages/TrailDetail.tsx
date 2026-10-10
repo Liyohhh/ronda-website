@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
+import TrailMap from '../components/TrailMap'
 import { HoursStatus, HoursWeek } from '../components/PlaceHours'
 import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
@@ -91,9 +92,16 @@ function TrailDetail() {
         )}
       </section>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-8">
         <BackLink />
+      </div>
 
+      {/* the map uses the full page width; the stop list below stays in the reading column */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
+        <TrailMap trail={trail} places={data.places} />
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-8">
         <h2 className="mt-6 text-lg font-semibold text-gray-900">
           {t('trailStops')} <span className="text-gray-500 font-normal">· {t('stopsCount').replace('{n}', String(trail.stops.length))}</span>
         </h2>
