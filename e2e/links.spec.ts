@@ -5,7 +5,7 @@ import { expect, test } from './mocks'
 // #section when it has one; every visible button does something when clicked (the page changes, the address
 // changes, or focus moves). Desktop only: the phone layout uses the same links and buttons.
 const ROUTES = [
-  '/', '/?tab=lines', '/about', '/help', '/help/payments', '/help/general', '/help/policies', '/services', '/trails',
+  '/', '/?tab=lines', '/about', '/help', '/help/payments', '/help/general', '/help/policies', '/trails',
   '/trails/heritage', '/ronda-300', '/live', '/credits', '/login', '/register', '/no-such-page',
 ]
 const LANGS = ['en', 'ms', 'zh', 'ar'] as const

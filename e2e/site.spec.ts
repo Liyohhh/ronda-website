@@ -4,7 +4,7 @@ import { expect, test } from './mocks'
 
 // Every public page loads without errors, the language switch works, and pages pass automated
 // accessibility checks (WCAG 2.1 A / AA rules that axe can test).
-const PAGES = ['/', '/about', '/help', '/help/general', '/help/policies', '/services', '/trails', '/trails/heritage', '/ronda-300', '/login', '/register', '/live', '/credits', '/no-such-page']
+const PAGES = ['/', '/about', '/help', '/help/general', '/help/policies', '/trails', '/trails/heritage', '/ronda-300', '/login', '/register', '/live', '/credits', '/no-such-page']
 
 for (const path of PAGES) {
   test(`${path} renders`, async ({ page, backend }) => {

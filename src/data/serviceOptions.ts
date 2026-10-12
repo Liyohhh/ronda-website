@@ -20,7 +20,11 @@ export type NavMenu = {
   promo: { title: TranslationKey; text: TranslationKey; cta: TranslationKey; to: string }
 }
 
-export const NAV_MENUS: NavMenu[] = [
+// Chauffeur and transfer services are future work (Lya, 12 Oct 2026): hidden from the menu, Home, Help and /services.
+// Set to true to bring them back; the page, section and texts are kept.
+export const SERVICES_ENABLED = false
+
+const ALL_MENUS: NavMenu[] = [
   {
     key: 'navTravel',
     columns: [
@@ -118,3 +122,5 @@ export const NAV_MENUS: NavMenu[] = [
     promo: { title: 'navMerchantTitle', text: 'navMerchantText', cta: 'navMerchantCta', to: '/help' },
   },
 ]
+
+export const NAV_MENUS: NavMenu[] = ALL_MENUS.filter((m) => SERVICES_ENABLED || m.key !== 'navServices')

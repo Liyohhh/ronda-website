@@ -1,4 +1,5 @@
 import type { TranslationKey } from '../i18n/translations'
+import { SERVICES_ENABLED } from './serviceOptions'
 
 export type HelpCategory = {
   slug: 'payments' | 'general' | 'policies'
@@ -16,7 +17,7 @@ export const HELP_CATEGORIES: HelpCategory[] = [
 // today); policy articles are a draft until reviewed by a lawyer (shown on the page).
 export type HelpArticle = { id: string; category: HelpCategory['slug']; draft?: boolean }
 
-export const HELP_ARTICLES: HelpArticle[] = [
+const ALL_ARTICLES: HelpArticle[] = [
   { id: 'payWhere', category: 'payments' },
   { id: 'payFares', category: 'payments' },
   { id: 'payFree', category: 'payments' },
@@ -31,6 +32,9 @@ export const HELP_ARTICLES: HelpArticle[] = [
   { id: 'polRights', category: 'policies', draft: true },
   { id: 'polService', category: 'policies', draft: true },
 ]
+
+// the services article goes with the services (see SERVICES_ENABLED)
+export const HELP_ARTICLES = ALL_ARTICLES.filter((a) => SERVICES_ENABLED || a.id !== 'services')
 
 // shown on the Help home page
 export const HOT_QUESTIONS = ['genLive', 'payWhere', 'payFares', 'business']

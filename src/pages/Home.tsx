@@ -13,6 +13,7 @@ import FeatureGrid from '../components/FeatureGrid'
 import FeatureBand from '../components/FeatureBand'
 import PromotionSection from '../components/PromotionSection'
 import ServicesSection from '../components/ServicesSection'
+import { SERVICES_ENABLED } from '../data/serviceOptions'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
 import { outOfReachMessage } from '../data/outOfReach'
 import SuggestionList from '../components/SuggestionList'
@@ -589,11 +590,11 @@ function Home() {
         </div>
       </section>
 
-      {/* Below the search: RONDA 300 trails, promotions (ads), services (chauffeur and transfers), the feature slides as a white card that sits over
+      {/* Below the search: RONDA 300 trails, promotions (ads), services (chauffeur and transfers, hidden until SERVICES_ENABLED), the feature slides as a white card that sits over
           the top of the navy band, then the feature tiles in the band (app banner + footer follow in SiteLayout) */}
       <TrailsSection />
       <PromotionSection />
-      <ServicesSection />
+      {SERVICES_ENABLED && <ServicesSection />}
       <FeatureCarousel
         onPlan={() => {
           setTab('directions')
