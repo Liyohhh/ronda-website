@@ -27,6 +27,7 @@ const SECTIONS: Section[] = [
       { name: '© OpenStreetMap contributors', url: 'https://www.openstreetmap.org/copyright', licence: { name: 'ODbL', url: 'https://opendatacommons.org/licenses/odbl/' } },
       { name: 'Protomaps basemap', url: 'https://protomaps.com/', licence: { name: 'BSD-3-Clause', url: 'https://github.com/protomaps/basemaps/blob/main/LICENSE.md' } },
       { name: 'Photon by komoot', url: 'https://photon.komoot.io/' },
+      { name: 'OSRM walking routes (FOSSGIS, routing.openstreetmap.de)', url: 'https://routing.openstreetmap.de/about.html' },
     ],
   },
   {
