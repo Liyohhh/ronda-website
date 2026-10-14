@@ -4,6 +4,9 @@
 //   lines, KTM Port Klang and Seremban Lines, KLIA Ekspres and KLIA Transit; sampled from the icon files 15 Oct 2026);
 //   `'gtfs'` = the operator's GTFS feed (route_color) for lines MyRapid does not show (other KTMB lines, BRT).
 // Don't invent colours for new lines: take them from the operator.
+// Icons: the 11 lines on MyRapid's legend use Prasarana's own icon files (public/lines/myrapid, downloaded from
+//   myrapid.com.my 15 Oct 2026 at the owner's request; listed for the operator permission letter). Other lines use our
+//   own drawing in the same style (lineBadgeSvg).
 //
 // Plain data + string builders (no React), so scripts/export-line-badges.ts can reuse it to
 // write public/lines/*.svg for the app and other repos.
@@ -19,27 +22,28 @@ export type Line = {
   color: string // background, #RRGGBB
   textColor: string // glyph + label colour on top of `color`
   colorSource: 'operator' | 'gtfs' | 'unverified'
+  icon?: string // the operator's own line icon (public/lines/myrapid), shown instead of our drawing
   gtfs: { feedId: string; routeIds: string[] }
 }
 
 export const LINES: Line[] = [
   // Prasarana rapidKL rail (feed rapid-rail-kl)
-  { id: 'lrt-ampang', name: 'LRT Ampang Line', short: 'Ampang', mode: 'LRT', code: 'AGL', color: '#EB7203', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['AG'] } },
-  { id: 'lrt-sri-petaling', name: 'LRT Sri Petaling Line', short: 'Sri Petaling', mode: 'LRT', code: 'SPL', color: '#7A212E', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PH'] } },
-  { id: 'lrt-kelana-jaya', name: 'LRT Kelana Jaya Line', short: 'Kelana Jaya', mode: 'LRT', code: 'KJL', color: '#DD0330', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KJ'] } },
-  { id: 'lrt-shah-alam', name: 'LRT Shah Alam Line', short: 'Shah Alam', mode: 'LRT', code: 'SAL', color: '#00A7E0', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['SA'] } },
-  { id: 'mrt-kajang', name: 'MRT Kajang Line', short: 'Kajang', mode: 'MRT', code: 'KGL', color: '#047835', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KGL'] } },
-  { id: 'mrt-putrajaya', name: 'MRT Putrajaya Line', short: 'Putrajaya', mode: 'MRT', code: 'PYL', color: '#FCD330', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PYL'] } },
-  { id: 'monorail', name: 'KL Monorail Line', short: 'Monorail', mode: 'MONORAIL', code: 'MRL', color: '#80BD01', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['MR'] } },
+  { id: 'lrt-ampang', name: 'LRT Ampang Line', short: 'Ampang', mode: 'LRT', code: 'AGL', color: '#EB7203', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/lrt-ampang.png', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['AG'] } },
+  { id: 'lrt-sri-petaling', name: 'LRT Sri Petaling Line', short: 'Sri Petaling', mode: 'LRT', code: 'SPL', color: '#7A212E', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/lrt-sri-petaling.png', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PH'] } },
+  { id: 'lrt-kelana-jaya', name: 'LRT Kelana Jaya Line', short: 'Kelana Jaya', mode: 'LRT', code: 'KJL', color: '#DD0330', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/lrt-kelana-jaya.png', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KJ'] } },
+  { id: 'lrt-shah-alam', name: 'LRT Shah Alam Line', short: 'Shah Alam', mode: 'LRT', code: 'SAL', color: '#00A7E0', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/lrt-shah-alam.png', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['SA'] } },
+  { id: 'mrt-kajang', name: 'MRT Kajang Line', short: 'Kajang', mode: 'MRT', code: 'KGL', color: '#047835', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/mrt-kajang.png', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KGL'] } },
+  { id: 'mrt-putrajaya', name: 'MRT Putrajaya Line', short: 'Putrajaya', mode: 'MRT', code: 'PYL', color: '#FCD330', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/mrt-putrajaya.png', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PYL'] } },
+  { id: 'monorail', name: 'KL Monorail Line', short: 'Monorail', mode: 'MONORAIL', code: 'MRL', color: '#80BD01', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/monorail.png', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['MR'] } },
   { id: 'brt-sunway', name: 'BRT Sunway Line', short: 'BRT Sunway', mode: 'BRT', code: 'BRT', color: '#115740', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['BRT'] } },
 
   // Express Rail Link (feed erl): no route_color in the feed, colours to be confirmed with ERL
-  { id: 'erl-klia-ekspres', name: 'ERL KLIA Ekspres', short: 'KLIA Ekspres', mode: 'ERL', color: '#7B4199', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'erl', routeIds: ['KE'] } },
-  { id: 'erl-klia-transit', name: 'ERL KLIA Transit', short: 'KLIA Transit', mode: 'ERL', color: '#00A9A7', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'erl', routeIds: ['KT'] } },
+  { id: 'erl-klia-ekspres', name: 'ERL KLIA Ekspres', short: 'KLIA Ekspres', mode: 'ERL', color: '#7B4199', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/erl-klia-ekspres.png', gtfs: { feedId: 'erl', routeIds: ['KE'] } },
+  { id: 'erl-klia-transit', name: 'ERL KLIA Transit', short: 'KLIA Transit', mode: 'ERL', color: '#00A9A7', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/erl-klia-transit.png', gtfs: { feedId: 'erl', routeIds: ['KT'] } },
 
   // Keretapi Tanah Melayu (feed ktmb)
-  { id: 'ktm-port-klang', name: 'KTM Port Klang Line', short: 'Port Klang', mode: 'KTM', color: '#EE3124', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'ktmb', routeIds: ['KA15_KD19'] } },
-  { id: 'ktm-seremban', name: 'KTM Seremban Line', short: 'Seremban', mode: 'KTM', color: '#0067B1', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'ktmb', routeIds: ['KC05_KB18'] } },
+  { id: 'ktm-port-klang', name: 'KTM Port Klang Line', short: 'Port Klang', mode: 'KTM', color: '#EE3124', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/ktm-port-klang.png', gtfs: { feedId: 'ktmb', routeIds: ['KA15_KD19'] } },
+  { id: 'ktm-seremban', name: 'KTM Seremban Line', short: 'Seremban', mode: 'KTM', color: '#0067B1', textColor: '#FFFFFF', colorSource: 'operator', icon: '/lines/myrapid/ktm-seremban.png', gtfs: { feedId: 'ktmb', routeIds: ['KC05_KB18'] } },
   { id: 'ktm-shuttle-selatan', name: 'KTM Shuttle Selatan (JB Sentral – Paloh)', short: 'Shuttle Selatan', mode: 'KTM', color: '#0A3D7A', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['SS'] } },
   { id: 'ktm-padang-besar', name: 'KTM Padang Besar Line', short: 'Padang Besar', mode: 'KTM', color: '#018000', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_47300'] } },
   { id: 'ktm-ipoh', name: 'KTM Ipoh Line', short: 'Ipoh', mode: 'KTM', color: '#1964B7', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_9000'] } },

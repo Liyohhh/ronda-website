@@ -2,7 +2,8 @@ import { useMemo } from 'react'
 import { LINES_BY_ID, lineBadgeSvg, type Line } from '../data/lines'
 
 // Coloured line icon (official line colour + vehicle glyph), e.g. <LineBadge line="mrt-kajang" />.
-// Artwork comes from src/data/lines.ts; the same badges are exported to public/lines/*.svg.
+// The operator's icon (Line.icon) where we have one, otherwise our drawing from src/data/lines.ts (also exported to
+// public/lines/*.svg).
 type Props = {
   line: string | Line
   size?: number // px
@@ -15,6 +16,21 @@ function LineBadge({ line, size = 32, className = '', decorative = false }: Prop
   // markup is built from our own static data, not user input
   const html = useMemo(() => (l ? lineBadgeSvg(l, { title: !decorative }) : ''), [l, decorative])
   if (!l) return null
+  // the operator's own icon where we have it (MyRapid's legend lines)
+  if (l.icon) {
+    return (
+      <img
+        src={l.icon}
+        alt={decorative ? '' : l.name}
+        aria-hidden={decorative || undefined}
+        width={size}
+        height={size}
+        loading="lazy"
+        className={`inline-block flex-shrink-0 rounded-[18%] object-contain ${className}`}
+        style={{ width: size, height: size }}
+      />
+    )
+  }
   return (
     <span
       className={`inline-block flex-shrink-0 [&>svg]:w-full [&>svg]:h-full ${className}`}
