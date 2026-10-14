@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../services/supabase'
 
-// Autocomplete data for the Start / End boxes: transit stops (search_stops RPC) and any place
+// Autocomplete data for the Start / End boxes: transit stops (search_stops RPC), our own OpenStreetMap places
+// (search_pois RPC: hotels, sights, malls) and any other place
 // (geocode Edge Function, OpenStreetMap). Debounced, cached per query for the session, and the
 // previous results stay on screen while new ones load so the list doesn't flicker.
 
@@ -89,14 +90,26 @@ export function useSmartSearch(query: string) {
     if (key.length < 3 || placeCache.has(key)) return
     let cancelled = false
     const timer = setTimeout(async () => {
-      const { data, error } = await supabase.functions.invoke('geocode', { body: { q: key } })
-      if (error || data?.error) {
-        console.error('Place search error:', error || data?.error)
+      // our own OpenStreetMap places first (hotels, sights, malls: search_pois), then the geocoder's
+      const [own, geo] = await Promise.all([
+        supabase.rpc('search_pois', { query: key, max_rows: 5 }),
+        supabase.functions.invoke('geocode', { body: { q: key } }),
+      ])
+      if (own.error) console.error('Own place search error:', own.error)
+      if (geo.error || geo.data?.error) console.error('Place search error:', geo.error || geo.data?.error)
+      if (own.error && (geo.error || geo.data?.error)) {
         if (!cancelled) setPlaceRes([])
         return
       }
-      remember(placeCache, key, (data?.results ?? []) as PlaceResult[])
-      if (!cancelled) setPlaceRes((data?.results ?? []) as PlaceResult[])
+      const seen = new Set<string>()
+      const merged = [...((own.data ?? []) as PlaceResult[]), ...((geo.data?.results ?? []) as PlaceResult[])].filter((p) => {
+        const k = p.osm || p.name.toLowerCase()
+        if (seen.has(k) || seen.has(p.name.toLowerCase())) return false
+        seen.add(k); seen.add(p.name.toLowerCase())
+        return true
+      })
+      remember(placeCache, key, merged)
+      if (!cancelled) setPlaceRes(merged)
     }, PLACE_DELAY)
     return () => {
       cancelled = true

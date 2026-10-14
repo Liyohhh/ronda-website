@@ -14,3 +14,13 @@ test('hub page: popular places from KLIA T1 with time, changes, fare and lines; 
   await expect(page.locator('#end-input')).toHaveValue('KLCC & Petronas Twin Towers')
 })
 
+
+test('just landed: type the hotel on the airport hub page, pick it, the planner opens from the airport to the hotel', async ({ page, backend }) => {
+  void backend
+  await page.goto('/hub/klia1')
+  await expect(page.getByRole('heading', { name: 'Just landed? Where are you staying?' })).toBeVisible()
+  await page.getByRole('combobox', { name: /Type your hotel/ }).fill('grand hyatt')
+  await page.getByRole('option', { name: /Grand Hyatt/ }).click()
+  await expect(page.locator('#start-input')).toHaveValue('KLIA Terminal 1')
+  await expect(page.locator('#end-input')).toHaveValue('Grand Hyatt')
+})

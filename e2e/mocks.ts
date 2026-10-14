@@ -100,6 +100,10 @@ async function mockBackend(page: Page): Promise<Backend> {
       case '/rest/v1/rpc/search_route_stops':
       case '/rest/v1/rpc/stops_in_bbox':
         return json(route, [])
+      case '/rest/v1/rpc/search_pois': { // our own OpenStreetMap places (hotels ...)
+        const q = String(body?.query ?? '').toLowerCase()
+        return json(route, q.includes('hyatt') ? [{ name: 'Grand Hyatt', detail: 'Hotel', lat: 3.1536, lon: 101.7121, kind: 'building', osm: 'way/1' }] : [])
+      }
       case '/functions/v1/geocode':
         return json(route, { results: [], attribution: '© OpenStreetMap contributors' })
       case '/functions/v1/plan-trip': {
