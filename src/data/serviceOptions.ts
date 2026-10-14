@@ -31,15 +31,15 @@ const ALL_MENUS: NavMenu[] = [
       {
         title: 'navAirports',
         items: [
-          { name: 'KLIA Terminal 1', detail: 'ERL KLIA T1', to: planTo('ERL KLIA T1', 'KLIA Terminal 1') },
-          { name: 'KLIA Terminal 2', detail: 'ERL KLIA T2', to: planTo('ERL KLIA T2', 'KLIA Terminal 2') },
-          { name: 'KL Sentral', detail: 'KLIA Ekspres · KLIA Transit', to: planTo('ERL KL Sentral', 'KL Sentral') },
+          { name: 'KLIA Terminal 1', detail: 'ERL KLIA T1', to: '/hub/klia1' },
+          { name: 'KLIA Terminal 2', detail: 'ERL KLIA T2', to: '/hub/klia2' },
+          { name: 'KL Sentral', detail: 'KLIA Ekspres · KLIA Transit', to: '/hub/kl-sentral' },
         ],
       },
       {
         title: 'navBusTerminals',
         items: [
-          { name: 'Terminal Bersepadu Selatan (TBS)', detail: 'LRT / KTM / ERL Bandar Tasik Selatan', to: planTo('LRT Bandar Tasik Selatan', 'Terminal Bersepadu Selatan (TBS)') },
+          { name: 'Terminal Bersepadu Selatan (TBS)', detail: 'LRT / KTM / ERL Bandar Tasik Selatan', to: '/hub/tbs' },
           { name: 'Pudu Sentral', detail: 'LRT Plaza Rakyat', to: planTo('LRT Plaza Rakyat', 'Pudu Sentral') },
           // OSM way 871914528 (Gombak Integrated Transport Terminal)
           { name: 'Terminal Bersepadu Gombak (TBG)', detail: 'Gombak, Selangor', to: planToPlace(3.2304945, 101.7250658, 'Terminal Bersepadu Gombak (TBG)') },

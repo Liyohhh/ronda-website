@@ -25,6 +25,7 @@ const Services = lazy(() => import('./pages/Services'))
 const LiveMap = lazy(() => import('./pages/LiveMap'))
 const Credits = lazy(() => import('./pages/Credits'))
 const Ronda300 = lazy(() => import('./pages/Ronda300'))
+const Hub = lazy(() => import('./pages/Hub'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function PageLoading() {
@@ -56,6 +57,7 @@ function App() {
           <Route path="/live" element={<LiveMap />} />
           <Route path="/credits" element={<Credits />} />
           <Route path="/ronda-300" element={<Ronda300 />} />
+          <Route path="/hub/:slug" element={<Hub />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         </Suspense>

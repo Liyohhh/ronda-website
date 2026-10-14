@@ -78,6 +78,14 @@ function Home() {
       setParams({}, { replace: true })
       setEnd(shown)
       setEndStop({ name: shown, lat: toLat, lon: toLon })
+      // a start too (/?fromLat=&fromLon=&fromName=, e.g. from a hub page): both boxes filled, ready to search
+      const fromLat = Number(params.get('fromLat')), fromLon = Number(params.get('fromLon')), fromName = params.get('fromName')
+      if (fromName && params.get('fromLat') && params.get('fromLon') && Number.isFinite(fromLat) && Number.isFinite(fromLon)) {
+        setStart(fromName)
+        setStartStop({ name: fromName, lat: fromLat, lon: fromLon })
+        document.getElementById('plan')?.scrollIntoView({ block: 'start' })
+        return
+      }
       const startBox = document.getElementById('start-input')
       startBox?.scrollIntoView({ block: 'center' })
       startBox?.focus()

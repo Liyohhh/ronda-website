@@ -11,6 +11,13 @@ export const TRAILS = fixture('trails.json')
 // three mapped places within 300 m (shape of public.places_near)
 const near = (osm_id: string, kind: string, name: string, distance_m: number) => ({ osm_id, kind, subkind: null, name, name_en: null, name_ms: null,
   name_zh: null, name_ar: null, lat: 3.158, lon: 101.712, opening_hours: null, distance_m })
+// two destinations from a hub (shape of public.hub_destinations)
+export const HUB_DESTINATIONS = [
+  { dest_slug: 'klcc', dest_name: 'KLCC & Petronas Twin Towers', lat: 3.1589, lon: 101.7133, sort: 1, duration_min: 53, transfers: 1, walk_min: 6,
+    fare_amount: 57.1, fare_exact: true, hops: ['ERL KLIA Ekspres / Transit', 'LRT Kelana Jaya Line'], computed_at: '2026-10-14T00:00:00Z' },
+  { dest_slug: 'putrajaya', dest_name: 'Putrajaya', lat: 2.9313, lon: 101.6715, sort: 2, duration_min: 17, transfers: 0, walk_min: 2,
+    fare_amount: 9.4, fare_exact: true, hops: ['ERL KLIA Ekspres / Transit'], computed_at: '2026-10-14T00:00:00Z' },
+]
 export const PLACES_NEAR = [near('node/1', 'restaurant', 'Test Kopitiam', 60), near('node/2', 'useful', 'Test Pharmacy', 120), near('way/3', 'park', 'Test Park', 250)] // public.trails_data(), recorded from production
 // ai-chat answer in the shape the function returns (made-up place: the cards come from tools in real use)
 export const CHAT = {
@@ -78,6 +85,13 @@ async function mockBackend(page: Page): Promise<Backend> {
         return json(route, TRAILS)
       case '/rest/v1/rpc/trail_route': // no walking route in the tests: the trail map stays hidden (no map tiles needed)
         return json(route, { start: null, end: null, stops: [], legs: [] })
+      case '/rest/v1/hubs': { // one arrival hub (maybeSingle asks for an object)
+        const one = (req.headers()['accept'] ?? '').includes('object')
+        const hub = { slug: 'klia1', name: 'KLIA Terminal 1', lat: 2.7547, lon: 101.7046 }
+        return json(route, url.searchParams.get('slug') === 'eq.klia1' || !url.searchParams.get('slug') ? (one ? hub : [hub]) : (one ? null : []))
+      }
+      case '/rest/v1/hub_destinations':
+        return json(route, HUB_DESTINATIONS)
       case '/rest/v1/rpc/places_near': // OpenStreetMap places around a station (RONDA 300 page)
         return json(route, PLACES_NEAR)
       case '/rest/v1/rpc/bus_routes':
