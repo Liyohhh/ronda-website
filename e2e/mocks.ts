@@ -92,6 +92,11 @@ async function mockBackend(page: Page): Promise<Backend> {
       }
       case '/rest/v1/hub_destinations':
         return json(route, HUB_DESTINATIONS)
+      case '/rest/v1/rpc/nearby_transit': // Home "Near you"
+        return json(route, [
+          { feed_id: 'rapid-rail-kl', stop_id: 'KG18A', name: 'MRT Bukit Bintang', lat: 3.1465, lon: 101.7109, is_rail: true, distance_m: 144, route_ids: ['KGL'], code: null, routes: null },
+          { feed_id: 'rapid-bus-kl', stop_id: '1000958', name: 'MRT Bukit Bintang/Hsbc', lat: 3.1477, lon: 101.7108, is_rail: false, distance_m: 29, route_ids: ['U4000'], code: 'KL86', routes: ['400', '420'] },
+        ])
       case '/rest/v1/rpc/places_near': // OpenStreetMap places around a station (RONDA 300 page)
         return json(route, PLACES_NEAR)
       case '/rest/v1/rpc/bus_routes':

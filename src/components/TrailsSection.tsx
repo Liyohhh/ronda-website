@@ -13,6 +13,14 @@ function TrailsSection() {
   const { t, lang } = useLanguage()
   const [category, setCategory] = useState<CategoryFilter>('all')
   const rowRef = useRef<HTMLUListElement>(null)
+  // which ends of the row are showing: an arrow with nowhere to go is greyed out
+  const [edge, setEdge] = useState({ start: true, end: false })
+  const onRowScroll = () => {
+    const el = rowRef.current
+    if (!el) return
+    const pos = Math.abs(el.scrollLeft) // negative in RTL
+    setEdge({ start: pos < 4, end: pos + el.clientWidth >= el.scrollWidth - 4 })
+  }
   const { data, error } = useTrails()
   const all = (data?.trails ?? []).filter((tr) => isCategoryShown(tr.category, lang))
   const trails = category === 'all' ? all : all.filter((tr) => tr.category === category)
@@ -28,8 +36,9 @@ function TrailsSection() {
     <button
       type="button"
       onClick={() => scroll(dir)}
+      disabled={dir === 1 ? edge.end : edge.start}
       aria-label={dir === 1 ? t('scrollNext') : t('scrollPrev')}
-      className={`hidden md:flex absolute top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white border border-gray-200 shadow-lg items-center justify-center text-[#1F2F5C] hover:bg-gray-50 ${
+      className={`hidden md:flex absolute top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white border border-gray-200 shadow-lg items-center justify-center text-[#1F2F5C] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-default ${
         dir === 1 ? '-end-5' : '-start-5'
       }`}
     >
@@ -57,7 +66,7 @@ function TrailsSection() {
         </div>
       </div>
 
-      <CategoryPills value={category} onChange={setCategory} />
+      <CategoryPills value={category} onChange={(c) => { setCategory(c); rowRef.current?.scrollTo({ left: 0 }); setEdge({ start: true, end: false }) }} />
 
       {!data ? (
         <p className="mt-6 text-gray-500" role={error ? 'alert' : 'status'}>{error ? t('trailsLoadError') : t('loading')}</p>
@@ -70,6 +79,7 @@ function TrailsSection() {
           {arrow(1)}
           <ul
             ref={rowRef}
+            onScroll={onRowScroll}
             className="mt-4 flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scroll-px-4 [scrollbar-width:none] -mx-4 px-4 pb-4"
           >
             {trails.map((trail) => (

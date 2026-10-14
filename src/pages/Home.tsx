@@ -17,6 +17,7 @@ import { SERVICES_ENABLED } from '../data/serviceOptions'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
 import { outOfReachMessage } from '../data/outOfReach'
 import SuggestionList from '../components/SuggestionList'
+import NearbyTransit from '../components/NearbyTransit'
 import { buildItems, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
@@ -591,6 +592,18 @@ function Home() {
                 )}
                 {formError && (
                   <div className="mt-3 bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{formError}</div>
+                )}
+
+                {/* Near you: nearest train stations and bus stops; picking one makes it the Start */}
+                {tab === 'directions' && (
+                  <NearbyTransit
+                    onPick={(p) => {
+                      setStart(p.name)
+                      setStartStop(p)
+                      setFormError('')
+                      document.getElementById('end-input')?.focus()
+                    }}
+                  />
                 )}
               </div>
             </div>
