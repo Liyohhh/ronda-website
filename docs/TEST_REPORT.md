@@ -72,9 +72,10 @@ widget, line tiles, feature tiles, promotions, Help page.
 - Home "Why RONDA?" map (15 Oct): redrawn as a dot map of Malaysia that fills in when scrolled into view, cities
   marked, no transit lines; still picture for reduced motion; lint, typecheck, unit 198 and e2e 200 passed.
 
-- Trails (15 Oct): one card design on Home and /trails; Home "See all trails" (was "Explore stations" to RONDA 300)
-  opens /trails with the same category; the trail page's back button returns to where the trail was opened; trail map
-  in a titled card beside the stops (above them on phones). Home map cities: official open timetables (data.gov.my).
+- Trails (15 Oct, owner's pick): the full-photo card on Home and /trails; Home "See all trails" (was "Explore stations" to RONDA 300)
+  opens /trails with the same category; the trail page's back button returns to where the trail was opened; a
+  "Trail overview" under the header (stops, start and end station, plan a trip to the start, map beside them; map
+  under the facts on phones). Home map cities: official open timetables (data.gov.my).
   Lint, typecheck, unit 198 and e2e 204 passed.
 
 ## Known gaps (not test failures)

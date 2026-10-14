@@ -3,7 +3,8 @@
 // and in the About page's photo credits (author, licence, link). BY-SA applies to the photo only.
 // Chosen 28 Sep 2026; `page` is the file's Commons page with the full licence details.
 
-export type TrailPhoto = { src: string; author: string; license: string; licenseUrl: string | null; page: string }
+// focus: where the picture is cropped around when it does not fit its box (CSS object-position, e.g. '50% 30%')
+export type TrailPhoto = { src: string; author: string; license: string; licenseUrl: string | null; page: string; focus?: string }
 
 const commons = (path: string, file: string) => `https://upload.wikimedia.org/wikipedia/commons/thumb/${path}/${file}/1280px-${file}`
 

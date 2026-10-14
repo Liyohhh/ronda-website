@@ -71,10 +71,27 @@ function TrailDetail() {
     )
   }
 
-  // with a map picture the page is two columns on a wide screen (stops, then the map beside them, staying in view
-  // while the stops scroll); on a phone the map comes first. Header, back link and body share one width.
+  // overview under the header: the trail's facts (stops, where it starts and ends, plan a trip to the start) beside
+  // its map picture when there is one; on a phone the map goes under the facts. Then the stops.
   const map = TRAIL_MAPS[trail.slug]
-  const box = map ? 'max-w-6xl' : 'max-w-4xl'
+  const stations = trail.stops.map((s) => data.places[s.placeId]?.station).filter((x): x is Station => !!x)
+  const start = stations[0], end = stations[stations.length - 1]
+  const box = 'max-w-4xl'
+  const stationRow = (label: string, s: Station) => (
+    <div>
+      <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</dt>
+      <dd className="mt-1 flex items-center gap-2 min-w-0">
+        <span className="flex -space-x-1 rtl:space-x-reverse flex-shrink-0">
+          {s.lineIds.map((id) => (
+            <span key={id} className="rounded-md ring-2 ring-white">
+              <LineBadge line={id} size={20} decorative />
+            </span>
+          ))}
+        </span>
+        <span className="font-semibold text-gray-900 truncate">{s.name}</span>
+      </dd>
+    </div>
+  )
 
   return (
     <SiteLayout>
@@ -102,29 +119,50 @@ function TrailDetail() {
         <BackLink />
       </div>
 
-      <div className={`${box} mx-auto px-4 sm:px-6 pb-10 mt-6 ${map ? 'lg:grid lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-8 lg:items-start' : ''}`}>
-        {map && (
-          <aside className="mb-8 lg:mb-0 lg:order-2 lg:sticky lg:top-24">
-            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-              <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-gray-100">
-                <h2 className="text-base font-semibold text-gray-900">{t('trailMapTitle')}</h2>
+      <section aria-labelledby="trail-overview" className={`${box} mx-auto px-4 sm:px-6 mt-6`}>
+        <div className={`rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden ${map ? 'md:grid md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]' : ''}`}>
+          <div className="p-5 flex flex-col">
+            <h2 id="trail-overview" className="text-base font-semibold text-gray-900">{t('trailOverview')}</h2>
+            <dl className="mt-4 space-y-4 text-sm">
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">{t('trailStops')}</dt>
+                <dd className="mt-1 font-semibold text-gray-900">{t('stopsCount').replace('{n}', String(trail.stops.length))}</dd>
+              </div>
+              {start && stationRow(t('trailStartLabel'), start)}
+              {end && end.name !== start?.name && stationRow(t('trailEndLabel'), end)}
+            </dl>
+            <div className="mt-5 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-2 md:mt-auto">
+              {start && (
+                <Link
+                  to={planHref(start)}
+                  className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#1F2F5C] text-white text-sm font-semibold hover:bg-[#152038] transition-colors"
+                >
+                  <Icon name="locationOnOutline" size={16} />
+                  {t('planToStart')}
+                </Link>
+              )}
+              {map && (
                 <a href={map.jpg} target="_blank" rel="noopener" className="inline-flex items-center gap-1 text-sm font-semibold text-[#1D4ED8] hover:underline">
                   {t('openFullMap')}
                   <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
                 </a>
-              </div>
-              {/* tap the picture to open it full size */}
-              <a href={map.jpg} target="_blank" rel="noopener" className="block">
-                <picture>
-                  <source srcSet={map.webp} type="image/webp" />
-                  <img src={map.jpg} alt={map.alt} width={1800} height={1200} loading="lazy" className="block w-full h-auto" />
-                </picture>
-              </a>
+              )}
             </div>
-          </aside>
-        )}
+          </div>
+          {map && (
+            // tap the map to open it full size
+            <a href={map.jpg} target="_blank" rel="noopener" aria-label={t('trailMapTitle')} className="block bg-gray-100 border-t md:border-t-0 md:border-s border-gray-200">
+              <picture>
+                <source srcSet={map.webp} type="image/webp" />
+                <img src={map.jpg} alt={map.alt} width={1800} height={1200} loading="lazy" className="block w-full h-full object-cover" />
+              </picture>
+            </a>
+          )}
+        </div>
+      </section>
 
-        <div className="min-w-0 lg:order-1">
+      <div className={`${box} mx-auto px-4 sm:px-6 pb-10 mt-8`}>
+        <div className="min-w-0">
           <h2 className="text-lg font-semibold text-gray-900">
             {t('trailStops')} <span className="text-gray-500 font-normal">· {t('stopsCount').replace('{n}', String(trail.stops.length))}</span>
           </h2>
@@ -147,7 +185,7 @@ function TrailDetail() {
                     <div className="relative flex-shrink-0 w-full aspect-[4/3] sm:aspect-auto sm:w-56 md:w-64 sm:min-h-44 rounded-xl overflow-hidden">
                       {PLACE_PHOTOS[place.id] ? (
                         <>
-                          <img src={PLACE_PHOTOS[place.id].src} alt={place.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                          <img src={PLACE_PHOTOS[place.id].src} alt={place.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" style={PLACE_PHOTOS[place.id].focus ? { objectPosition: PLACE_PHOTOS[place.id].focus } : undefined} />
                           <p className="absolute inset-x-0 bottom-0 px-2 py-1 text-[9px] leading-tight text-white/90 bg-gradient-to-t from-black/60 to-transparent truncate">
                             {t('photoLabel')}: <PhotoCredit photo={PLACE_PHOTOS[place.id]} />
                           </p>
