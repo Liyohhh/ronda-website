@@ -355,6 +355,21 @@ function Home() {
     return () => { delete document.body.dataset.sidePanel }
   }, [sidePanel])
 
+  const searchButton = (
+    <button
+      onClick={() => handleSearch()}
+      disabled={loading}
+      className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+      aria-label={t('searchAria')}
+    >
+      {loading ? (
+        <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+      ) : (
+        <Icon name="search" size={20} />
+      )}
+    </button>
+  )
+
   return (
     <SiteLayout>
       {/* Hero: KL skyline photo, light (clean blue theme): a light indigo wash plus a soft cobalt tint; a soft scrim only
@@ -438,10 +453,12 @@ function Home() {
                   if (tab === 'lines' && !e.currentTarget.contains(e.relatedTarget as Node | null)) setLineListOpen(false)
                 }}
               >
-                <div className="bg-white rounded-3xl sm:rounded-full shadow-lg border flex flex-wrap sm:flex-nowrap items-center pe-2.5">
+                {/* directions: Start and End are equal halves around the swap button, each with its own button at the end
+                    (my location / search), so the swap button sits in the middle */}
+                <div className={`bg-white rounded-3xl sm:rounded-full shadow-lg border flex flex-wrap sm:flex-nowrap items-center ps-0 sm:ps-2.5 pe-2.5 ${tab === 'directions' ? 'sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]' : ''}`}>
                   {tab === 'directions' ? (
                     <>
-                      <div className="basis-full sm:basis-auto flex-1 flex items-center px-5 sm:px-7 py-3 sm:py-4 border-b border-gray-100 sm:border-b-0 min-w-0">
+                      <div className="basis-full flex-1 flex items-center ps-5 pe-2.5 sm:pe-4 py-3 sm:py-4 border-b border-gray-100 sm:border-b-0 min-w-0">
                         <div className="flex-1">
                           <div className="text-sm text-gray-500">{t('start')}</div>
                           <input
@@ -487,8 +504,8 @@ function Home() {
                         <Icon name="swapVert" size={22} />
                       </button>
 
-                      <div className="flex-1 flex items-center px-4 sm:px-7 py-3 sm:py-4 min-w-0">
-                        <div className="flex-1">
+                      <div className="flex-1 flex items-center min-w-0">
+                        <div className="flex-1 min-w-0 ps-4 pe-3 py-3 sm:py-4">
                           <div className="text-sm text-gray-500">{t('end')}</div>
                           <input
                             type="text"
@@ -512,10 +529,11 @@ function Home() {
                             className="w-full text-base sm:text-lg outline-none"
                           />
                         </div>
+                        {searchButton}
                       </div>
                     </>
                   ) : (
-                    <div className="flex-1 flex items-center px-7 py-4">
+                    <div className="flex-1 flex items-center ps-5 pe-4 py-4">
                       <div className="flex-1">
                         <div className="text-sm text-gray-500">{t('line')}</div>
                         <input
@@ -543,18 +561,7 @@ function Home() {
                     </div>
                   )}
 
-                  <button
-                    onClick={() => handleSearch()}
-                    disabled={loading}
-                    className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
-                    aria-label={t('searchAria')}
-                  >
-                    {loading ? (
-                      <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <Icon name="search" size={20} />
-                    )}
-                  </button>
+                  {tab !== 'directions' && searchButton}
                 </div>
 
                 {/* Suggestions: stations & stops first, then any place (OpenStreetMap) */}
