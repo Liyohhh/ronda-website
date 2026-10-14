@@ -31,6 +31,10 @@ test.describe('plan a journey', () => {
     expect(call?.body).toMatchObject({ resident: 'citizen', payment: 'cashless' })
     const [klcc] = (await import('./fixtures/search_klcc.json', { with: { type: 'json' } })).default
     expect(call?.body).toMatchObject({ from: { lat: klcc.stop_lat, lon: klcc.stop_lon } })
+
+    // a trip's details show it on the map (the map engine loads only now)
+    await panel.getByText(`${PLAN.options[0].duration_min} min`, { exact: true }).first().click()
+    await expect(panel.getByRole('img', { name: /^Map of the trip from / })).toBeVisible()
   })
 
   test('journey panel has no serious accessibility violations', async ({ page, backend }) => {

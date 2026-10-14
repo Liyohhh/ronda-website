@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import LineBadge from './LineBadge'
@@ -13,6 +13,10 @@ import Icon from './Icon'
 import BusStopName from './BusStopName'
 import LiveApproach from './LiveApproach'
 import RouteChip from './RouteChip'
+import type { JourneySegment } from './JourneyMap'
+
+// the map engine loads only when a trip's details are opened
+const JourneyMap = lazy(() => import('./JourneyMap'))
 
 export type Place = { name: string; lat: number; lon: number; code?: string | null } // code: bus stop code ("KL1483")
 
@@ -66,7 +70,7 @@ export type Leg = {
 export type Platform = { station: string; stop_id: string; platform_code: string | null; level_name: string | null }
 export type Entrance = { ref: string | null; name: string | null; wheelchair: boolean | null; level_name: string | null }
 export type OtherLine = { feed_id: string; route_id: string; name: string | null; route_short_name: string | null; colour: string | null }
-export type Stop = { name: string; stop_id?: string; code?: string | null; time: string; estimated?: boolean; is_interchange?: boolean; other_lines?: OtherLine[] }
+export type Stop = { name: string; stop_id?: string; code?: string | null; lat?: number; lon?: number; time: string; estimated?: boolean; is_interchange?: boolean; other_lines?: OtherLine[] }
 
 export type Tag = 'fastest' | 'fewest_changes' | 'least_walking' | 'cheapest' | 'no_exit' | 'uses_airport_rail'
 
@@ -115,6 +119,15 @@ const GOLD = '#2563EB'
 const isBus = (leg: Leg) => leg.route_type === 3
 
 // Badge artwork for a ride: the rail line's official badge, or a bus badge in the route's GTFS colour
+// The trip as lines on a map: rides through their stops (planner coordinates), walks from place to place
+function journeySegments(legs: Leg[]): JourneySegment[] {
+  const pt = (p: { lat?: number; lon?: number }) => (Number.isFinite(p.lat) && Number.isFinite(p.lon) ? [p.lon!, p.lat!] as [number, number] : null)
+  return legs.map((leg) => {
+    const pts = leg.mode === 'transit' && leg.stops?.length ? leg.stops.map(pt) : [pt(leg.from), pt(leg.to)]
+    return { mode: leg.mode, color: leg.mode === 'transit' ? legLine(leg).color : '#6B7280', coords: pts.filter((c): c is [number, number] => c !== null) }
+  })
+}
+
 function legLine(leg: Leg): Line {
   const line = leg.feed_id && leg.route_id ? lineForRoute(leg.feed_id, leg.route_id) : undefined
   if (line) return line
@@ -466,6 +479,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   const { t, lang } = useLanguage()
   const [sort, setSort] = useState<SortKey>('fastest')
   const [detail, setDetail] = useState<TripOption | null>(null)
+  const detailSegments = useMemo(() => (detail ? journeySegments(detail.legs) : []), [detail])
   const [showMore, setShowMore] = useState(false)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(() => departAt ?? malaysiaNow())
@@ -758,6 +772,12 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                   <RoutePreview option={detail} />
                 </div>
               </div>
+
+              <Suspense fallback={<div className="h-56 md:h-64 mb-5 rounded-2xl bg-[#EEF1F5]" />}>
+                <div className="mb-5">
+                  <JourneyMap segments={detailSegments} label={t('journeyMapLabel').replace('{from}', from).replace('{to}', to)} />
+                </div>
+              </Suspense>
 
               <ol className="relative">
                 {detail.legs.map((leg, i) => {
