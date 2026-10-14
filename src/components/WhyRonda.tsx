@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 
 // Home "Why RONDA?": Malaysia (Peninsula, Sarawak and Sabah) as a dot map. When the section scrolls into view the
-// dots fill in from west to east and the main cities appear with a soft pulse. No transit lines on purpose: the
+// dots fill in from west to east and the cities with published public transport timetables light up. No transit lines on purpose: the
 // drawing shows the country, not which services RONDA covers.
 // A drawing, not a map (outline simplified from coastline points, about 0.2 degrees per dot). Numbers come from the
 // database (14 networks, 6,533 stops, 18,664 OSM places, 17 trails on 15 Oct 2026), rounded down.
@@ -46,17 +46,32 @@ for (let y = STEP; y < 430; y += STEP) {
   }
 }
 
+// Cities with an official public transport timetable published as open data on data.gov.my (GTFS: Rapid KL, KTMB,
+// Rapid Penang and the BAS.MY cities; checked 15 Oct 2026). Positions from OpenStreetMap (Nominatim, 15 Oct 2026).
+// Each city takes the land dot nearest to it, so every dot keeps the same size.
 const CITIES: { at: [number, number]; name: string; big?: boolean; left?: boolean }[] = [
-  { at: [101.69, 3.14], name: 'Kuala Lumpur', big: true },
-  { at: [100.33, 5.41], name: 'Penang', left: true },
-  { at: [101.08, 4.6], name: 'Ipoh' },
-  { at: [103.76, 1.46], name: 'Johor Bahru' },
-  { at: [102.24, 6.13], name: 'Kota Bharu' },
-  { at: [103.33, 3.81], name: 'Kuantan' },
-  { at: [110.35, 1.55], name: 'Kuching' },
-  { at: [113.99, 4.4], name: 'Miri', left: true },
-  { at: [116.07, 5.98], name: 'Kota Kinabalu', left: true },
+  { at: [101.694, 3.152], name: 'Kuala Lumpur', big: true },
+  { at: [100.328, 5.414], name: 'George Town', left: true },
+  { at: [100.194, 6.439], name: 'Kangar', left: true },
+  { at: [100.368, 6.123], name: 'Alor Setar', left: true },
+  { at: [102.237, 6.125], name: 'Kota Bharu' },
+  { at: [103.138, 5.33], name: 'Kuala Terengganu' },
+  { at: [101.09, 4.599], name: 'Ipoh', left: true },
+  { at: [101.94, 2.723], name: 'Seremban' },
+  { at: [102.248, 2.194], name: 'Melaka', left: true },
+  { at: [103.764, 1.458], name: 'Johor Bahru' },
+  { at: [110.345, 1.56], name: 'Kuching' },
 ]
+const taken = new Set<number>()
+const CITY_DOTS = CITIES.map((c) => {
+  const [cx, cy] = xy(...c.at)
+  let best = -1
+  DOTS.forEach((d, i) => {
+    if (!taken.has(i) && (best < 0 || Math.hypot(d.x - cx, d.y - cy) < Math.hypot(DOTS[best].x - cx, DOTS[best].y - cy))) best = i
+  })
+  taken.add(best)
+  return { ...c, x: DOTS[best].x, y: DOTS[best].y }
+})
 
 function WhyRonda() {
   const { t } = useLanguage()
@@ -109,15 +124,15 @@ function WhyRonda() {
           </g>
 
           {/* cities */}
-          {CITIES.map((c, i) => {
-            const [x, y] = xy(...c.at)
-            const r = c.big ? 8 : 5.5
+          {CITY_DOTS.map((c, i) => {
+            const { x, y } = c
+            const r = 4.2
             return (
               <g key={c.name} className="why-city" style={{ animationDelay: `${1.3 + i * 0.12}s` }}>
-                <circle className="why-pulse" cx={x} cy={y} r={r} fill="none" stroke="#2563EB" strokeWidth="2" style={{ animationDelay: `${2 + i * 0.35}s` }} />
-                <circle cx={x} cy={y} r={r} fill="#FFFFFF" stroke="#1F2F5C" strokeWidth={c.big ? 3.5 : 2.5} />
-                <text className={c.big ? undefined : 'why-label-small'} x={x + (c.left ? -(r + 7) : r + 7)} y={y} textAnchor={c.left ? 'end' : 'start'} dominantBaseline="central"
-                  fontSize={c.big ? 17 : 13} fontWeight={c.big ? 700 : 600} fill="#1F2F5C" paintOrder="stroke" stroke="#FFFFFF" strokeWidth="4" strokeLinejoin="round">
+                <circle className="why-pulse" cx={x} cy={y} r={r} fill="none" stroke="#F59E0B" strokeWidth="1.5" style={{ animationDelay: `${2 + i * 0.35}s` }} />
+                <circle cx={x} cy={y} r={r} fill="#F59E0B" />
+                <text className={c.big ? undefined : 'why-label-small'} x={x + (c.left ? -(r + 6) : r + 6)} y={y} textAnchor={c.left ? 'end' : 'start'} dominantBaseline="central"
+                  fontSize={c.big ? 16 : 13} fontWeight={c.big ? 700 : 600} fill="#1F2F5C" paintOrder="stroke" stroke="#FFFFFF" strokeWidth="4" strokeLinejoin="round">
                   {c.name}
                 </text>
               </g>
@@ -129,6 +144,10 @@ function WhyRonda() {
             {t('why_country').toUpperCase()}
           </text>
         </svg>
+        <p className="mt-1 flex items-center justify-center gap-2 text-xs text-gray-500">
+          <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-[#F59E0B]" />
+          {t('why_legend')}
+        </p>
         <figcaption className="mt-4 text-center text-lg italic text-gray-600 max-w-3xl mx-auto">{t('why_caption')}</figcaption>
       </figure>
 
