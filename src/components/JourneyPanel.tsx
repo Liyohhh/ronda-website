@@ -473,7 +473,8 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
 
 function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [], notice, resident, onResidentChange, payment, onPaymentChange, departAt, onDepartChange, onPlacesChange, onClose }: Props) {
   const { t, lang } = useLanguage()
-  const [sort, setSort] = useState<SortKey>('fastest')
+  // least walking first by default (owner, 15 Oct 2026); the other orders are one tap away
+  const [sort, setSort] = useState<SortKey>('walking')
   const [detail, setDetail] = useState<TripOption | null>(null)
   const [showMore, setShowMore] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -511,10 +512,10 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   const placeName = (p: Place) => (p.name === 'Start' ? from : p.name === 'Destination' ? to : p.name)
 
   const pills: { key: SortKey; label: string }[] = [
+    { key: 'walking', label: t('sortLeastWalking') },
     { key: 'fastest', label: t('sortFastest') },
     { key: sort === 'priceHigh' ? 'priceHigh' : 'priceLow', label: sort === 'priceHigh' ? t('sortPriceHigh') : t('sortPriceLow') },
     { key: 'transfers', label: t('sortFewestTransfers') },
-    { key: 'walking', label: t('sortLeastWalking') },
   ]
   const onPill = (key: SortKey) => {
     // tapping the price pill again flips low <-> high

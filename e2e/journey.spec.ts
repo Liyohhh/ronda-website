@@ -18,6 +18,8 @@ test.describe('plan a journey', () => {
 
     const panel = page.getByRole('dialog', { name: 'Your journey' })
     await expect(panel).toBeVisible()
+    // least walking first by default
+    await expect(panel.getByRole('button', { name: 'Least walking', exact: true }).first()).toHaveAttribute('aria-pressed', 'true')
     // each option as the planner sent it: duration and fare, and the bus route number on its chip
     for (const o of PLAN.options) {
       await expect(panel.getByText(`${o.duration_min} min`, { exact: true }).first()).toBeVisible()
