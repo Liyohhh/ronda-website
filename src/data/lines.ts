@@ -11,6 +11,8 @@
 // Plain data + string builders (no React), so scripts/export-line-badges.ts can reuse it to
 // write public/lines/*.svg for the app and other repos.
 
+import { FA_BUS } from './operatorIcons.ts'
+
 export type LineMode = 'MRT' | 'LRT' | 'MONORAIL' | 'BRT' | 'KTM' | 'ETS' | 'ERL' | 'BUS'
 
 export type Line = {
@@ -189,19 +191,11 @@ export function linesForStop(feedId: string, routeIds: string[] = []): Line[] {
 }
 
 // ---------- badge artwork ----------
-// Same icons as the RONDA app: a white vehicle glyph on a circle in the line colour.
-// Glyphs are Flutter's icons, 24x24: Material Icons (Apache License 2.0) and, for KTM, Cupertino Icons
-// tram_fill (MIT, outline taken from cupertino_icons 1.0.9).
-
-const GLYPHS: Record<'bus', string> = {
-  bus: 'M12,2C8,2,4,2.5,4,6v9.5c0,0.95,0.38,1.81,1,2.44V20c0,0.55,0.45,1,1,1h1c0.55,0,1-0.45,1-1 v-1h8v1c0,0.55,0.45,1,1,1h1c0.55,0,1-0.45,1-1v-2.06c0.62-0.63,1-1.49,1-2.44V6C20,2.5,16.42,2,12,2z M8.5,16 C7.67,16,7,15.33,7,14.5S7.67,13,8.5,13s1.5,0.67,1.5,1.5S9.33,16,8.5,16z M15.5,16c-0.83,0-1.5-0.67-1.5-1.5s0.67-1.5,1.5-1.5 s1.5,0.67,1.5,1.5S16.33,16,15.5,16z M18,10H6V7h12V10z', // Icons.directions_bus_filled
-}
-
 
 // Standalone SVG markup for a line badge (used by the website component and the file export), in the style of the
 // operator's line icons: a rounded square in the line colour with a white train front. Our own drawing, not their
 // artwork. MRT: angular front with "MRT"; LRT: rounded front on tracks; Monorail: on a beam; KTM / ETS / KLIA: rounded
-// front with the name under it; BRT and buses: the bus glyph.
+// front with the name under it; BRT and buses: MyRapid's bus icon (Font Awesome Free, CC BY 4.0).
 const FRONT = 'M16 7h16a6 6 0 0 1 6 6v12c0 6-6 10-14 10S10 31 10 25V13a6 6 0 0 1 6-6z'
 const FRONT_WINDOW = 'M15 13.5c0-2 1-3 3-3h12c2 0 3 1 3 3c0 5-4 8-9 8s-9-3-9-8z'
 const MRT_FRONT = 'M15 7h18l5 7v16l-6 7H16l-6-7V14z'
@@ -228,7 +222,7 @@ function badgeGlyph(line: Line): string {
     case 'ERL':
       return front + label('KLIA')
     default:
-      return `<path transform="translate(11 11) scale(1.0833)" fill="${w}" d="${GLYPHS.bus}"/>`
+      return `<path transform="translate(10 10) scale(0.0546875)" fill="${w}" d="${FA_BUS}"/>`
   }
 }
 export function lineBadgeSvg(line: Line, opts: { title?: boolean } = {}): string {

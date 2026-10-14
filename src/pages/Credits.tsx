@@ -36,6 +36,7 @@ const SECTIONS: Section[] = [
       { name: 'MapLibre GL JS', url: 'https://maplibre.org/', licence: { name: 'BSD-3-Clause', url: 'https://github.com/maplibre/maplibre-gl-js/blob/main/LICENSE.txt' } },
       { name: 'PMTiles (Protomaps)', url: 'https://github.com/protomaps/PMTiles', licence: { name: 'BSD-3-Clause', url: 'https://github.com/protomaps/PMTiles/blob/main/LICENSE' } },
       { name: 'Material Symbols and Material Icons (Google)', url: 'https://github.com/google/material-design-icons', licence: { name: 'Apache-2.0', url: 'https://www.apache.org/licenses/LICENSE-2.0' } },
+      { name: 'Font Awesome Free 5.15.3 bus icons (as used by MyRapid)', url: 'https://fontawesome.com/', licence: { name: 'CC BY 4.0', url: 'https://creativecommons.org/licenses/by/4.0/' } },
       { name: 'Cupertino Icons (Flutter)', url: 'https://github.com/flutter/packages/tree/main/third_party/packages/cupertino_icons', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
       { name: 'React, React Router, Supabase JS, Tailwind CSS', url: 'https://github.com/Liyohhh/ronda-website/blob/main/package.json', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
     ],

@@ -66,7 +66,7 @@ function NearbyTransit({ onPick }: { onPick: (p: Pick) => void }) {
           {near.bus && item(
             near.bus,
             <span aria-hidden="true" className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded bg-[#1F2F5C] text-white">
-              <Icon name="directionsBusOutline" size={14} />
+              <Icon name="bus" size={14} />
             </span>,
             near.bus.code ? `${near.bus.name} (${near.bus.code})` : near.bus.name,
           )}

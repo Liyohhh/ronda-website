@@ -1,10 +1,10 @@
 import Icon from './Icon'
-import type { IconName } from '../data/icons'
+import type { IconName } from './Icon'
 import type { StopIconKind } from '../data/stopIcon'
 
 const NAMES: Record<StopIconKind, IconName> = {
   train: 'trainOutline',
-  bus: 'directionsBusOutline',
+  bus: 'bus', // MyRapid's bus icon
   airport: 'flight',
   hospital: 'localHospitalOutline',
   school: 'schoolOutline',

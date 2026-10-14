@@ -1,4 +1,21 @@
-# Test report - 7 Oct 2026
+# Test report
+
+## Latest run - 15 Oct 2026 (branch design-2-blue-classic)
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **198 / 198 passed**, 29 files |
+| Website end-to-end tests (Playwright, desktop + phone) | **200 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
+| Trip-planner regression matrix (production, plan-trip v23) | **134 cases, 0 regressions** (2 improved), p95 276 ms |
+| Nightly route check (production, first run) | 56 trips + 186 nearby-station trips planned; 14 trips flagged for review (database repo `docs/ROUTE_QUALITY_PLAN.md`) |
+
+Changes covered since 7 Oct: hub pages, OSM places, one-line "Nearest", Why RONDA, least walking first, MyRapid line
+and bus icons, passes in fares. The full workbook is the database repo's `testing/RONDA_Test_Report.xlsx`.
+
+---
+
+## Earlier run - 7 Oct 2026
 
 Website `main` at `a713772`; database repository at `80044b8`; production Supabase project after the
 `trail_halal_fine_dining` and `ai_chat` migrations. All runs on 7 Oct 2026. How each layer works: `docs/TESTING.md`.
