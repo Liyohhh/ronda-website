@@ -436,10 +436,10 @@ function Home() {
                   if (tab === 'lines' && !e.currentTarget.contains(e.relatedTarget as Node | null)) setLineListOpen(false)
                 }}
               >
-                <div className="bg-white rounded-full shadow-lg border flex items-center pe-2.5">
+                <div className="bg-white rounded-3xl sm:rounded-full shadow-lg border flex flex-wrap sm:flex-nowrap items-center pe-2.5">
                   {tab === 'directions' ? (
                     <>
-                      <div className="flex-1 flex items-center px-7 py-4">
+                      <div className="basis-full sm:basis-auto flex-1 flex items-center px-5 sm:px-7 py-3 sm:py-4 border-b border-gray-100 sm:border-b-0 min-w-0">
                         <div className="flex-1">
                           <div className="text-sm text-gray-500">{t('start')}</div>
                           <input
@@ -461,7 +461,7 @@ function Home() {
                             aria-activedescendant={activeField === 'start' && highlighted >= 0 ? `${LIST_ID}-${highlighted}` : undefined}
                             autoComplete="off"
                             placeholder={t('startPh')}
-                            className="w-full text-lg outline-none"
+                            className="w-full text-base sm:text-lg outline-none"
                           />
                         </div>
                         <button
@@ -479,13 +479,13 @@ function Home() {
                       <button
                         onClick={handleSwap}
                         disabled={!start.trim() && !end.trim()}
-                        className="w-12 h-12 rounded-full bg-[#1F2F5C] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                        className="ms-3 sm:ms-0 my-2 sm:my-0 w-12 h-12 rounded-full bg-[#1F2F5C] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                         aria-label={t('swapAria')}
                       >
                         <Icon name="swapVert" size={22} />
                       </button>
 
-                      <div className="flex-1 flex items-center px-7 py-4">
+                      <div className="flex-1 flex items-center px-4 sm:px-7 py-3 sm:py-4 min-w-0">
                         <div className="flex-1">
                           <div className="text-sm text-gray-500">{t('end')}</div>
                           <input
@@ -507,7 +507,7 @@ function Home() {
                             aria-activedescendant={activeField === 'end' && highlighted >= 0 ? `${LIST_ID}-${highlighted}` : undefined}
                             autoComplete="off"
                             placeholder={t('endPh')}
-                            className="w-full text-lg outline-none"
+                            className="w-full text-base sm:text-lg outline-none"
                           />
                         </div>
                       </div>
