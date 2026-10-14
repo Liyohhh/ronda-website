@@ -73,7 +73,8 @@ widget, line tiles, feature tiles, promotions, Help page.
 
 - KTM Komuter (Klang Valley) fares were added on 7 Oct after this report (smoke 48 / 48, regression 0 regressions);
   ETS / Intercity (flexible fares), Northern Komuter, Shuttle Selatan, Abdullah Hukum and Kajang 2 stay unpriced.
-- KTMB's published timetable ends 21 Oct 2026; an alert is open until KTMB publishes the next one.
+- KTMB publishes its timetable about two weeks ahead and moves the end date forward daily (29 Oct on 15 Oct); the
+  alert now fires 7 days before the end, so only if KTMB stops publishing.
 - Live KTM positions: the official open feed carries ETS / intercity trainsets only (7 trains at 13:15 on 7 Oct),
   no Komuter.
 - No independent penetration test yet; native-speaker review of Malay, Chinese and Arabic pending (`docs/UAT.md`).
