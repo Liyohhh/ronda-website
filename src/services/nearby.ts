@@ -1,33 +1,25 @@
 import { supabase } from './supabase'
+import { walkMinutes } from './places'
 
-// The nearest train stations and bus stops to a point (public.nearby_transit: within 1 km, nearest first, with the
-// route ids for line badges, the bus stop code and the bus route numbers).
+// The nearest train station and the nearest bus stop to a point, however far (public.nearest_transit), with the
+// route ids for the line badge, the bus stop code and the bus route numbers.
 
 export type NearStop = {
   feed_id: string; stop_id: string; name: string; lat: number; lon: number; is_rail: boolean
   distance_m: number; route_ids: string[] | null; code: string | null; routes: string[] | null
 }
 
-export const NEAR_RADIUS_M = 1000
-export const NEAR_PER_GROUP = 4
-
-export async function loadNearbyTransit(lat: number, lon: number): Promise<NearStop[]> {
-  const { data, error } = await supabase.rpc('nearby_transit', { p_lat: lat, p_lon: lon, p_radius_m: NEAR_RADIUS_M, p_limit: 60 })
+export async function loadNearestTransit(lat: number, lon: number): Promise<{ train: NearStop | null; bus: NearStop | null }> {
+  const { data, error } = await supabase.rpc('nearest_transit', { p_lat: lat, p_lon: lon })
   if (error) throw new Error(error.message)
-  return (data ?? []) as NearStop[]
+  const rows = (data ?? []) as NearStop[]
+  return { train: rows.find((r) => r.is_rail) ?? null, bus: rows.find((r) => !r.is_rail) ?? null }
 }
 
-// Trains and buses, nearest first, a few of each. Bus stops with the same name and routes (the two sides of a road)
-// show once, the nearer one.
-export function splitNearby(stops: NearStop[], perGroup = NEAR_PER_GROUP) {
-  const trains = stops.filter((s) => s.is_rail).slice(0, perGroup)
-  const seen = new Set<string>()
-  const buses = stops.filter((s) => {
-    if (s.is_rail) return false
-    const k = `${s.name.toLowerCase()}|${(s.routes ?? []).join(',')}`
-    if (seen.has(k)) return false
-    seen.add(k)
-    return true
-  }).slice(0, perGroup)
-  return { trains, buses }
-}
+// "400 m", "1.6 km", "26 km"
+export const distanceText = (m: number) => (m < 1000 ? `${m} m` : `${(m / 1000).toFixed(m < 10_000 ? 1 : 0)} km`)
+
+// up to 2 km away a walk makes sense: say how long; further, only the distance
+export const WALK_MAX_M = 2000
+export const walkable = (m: number) => m <= WALK_MAX_M
+export { walkMinutes }

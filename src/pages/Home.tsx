@@ -12,6 +12,7 @@ import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
 import FeatureBand from '../components/FeatureBand'
 import PromotionSection from '../components/PromotionSection'
+import WhyRonda from '../components/WhyRonda'
 import ServicesSection from '../components/ServicesSection'
 import { SERVICES_ENABLED } from '../data/serviceOptions'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
@@ -615,6 +616,7 @@ function Home() {
           the top of the navy band, then the feature tiles in the band (app banner + footer follow in SiteLayout) */}
       <TrailsSection />
       <PromotionSection />
+      <WhyRonda />
       {SERVICES_ENABLED && <ServicesSection />}
       <FeatureCarousel
         onPlan={() => {

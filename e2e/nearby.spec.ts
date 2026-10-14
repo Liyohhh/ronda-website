@@ -2,14 +2,12 @@ import { expect, test } from './mocks'
 
 test.use({ geolocation: { latitude: 3.1478, longitude: 101.7111 }, permissions: ['geolocation'] })
 
-test('Near you: with location allowed, the nearest trains and buses show under the search bar; a station becomes the Start', async ({ page, backend }) => {
+test('Near you: with location allowed, the nearest train and bus stop show in one line under the search bar; a station becomes the Start', async ({ page, backend }) => {
   void backend
   await page.goto('/')
-  const near = page.getByRole('region', { name: 'Near you' })
-  await expect(near).toContainText('MRT Bukit Bintang')
-  await expect(near).toContainText('MRT Kajang Line')
-  await expect(near).toContainText('144 m · 3 min walk')
-  await expect(near).toContainText('KL86 · 400 · 420')
-  await near.getByRole('button', { name: /^MRT Bukit Bintang, 144 m/ }).click()
+  const train = page.getByRole('button', { name: /^MRT Bukit Bintang · 144 m · 3 min walk/ })
+  await expect(train).toBeVisible()
+  await expect(page.getByRole('button', { name: /MRT Bukit Bintang\/Hsbc \(KL86\) · 29 m/ })).toBeVisible()
+  await train.click()
   await expect(page.locator('#start-input')).toHaveValue('MRT Bukit Bintang')
 })

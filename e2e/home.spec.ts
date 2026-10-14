@@ -1,7 +1,7 @@
 import { expect, test } from './mocks'
 
 // Home page order under the search card: RONDA 300 trails -> Promotions -> slides (Services hidden for now) -> "Everything you need"
-const ORDER = ['trails-title', 'promo-title', 'slides-title', 'features-title']
+const ORDER = ['trails-title', 'promo-title', 'why-title', 'slides-title', 'features-title']
 
 test('home sections come in the agreed order', async ({ page, backend }) => {
   void backend
