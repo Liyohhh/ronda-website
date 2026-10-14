@@ -72,6 +72,11 @@ widget, line tiles, feature tiles, promotions, Help page.
 - Home "Why RONDA?" map (15 Oct): redrawn as a dot map of Malaysia that fills in when scrolled into view, cities
   marked, no transit lines; still picture for reduced motion; lint, typecheck, unit 198 and e2e 200 passed.
 
+- Trails (15 Oct): one card design on Home and /trails; Home "See all trails" (was "Explore stations" to RONDA 300)
+  opens /trails with the same category; the trail page's back button returns to where the trail was opened; trail map
+  in a titled card beside the stops (above them on phones). Home map cities: official open timetables (data.gov.my).
+  Lint, typecheck, unit 198 and e2e 204 passed.
+
 ## Known gaps (not test failures)
 
 - KTM Komuter (Klang Valley) fares were added on 7 Oct after this report (smoke 48 / 48, regression 0 regressions);

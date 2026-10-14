@@ -2,13 +2,13 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTrails } from '../hooks/useTrails'
-import TrailCardClassic from './TrailCardClassic'
+import TrailCard from './TrailCard'
 import CategoryPills, { type CategoryFilter } from './CategoryPills'
 import Icon from './Icon'
 import { isCategoryShown } from '../data/trails'
 
-// Home page "RONDA 300" (trails are part of RONDA 300; "Explore stations" opens the RONDA 300 page):
-// category pills and a swipeable row of trail cards
+// Home page "RONDA 300" trails: category pills, a swipeable row of trail cards and "See all trails", which opens
+// /trails with the same category picked
 function TrailsSection() {
   const { t, lang } = useLanguage()
   const [category, setCategory] = useState<CategoryFilter>('all')
@@ -57,10 +57,10 @@ function TrailsSection() {
         </div>
         <div className="flex items-center flex-shrink-0">
           <Link
-            to="/ronda-300"
-            className="hidden sm:inline-flex items-center gap-1 h-10 px-4 rounded-full border border-gray-200 bg-white text-sm font-semibold text-[#1F2F5C] shadow-sm hover:bg-gray-50"
+            to={category === 'all' ? '/trails' : `/trails?category=${category}`}
+            className="inline-flex items-center gap-1 h-10 px-4 rounded-full border border-gray-200 bg-white text-sm font-semibold text-[#1F2F5C] shadow-sm hover:bg-gray-50"
           >
-            {t('s2_cta')}
+            {t('seeAllTrails')}
             <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
           </Link>
         </div>
@@ -84,7 +84,7 @@ function TrailsSection() {
           >
             {trails.map((trail) => (
               <li key={trail.slug} className="snap-start flex-shrink-0 w-[78%] sm:w-[46%] md:w-[31%] lg:w-[23.5%] flex">
-                <TrailCardClassic trail={trail} places={data.places} className="w-full" />
+                <TrailCard trail={trail} places={data.places} className="w-full" />
               </li>
             ))}
           </ul>

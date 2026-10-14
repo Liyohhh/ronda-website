@@ -25,3 +25,27 @@ test('Arabic: the halal pill filters to the halal trail on /trails; Home lists t
   // Home has category cards and a Featured trails row (no pills): the halal trail is in the row
   await expect(page.locator('#explore a[href="/trails/halal-fine-dining"]')).toBeVisible()
 })
+
+test('Home "See all trails" keeps the picked category; a trail opened there goes back to it', async ({ page, backend }) => {
+  void backend
+  await page.goto('/')
+  const row = page.locator('#explore')
+  await row.getByRole('button', { name: 'Culture & Heritage' }).click()
+  await row.getByRole('link', { name: 'See all trails' }).click()
+  await expect(page).toHaveURL(/\/trails\?category=culture/)
+  await expect(page.getByRole('button', { name: 'Culture & Heritage', pressed: true })).toBeVisible()
+  // the trail page's back button returns to the filtered list
+  await page.locator('a[href="/trails/heritage"]').click()
+  await expect(page).toHaveURL(/\/trails\/heritage$/)
+  await page.getByRole('link', { name: 'Back to all trails' }).click()
+  await expect(page).toHaveURL(/\/trails\?category=culture/)
+})
+
+test('a trail opened from Home goes back to Home', async ({ page, backend }) => {
+  void backend
+  await page.goto('/')
+  await page.locator('#explore a[href="/trails/heritage"]').click()
+  await expect(page).toHaveURL(/\/trails\/heritage$/)
+  await page.getByRole('link', { name: 'Back to home' }).click()
+  await expect(page).toHaveURL(/\/#explore$/)
+})
