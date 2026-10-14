@@ -1604,6 +1604,385 @@
      "lrt-kelana-jaya"
     ]
    }
+  },
+  {
+   "id": "camp5OneUtama",
+   "name": "Camp5 1 Utama",
+   "address": "1 Utama Shopping Centre (New Wing), Lebuh Bandar Utama, 47800 Petaling Jaya",
+   "station": {
+    "name": "MRT Bandar Utama",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Bandar Utama",
+    "stopId": "KG09",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 572
+  },
+  {
+   "id": "camp5EcoCity",
+   "name": "Camp5 KL Eco City",
+   "address": "KL Eco City Mall, 3 Jalan Bangsar, 59200 Kuala Lumpur",
+   "station": {
+    "name": "LRT Abdullah Hukum",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Abdullah Hukum",
+    "stopId": "KJ17",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 150
+  },
+  {
+   "id": "camp5Utropolis",
+   "name": "Camp5 Utropolis",
+   "address": "Utropolis Marketplace, Jalan Kontraktor U1/14, Seksyen U1, 40150 Shah Alam",
+   "station": {
+    "name": "Utropolis Mall (bus T779)",
+    "feedId": "rapid-bus-kl",
+    "search": "Utropolis Mall",
+    "stopId": "1009182",
+    "lineIds": []
+   },
+   "walkMeters": 425,
+   "todo": "Unit not confirmed; LRT Kerjaya is about 1.3 km on foot"
+  },
+  {
+   "id": "bumpJayaOne",
+   "name": "BUMP Bouldering Jaya One",
+   "address": "Lot 1.051, Level 1, The School, Jaya One, 72A Jalan Profesor Diraja Ungku Aziz, PJS 13, 46200 Petaling Jaya",
+   "station": {
+    "name": "Jaya One Mall (bus T787, T790)",
+    "feedId": "rapid-bus-kl",
+    "search": "Jaya One Mall",
+    "stopId": "1004188",
+    "lineIds": []
+   },
+   "walkMeters": 353,
+   "todo": "No train station within 2 km; bus T787 or T790"
+  },
+  {
+   "id": "bumpPavilionBukitJalil",
+   "name": "BUMP Bouldering Pavilion Bukit Jalil",
+   "address": "Pavilion Bukit Jalil, 2 Persiaran Jalil 8, Bandar Bukit Jalil, 57000 Kuala Lumpur",
+   "station": {
+    "name": "Pavilion Bukit Jalil (shuttle bus from LRT Awan Besar)",
+    "feedId": "rapid-bus-kl",
+    "search": "Pavilion Bukit Jalil",
+    "stopId": "1009056",
+    "lineIds": []
+   },
+   "walkMeters": 368,
+   "todo": "Floor not confirmed; LRT Awan Besar is about 1.6 km on foot, or take the mall shuttle"
+  },
+  {
+   "id": "gameonPavilionBukitJalil",
+   "name": "GAMEON Arcade Arena & Sports Hub, Pavilion Bukit Jalil",
+   "address": "Lot 4.82.00, Level 4 (Orange Zone), Pavilion Bukit Jalil, 2 Persiaran Jalil 8, 57000 Kuala Lumpur",
+   "station": {
+    "name": "Pavilion Bukit Jalil (shuttle bus from LRT Awan Besar)",
+    "feedId": "rapid-bus-kl",
+    "search": "Pavilion Bukit Jalil",
+    "stopId": "1009056",
+    "lineIds": []
+   },
+   "walkMeters": 368,
+   "todo": "LRT Awan Besar is about 1.6 km on foot, or take the mall shuttle"
+  },
+  {
+   "id": "gameonNinjaPark",
+   "name": "GAMEON Ninja Park",
+   "address": "The Labs, Bukit Bintang City Centre (LaLaport), 2 Jalan Hang Tuah, 55100 Kuala Lumpur",
+   "station": {
+    "name": "Monorail Hang Tuah",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Hang Tuah",
+    "stopId": "MR4",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 299,
+   "todo": "Floor not confirmed"
+  },
+  {
+   "id": "gameonTheMines",
+   "name": "GAMEON Theme Park, The Mines",
+   "address": "The Mines Shopping Mall, Seri Kembangan, Selangor",
+   "station": {
+    "name": "KTM Serdang",
+    "feedId": "ktmb",
+    "search": "KTM/ETS Serdang",
+    "stopId": "19900",
+    "lineIds": [
+     "ktm-seremban"
+    ]
+   },
+   "walkMeters": 716,
+   "todo": "Floor not confirmed"
+  },
+  {
+   "id": "gameonOneUtama",
+   "name": "GAMEON Sports Hub, 1 Utama",
+   "address": "1 Utama Shopping Centre, Lebuh Bandar Utama, 47800 Petaling Jaya",
+   "station": {
+    "name": "MRT Bandar Utama",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Bandar Utama",
+    "stopId": "KG09",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 776,
+   "todo": "Wing and floor not confirmed; walk measured to the New Wing"
+  },
+  {
+   "id": "gameonMelawati",
+   "name": "GAMEON Theme Park, Melawati Mall",
+   "address": "Melawati Mall, 355 Jalan Bandar Melawati, Taman Melawati, 53100 Kuala Lumpur",
+   "station": {
+    "name": "Melawati Mall (bus 222, 253, T222)",
+    "feedId": "rapid-bus-kl",
+    "search": "Melawati Mall",
+    "stopId": "1001368",
+    "lineIds": []
+   },
+   "walkMeters": 183,
+   "todo": "No train station within 1.5 km (LRT Sri Rampai about 1.7 km); bus 222, 253 or T222"
+  },
+  {
+   "id": "gameonQuillCity",
+   "name": "GAMEON Sports Hub, Quill City Mall",
+   "address": "Quill City Mall, 1018 Jalan Sultan Ismail, Kuala Lumpur",
+   "station": {
+    "name": "Monorail Medan Tuanku",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Medan Tuanku",
+    "stopId": "MR9",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 537,
+   "todo": "Listed on gameonthemepark.com with no floor; confirm it is open"
+  },
+  {
+   "id": "jumpStreet",
+   "name": "Jump Street Asia",
+   "address": "8A Jalan 13/6, Seksyen 13, 46200 Petaling Jaya",
+   "station": {
+    "name": "Jaya One Mall (bus T787, T790)",
+    "feedId": "rapid-bus-kl",
+    "search": "Jaya One Mall",
+    "stopId": "1004188",
+    "lineIds": []
+   },
+   "walkMeters": 433,
+   "todo": "Position is the street (Jalan 13/6), not the building; no train station within 2 km"
+  },
+  {
+   "id": "funXWorld",
+   "name": "Fun X World",
+   "address": "Lot 2.140B, Level 2, The Summit USJ, Persiaran Kewajipan, USJ 1, Subang Jaya",
+   "station": {
+    "name": "Summit USJ (bus 770)",
+    "feedId": "rapid-bus-kl",
+    "search": "Summit USJ",
+    "stopId": "1003703",
+    "lineIds": []
+   },
+   "walkMeters": 78,
+   "todo": "BRT South Quay-USJ 1 is about 1.4 km on foot"
+  },
+  {
+   "id": "superPark",
+   "name": "SuperPark Malaysia",
+   "address": "Unit 4-1, Level 4, Avenue K, 156 Jalan Ampang, 50450 Kuala Lumpur",
+   "station": {
+    "name": "LRT KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT KLCC",
+    "stopId": "KJ10",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 242
+  },
+  {
+   "id": "espaceEkoCheras",
+   "name": "Espace EkoCheras",
+   "address": "Level 2, EkoCheras Mall, Cheras, 56100 Kuala Lumpur",
+   "station": {
+    "name": "MRT Taman Mutiara",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Taman Mutiara",
+    "stopId": "KG25",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 509,
+   "todo": "Unit not confirmed"
+  },
+  {
+   "id": "escapePj",
+   "name": "ESCAPE Petaling Jaya",
+   "address": "GB-07, Level G, Paradigm Mall, 1 Jalan SS 7/26A, 47301 Petaling Jaya",
+   "station": {
+    "name": "LRT Subang",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Subang",
+    "stopId": "SA6",
+    "lineIds": [
+     "lrt-shah-alam"
+    ]
+   },
+   "walkMeters": 787
+  },
+  {
+   "id": "hauntuLinc",
+   "name": "Hauntu, The LINC KL",
+   "address": "The LINC KL, 360 Jalan Tun Razak, 50400 Kuala Lumpur",
+   "station": {
+    "name": "LRT Ampang Park",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Ampang Park",
+    "stopId": "KJ9",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 295
+  },
+  {
+   "id": "hauntuCurve",
+   "name": "Hauntu's Seri Panggung Academy, The Curve",
+   "address": "The Curve, 6 Jalan PJU 7/3, Mutiara Damansara, 47810 Petaling Jaya",
+   "station": {
+    "name": "MRT Mutiara Damansara",
+    "feedId": "rapid-rail-kl",
+    "search": "MRT Mutiara Damansara",
+    "stopId": "KG08",
+    "lineIds": [
+     "mrt-kajang"
+    ]
+   },
+   "walkMeters": 581,
+   "todo": "Unit not confirmed"
+  },
+  {
+   "id": "breakoutAvenueK",
+   "name": "Breakout, Avenue K",
+   "address": "L2-16, Level 2, Avenue K, 156 Jalan Ampang, 50450 Kuala Lumpur",
+   "station": {
+    "name": "LRT KLCC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT KLCC",
+    "stopId": "KJ10",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 242
+  },
+  {
+   "id": "breakoutNuSentral",
+   "name": "Breakout, NU Sentral",
+   "address": "L4-09A, Level 4, NU Sentral, 201 Jalan Tun Sambanthan, 50470 Kuala Lumpur",
+   "station": {
+    "name": "Monorail KL Sentral",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail KL Sentral",
+    "stopId": "MR1",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 137
+  },
+  {
+   "id": "fifthroom",
+   "name": "Fifthroom, Sunway Putra Mall",
+   "address": "Lot L4-40, Level 4, Sunway Putra Mall, 100 Jalan Putra, 50350 Kuala Lumpur",
+   "station": {
+    "name": "LRT PWTC",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Pwtc",
+    "stopId": "AG4",
+    "lineIds": [
+     "lrt-ampang",
+     "lrt-sri-petaling"
+    ]
+   },
+   "walkMeters": 244,
+   "todo": "Now runs as PartyBox 360 (bookings on partybox360.com); confirm the name"
+  },
+  {
+   "id": "mazeEscape",
+   "name": "MAZE Escape Room",
+   "address": "16 Jalan PJS 11/18, Bandar Sunway, 46150 Petaling Jaya",
+   "station": {
+    "name": "BRT SunU-Monash",
+    "feedId": "rapid-rail-kl",
+    "search": "BRT Sunu-Monash",
+    "stopId": "BRT5",
+    "lineIds": [
+     "brt-sunway"
+    ]
+   },
+   "walkMeters": 776,
+   "todo": "Position is the street (Jalan PJS 11/18), not the building"
+  },
+  {
+   "id": "laserBattleKl",
+   "name": "Laser Battle Kuala Lumpur",
+   "address": "Central Zone, Level 7, Berjaya Times Square, 1 Jalan Imbi, 55100 Kuala Lumpur",
+   "station": {
+    "name": "Monorail Imbi",
+    "feedId": "rapid-rail-kl",
+    "search": "Monorail Imbi",
+    "stopId": "MR5",
+    "lineIds": [
+     "monorail"
+    ]
+   },
+   "walkMeters": 135
+  },
+  {
+   "id": "hurdis",
+   "name": "HURDIS.MY Laser Tag",
+   "address": "Lot 18 & 19, Level 1, 1 Jalan SS 7/26A, SS 7, 47301 Petaling Jaya",
+   "station": {
+    "name": "LRT Subang",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Subang",
+    "stopId": "SA6",
+    "lineIds": [
+     "lrt-shah-alam"
+    ]
+   },
+   "walkMeters": 787,
+   "todo": "Same address as Paradigm Mall; position is the mall"
+  },
+  {
+   "id": "galacticLaser",
+   "name": "Galactic Laser, Sunway Pyramid",
+   "address": "Sunway Pyramid, 3 Jalan PJS 11/15, Bandar Sunway, 47500 Petaling Jaya",
+   "station": {
+    "name": "BRT Sunway Lagoon",
+    "feedId": "rapid-rail-kl",
+    "search": "BRT Sunway Lagoon",
+    "stopId": "BRT3",
+    "lineIds": [
+     "brt-sunway"
+    ]
+   },
+   "walkMeters": 884,
+   "todo": "Still open? Only an undated Time Out listing found"
   }
  ],
  "trails": [
@@ -2062,6 +2441,116 @@
     }
    ],
    "category": "halal-fine-dining"
+  },
+  {
+   "key": "climbing",
+   "slug": "climbing",
+   "stops": [
+    {
+     "placeId": "camp5EcoCity"
+    },
+    {
+     "placeId": "camp5OneUtama"
+    },
+    {
+     "placeId": "bumpJayaOne"
+    },
+    {
+     "placeId": "camp5Utropolis"
+    },
+    {
+     "placeId": "bumpPavilionBukitJalil"
+    }
+   ],
+   "category": "activities"
+  },
+  {
+   "key": "arcades",
+   "slug": "arcades",
+   "stops": [
+    {
+     "placeId": "gameonNinjaPark"
+    },
+    {
+     "placeId": "gameonQuillCity"
+    },
+    {
+     "placeId": "gameonMelawati"
+    },
+    {
+     "placeId": "gameonOneUtama"
+    },
+    {
+     "placeId": "gameonPavilionBukitJalil"
+    },
+    {
+     "placeId": "gameonTheMines"
+    }
+   ],
+   "category": "activities"
+  },
+  {
+   "key": "activePlay",
+   "slug": "active-play",
+   "stops": [
+    {
+     "placeId": "superPark"
+    },
+    {
+     "placeId": "espaceEkoCheras"
+    },
+    {
+     "placeId": "jumpStreet"
+    },
+    {
+     "placeId": "escapePj"
+    },
+    {
+     "placeId": "funXWorld"
+    }
+   ],
+   "category": "activities"
+  },
+  {
+   "key": "escapeRooms",
+   "slug": "escape-rooms",
+   "stops": [
+    {
+     "placeId": "breakoutAvenueK"
+    },
+    {
+     "placeId": "hauntuLinc"
+    },
+    {
+     "placeId": "fifthroom"
+    },
+    {
+     "placeId": "breakoutNuSentral"
+    },
+    {
+     "placeId": "hauntuCurve"
+    },
+    {
+     "placeId": "mazeEscape"
+    }
+   ],
+   "category": "activities"
+  },
+  {
+   "key": "laserTag",
+   "slug": "laser-tag",
+   "stops": [
+    {
+     "placeId": "laserBattleKl"
+    },
+    {
+     "placeId": "hurdis"
+    },
+    {
+     "placeId": "galacticLaser"
+    }
+   ],
+   "category": "activities"
   }
  ]
 }

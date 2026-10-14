@@ -40,6 +40,11 @@ export const CATEGORY_STYLE: Record<TrailCategory, { from: string; to: string; i
     to: '#3B5BDB',
     icon: 'event',
   },
+  activities: {
+    from: '#18243F',
+    to: '#2563EB',
+    icon: 'hiking',
+  },
   explore: {
     from: '#18243F',
     to: '#4338CA',

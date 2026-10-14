@@ -9,10 +9,10 @@
 
 import type { Lang, TranslationKey } from '../i18n/translations'
 
-export type TrailCategory = 'food' | 'culture' | 'shopping' | 'nature' | 'family' | 'explore' | 'events' | 'halal-fine-dining'
+export type TrailCategory = 'food' | 'culture' | 'shopping' | 'nature' | 'family' | 'explore' | 'events' | 'activities' | 'halal-fine-dining'
 
 // shown in every language
-export const TRAIL_CATEGORIES: TrailCategory[] = ['food', 'culture', 'shopping', 'nature', 'family', 'explore', 'events']
+export const TRAIL_CATEGORIES: TrailCategory[] = ['food', 'culture', 'shopping', 'nature', 'family', 'explore', 'events', 'activities']
 // shown only when the site is in Arabic (pills, trail lists, the Explore menu); hidden in the other languages
 export const ARABIC_ONLY_CATEGORIES: TrailCategory[] = ['halal-fine-dining']
 

@@ -5,13 +5,14 @@
 | Suite | Result |
 |---|---|
 | Website static checks (ESLint, TypeScript) | clean |
-| Website unit and component tests (Vitest) | **198 / 198 passed**, 29 files |
-| Website end-to-end tests (Playwright, desktop + phone) | **200 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
+| Website unit and component tests (Vitest) | **200 / 200 passed**, 30 files |
+| Website end-to-end tests (Playwright, desktop + phone) | **210 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
 | Trip-planner regression matrix (production, plan-trip v23) | **134 cases, 0 regressions** (2 improved), p95 276 ms |
 | Nightly route check (production, first run) | 56 trips + 186 nearby-station trips planned; 14 trips flagged for review (database repo `docs/ROUTE_QUALITY_PLAN.md`) |
 
 Changes covered since 7 Oct: hub pages, OSM places, one-line "Nearest", Why RONDA, least walking first, MyRapid line
-and bus icons, passes in fares. The full workbook is the database repo's `testing/RONDA_Test_Report.xlsx`.
+and bus icons, passes in fares, Fun & Activities trails (5 trails, 25 places; e2e uses the new migration's data, not on
+production until it is deployed). The full workbook is the database repo's `testing/RONDA_Test_Report.xlsx`.
 
 ---
 

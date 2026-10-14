@@ -19,6 +19,12 @@ export const TRAIL_PHOTOS: Record<string, TrailPhoto> = {
   'cafe-hopping': { src: commons('1/1f', 'Tingkap_Cafe_2.jpg'), author: 'Slleong', license: 'CC0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/', page: 'https://commons.wikimedia.org/wiki/File:Tingkap_Cafe_2.jpg' },
   instagrammable: { src: commons('c/c5', 'Saloma_link_at_night.jpg'), author: 'Sheikh Izham', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0', page: 'https://commons.wikimedia.org/wiki/File:Saloma_link_at_night.jpg' },
   'rooftop-dining': { src: commons('c/cc', 'Kuala_Lumpur_Skyline_at_dusk_1.jpg'), author: 'Walkerssk', license: 'CC0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/', page: 'https://commons.wikimedia.org/wiki/File:Kuala_Lumpur_Skyline_at_dusk_1.jpg' },
+  // Fun & Activities trails: the building of one of the trail's stops (same photos as placePhotos.ts), 15 Oct 2026
+  climbing: { src: commons('6/68', 'KL_Eco_City_in_February_2020-01.jpg'), author: 'Renek78', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:KL_Eco_City_in_February_2020-01.jpg' },
+  arcades: { src: commons('5/5b', 'The_Mines_Shopping_Mall%2C_Mines_Wellness_City_20231015_123334.jpg'), author: 'Wiki Farazi', license: 'CC0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/', page: 'https://commons.wikimedia.org/wiki/File:The_Mines_Shopping_Mall,_Mines_Wellness_City_20231015_123334.jpg' },
+  'active-play': { src: commons('d/d1', 'Avenue_K%2C_Kuala_Lumpur_20260413_095055.jpg'), author: 'Wiki Farazi', license: 'CC0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/', page: 'https://commons.wikimedia.org/wiki/File:Avenue_K,_Kuala_Lumpur_20260413_095055.jpg' },
+  'escape-rooms': { src: commons('7/72', 'The_LINC_Mall.jpg'), author: 'Kaart @ Mapillary.com', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:The_LINC_Mall.jpg' },
+  'laser-tag': { src: commons('3/33', 'Sunway_Pyramid_interior_%28240131%29_01.jpg'), author: '*angys*', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Sunway_Pyramid_interior_(240131)_01.jpg' },
 }
 
 // Home page slides ("Travel made effortless"): iconic KL places, same licence rules and credits as above.
