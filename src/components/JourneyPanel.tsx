@@ -128,6 +128,9 @@ function journeySegments(legs: Leg[]): JourneySegment[] {
   })
 }
 
+// KTM ETS and Intercity rides with no fare from us: tickets (with seats) are bought from KTMB
+const bookOnKtmb = (leg: Leg) => leg.feed_id === 'ktmb' && /^KTM (ETS|Intercity)/i.test(leg.hop ?? '') && (!leg.fare || leg.fare.amount === null)
+
 function legLine(leg: Leg): Line {
   const line = leg.feed_id && leg.route_id ? lineForRoute(leg.feed_id, leg.route_id) : undefined
   if (line) return line
@@ -368,7 +371,13 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
           <span className="text-base font-semibold text-gray-900">{placeName(leg.from)}</span>
         )}
         {legSubLabel(leg) && <span className="text-xs text-gray-500">{legSubLabel(leg)}</span>}
-        {leg.fare && leg.fare.amount === null && (
+        {/* KTM ETS / Intercity: seat tickets sold by KTMB, fares not loaded (checklist G2-05): send riders to KTMB */}
+        {bookOnKtmb(leg) && (
+          <a href="https://www.ktmb.com.my/" target="_blank" rel="noopener noreferrer" className="ms-auto text-xs font-semibold text-[#1F2F5C] underline">
+            {t('fareBookKtmb')}
+          </a>
+        )}
+        {!bookOnKtmb(leg) && leg.fare && leg.fare.amount === null && (
           <span className="ms-auto text-xs text-gray-500" title={leg.fare.note}>
             {t('fareUnknown')}
           </span>
