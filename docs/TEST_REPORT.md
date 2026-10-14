@@ -69,6 +69,9 @@ Line coverage of the website is 31% overall (most pages are covered end-to-end i
 minimum enforced in `vitest.config.ts` (90-100% of lines): RONDA 300 lookup, Help data, trails, chat service and
 widget, line tiles, feature tiles, promotions, Help page.
 
+- Home "Why RONDA?" map (15 Oct): redrawn as a dot map of Malaysia that fills in when scrolled into view, cities
+  marked, no transit lines; still picture for reduced motion; lint, typecheck, unit 198 and e2e 200 passed.
+
 ## Known gaps (not test failures)
 
 - KTM Komuter (Klang Valley) fares were added on 7 Oct after this report (smoke 48 / 48, regression 0 regressions);

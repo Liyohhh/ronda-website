@@ -66,6 +66,71 @@ body {
   }
 }
 
+/* Home "Why RONDA?" dot map: hidden until the section is on screen, then dots fill in west to east and the
+   cities appear */
+.why-map .why-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  opacity: 0.9;
+}
+.why-map .why-city,
+.why-map .why-name {
+  opacity: 0;
+}
+.why-map .why-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+.why-map.is-playing .why-dot {
+  animation: why-dot-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.why-map.is-playing .why-city {
+  animation: why-fade-up 0.5s ease-out forwards;
+}
+.why-map.is-playing .why-pulse {
+  animation: why-pulse 2.8s ease-out infinite;
+}
+.why-map.is-playing .why-name {
+  animation: why-fade-up 0.6s ease-out 1.6s forwards;
+}
+@keyframes why-dot-in {
+  to { transform: scale(1); }
+}
+@keyframes why-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes why-pulse {
+  0% { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0; transform: scale(3.2); }
+}
+/* on phones the drawing is too small for every city name: only Kuala Lumpur keeps its label */
+@media (max-width: 639px) {
+  .why-map .why-label-small {
+    display: none;
+  }
+}
+/* riders who asked for less motion get the finished picture */
+@media (prefers-reduced-motion: reduce) {
+  .why-map .why-dot,
+  .why-map.is-playing .why-dot {
+    animation: none;
+    transform: none;
+  }
+  .why-map .why-city,
+  .why-map .why-name,
+  .why-map.is-playing .why-city,
+  .why-map.is-playing .why-name {
+    animation: none;
+    opacity: 1;
+  }
+  .why-map .why-pulse {
+    display: none;
+  }
+}
+
 /* Live bus map (/live): a bus is a pill with its route number, coloured by status */
 .ronda-bus {
   position: relative;
