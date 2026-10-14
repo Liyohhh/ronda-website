@@ -78,6 +78,10 @@ widget, line tiles, feature tiles, promotions, Help page.
   under the facts on phones). Home map cities: official open timetables (data.gov.my).
   Lint, typecheck, unit 198 and e2e 204 passed.
 
+- Photos (15 Oct): 42 stop photos and 5 trail covers added from Wikimedia Commons (free licences, credited, each
+  checked by eye); all trail pages load every picture (no broken images). 2 covers and 31 stops still have none
+  (database repo `docs/PICTURES_NEEDED.md`). Unit 200, e2e 210 passed.
+
 ## Known gaps (not test failures)
 
 - KTM Komuter (Klang Valley) fares were added on 7 Oct after this report (smoke 48 / 48, regression 0 regressions);
