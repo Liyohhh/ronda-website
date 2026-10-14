@@ -11,6 +11,21 @@ test('RONDA 300: a station with places lists them with plan links', async ({ pag
   await expect(plan).toHaveAttribute('href', /\/\?to=LRT%20KLCC&toName=/)
 })
 
+test('RONDA 300: places mapped around the station, nearest first, filtered by kind, each plannable', async ({ page, backend }) => {
+  void backend
+  await page.goto('/ronda-300')
+  await page.getByRole('combobox', { name: 'Find a station' }).fill('klcc')
+  await page.getByRole('option', { name: /LRT KLCC/ }).click()
+  const around = page.getByRole('region', { name: 'Around LRT KLCC' })
+  await expect(around.getByRole('listitem')).toHaveCount(3)
+  await expect(around.getByRole('listitem').first()).toContainText('Test Kopitiam')
+  await expect(around.getByRole('listitem').first()).toContainText('60 m · about 1 min walk')
+  await around.getByRole('button', { name: /Parks/ }).click()
+  await expect(around.getByRole('listitem')).toHaveCount(1)
+  await expect(around.getByRole('link', { name: 'Plan a trip here' })).toHaveAttribute('href', /toLat=3\.158&toLon=101\.712&toName=Test%20Park/)
+  await expect(around.getByRole('link', { name: '© OpenStreetMap contributors' })).toBeVisible()
+})
+
 test('RONDA 300: a station without places says so and shows the nearest that have some', async ({ page, backend }) => {
   void backend
   await page.goto('/ronda-300')

@@ -7,7 +7,11 @@ import { test as base, expect, type Page, type Route } from '@playwright/test'
 const fixture = (name: string) => JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8'))
 export const SEARCH = { klcc: fixture('search_klcc.json'), pasarSeni: fixture('search_pasar_seni.json') }
 export const PLAN = fixture('plan_klcc_pasar_seni.json')
-export const TRAILS = fixture('trails.json') // public.trails_data(), recorded from production
+export const TRAILS = fixture('trails.json')
+// three mapped places within 300 m (shape of public.places_near)
+const near = (osm_id: string, kind: string, name: string, distance_m: number) => ({ osm_id, kind, subkind: null, name, name_en: null, name_ms: null,
+  name_zh: null, name_ar: null, lat: 3.158, lon: 101.712, opening_hours: null, distance_m })
+export const PLACES_NEAR = [near('node/1', 'restaurant', 'Test Kopitiam', 60), near('node/2', 'useful', 'Test Pharmacy', 120), near('way/3', 'park', 'Test Park', 250)] // public.trails_data(), recorded from production
 // ai-chat answer in the shape the function returns (made-up place: the cards come from tools in real use)
 export const CHAT = {
   reply: 'There is one hotel within 500 m of LRT KLCC.',
@@ -74,6 +78,8 @@ async function mockBackend(page: Page): Promise<Backend> {
         return json(route, TRAILS)
       case '/rest/v1/rpc/trail_route': // no walking route in the tests: the trail map stays hidden (no map tiles needed)
         return json(route, { start: null, end: null, stops: [], legs: [] })
+      case '/rest/v1/rpc/places_near': // OpenStreetMap places around a station (RONDA 300 page)
+        return json(route, PLACES_NEAR)
       case '/rest/v1/rpc/bus_routes':
         return json(route, BUS_ROUTES)
       case '/rest/v1/rpc/line_stations':

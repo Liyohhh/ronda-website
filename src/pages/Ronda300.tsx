@@ -13,6 +13,7 @@ import { useSmartSearch } from '../hooks/useSmartSearch'
 import { useTrails } from '../hooks/useTrails'
 import { useLanguage } from '../hooks/useLanguage'
 import { supabase } from '../services/supabase'
+import { KIND_ICON, PLACE_KINDS, loadPlacesNear, placeName, planToPoint, walkMinutes, type NearPlace, type PlaceKind } from '../services/places'
 
 const LIST_ID = 'r300-list'
 
@@ -118,10 +119,14 @@ function Ronda300() {
           ) : !picked ? (
             <p className="text-gray-600">{t('r3_hint').replace('{n}', String(all.length))}</p>
           ) : here ? (
-            <StationBlock group={here} heading={t('r3_placesAt').replace('{station}', here.station.name)} />
+            <>
+              <StationBlock group={here} heading={t('r3_placesAt').replace('{station}', here.station.name)} />
+              <NearbyPlaces key={picked.name} at={picked} />
+            </>
           ) : (
             <>
-              <p className="text-gray-800">{t('r3_none').replace('{station}', picked.name)}</p>
+              <NearbyPlaces key={picked.name} at={picked} />
+              <p className="mt-8 text-gray-800">{t('r3_none').replace('{station}', picked.name)}</p>
               {nearest && nearest.length > 0 && (
                 <>
                   <h2 className="mt-6 text-lg font-semibold text-[#1F2F5C]">{t('r3_nearest')}</h2>
@@ -145,6 +150,86 @@ function Ronda300() {
         </section>
       </div>
     </SiteLayout>
+  )
+}
+
+const FIRST_PLACES = 24
+// Everything mapped on OpenStreetMap within 300 m of the picked station, nearest first, with a filter by kind
+function NearbyPlaces({ at }: { at: Pick }) {
+  const { t, lang } = useLanguage()
+  const [places, setPlaces] = useState<NearPlace[] | null>(null)
+  const [failed, setFailed] = useState(false)
+  const [kind, setKind] = useState<PlaceKind | null>(null)
+  const [all, setAll] = useState(false)
+  useEffect(() => {
+    let live = true
+    loadPlacesNear(at.lat, at.lon).then((p) => { if (live) setPlaces(p) }).catch(() => { if (live) setFailed(true) })
+    return () => { live = false }
+  }, [at.lat, at.lon])
+  const kinds = PLACE_KINDS.filter((k) => places?.some((p) => p.kind === k))
+  const matching = (places ?? []).filter((p) => !kind || p.kind === kind)
+  const shown = all ? matching : matching.slice(0, FIRST_PLACES)
+  return (
+    <section aria-labelledby="r3-osm" className="mt-8">
+      <h2 id="r3-osm" className="text-lg font-semibold text-[#1F2F5C]">{t('r3_osmTitle').replace('{station}', at.name)}</h2>
+      <p className="mt-1 text-sm text-gray-600">{t('r3_osmNote')}</p>
+      {failed ? (
+        <p role="alert" className="mt-3 text-gray-700">{t('r3_osmError')}</p>
+      ) : !places ? (
+        <p role="status" className="mt-3 text-gray-500">{t('loading')}</p>
+      ) : places.length === 0 ? (
+        <p className="mt-3 text-gray-700">{t('r3_osmNone')}</p>
+      ) : (
+        <>
+          <div role="group" aria-label={t('r3_osmFilter')} className="mt-4 flex flex-wrap gap-2">
+            {[null, ...kinds].map((k) => (
+              <button
+                key={k ?? 'all'}
+                type="button"
+                aria-pressed={kind === k}
+                onClick={() => { setKind(k); setAll(false) }}
+                className={`inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full border text-sm font-medium ${kind === k ? 'bg-[#1F2F5C] border-[#1F2F5C] text-white' : 'bg-white border-gray-300 text-gray-800 hover:bg-gray-50'}`}
+              >
+                {k && <Icon name={KIND_ICON[k]} size={16} />}
+                {k ? t(`r3k_${k}` as TranslationKey) : t('r3_osmAll')}
+                <span className={kind === k ? 'text-white/80' : 'text-gray-500'}>{k ? places.filter((p) => p.kind === k).length : places.length}</span>
+              </button>
+            ))}
+          </div>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {shown.map((p) => {
+              const name = placeName(p, lang)
+              return (
+                <li key={p.osm_id} className="flex items-start gap-3 rounded-2xl border border-gray-200 bg-white p-4">
+                  <span aria-hidden="true" className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#EEF2FF] text-[#1F2F5C]">
+                    <Icon name={KIND_ICON[p.kind]} size={18} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-medium text-gray-900 break-words">{name}</span>
+                    <span className="mt-0.5 block text-sm text-gray-600">
+                      {t(`r3k_${p.kind}` as TranslationKey)} · {t('r3_osmWalk').replace('{m}', String(p.distance_m)).replace('{min}', String(walkMinutes(p.distance_m)))}
+                    </span>
+                    <Link to={planToPoint(p, name)} className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[#1F2F5C] hover:underline">
+                      {t('planTripHere')}
+                      <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+                    </Link>
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+          {!all && matching.length > FIRST_PLACES && (
+            <button type="button" onClick={() => setAll(true)} className="mt-4 inline-flex items-center gap-1 h-10 px-4 rounded-full border border-gray-300 bg-white text-sm font-semibold text-[#1F2F5C] hover:bg-gray-50">
+              {t('r3_osmMore').replace('{n}', String(matching.length))}
+              <Icon name="expandMore" size={18} />
+            </button>
+          )}
+          <p className="mt-3 text-xs text-gray-500">
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline">© OpenStreetMap contributors</a>
+          </p>
+        </>
+      )}
+    </section>
   )
 }
 
