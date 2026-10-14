@@ -76,7 +76,8 @@ widget, line tiles, feature tiles, promotions, Help page.
 - KTMB publishes its timetable about two weeks ahead and moves the end date forward daily (29 Oct on 15 Oct); the
   alert now fires 7 days before the end, so only if KTMB stops publishing.
 - API keys (15 Oct): database smoke checks pass 48/48 with the publishable key the website uses; backend functions
-  moved to the new secret key in code, deploy pending (database repo `docs/API_KEYS.md`).
+  moved to the new secret key and deployed (plan-trip v24); regression 134/134, no change in results (database repo
+  `docs/API_KEYS.md`).
 - Live KTM positions: the official open feed carries ETS / intercity trainsets only (7 trains at 13:15 on 7 Oct),
   no Komuter.
 - No independent penetration test yet; native-speaker review of Malay, Chinese and Arabic pending (`docs/UAT.md`).
