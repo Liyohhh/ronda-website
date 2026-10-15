@@ -1983,6 +1983,47 @@
    },
    "walkMeters": 884,
    "todo": "Still open? Only an undated Time Out listing found"
+  },
+  {
+   "id": "sriAwanaPaintball",
+   "name": "Sri Awana Paintball Park",
+   "address": "Seksyen 15, 43650 Bandar Baru Bangi, Selangor",
+   "station": {
+    "name": "Bangi Gateway Mall (bus T464)",
+    "feedId": "rapid-bus-mrtfeeder",
+    "search": "Bangi Gateway Mall",
+    "stopId": "12002195",
+    "lineIds": []
+   },
+   "walkMeters": 404,
+   "todo": "Field runs on bookings: call ahead"
+  },
+  {
+   "id": "puncakJalilPaintball",
+   "name": "Puncak Jalil Paintball Park Battlefields",
+   "address": "Lot 73984, Jalan PUJ 9/17, Taman Puncak Jalil, Bandar Putra Permai, 43300 Seri Kembangan",
+   "station": {
+    "name": "Surau Nurul Iman PUJ 9 (bus T543)",
+    "feedId": "rapid-bus-mrtfeeder",
+    "search": "Surau Nurul Iman Puj 9",
+    "stopId": "12002585",
+    "lineIds": []
+   },
+   "walkMeters": 144
+  },
+  {
+   "id": "evoltKarting",
+   "name": "Evolt Karting, Selangor (Flagship)",
+   "address": "PT 3779, Jalan 4D, Kampung Subang Baru, 40150 Shah Alam",
+   "station": {
+    "name": "Spg Jalan 2D Kg Baru Subang (bus T772)",
+    "feedId": "rapid-bus-mrtfeeder",
+    "search": "Spg Jalan 2d. Kg Baru Subang",
+    "stopId": "12001752",
+    "lineIds": []
+   },
+   "walkMeters": 302,
+   "todo": "No train station within 5 km; bus T772"
   }
  ],
  "trails": [
@@ -2548,6 +2589,29 @@
     },
     {
      "placeId": "galacticLaser"
+    }
+   ],
+   "category": "activities"
+  },
+  {
+   "key": "paintball",
+   "slug": "paintball",
+   "stops": [
+    {
+     "placeId": "puncakJalilPaintball"
+    },
+    {
+     "placeId": "sriAwanaPaintball"
+    }
+   ],
+   "category": "activities"
+  },
+  {
+   "key": "karting",
+   "slug": "karting",
+   "stops": [
+    {
+     "placeId": "evoltKarting"
     }
    ],
    "category": "activities"

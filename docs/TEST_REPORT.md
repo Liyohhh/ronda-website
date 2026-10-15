@@ -11,7 +11,8 @@
 | Nightly route check (production, first run) | 56 trips + 186 nearby-station trips planned; 14 trips flagged for review (database repo `docs/ROUTE_QUALITY_PLAN.md`) |
 
 Changes covered since 7 Oct: hub pages, OSM places, one-line "Nearest", Why RONDA, least walking first, MyRapid line
-and bus icons, passes in fares, Fun & Activities trails (5 trails, 25 places; on production since 15 Oct). The full workbook is the database repo's `testing/RONDA_Test_Report.xlsx`.
+and bus icons, passes in fares, Fun & Activities trails (5 trails, 25 places on production since 15 Oct; Paintball and Karting, 3 more places, waiting
+for deploy). The full workbook is the database repo's `testing/RONDA_Test_Report.xlsx`.
 
 ---
 
