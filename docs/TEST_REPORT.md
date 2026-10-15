@@ -83,6 +83,10 @@ widget, line tiles, feature tiles, promotions, Help page.
   checked by eye); all trail pages load every picture (no broken images). 2 covers and 31 stops still have none
   (database repo `docs/PICTURES_NEEDED.md`). Unit 200, e2e 210 passed.
 
+- Line badges (15 Oct): every line now uses our own vector badge in the style of MyRapid's line legend (one matching
+  set, sharp at any size); MyRapid's small icon files are kept on record but no longer shown. App badge files
+  (`public/lines`) re-exported. Unit 200, e2e 212 passed.
+
 ## Known gaps (not test failures)
 
 - KTM Komuter (Klang Valley) fares were added on 7 Oct after this report (smoke 48 / 48, regression 0 regressions);
