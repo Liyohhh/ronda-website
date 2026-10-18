@@ -1,10 +1,9 @@
 import { useLanguage } from '../hooks/useLanguage'
+import { Accent, Eyebrow } from './Motion'
 import BrandLogo from './BrandLogo'
 import LineBadge from './LineBadge'
 import WalkIcon from './WalkIcon'
 
-// "Get the RONDA app" band. SiteLayout always renders it just above the footer.
-// Store links come from env vars; until the app is published the badges show "Coming soon".
 const PLAY_URL = import.meta.env.VITE_PLAY_STORE_URL as string | undefined
 const APPSTORE_URL = import.meta.env.VITE_APP_STORE_URL as string | undefined
 
@@ -20,52 +19,52 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
         <path fill="currentColor" d={iconPath} />
       </svg>
       <span className="flex flex-col leading-none text-start">
-        <span className="text-[10px] tracking-wide text-white/80">{small}</span>
+        <span className="text-[10px] tracking-wide text-gray-600">{small}</span>
         <span className="text-lg font-semibold mt-1">{big}</span>
       </span>
     </>
   )
   const cls =
-    'h-14 w-48 px-4 inline-flex items-center gap-3 rounded-xl bg-black/70 text-white border border-white/25 backdrop-blur-sm'
+    'h-14 w-48 px-5 inline-flex items-center gap-3 rounded-full bg-white text-[#222D52]'
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3">
       {href ? (
-        <a href={href} target="_blank" rel="noreferrer" className={`${cls} hover:bg-black/85 hover:border-white/40 transition`}>
+        <a href={href} target="_blank" rel="noreferrer" className={`${cls} hover:bg-gray-100 active:scale-95 transition`}>
           {body}
         </a>
       ) : (
-        <span className={`${cls} opacity-90`} aria-disabled="true">
+        <span className={cls} aria-disabled="true">
           {body}
         </span>
       )}
-      {!href && <span className="text-xs font-medium text-[#E7C98F] uppercase tracking-wider">{soon}</span>}
+      {!href && <span className="text-[11px] font-semibold text-gold-light uppercase tracking-wider">{soon}</span>}
     </div>
   )
 }
 
-// Phone mock-up with a simplified RONDA screen (illustration, not live data). It rises above the banner's
-// top edge and is cut off at the bottom, like app banners on bank / airline sites.
+// Phone mock-up with a simplified RONDA screen (an illustration, not live data): a planned trip with two options.
+// Two small cards float beside it (gently moving; still for reduced motion).
 function PhoneMockup() {
   const { t } = useLanguage()
   return (
-    <div className="w-[230px] rounded-[2.4rem] bg-[#0b0f1a] p-2.5 shadow-2xl ring-1 ring-white/10" aria-hidden="true">
-      <div className="relative rounded-[1.9rem] overflow-hidden bg-gray-50 h-[440px]">
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-[#0b0f1a]" />
-        <div className="bg-[#002472] px-4 pt-10 pb-4">
+    <div className="w-[240px] rounded-[2.6rem] bg-[#0b0d16] p-2.5 shadow-[0_40px_80px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10" aria-hidden="true">
+      <div className="relative rounded-[2rem] overflow-hidden bg-[#FAF8F5] h-[470px]">
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-[#0b0d16]" />
+        <div className="bg-[#222D52] px-4 pt-10 pb-4">
           <BrandLogo tone="light" size="sm" />
           <div className="mt-3 rounded-xl bg-white px-3 py-2 space-y-1.5">
-            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full border-2 border-[#002472]" />KL Sentral</div>
-            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full bg-[#C9A45C]" />KLCC</div>
+            <div className="flex items-center gap-2 text-[10px] text-gray-600"><span className="w-2 h-2 rounded-full border-2 border-[#222D52]" />KL Sentral</div>
+            <div className="flex items-center gap-2 text-[10px] text-gray-600"><span className="w-2 h-2 rounded-full bg-gold" />KLCC</div>
           </div>
         </div>
         <div className="p-3 space-y-2">
           {[
-            { lines: ['lrt-kelana-jaya'], time: '07:52 – 08:04', dur: t('durMin').replace('{m}', '12') },
-            { lines: ['monorail', 'lrt-kelana-jaya'], time: '07:55 – 08:15', dur: t('durMin').replace('{m}', '20') },
+            { lines: ['lrt-kelana-jaya'], time: '07:52 – 08:04', dur: t('durMin').replace('{m}', '12'), best: true },
+            { lines: ['monorail', 'lrt-kelana-jaya'], time: '07:55 – 08:15', dur: t('durMin').replace('{m}', '20'), best: false },
           ].map((r) => (
-            <div key={r.time} className="rounded-xl bg-white border border-gray-200 p-2.5">
+            <div key={r.time} className={`rounded-xl bg-white p-2.5 border ${r.best ? 'border-gold' : 'border-gray-200'}`}>
               <div className="flex items-baseline justify-between">
-                <span className="text-sm font-bold text-gray-900">{r.dur}</span>
+                <span className="text-sm font-bold text-[#222D52]">{r.dur}</span>
                 <span className="text-[9px] text-gray-500">{r.time}</span>
               </div>
               <div className="mt-1.5 flex items-center gap-1">
@@ -80,44 +79,48 @@ function PhoneMockup() {
             <div className="h-2 w-24 rounded bg-gray-200" />
             <div className="mt-2 h-2 w-16 rounded bg-gray-100" />
           </div>
+          <div className="rounded-xl bg-white border border-gray-200 p-2.5">
+            <div className="h-2 w-20 rounded bg-gray-200" />
+            <div className="mt-2 h-2 w-28 rounded bg-gray-100" />
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
+// "Get the RONDA app": a velvet band at the top of the footer. The words and store badges on one side; on the other
+// the phone preview rising out of a soft champagne glow, with two small cards floating beside it. Store links come
+// from env vars; until the app is published the badges show "Coming soon".
 function AppDownloadBanner() {
   const { t } = useLanguage()
   return (
-    // Full width, and its bottom fades into the footer's navy so the two read as one block.
-    // The phone sits outside the clipped background so it can rise above the banner.
-    <section id="download" aria-labelledby="download-title" className="relative mt-24 text-white">
-      <div className="absolute inset-0 overflow-hidden bg-[#002472]">
-        {/* KL skyline, darkened so the text reads */}
-        <picture>
-          <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-          <img src="/Image/banner-kl.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[center_40%]" />
-        </picture>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#001233]/95 via-[#001233]/80 to-[#001233]/60" />
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-[#002472]" />
-      </div>
-
-      <div className="relative max-w-6xl mx-auto grid gap-8 md:grid-cols-[1.1fr_auto_auto] items-center px-4 sm:px-6">
-        <div className="py-12">
-          <h2 id="download-title" className="text-2xl sm:text-3xl font-bold leading-tight">
-            {t('appBannerTitle')}
+    <section id="download" aria-labelledby="download-title" className="scroll-mt-24 relative overflow-hidden bg-[#222D52] text-white">
+      <div aria-hidden="true" className="pointer-events-none absolute -end-40 top-1/2 -translate-y-1/2 h-[560px] w-[560px] rounded-full bg-[radial-gradient(closest-side,rgb(210_182_138/0.28),transparent)]" />
+      <div className="wrap relative grid items-center gap-12 py-20 md:py-24 lg:grid-cols-[1.1fr_1fr]">
+        <div className="text-center lg:text-start">
+          <Eyebrow tone="dark" center>{t('getApp')}</Eyebrow>
+          <h2 id="download-title" className="mt-5 max-w-xl mx-auto lg:mx-0 [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em]">
+            <Accent text={t('appBannerTitle')} dark />
           </h2>
-          <p className="mt-2 text-white/75 max-w-md">{t('appBannerText')}</p>
+          <p className="mt-4 max-w-md mx-auto lg:mx-0 text-base md:text-lg text-white/80">{t('appBannerText')}</p>
+          <div className="mt-8 flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4">
+            <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
+            <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
+          </div>
         </div>
 
-        <div className="flex flex-col gap-3 pb-12 md:pb-0">
-          <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
-          <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
-        </div>
-
-        {/* phone: its top pokes above the banner, its bottom is cut at the banner's bottom edge */}
-        <div className="hidden md:block self-end -mt-20 h-[calc(100%+5rem)] max-h-[340px] overflow-hidden">
+        <div className="relative hidden md:flex justify-center" aria-hidden="true">
           <PhoneMockup />
+          {/* floating cards: the network in a number, and a line on the way */}
+          <div className="float-y absolute top-16 start-[calc(50%-260px)] rounded-2xl bg-white px-4 py-3 text-[#222D52] shadow-xl">
+            <span className="block font-display text-2xl font-semibold leading-none">6,500+</span>
+            <span className="mt-1 block text-xs text-gray-600">{t('why_stops')}</span>
+          </div>
+          <div className="float-y absolute bottom-20 end-[calc(50%-270px)] flex items-center gap-2 rounded-2xl bg-gold px-4 py-3 text-[#222D52] shadow-xl [animation-delay:-2.5s]">
+            <LineBadge line="mrt-kajang" size={22} decorative />
+            <span className="text-sm font-semibold">{t('durMin').replace('{m}', '12')}</span>
+          </div>
         </div>
       </div>
     </section>

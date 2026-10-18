@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import PageHero from '../components/PageHero'
 import { useLanguage } from '../hooks/useLanguage'
 
 // Any address the site doesn't know: say so, and offer the main ways back
@@ -8,18 +9,14 @@ function NotFound() {
   const { pathname } = useLocation()
   return (
     <SiteLayout>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-center">
-        <p className="text-sm font-semibold text-[#86672a]">404</p>
-        <h1 className="mt-2 text-3xl md:text-4xl font-bold text-[#002472]">{t('nf_title')}</h1>
-        <p className="mt-4 text-gray-600">
-          {t('nf_text')} <span className="font-mono text-gray-800 break-all" dir="ltr">{pathname}</span>
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link to="/" className="rounded-full bg-[#002472] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0a3391]">{t('nf_home')}</Link>
-          <Link to="/trails" className="rounded-full border border-[#002472] px-6 py-3 text-sm font-semibold text-[#002472] hover:bg-[#002472]/5">{t('trails')}</Link>
-          <Link to="/help" className="rounded-full border border-[#002472] px-6 py-3 text-sm font-semibold text-[#002472] hover:bg-[#002472]/5">{t('helpCentre')}</Link>
+      <PageHero eyebrow="404" title={t('nf_title')} center
+        intro={<>{t('nf_text')} <span className="font-mono break-all" dir="ltr">{pathname}</span></>}>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Link to="/" className="rounded-full bg-gold px-6 py-3 text-sm font-bold text-[#222D52] hover:bg-gold-hover">{t('nf_home')}</Link>
+          <Link to="/trails" className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-[#222D52]">{t('trails')}</Link>
+          <Link to="/help" className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-[#222D52]">{t('helpCentre')}</Link>
         </div>
-      </div>
+      </PageHero>
     </SiteLayout>
   )
 }

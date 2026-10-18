@@ -1,4 +1,8 @@
-import { ICONS, type IconName } from '../data/icons'
+import { ICONS, type IconName as MaterialName } from '../data/icons'
+import { OPERATOR_ICONS, type OperatorIconName } from '../data/operatorIcons'
+
+export type IconName = MaterialName | OperatorIconName
+const ALL: Record<IconName, string> = { ...ICONS, ...OPERATOR_ICONS }
 
 type Props = {
   name: IconName
@@ -7,7 +11,8 @@ type Props = {
   label?: string // spoken name; without it the icon is decorative
 }
 
-// Material Symbols icon (see scripts/fetch-icons.mjs). Takes the text colour.
+// Material Symbols icon (see scripts/fetch-icons.mjs), or the operator's own bus icons (data/operatorIcons.ts).
+// Takes the text colour.
 function Icon({ name, size = 20, className = '', label }: Props) {
   return (
     <svg
@@ -19,7 +24,7 @@ function Icon({ name, size = 20, className = '', label }: Props) {
       aria-label={label}
       aria-hidden={label ? undefined : true}
       // markup comes from our own generated file, not user input
-      dangerouslySetInnerHTML={{ __html: ICONS[name] }}
+      dangerouslySetInnerHTML={{ __html: ALL[name] }}
     />
   )
 }

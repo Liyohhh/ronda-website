@@ -4,8 +4,10 @@ import BrandLogo from './BrandLogo'
 import LanguageMenu from './LanguageMenu'
 import SocialLogin from './SocialLogin'
 import { useLanguage } from '../hooks/useLanguage'
+import { AUTH_VIDEO } from '../data/authVideo'
 
 // Shared frame for Login / Register: slim top bar, brand panel on the left (desktop), form on the right.
+
 type Props = {
   promoTitle: string
   promoText: string
@@ -27,17 +29,30 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
       </header>
 
       <div className="flex flex-1">
-        {/* Brand panel */}
-        <aside className="relative hidden md:flex md:w-1/2 overflow-hidden bg-[#002472] text-white">
+        {/* Brand panel: KL sunset timelapse, clear (no tint over it); only a short soft shadow at the bottom behind the text */}
+        <aside className="relative hidden md:flex md:w-1/2 overflow-hidden bg-[#222D52] text-white">
           <picture>
             <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-            <img src="/Image/banner-kl.jpg" alt="" className="absolute inset-0 w-full h-full object-cover object-[45%_center] opacity-35" />
+            <img src="/Image/banner-kl.jpg" alt="" className="absolute inset-0 w-full h-full object-cover object-[45%_center]" />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#001233] via-[#002472]/85 to-[#002472]/70" />
-          <div className="relative flex flex-col justify-center px-12 lg:px-16">
-            <BrandLogo tone="light" size="lg" className="mb-8" />
-            <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4">{promoTitle}</h1>
-            <p className="text-white/75 text-lg max-w-md">{promoText}</p>
+          <video
+            src={AUTH_VIDEO.src}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-[12%_50%] motion-reduce:hidden"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-black/60 via-black/35 to-transparent" />
+          <div className="relative flex flex-col justify-end w-full px-12 lg:px-16 pb-16">
+            <BrandLogo tone="light" size="lg" className="mb-6" />
+            <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 [text-shadow:0_2px_10px_rgb(0_0_0/0.6)]">{promoTitle}</h1>
+            <p className="text-white text-lg max-w-md [text-shadow:0_1px_6px_rgb(0_0_0/0.55)]">{promoText}</p>
+            <a href={AUTH_VIDEO.page} target="_blank" rel="noopener noreferrer" className="absolute bottom-3 end-4 rounded bg-black/45 px-2 py-0.5 text-[11px] text-white/85 hover:underline">
+              {t('videoLabel')}: {AUTH_VIDEO.author} · Pexels
+            </a>
           </div>
         </aside>
 
@@ -76,7 +91,7 @@ export function AuthField({
       <span className="block text-sm font-medium text-gray-700 mb-1">{label}</span>
       <input
         {...input}
-        className="w-full h-11 border border-gray-300 rounded-lg px-3 bg-white text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#002472] focus:ring-2 focus:ring-[#002472]/15 transition"
+        className="w-full h-11 border border-gray-300 rounded-lg px-3 bg-white text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#222D52] focus:ring-2 focus:ring-[#222D52]/15 transition"
       />
     </label>
   )
@@ -88,9 +103,9 @@ export function SubmitButton({ busy, children }: { busy: boolean; children: Reac
     <button
       type="submit"
       disabled={busy}
-      className="w-full h-11 mt-2 bg-[#002472] text-white rounded-lg font-semibold hover:bg-[#001a55] disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-2"
+      className="w-full h-11 mt-2 bg-accent text-white rounded-lg font-semibold hover:bg-accent-hover disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-2"
     >
-      {busy && <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />}
+      {busy && <span className="w-4 h-4 border-2 border-[#222D52]/30 border-t-[#222D52] rounded-full animate-spin" />}
       {busy ? t('pleaseWait') : children}
     </button>
   )

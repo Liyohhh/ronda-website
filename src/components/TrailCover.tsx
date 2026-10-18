@@ -8,7 +8,7 @@ function TrailCover({ trail, className = '' }: { trail: Trail; className?: strin
   const style = CATEGORY_STYLE[trail.category]
   const photo = TRAIL_PHOTOS[trail.slug]
   if (photo) {
-    return <img src={photo.src} alt="" loading="lazy" className={`w-full h-full object-cover ${className}`} />
+    return <img src={photo.src} alt="" loading="lazy" className={`w-full h-full object-cover ${className}`} style={photo.focus ? { objectPosition: photo.focus } : undefined} />
   }
   return (
     <div

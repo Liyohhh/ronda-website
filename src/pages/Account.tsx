@@ -2,6 +2,7 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { useNavigate } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import PageHero from '../components/PageHero'
 import { AuthField } from '../components/AuthLayout'
 import { supabase } from '../services/supabase'
 import { useLanguage } from '../hooks/useLanguage'
@@ -93,12 +94,7 @@ function AccountForms({ user }: { user: User }) {
 
   return (
     <SiteLayout>
-      <section className="bg-[#002472] text-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-          <h1 className="text-3xl font-bold">{t('accountTitle')}</h1>
-          <p className="mt-2 text-white/80">{t('accountIntro')}</p>
-        </div>
-      </section>
+      <PageHero title={t('accountTitle')} intro={t('accountIntro')} />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-5">
         <Card title={t('accountProfile')}>
@@ -107,7 +103,7 @@ function AccountForms({ user }: { user: User }) {
           </p>
           <form onSubmit={saveName}>
             <AuthField label={t('fullName')} type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
-            <button type="submit" disabled={busy !== ''} className={`${btn} bg-[#002472] text-white hover:bg-[#001a55]`}>{t('accountSaveName')}</button>
+            <button type="submit" disabled={busy !== ''} className={`${btn} bg-[#222D52] text-white hover:bg-[#18203D]`}>{t('accountSaveName')}</button>
             {nameMsg && <Note kind={nameMsg.kind}>{nameMsg.text}</Note>}
           </form>
         </Card>
@@ -118,7 +114,7 @@ function AccountForms({ user }: { user: User }) {
               <h3 className="mb-2 font-medium text-gray-900">{t('accountPassword')}</h3>
               <AuthField label={t('newPassword')} type="password" autoComplete="new-password" minLength={8} value={pw} onChange={(e) => setPw(e.target.value)} required />
               <AuthField label={t('confirmPassword')} type="password" autoComplete="new-password" minLength={8} value={pw2} onChange={(e) => setPw2(e.target.value)} required />
-              <button type="submit" disabled={busy !== ''} className={`${btn} bg-[#002472] text-white hover:bg-[#001a55]`}>{t('resetSave')}</button>
+              <button type="submit" disabled={busy !== ''} className={`${btn} bg-[#222D52] text-white hover:bg-[#18203D]`}>{t('resetSave')}</button>
               {pwMsg && <Note kind={pwMsg.kind}>{pwMsg.text}</Note>}
             </form>
           )}

@@ -1,4 +1,5 @@
 import type { TranslationKey } from '../i18n/translations'
+import { SERVICES_ENABLED } from './serviceOptions'
 
 export type HelpCategory = {
   slug: 'payments' | 'general' | 'policies'
@@ -16,10 +17,12 @@ export const HELP_CATEGORIES: HelpCategory[] = [
 // today); policy articles are a draft until reviewed by a lawyer (shown on the page).
 export type HelpArticle = { id: string; category: HelpCategory['slug']; draft?: boolean }
 
-export const HELP_ARTICLES: HelpArticle[] = [
+const ALL_ARTICLES: HelpArticle[] = [
   { id: 'payWhere', category: 'payments' },
   { id: 'payFares', category: 'payments' },
   { id: 'payFree', category: 'payments' },
+  // sources: myrapid.com.my (tokens, bus, Rapid Kembara), kliaekspres.com (KLIA Ekspres), KTMB fare tables and Komuter page; checked 14 Oct 2026
+  { id: 'payVisitor', category: 'payments' },
   { id: 'genCover', category: 'general' },
   { id: 'genLive', category: 'general' },
   { id: 'genAccount', category: 'general' },
@@ -32,8 +35,11 @@ export const HELP_ARTICLES: HelpArticle[] = [
   { id: 'polService', category: 'policies', draft: true },
 ]
 
+// the services article goes with the services (see SERVICES_ENABLED)
+export const HELP_ARTICLES = ALL_ARTICLES.filter((a) => SERVICES_ENABLED || a.id !== 'services')
+
 // shown on the Help home page
-export const HOT_QUESTIONS = ['genLive', 'payWhere', 'payFares', 'business']
+export const HOT_QUESTIONS = ['genLive', 'payWhere', 'payVisitor', 'payFares', 'business']
 
 export const articleQ = (id: string) => `help_${id}_q` as TranslationKey
 export const articleA = (id: string) => `help_${id}_a` as TranslationKey

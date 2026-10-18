@@ -44,7 +44,7 @@ function PlaceField({ id, label, value, onPick }: Props) {
         }}
         className="w-full text-start bg-white/10 hover:bg-white/15 rounded-lg px-3 py-2 group"
       >
-        <div className="text-[11px] text-white/60">{label}</div>
+        <div className="text-[11px] text-white/80">{label}</div>
         <div className="flex items-center gap-2">
           <span className="flex-1 font-semibold truncate">{value}</span>
           <Icon name="editOutline" size={14} className="text-white/50 group-hover:text-white" />

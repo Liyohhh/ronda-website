@@ -1,18 +1,92 @@
 @import "tailwindcss";
 
-/* Blue theme: Tailwind's grays are replaced with blue-tinted neutrals (hue ~222, the RONDA navy),
-   so borders, muted text and light backgrounds all lean blue */
+/* Luxe & Elegant (18 Oct 2026, the owner's palette): velvet navy #222D52 for text, buttons and the dark bands, onyx
+   (onyx was tried for the band of numbers and dropped; that band is velvet with a champagne glow), champagne #D2B68A for the main buttons (velvet text, 6.9:1) and gold accents,
+   #E2CBA4 for champagne on dark, #6F5630 for gold text on light backgrounds (5.5:1 on silk), silk #EEE5D9 for
+   alternate sections and cards, marble #E8E4E0 and warm greys for borders and quiet fills, pearl white page.
+   Official line colours, open / closed and live bus colours keep their own meaning. Headings use a serif display
+   face (font-display). Token names (navy, gold, cream) are kept from earlier palettes. */
 @theme {
-  --color-gray-50: #f4f7fd;
-  --color-gray-100: #e9eff9;
-  --color-gray-200: #d9e2f2;
-  --color-gray-300: #bfcce4;
-  --color-gray-400: #8b9aba;
-  --color-gray-500: #5d6b90;
-  --color-gray-600: #485679;
-  --color-gray-700: #34405f;
-  --color-gray-800: #222c47;
-  --color-gray-900: #131b33;
+  --color-gray-50: #faf8f5;
+  --color-gray-100: #f1eeea;
+  --color-gray-200: #e8e4e0;
+  --color-gray-300: #d6d0c8;
+  --color-gray-400: #a39d95;
+  --color-gray-500: #6b655e;
+  --color-gray-600: #57524c;
+  --color-gray-700: #403c37;
+  --color-gray-800: #26231f;
+  --color-gray-900: #222D52;
+  --color-navy: #222D52;
+  --color-navy-deep: #18203D;
+  --color-gold: #D2B68A;
+  --color-gold-hover: #C2A374;
+  --color-gold-light: #E2CBA4;
+  --color-gold-deep: #6F5630;
+  --color-gold-soft: #F3EBDD;
+  --color-cream: #EEE5D9;
+  --color-navy-2: #2E3A66;
+  --color-band: #f1eeea;
+  --color-marble: #E8E4E0;
+  --color-onyx: #000000;
+  --color-accent: #222D52;
+  --color-accent-hover: #18203D;
+  --color-accent-light: #E2CBA4;
+  --color-accent-text: #222D52;
+  --color-blue-batik: #222D52;
+  --color-blue-batik-hover: #18203D;
+}
+
+/* Headings: a serif display face (Playfair Display when the device has it, else Georgia) */
+@utility font-display {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+}
+
+/* The accent word of a heading: italic, in a slowly moving band of deep gold (on light) or gold to champagne (on navy) */
+@keyframes aurora {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.accent-word {
+  font-style: italic;
+  color: #6F5630;
+  background-image: linear-gradient(135deg, #5E4826, #6F5630, #8C7046, #6F5630, #5E4826);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: aurora 10s ease-in-out infinite;
+}
+/* on velvet or onyx: champagne */
+.accent-word.on-dark {
+  color: #E2CBA4;
+  background-image: linear-gradient(135deg, #D2B68A, #E2CBA4, #F1E3C8, #E2CBA4, #D2B68A);
+}
+
+/* Gentle float for small cards over a photo */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.float-y { animation: float-y 5s ease-in-out infinite; }
+
+/* One page grid for the home page, header and footer (Blaze layout): every block starts on the same left edge.
+   Gutters 16 / 24 / 48 / 80 px, content at most 1280 px wide. */
+@utility wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    padding-inline: 3rem;
+  }
+  @media (min-width: 1280px) {
+    padding-inline: 5rem;
+  }
 }
 
 /* The site is designed light-only: keep native controls (inputs, scrollbars) light too */
@@ -22,25 +96,116 @@
 
 html {
   scroll-behavior: smooth;
-  /* in-page links (#download) stop below the sticky header: 64px row + services row on phones */
+  /* in-page links (#plan) stop below the sticky header: 64px row + menus row below 1280px */
   scroll-padding-top: 120px;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   html {
     scroll-padding-top: 80px;
   }
 }
 
+/* Blaze layout (design 4): white page, near-black text in RONDA navy, soft grey pills (#eef1f6) and panels (#f5f7fa),
+   big 32px corners, tight headline tracking. Inter when the device has it, else the system UI font (CSP: fonts are
+   self-hosted only). */
 body {
-  background: #f4f7fd;
-  color: #131b33;
+  background: #ffffff;
+  color: #222D52;
+  font-family: Inter, "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Fade-up on scroll (useReveal): hidden only once scripts have marked the page, so nothing is lost without them */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition: opacity 0.7s ease-out, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+  transition-delay: var(--reveal-delay, 0s);
+}
+.js-reveal .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Hero photo / video: starts slightly zoomed in and settles */
+@keyframes hero-settle {
+  from { transform: scale(1.12); }
+  to { transform: scale(1); }
+}
+.hero-settle {
+  animation: hero-settle 3.5s ease-in-out both;
+}
+
+/* Hero text: rises in line by line */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+.rise-in {
+  animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+
+/* Endless rows (LineMarquee): two copies of a row side by side, each moving by its own width */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+@keyframes marquee-right {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+@keyframes marquee-up {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
+.marquee-left { animation: marquee-left 45s linear infinite; }
+.marquee-right { animation: marquee-right 40s linear infinite; }
+.marquee-up { animation: marquee-up 30s linear infinite; }
+.marquee:hover .marquee-track,
+.marquee-v:hover .marquee-track { animation-play-state: paused; }
+
+/* Big headings whose words darken one by one as the page scrolls (WordFill) */
+.word-fill > span {
+  color: #222D52;
+  /* this word's share of the fill: 0 until the words before it are done, then up to 1 */
+  color: color-mix(in srgb, #222D52 calc(clamp(0, var(--p) * var(--n) - var(--i), 1) * 100%), #8A8A8A);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hero-settle,
+  .rise-in,
+  .marquee-track,
+  .accent-word,
+  .float-y {
+    animation: none;
+  }
+  /* rows stand still: let them wrap instead of running off the screen; the repeat copy is not needed */
+  .marquee {
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-inline: 16px;
+  }
+  .marquee .marquee-track { flex-wrap: wrap; justify-content: center; }
+  /* a long line name wraps inside its pill instead of running off a phone screen */
+  .marquee .marquee-track > li { max-width: 100%; }
+  .marquee .marquee-track > li > span:last-child { white-space: normal; }
+  .marquee .marquee-track[aria-hidden="true"],
+  .marquee-v .marquee-track[aria-hidden="true"] { display: none; }
 }
 
 @keyframes menu-in {
@@ -51,6 +216,71 @@ body {
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Home "Why RONDA?" dot map: hidden until the section is on screen, then dots fill in west to east and the
+   cities appear */
+.why-map .why-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  opacity: 0.9;
+}
+.why-map .why-city,
+.why-map .why-name {
+  opacity: 0;
+}
+.why-map .why-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+.why-map.is-playing .why-dot {
+  animation: why-dot-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.why-map.is-playing .why-city {
+  animation: why-fade-up 0.5s ease-out forwards;
+}
+.why-map.is-playing .why-pulse {
+  animation: why-pulse 2.8s ease-out infinite;
+}
+.why-map.is-playing .why-name {
+  animation: why-fade-up 0.6s ease-out 1.6s forwards;
+}
+@keyframes why-dot-in {
+  to { transform: scale(1); }
+}
+@keyframes why-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes why-pulse {
+  0% { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0; transform: scale(3.2); }
+}
+/* on phones the drawing is too small for every city name: only Kuala Lumpur keeps its label */
+@media (max-width: 639px) {
+  .why-map .why-label-small {
+    display: none;
+  }
+}
+/* riders who asked for less motion get the finished picture */
+@media (prefers-reduced-motion: reduce) {
+  .why-map .why-dot,
+  .why-map.is-playing .why-dot {
+    animation: none;
+    transform: none;
+  }
+  .why-map .why-city,
+  .why-map .why-name,
+  .why-map.is-playing .why-city,
+  .why-map.is-playing .why-name {
+    animation: none;
+    opacity: 1;
+  }
+  .why-map .why-pulse {
+    display: none;
   }
 }
 
@@ -81,7 +311,7 @@ body {
   display: block;
   width: 14px;
   height: 14px;
-  border: 2px solid #002472;
+  border: 2px solid #222D52;
   border-radius: 9999px;
   background: #fff;
   cursor: pointer;

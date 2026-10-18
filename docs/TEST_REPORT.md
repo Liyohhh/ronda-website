@@ -1,4 +1,168 @@
-# Test report - 7 Oct 2026
+# Test report
+
+## Latest run - 18 Oct 2026, night 3 (branch design-4-blaze, all pages, RONDA 300 map, Ainaa-style concept)
+
+- Home hero: "Malaysia" tried in the flag's colours (striped, then letter by letter) and set back to gold at the
+  owner's request.
+  Full e2e: 207 passed, 3 failed under heavy load (forgot password, open chat a11y, map tiles failing); all 3
+  passed when re-run alone.
+- Home "Everything you need for the journey", after how Transit, Citymapper, Omio and Bolt present features: a Live
+  map spotlight (navy card, live dot, gliding vehicles on three lines, "Open the live map"), then the ten features in
+  three groups (Plan your trip / Explore around stations / Made for you), each with one plain line on what it does
+  (4 languages; only what RONDA does today). Unit 210 / 210.
+- RONDA 300: the hand-picked "Places near …" list and "nearest stations with places" removed; before a search the
+  page shows a map of all 193 LRT / MRT / Monorail / BRT / ERL stations in their line colours (public.stops); pressing
+  a station opens it like the search (display name looked up the same way). E2E: new preview test, old curated-list
+  tests removed. Filter chips show each kind's icon in its colour instead of a dot; both RONDA 300 maps are labelled
+  as regions (they hold buttons). Unit 210 / 210; RONDA 300 + site specs 66 passed.
+- Fix (RONDA 300): the station suggestions were cut off by the header card; the card no longer clips (only when
+  it has a photo), so the list opens over the page. Checked: "klcc" lists 4 stops, picking LRT KLCC shows its places.
+- Live map: "Near me" checked with a test position (dot, accuracy ring, zoom to stops: works). The basemap's own
+  shop and restaurant icons removed from the live map (not pressable there, hid the buses; places near a station
+  are on RONDA 300). Unit 210 / 210; live, site and links specs passed.
+- Fix (live map): the map's panel sat above the header, so the header menus could not be clicked on /live; the map
+  now has its own layer under the header (checked: menu link over the panel opens, Back returns). /live redesigned:
+  map as an inset card with round corners, velvet control panel with a live dot, serif title, pill filter and gold
+  "Near me". Unit 210 / 210, e2e 212 passed.
+- Later still: the owner's "Luxe & Elegant" palette - velvet navy #222D52, champagne #D2B68A (buttons, velvet text
+  6.9:1), #E2CBA4 on dark, #6F5630 for gold text on light, silk #EEE5D9, marble #E8E4E0, warm greys, pearl white;
+  the band of numbers is velvet with a champagne glow (onyx tried and dropped); the app band has the phone preview
+  back, with two floating cards. Small dark-panel labels raised for contrast. Unit 210 / 210, e2e 212 passed.
+- Earlier: colours changed to petrol #0F2E35 / #16434C, sand #F3EEE6, copper #D08A4E (buttons), peach copper #F2B98A
+  (on petrol) and burnt sienna #9A4A1E (accent text on light); the Putra Mosque hero clip replaced by the KL
+  high-rise clip (night to morning, 4.6 MB). Unit 210 / 210 after the change.
+- Every inner page (Trails, trail pages, RONDA 300, Hub, About, Help, Account, dashboards, Services, Credits, 404)
+  now opens with the same inset navy card as Home (PageHero) and sits on the same page grid.
+- RONDA 300: search in the page header; after picking a station, the list of places (filter by kind, colour per
+  kind) beside a map that stays in view: the station in the middle, a dashed 300 m ring (about 5 min walk), every
+  place as a coloured dot; pointing at a place rings its dot, pressing a dot picks the place in the list.
+- Look after the Ainaa site the owner pointed to, in our own shades: serif headings with the last word in italic
+  shimmering gold, small gold labels between thin lines, sections alternating white / stone / navy, navy band with the
+  network in big numbers, features as stone cards, navy app band, white footer, plain-text header menus. Palette:
+  midnight navy, #1C3263, stone #F4F1EA, brass #C8963E (buttons), champagne #E3BE6E (on navy), deep bronze #8A6420
+  (gold text on light, 4.5:1).
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **210 / 210 passed**, 34 files |
+| Website end-to-end tests (Playwright, desktop + phone, incl. accessibility scan of 14 pages) | **212 passed, 0 failed**, 6 skipped |
+| RONDA 300 map | checked by eye at 1440 and 390 px with MRT Bukit Bintang (200 places), with the local map file |
+
+---
+
+## Run - 18 Oct 2026, night 2 (branch design-4-blaze, hero videos, ECRL, clean-up)
+
+- Hero: 5 KL / Putrajaya videos from the owner (Pexels; re-encoded to 720p MP4, 1.2-4.4 MB each, first frame as
+  poster) play one after another with a soft fade; slim bars top right switch them; phones and reduced motion keep
+  the photo.
+- About: ECRL "coming soon" card - 20 stations, phase 1 (Kota Bharu - ITT Gombak, target mid-Dec 2026) and phase 2
+  (to Jalan Kastam, service from Jan 2028), interchanges, "fares not announced yet", sources linked. The viral fare
+  poster was not used (The Star fact-check: not official).
+- Clean-up: rainbow stripes removed; section labels as small capitals with a gold dot; one heading scale; hero
+  without decorative chips; even trail row; feature slides off the page for now; navy line band and stats card;
+  cool blue-grey neutrals. Promotions and "Everything you need" made compact (banner + 3 small cards; 5 x 2 icon
+  tiles, each feature with its own colour and icon pair).
+- Later the same night: the line band quote is a large white quote signed with the white logo; feature tiles show
+  plain coloured icons (no tinted boxes or badges) at one even height; section labels are solid pills (navy, or
+  white on the dark band) with a gold dot. Unit 210 / 210, home + site e2e re-run passed.
+- Fix: pressing Search on the Lines tab with an empty box did nothing; it now opens the list of all lines.
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **210 / 210 passed**, 34 files (new: EcrlCard, HeroVideos) |
+| Website end-to-end tests (Playwright, desktop + phone) | **211 passed, 1 failed**, 6 skipped in the full run before the fix; after the fix, links + journey specs **19 passed** |
+
+---
+
+## Run - 18 Oct 2026, late (branch design-4-blaze, features band as a route)
+
+"Everything you need for the journey" redesigned: heading and the station-map drawing on the left (they stay in view
+on wide screens), the 10 features on the right as stops on a gold line, each with a station code (RD01-RD10), icon,
+name and arrow; pointing at a stop lights it gold. Same links and texts as before.
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **206 / 206 passed**, 32 files |
+| Website end-to-end tests (Playwright, desktop + phone) | **211 passed, 1 failed**, 6 skipped in the full run; the failed one ("every visible button does something", the trails "Next" arrow on /?tab=lines) **passed** when run again alone, so it is a timing flake under load, not a broken button |
+
+---
+
+## Run - 18 Oct 2026, night (branch design-4-blaze, cards, features band, footer)
+
+Promotion cards are now one solid card each (photo and text on one grey surface, no white backing or shadow), so the
+card on top covers the one below exactly while scrolling (checked frame by frame every 140 px). Features band rebuilt:
+tiles in one grid with even 1 px lines, hover fills the whole tile, "Coming soon" inside its tile; the drawing is now a
+station-map style diagram (straight lines, 45 degree bends, interchanges where lines meet) with a key of line names.
+Large RONDA wordmark removed from the footer.
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **206 / 206 passed**, 32 files |
+| Website end-to-end tests (Playwright, desktop + phone) | **212 passed, 0 failed**, 6 skipped (full run before the footer change); site, home and links specs re-run after it: **75 passed** |
+
+---
+
+## Run - 18 Oct 2026, evening (branch design-4-blaze, polish + Black & Gold)
+
+Design review fixes: one page grid (every block starts on the same 80 px line on wide screens: header, hero text,
+search card, sections, footer); promotion cards all the same size and sticking at the same place, so each one slides
+over the last and covers it fully (no more slivers of mismatched halves); word-by-word headings now fade smoothly
+(no re-render while scrolling); gentler fade-up; stations in the metro drawing sit on their lines. Colours moved to the
+Black & Gold set across the whole site: navy #14213D, gold #FCA311 for main actions (with navy text), platinum and
+neutral greys, black footer. Official line colours unchanged.
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **206 / 206 passed**, 32 files |
+| Website end-to-end tests (Playwright, desktop + phone, incl. accessibility scan of 14 pages) | **212 passed, 0 failed**, 6 skipped |
+| Visual check | full-page screenshots at 390, 1024, 1280, 1440 px; scroll frames every 200 px through the promotion cards; /trails, /login, /about checked for the new colours |
+
+---
+
+## Run - 18 Oct 2026 (branch design-4-blaze)
+
+New home page layout in the style of the Blaze travel template (white page, 32 px round corners, grey pills,
+fade-up and word-by-word headings, sticky stacked promotion cards, dark band and footer), themed on Malaysian rail:
+official line colours, a moving row of every line with its badge, a metro drawing. Text and data unchanged, except the
+slide 2 button label ("Explore stations"), which had gone missing on 15 Oct and is back in all 4 languages, and one new
+footer button "Back to top" (4 languages).
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **206 / 206 passed**, 32 files (new: Motion, LineMarquee; promotions arrows test replaced by stacked-cards test) |
+| Website end-to-end tests (Playwright, desktop + phone, incl. accessibility scan of 14 pages) | **212 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
+| Visual check (full-page screenshots at 375, 768, 1024, 1280, 1440 px; reduced motion too) | checked by eye: no overlap, no sideways scroll, long line names wrap on phones |
+| Trip-planner regression matrix | Not run (no planner or database change) |
+
+Notes: one earlier full run had 2 tests time out under load (journey "use my location", trails "See all trails");
+both passed alone and in the next two full runs. Production workbook (database repo `testing/build_report.py`) not
+regenerated: this branch is not deployed.
+
+---
+
+## Run - 15 Oct 2026 (branch design-2-blue-classic)
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **200 / 200 passed**, 30 files |
+| Website end-to-end tests (Playwright, desktop + phone) | **210 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
+| Trip-planner regression matrix (production, plan-trip v23) | **134 cases, 0 regressions** (2 improved), p95 276 ms |
+| Nightly route check (production, first run) | 56 trips + 186 nearby-station trips planned; 14 trips flagged for review (database repo `docs/ROUTE_QUALITY_PLAN.md`) |
+
+Changes covered since 7 Oct: hub pages, OSM places, one-line "Nearest", Why RONDA, least walking first, MyRapid line
+and bus icons, passes in fares, Fun & Activities trails (5 trails, 25 places on production since 15 Oct; Paintball and Karting, 3 more places, waiting
+for deploy). The full workbook is the database repo's `testing/RONDA_Test_Report.xlsx`.
+
+---
+
+## Earlier run - 7 Oct 2026
 
 Website `main` at `a713772`; database repository at `80044b8`; production Supabase project after the
 `trail_halal_fine_dining` and `ai_chat` migrations. All runs on 7 Oct 2026. How each layer works: `docs/TESTING.md`.
@@ -52,11 +216,32 @@ Line coverage of the website is 31% overall (most pages are covered end-to-end i
 minimum enforced in `vitest.config.ts` (90-100% of lines): RONDA 300 lookup, Help data, trails, chat service and
 widget, line tiles, feature tiles, promotions, Help page.
 
+- Home "Why RONDA?" map (15 Oct): redrawn as a dot map of Malaysia that fills in when scrolled into view, cities
+  marked, no transit lines; still picture for reduced motion; lint, typecheck, unit 198 and e2e 200 passed.
+
+- Trails (15 Oct, owner's pick): the full-photo card on Home and /trails; Home "See all trails" (was "Explore stations" to RONDA 300)
+  opens /trails with the same category; the trail page's back button returns to where the trail was opened; a
+  "Trail overview" under the header (stops, start and end station, plan a trip to the start, map beside them; map
+  under the facts on phones). Home map cities: official open timetables (data.gov.my).
+  Lint, typecheck, unit 198 and e2e 204 passed.
+
+- Photos (15 Oct): 42 stop photos and 5 trail covers added from Wikimedia Commons (free licences, credited, each
+  checked by eye); all trail pages load every picture (no broken images). 2 covers and 31 stops still have none
+  (database repo `docs/PICTURES_NEEDED.md`). Unit 200, e2e 210 passed.
+
+- Line badges (15 Oct): every line now uses our own vector badge in the style of MyRapid's line legend (one matching
+  set, sharp at any size); MyRapid's small icon files are kept on record but no longer shown. App badge files
+  (`public/lines`) re-exported. Unit 200, e2e 212 passed.
+
 ## Known gaps (not test failures)
 
 - KTM Komuter (Klang Valley) fares were added on 7 Oct after this report (smoke 48 / 48, regression 0 regressions);
   ETS / Intercity (flexible fares), Northern Komuter, Shuttle Selatan, Abdullah Hukum and Kajang 2 stay unpriced.
-- KTMB's published timetable ends 21 Oct 2026; an alert is open until KTMB publishes the next one.
+- KTMB publishes its timetable about two weeks ahead and moves the end date forward daily (29 Oct on 15 Oct); the
+  alert now fires 7 days before the end, so only if KTMB stops publishing.
+- API keys (15 Oct): database smoke checks pass 48/48 with the publishable key the website uses; backend functions
+  moved to the new secret key and deployed (plan-trip v24); regression 134/134, no change in results (database repo
+  `docs/API_KEYS.md`).
 - Live KTM positions: the official open feed carries ETS / intercity trainsets only (7 trains at 13:15 on 7 Oct),
   no Komuter.
 - No independent penetration test yet; native-speaker review of Malay, Chinese and Arabic pending (`docs/UAT.md`).

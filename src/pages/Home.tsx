@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import LinePicker from '../components/LinePicker'
 import LinePanel from '../components/LinePanel'
 import { LineGrid } from '../components/LineTiles'
@@ -8,25 +8,36 @@ import { useBusRoutes } from '../data/busRoutes'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
 import TrailsSection from '../components/TrailsSection'
-import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
-import NavyBand from '../components/NavyBand'
-import ReviewsSection from '../components/ReviewsSection'
+import FeatureBand from '../components/FeatureBand'
 import PromotionSection from '../components/PromotionSection'
+import LineMarquee from '../components/LineMarquee'
+import WhyRonda from '../components/WhyRonda'
+import ServicesSection from '../components/ServicesSection'
+import { SERVICES_ENABLED } from '../data/serviceOptions'
 import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type DepartAt, type Payment } from '../components/JourneyPanel'
 import { outOfReachMessage } from '../data/outOfReach'
 import SuggestionList from '../components/SuggestionList'
+import NearbyTransit from '../components/NearbyTransit'
 import { buildItems, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
 import { useLocate } from '../hooks/useLocate'
+import HeroVideos from '../components/HeroVideos'
+import { Accent } from '../components/Motion'
+
+// the hero videos play on wider screens only (phones keep the photo and their data), never with reduced motion
+const wantsHeroVideo = () =>
+  typeof window !== 'undefined' && !!window.matchMedia &&
+  window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)').matches
 
 const LIST_ID = 'place-suggestions'
 
 function Home() {
   const { t } = useLanguage()
   // /?tab=lines opens the Lines tab (the "All lines" link on line pages)
+  const [heroVideo] = useState(wantsHeroVideo)
   const [tab, setTab] = useState<'directions' | 'lines'>(() => (new URLSearchParams(window.location.search).get('tab') === 'lines' ? 'lines' : 'directions'))
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
@@ -77,6 +88,14 @@ function Home() {
       setParams({}, { replace: true })
       setEnd(shown)
       setEndStop({ name: shown, lat: toLat, lon: toLon })
+      // a start too (/?fromLat=&fromLon=&fromName=, e.g. from a hub page): both boxes filled, ready to search
+      const fromLat = Number(params.get('fromLat')), fromLon = Number(params.get('fromLon')), fromName = params.get('fromName')
+      if (fromName && params.get('fromLat') && params.get('fromLon') && Number.isFinite(fromLat) && Number.isFinite(fromLon)) {
+        setStart(fromName)
+        setStartStop({ name: fromName, lat: fromLat, lon: fromLon })
+        document.getElementById('plan')?.scrollIntoView({ block: 'start' })
+        return
+      }
       const startBox = document.getElementById('start-input')
       startBox?.scrollIntoView({ block: 'center' })
       startBox?.focus()
@@ -231,6 +250,12 @@ function Home() {
     setLineHi(-1)
   }
   const openFirstLine = () => {
+    // nothing typed yet: show every line to pick from instead of doing nothing
+    if (!line.trim()) {
+      setLineListOpen(true)
+      document.getElementById('line-input')?.focus()
+      return
+    }
     const found = matchLines(line, busLines)
     const l = found[lineHi >= 0 && lineHi < found.length ? lineHi : 0]
     if (l) pickLine(l)
@@ -344,61 +369,88 @@ function Home() {
     return () => { delete document.body.dataset.sidePanel }
   }, [sidePanel])
 
-  return (
-    <SiteLayout>
-      {/* Hero: KL skyline, only lightly darkened so the photo shows; a soft scrim behind the headline keeps the text
-          readable (contrast measured at 375 / 768 / 1440 px); the search card overlaps its bottom */}
-      <section className="relative overflow-x-clip">
-        {/* Photo behind the whole hero; the light strip in the card row hides its lower part,
-            so the photo always ends exactly halfway down the search card (pure CSS, any card height) */}
-        <div className="absolute inset-0 overflow-hidden bg-[#001233]" aria-hidden="true">
-          <picture>
-            <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-            <img
-              src="/Image/banner-kl.jpg"
-              alt=""
-              fetchPriority="high"
-              className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
-            />
-          </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#001233]/45 via-[#001233]/25 to-[#001233]/45" />
-        </div>
+  const searchButton = (
+    <button
+      onClick={() => handleSearch()}
+      disabled={loading}
+      className="w-14 h-14 rounded-full bg-gold hover:bg-gold-hover active:scale-95 transition text-[#222D52] flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(210_182_138/0.4)] disabled:opacity-60"
+      aria-label={t('searchAria')}
+    >
+      {loading ? (
+        <div className="w-5 h-5 border-2 border-[#222D52]/30 border-t-[#222D52] rounded-full animate-spin" />
+      ) : (
+        <Icon name="search" size={20} />
+      )}
+    </button>
+  )
 
-        <div className="relative max-w-6xl mx-auto px-4 pt-12 md:pt-16 text-center">
-          <div className="relative inline-block px-4 py-2">
-            {/* local scrim: darkens only behind the text, fading out at the edges */}
-            <div
-              className="absolute -inset-x-10 -inset-y-8 md:-inset-x-24 md:-inset-y-10 bg-[radial-gradient(ellipse_at_center,rgb(0_18_51/0.75)_0%,rgb(0_18_51/0.62)_50%,transparent_78%)]"
-              aria-hidden="true"
-            />
-            <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(0_18_51/0.7)]">
-              {t('bannerTitle')}
-            </h1>
-            <p className="relative mt-4 text-lg md:text-2xl text-white/95 [text-shadow:0_1px_12px_rgb(0_18_51/0.8)]">
-              {t('bannerSubtitle')}
-            </p>
+  return (
+    <SiteLayout darkEnd>
+      {/* Hero (Blaze layout): an inset card with rounded corners; the KL skyline photo starts slightly zoomed in and
+          settles, and on wider screens the hero videos play over it one after another (HeroVideos, with its station
+          line as the slide control); the headline sits bottom-left over a dark fade.
+          The search card overlaps the card's bottom edge. */}
+      <section className="relative pt-1">
+        <div className="hero-card relative mx-3 sm:mx-4 overflow-hidden rounded-[32px] bg-[#222D52] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.25)] min-h-[480px] md:min-h-[600px] lg:h-[76vh] lg:max-h-[760px] flex flex-col justify-end">
+          <div className="absolute inset-0 hero-settle" aria-hidden="true">
+            <picture>
+              <source srcSet="/Image/banner-kl.webp" type="image/webp" />
+              <img
+                src="/Image/banner-kl.jpg"
+                alt=""
+                fetchPriority="high"
+                className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
+              />
+            </picture>
+          </div>
+          {heroVideo && <HeroVideos />}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#18203D]/85 via-[#18203D]/30 to-[#18203D]/10" aria-hidden="true" />
+
+          <div className="relative px-6 sm:px-8 xl:px-16 pb-28 md:pb-32 pt-24 flex flex-col lg:flex-row lg:items-end justify-between gap-y-8 gap-x-10">
+            <div className="max-w-4xl text-start">
+              <h1 className="rise-in max-w-[820px] [text-wrap:balance] font-display text-[40px] sm:text-5xl md:text-[64px] lg:text-[84px] leading-[1.02] font-semibold tracking-[-0.02em] text-white drop-shadow-sm">
+                <Accent text={t('bannerTitle')} dark />
+              </h1>
+            </div>
+
+            <div className="rise-in lg:max-w-[440px] lg:flex-shrink-0 flex flex-col lg:items-end gap-5" style={{ '--rise-delay': '0.3s' } as CSSProperties}>
+              <p className="text-base md:text-lg font-medium leading-snug text-white/90 lg:text-end [text-wrap:balance]">{t('bannerSubtitle')}</p>
+              <ul className="flex flex-wrap lg:flex-nowrap lg:justify-end gap-2">
+                {([['directions', '/#plan', 'route'], ['lines', '/?tab=lines', 'train'], ['trails', '/trails', 'hiking']] as const).map(([key, to, icon]) => (
+                  <li key={key}>
+                    <Link to={to} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full bg-white/10 border border-white/25 backdrop-blur-xl text-sm font-medium text-white whitespace-nowrap hover:bg-white hover:text-[#222D52] transition-colors">
+                      <Icon name={icon} size={16} />
+                      {t(key)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        {/* Search card: half on the photo, half on the light page below it */}
-        <div className="relative z-20 mt-10 px-4 flex justify-center">
-          <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-gray-50" aria-hidden="true" />
-          <div id="plan" className="relative w-full max-w-6xl bg-white rounded-[2rem] shadow-2xl px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
+        {/* Search card: overlaps the bottom of the hero card */}
+        <div className="wrap relative z-20 -mt-16 md:-mt-20">
+          <div id="plan" className="relative w-full bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.22)] ring-1 ring-gray-100 px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
             {/* Tab switcher */}
             <div className="flex justify-center">
               <div className="flex bg-gray-100 rounded-full p-1">
                 <button
+                  type="button"
+                  aria-pressed={tab === 'directions'}
                   onClick={() => setTab('directions')}
                   className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
-                    tab === 'directions' ? 'bg-white text-black shadow' : 'text-gray-500'
+                    tab === 'directions' ? 'bg-[#222D52] text-white shadow-[0_4px_12px_rgb(34_45_82/0.2)]' : 'text-gray-600 hover:text-[#222D52]'
                   }`}
                 >
                   {t('directions')}
                 </button>
                 <button
+                  type="button"
+                  aria-pressed={tab === 'lines'}
                   onClick={() => setTab('lines')}
                   className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
-                    tab === 'lines' ? 'bg-white text-black shadow' : 'text-gray-500'
+                    tab === 'lines' ? 'bg-[#222D52] text-white shadow-[0_4px_12px_rgb(34_45_82/0.2)]' : 'text-gray-600 hover:text-[#222D52]'
                   }`}
                 >
                   {t('lines')}
@@ -409,18 +461,20 @@ function Home() {
             {/* Search bar + suggestions dropdown */}
             <div className="flex justify-center mt-4 relative">
               <div
-                className="w-full max-w-5xl relative"
+                className="w-full relative"
                 onBlur={(e) => {
                   // Lines tab: the dropdown stays open while focus moves inside it (box -> tiles)
                   if (tab === 'lines' && !e.currentTarget.contains(e.relatedTarget as Node | null)) setLineListOpen(false)
                 }}
               >
-                <div className="bg-white rounded-full shadow-lg border flex items-center pe-2.5">
+                {/* directions: Start and End are equal halves around the swap button, each with its own button at the end
+                    (my location / search), so the swap button sits in the middle */}
+                <div className={`bg-gray-50 rounded-3xl sm:rounded-full border border-gray-200 flex flex-wrap sm:flex-nowrap items-center ps-0 sm:ps-2.5 pe-2.5 ${tab === 'directions' ? 'sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]' : ''}`}>
                   {tab === 'directions' ? (
                     <>
-                      <div className="flex-1 flex items-center px-7 py-4">
+                      <div className="basis-full flex-1 flex items-center ps-5 pe-2.5 sm:pe-4 py-3 sm:py-4 border-b border-gray-100 sm:border-b-0 min-w-0">
                         <div className="flex-1">
-                          <div className="text-sm text-gray-500">{t('start')}</div>
+                          <div className="text-sm text-gray-600">{t('start')}</div>
                           <input
                             type="text"
                             value={start}
@@ -440,7 +494,7 @@ function Home() {
                             aria-activedescendant={activeField === 'start' && highlighted >= 0 ? `${LIST_ID}-${highlighted}` : undefined}
                             autoComplete="off"
                             placeholder={t('startPh')}
-                            className="w-full text-lg outline-none"
+                            className="w-full text-base sm:text-lg outline-none"
                           />
                         </div>
                         <button
@@ -449,7 +503,7 @@ function Home() {
                           disabled={loc.status === 'locating'}
                           aria-label={t('useMyLocation')}
                           title={t('useMyLocation')}
-                          className="ms-2 w-9 h-9 rounded-full text-[#002472] hover:bg-[#002472]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
+                          className="ms-2 w-9 h-9 rounded-full text-[#222D52] hover:bg-[#222D52]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
                         >
                           <Icon name="myLocation" size={20} />
                         </button>
@@ -458,15 +512,15 @@ function Home() {
                       <button
                         onClick={handleSwap}
                         disabled={!start.trim() && !end.trim()}
-                        className="w-12 h-12 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                        className="ms-3 sm:ms-0 my-2 sm:my-0 w-12 h-12 rounded-full bg-[#222D52] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                         aria-label={t('swapAria')}
                       >
                         <Icon name="swapVert" size={22} />
                       </button>
 
-                      <div className="flex-1 flex items-center px-7 py-4">
-                        <div className="flex-1">
-                          <div className="text-sm text-gray-500">{t('end')}</div>
+                      <div className="flex-1 flex items-center min-w-0">
+                        <div className="flex-1 min-w-0 ps-4 pe-3 py-3 sm:py-4">
+                          <div className="text-sm text-gray-600">{t('end')}</div>
                           <input
                             type="text"
                             id="end-input"
@@ -486,15 +540,16 @@ function Home() {
                             aria-activedescendant={activeField === 'end' && highlighted >= 0 ? `${LIST_ID}-${highlighted}` : undefined}
                             autoComplete="off"
                             placeholder={t('endPh')}
-                            className="w-full text-lg outline-none"
+                            className="w-full text-base sm:text-lg outline-none"
                           />
                         </div>
+                        {searchButton}
                       </div>
                     </>
                   ) : (
-                    <div className="flex-1 flex items-center px-7 py-4">
+                    <div className="flex-1 flex items-center ps-5 pe-4 py-4">
                       <div className="flex-1">
-                        <div className="text-sm text-gray-500">{t('line')}</div>
+                        <div className="text-sm text-gray-600">{t('line')}</div>
                         <input
                           type="text"
                           id="line-input"
@@ -520,18 +575,7 @@ function Home() {
                     </div>
                   )}
 
-                  <button
-                    onClick={() => handleSearch()}
-                    disabled={loading}
-                    className="w-14 h-14 rounded-full bg-[#002472] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
-                    aria-label={t('searchAria')}
-                  >
-                    {loading ? (
-                      <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <Icon name="search" size={20} />
-                    )}
-                  </button>
+                  {tab !== 'directions' && searchButton}
                 </div>
 
                 {/* Suggestions: stations & stops first, then any place (OpenStreetMap) */}
@@ -571,31 +615,35 @@ function Home() {
                 {formError && (
                   <div className="mt-3 bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{formError}</div>
                 )}
+
+                {/* Near you: nearest train stations and bus stops; picking one makes it the Start */}
+                {tab === 'directions' && (
+                  <NearbyTransit
+                    onPick={(p) => {
+                      setStart(p.name)
+                      setStartStop(p)
+                      setFormError('')
+                      document.getElementById('end-input')?.focus()
+                    }}
+                  />
+                )}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Below the search: trails (Explore), promotions (ads), the feature slides as a white card that sits over
-          the top of the navy band, the feature tiles in the band, then rider reviews (app banner + footer follow in SiteLayout) */}
+      {/* Below the search: RONDA 300 trails, promotions (ads), Why RONDA, services (chauffeur and transfers, hidden until
+          SERVICES_ENABLED), then the feature tiles in the dark band (footer follows in SiteLayout). The feature slides
+          (FeatureCarousel) are off the page for now (owner, 18 Oct 2026). */}
       <TrailsSection />
       <PromotionSection />
-      <FeatureCarousel
-        onPlan={() => {
-          setTab('directions')
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-          setTimeout(() => document.getElementById('start-input')?.focus({ preventScroll: true }), 400)
-        }}
-        onLines={() => {
-          setTab('lines')
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        }}
-      />
-      <NavyBand overlap>
+      <LineMarquee />
+      <WhyRonda />
+      {SERVICES_ENABLED && <ServicesSection />}
+      <FeatureBand>
         <FeatureGrid />
-      </NavyBand>
-      <ReviewsSection />
+      </FeatureBand>
 
       {/* Line stations in the right-side panel; "Plan a trip here" fills the End box */}
       {pickedLine && (

@@ -19,8 +19,10 @@ for (const width of [375, 768, 1440]) {
   await page.goto(BASE + '/')
   await page.waitForFunction(() => { const i = document.querySelector('picture img'); return !!i && i.complete && i.naturalWidth > 0 })
   await page.waitForTimeout(300)
-  for (const [sel, name, alpha, need] of [['main h1, h1', 'headline', 1, 3], ['h1 + p', 'subtitle', 0.95, 4.5]]) {
+  for (const [sel, name, alpha] of [['main h1, h1', 'headline', 1], ['h1 + p', 'subtitle', 0.95]]) {
     const el = page.locator(sel).first()
+    // WCAG: large text (24px+, or 18.66px+ bold) needs 3:1, other text 4.5:1
+    const need = await el.evaluate((n) => { const s = getComputedStyle(n); const px = parseFloat(s.fontSize), w = Number(s.fontWeight); return px >= 24 || (px >= 18.66 && w >= 700) ? 3 : 4.5 })
     await el.evaluate((n) => { n.style.color = 'transparent'; n.style.textShadow = 'none' })
     const png = await el.screenshot()
     await el.evaluate((n) => { n.style.color = ''; n.style.textShadow = '' })

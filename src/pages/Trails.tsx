@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import PageHero from '../components/PageHero'
 import TrailCard from '../components/TrailCard'
 import CategoryPills, { type CategoryFilter } from '../components/CategoryPills'
 import { categoriesFor, isCategoryShown } from '../data/trails'
@@ -20,14 +21,9 @@ function Trails() {
 
   return (
     <SiteLayout>
-      <section className="bg-[#002472] text-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
-          <h1 className="text-3xl md:text-4xl font-bold">{t('trailsTitle')}</h1>
-          <p className="mt-2 text-white/75 max-w-xl">{t('trailsSubtitle')}</p>
-        </div>
-      </section>
+      <PageHero back={{ to: '/', label: t('backToHome') }} eyebrow={t('trails')} title={t('trailsTitle')} intro={t('trailsSubtitle')} />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <div className="wrap py-8">
         <CategoryPills value={category} onChange={setCategory} />
 
         {!data ? (
@@ -37,7 +33,7 @@ function Trails() {
             {t('noTrailsInCategory')}
           </div>
         ) : (
-          <ul className="mt-6 grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <ul className="mt-6 grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {trails.map((trail) => (
               <li key={trail.slug} className="flex">
                 <TrailCard trail={trail} places={data.places} className="w-full" />

@@ -1,14 +1,22 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
+import { TRAIL_MAPS } from '../data/trailMaps'
+import { HoursStatus, HoursWeek } from '../components/PlaceHours'
 import { TRAIL_PHOTOS } from '../data/trailPhotos'
+import { PLACE_PHOTOS } from '../data/placePhotos'
+import { CATEGORY_STYLE } from '../data/trailStyles'
 import LineBadge from '../components/LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
+import BackButton from '../components/BackButton'
+import { Eyebrow } from '../components/Motion'
 import { useTrails } from '../hooks/useTrails'
 import {
   categoryKey,
+  cuisineKey,
+  dietKey,
   findTrail,
   placeBlurbKey,
   trailDescKey,
@@ -17,17 +25,18 @@ import {
   type Station,
 } from '../data/trails'
 
+// Rapid KL stop ids are the station codes riders see (KJ10, KG18A); other feeds use internal numbers
+const stationCode = (s: Station) => (s.feedId === 'rapid-rail-kl' && s.stopId ? s.stopId : null)
+
 // Home opens with the End box filled in: /?to=<exact search name>&toName=<shown name>
 const planHref = (s: Station) => `/?to=${encodeURIComponent(s.search)}&toName=${encodeURIComponent(s.name)}`
 
+// back to where the trail was opened: Home's trail row, or /trails with its category; all trails otherwise
 function BackLink() {
   const { t } = useLanguage()
-  return (
-    <Link to="/trails" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#002472] hover:underline">
-      <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
-      {t('backToTrails')}
-    </Link>
-  )
+  const from = (useLocation().state as { from?: string } | null)?.from
+  if (from === '/') return <BackButton to="/#explore" label={t('backToHome')} />
+  return <BackButton to={from?.startsWith('/trails') ? from : '/trails'} label={t('backToTrails')} />
 }
 
 function TrailDetail() {
@@ -50,7 +59,7 @@ function TrailDetail() {
     return (
       <SiteLayout>
         <div className="max-w-xl mx-auto px-4 py-20 text-center">
-          <div className="mx-auto w-14 h-14 rounded-full bg-[#002472]/10 text-[#002472] flex items-center justify-center" aria-hidden="true">
+          <div className="mx-auto w-14 h-14 rounded-full bg-[#222D52]/10 text-[#222D52] flex items-center justify-center" aria-hidden="true">
             <Icon name="searchOff" size={26} />
           </div>
           <h1 className="mt-4 text-2xl font-bold text-gray-900">{t('trailNotFound')}</h1>
@@ -63,89 +72,228 @@ function TrailDetail() {
     )
   }
 
+  // overview under the header: the trail's facts (stops, where it starts and ends, plan a trip to the start) beside
+  // its map picture when there is one; on a phone the map goes under the facts. Then the stops.
+  const map = TRAIL_MAPS[trail.slug]
+  const stations = trail.stops.map((s) => data.places[s.placeId]?.station).filter((x): x is Station => !!x)
+  const start = stations[0], end = stations[stations.length - 1]
+  const box = 'max-w-4xl'
+  const stationRow = (label: string, s: Station) => (
+    <div>
+      <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</dt>
+      <dd className="mt-1 flex items-center gap-2 min-w-0">
+        <span className="flex -space-x-1 rtl:space-x-reverse flex-shrink-0">
+          {s.lineIds.map((id) => (
+            <span key={id} className="rounded-md ring-2 ring-white">
+              <LineBadge line={id} size={20} decorative />
+            </span>
+          ))}
+        </span>
+        <span className="font-semibold text-gray-900 truncate">{s.name}</span>
+      </dd>
+    </div>
+  )
+
   return (
     <SiteLayout>
       {/* Cover banner */}
-      <section className="relative h-56 md:h-72 overflow-hidden">
+      <section className="relative mx-3 sm:mx-4 mt-1 h-64 md:h-[360px] overflow-hidden rounded-[32px]">
         <TrailCover trail={trail} />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#001233]/90 via-[#001233]/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#222D52]/90 via-[#222D52]/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-6 text-white">
-            <span className="inline-block bg-white/15 backdrop-blur text-[11px] font-bold uppercase tracking-wide px-3 py-1 rounded-full">
-              {t(categoryKey(trail.category))}
-            </span>
-            <h1 className="mt-2 text-3xl md:text-4xl font-bold">{t(trailNameKey(trail))}</h1>
+          <div className={`${box} mx-auto px-6 sm:px-10 pb-8 text-white`}>
+            <Eyebrow tone="dark">{t(categoryKey(trail.category))}</Eyebrow>
+            <h1 className="mt-4 [text-wrap:balance] text-[34px] md:text-[52px] leading-[1.05] font-semibold tracking-[-0.035em]">{t(trailNameKey(trail))}</h1>
             <p className="mt-1 text-white/85">{t(trailDescKey(trail))}</p>
           </div>
         </div>
         {TRAIL_PHOTOS[trail.slug] && (
-          <p className="absolute top-2 end-3 text-[10px] text-white/70">
+          <p className="absolute top-4 end-5 rounded-full bg-black/35 px-2.5 py-0.5 text-[10px] text-white/80 backdrop-blur-sm">
             {t('photoLabel')}: <PhotoCredit photo={TRAIL_PHOTOS[trail.slug]} />
           </p>
         )}
       </section>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <div className={`${box} mx-auto px-4 sm:px-6 pt-8`}>
         <BackLink />
+      </div>
 
-        <h2 className="mt-6 text-lg font-semibold text-gray-900">
-          {t('trailStops')} <span className="text-gray-500 font-normal">· {t('stopsCount').replace('{n}', String(trail.stops.length))}</span>
-        </h2>
+      <section aria-labelledby="trail-overview" className={`${box} mx-auto px-4 sm:px-6 mt-6`}>
+        <div className={`rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden ${map ? 'md:grid md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]' : ''}`}>
+          <div className="p-5 flex flex-col">
+            <h2 id="trail-overview" className="text-base font-semibold text-gray-900">{t('trailOverview')}</h2>
+            <dl className="mt-4 space-y-4 text-sm">
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">{t('trailStops')}</dt>
+                <dd className="mt-1 font-semibold text-gray-900">{t('stopsCount').replace('{n}', String(trail.stops.length))}</dd>
+              </div>
+              {start && stationRow(t('trailStartLabel'), start)}
+              {end && end.name !== start?.name && stationRow(t('trailEndLabel'), end)}
+            </dl>
+            <div className="mt-5 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-2 md:mt-auto">
+              {start && (
+                <Link
+                  to={planHref(start)}
+                  className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#222D52] text-white text-sm font-semibold hover:bg-[#18203D] transition-colors"
+                >
+                  <Icon name="locationOnOutline" size={16} />
+                  {t('planToStart')}
+                </Link>
+              )}
+              {map && (
+                <a href={map.jpg} target="_blank" rel="noopener" className="inline-flex items-center gap-1 text-sm font-semibold text-[#222D52] hover:underline">
+                  {t('openFullMap')}
+                  <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+                </a>
+              )}
+            </div>
+          </div>
+          {map && (
+            // tap the map to open it full size
+            <a href={map.jpg} target="_blank" rel="noopener" aria-label={t('trailMapTitle')} className="block bg-gray-100 border-t md:border-t-0 md:border-s border-gray-200">
+              <picture>
+                <source srcSet={map.webp} type="image/webp" />
+                <img src={map.jpg} alt={map.alt} width={1800} height={1200} loading="lazy" className="block w-full h-full object-cover" />
+              </picture>
+            </a>
+          )}
+        </div>
+      </section>
 
-        <ol className="mt-4">
-          {trail.stops.map((stop, i) => {
-            const place = data.places[stop.placeId]
-            const last = i === trail.stops.length - 1
-            const newDay = stop.day && stop.day !== trail.stops[i - 1]?.day
-            return (
-              <li key={`${stop.placeId}-${i}`} className="relative flex gap-4 pb-6 last:pb-0">
-                {/* numbered dot + connecting line */}
-                {!last && <span className="absolute start-4 top-9 bottom-0 w-0.5 -translate-x-1/2 rtl:translate-x-1/2 bg-[#002472]/15" aria-hidden="true" />}
-                <span className="relative z-10 w-8 h-8 rounded-full bg-[#002472] text-white text-sm font-bold flex items-center justify-center flex-shrink-0">
-                  {i + 1}
-                </span>
+      <div className={`${box} mx-auto px-4 sm:px-6 pb-10 mt-8`}>
+        <div className="min-w-0">
+          <h2 className="text-lg font-semibold text-gray-900">
+            {t('trailStops')} <span className="text-gray-500 font-normal">· {t('stopsCount').replace('{n}', String(trail.stops.length))}</span>
+          </h2>
 
-                <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-4">
-                  {newDay && (
-                    <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#86672a] bg-[#C9A45C]/15 px-2 py-0.5 rounded">
-                      {t(weekdayKey(stop.day!))}
+          <ol className="mt-4">
+            {trail.stops.map((stop, i) => {
+              const place = data.places[stop.placeId]
+              const last = i === trail.stops.length - 1
+              const newDay = stop.day && stop.day !== trail.stops[i - 1]?.day
+              return (
+                <li key={`${stop.placeId}-${i}`} className="relative flex gap-4 pb-6 last:pb-0">
+                  {/* numbered dot + connecting line */}
+                  {!last && <span className="absolute start-4 top-9 bottom-0 w-0.5 -translate-x-1/2 rtl:translate-x-1/2 bg-[#222D52]/15" aria-hidden="true" />}
+                  <span className="relative z-10 w-8 h-8 rounded-full bg-[#222D52] text-white text-sm font-bold flex items-center justify-center flex-shrink-0">
+                    {i + 1}
+                  </span>
+
+                  <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-3 flex flex-col sm:flex-row-reverse gap-4">
+                    {/* details on the left, photo on the right (category cover when the place has no free photo); photo on top on a phone */}
+                    <div className="relative flex-shrink-0 w-full aspect-[4/3] sm:aspect-auto sm:w-56 md:w-64 sm:min-h-44 rounded-xl overflow-hidden">
+                      {PLACE_PHOTOS[place.id] ? (
+                        <>
+                          <img src={PLACE_PHOTOS[place.id].src} alt={place.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" style={PLACE_PHOTOS[place.id].focus ? { objectPosition: PLACE_PHOTOS[place.id].focus } : undefined} />
+                          <p className="absolute inset-x-0 bottom-0 px-2 py-1 text-[9px] leading-tight text-white/90 bg-gradient-to-t from-black/60 to-transparent truncate">
+                            {t('photoLabel')}: <PhotoCredit photo={PLACE_PHOTOS[place.id]} />
+                          </p>
+                        </>
+                      ) : (
+                        <div
+                          aria-hidden="true"
+                          className="absolute inset-0 flex items-center justify-center"
+                          style={{ backgroundImage: `linear-gradient(135deg, ${CATEGORY_STYLE[trail.category].from} 10%, ${CATEGORY_STYLE[trail.category].to})` }}
+                        >
+                          <Icon name={CATEGORY_STYLE[trail.category].icon} size={44} className="text-white/85" />
+                        </div>
+                      )}
                     </div>
-                  )}
-                  <h3 className="font-semibold text-gray-900">{place.name}</h3>
-                  <p className="mt-1 text-sm text-gray-600">{t(placeBlurbKey(place.id))}</p>
 
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                    {place.station ? (
-                      <div className="flex items-center gap-2 text-sm min-w-0">
-                        <span className="flex -space-x-1 rtl:space-x-reverse">
-                          {place.station.lineIds.map((id) => (
-                            <span key={id} className="rounded-md ring-2 ring-white">
-                              <LineBadge line={id} size={22} decorative />
+                    <div className="flex-1 min-w-0 flex flex-col sm:py-1 sm:ps-1">
+                      {newDay && (
+                        <div className="inline-block mb-2 text-[11px] font-bold uppercase tracking-wide text-[#222D52] bg-[#222D52]/10 px-2 py-0.5 rounded">
+                          {t(weekdayKey(stop.day!))}
+                        </div>
+                      )}
+                      <h3 className="text-lg font-semibold text-gray-900 leading-snug">{place.name}</h3>
+                      {place.address && <p className="mt-0.5 text-xs text-gray-500">{place.address}</p>}
+                      {(place.cuisine || place.dietary) && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {place.cuisine && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F3EBDD] px-2.5 py-0.5 text-xs font-semibold text-[#222D52]">
+                              <Icon name="restaurant" size={13} />
+                              {t(cuisineKey(place.cuisine))}
                             </span>
-                          ))}
-                        </span>
-                        <span className="text-gray-500">{t('nearestStation')}:</span>
-                        <span className="font-medium text-gray-900 truncate">{place.station.name}</span>
-                      </div>
-                    ) : (
-                      <span className="text-sm text-gray-500 italic">{t('stationTbc')}</span>
-                    )}
+                          )}
+                          {place.dietary && (
+                            <span
+                              className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                                place.dietary === 'halal' || place.dietary === 'muslim_friendly'
+                                  ? 'bg-[#E7F6EC] text-[#15803D]'
+                                  : place.dietary === 'non_halal'
+                                    ? 'bg-[#FDE9E9] text-[#B91C1C]'
+                                    : 'bg-[#FDF3E2] text-[#92400E]'
+                              }`}
+                            >
+                              {t(dietKey(place.dietary))}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      <p className="mt-2 text-sm text-gray-600 leading-relaxed">{t(placeBlurbKey(place.id))}</p>
 
-                    {place.station && (
-                      <Link
-                        to={planHref(place.station)}
-                        className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#002472] text-white text-sm font-semibold hover:bg-[#001a55] transition-colors"
-                      >
-                        <Icon name="locationOnOutline" size={16} />
-                        {t('planTripHere')}
-                      </Link>
-                    )}
+                      {/* facts, one per row with an icon: where to get off, the walk from there, the week's hours */}
+                      <ul className="mt-3 space-y-1.5 text-sm text-gray-700">
+                        {place.station ? (
+                          <li className="flex items-center gap-2 min-w-0">
+                            <span className="flex -space-x-1 rtl:space-x-reverse flex-shrink-0">
+                              {place.station.lineIds.map((id) => (
+                                <span key={id} className="rounded-md ring-2 ring-white">
+                                  <LineBadge line={id} size={20} decorative />
+                                </span>
+                              ))}
+                            </span>
+                            <span className="truncate">
+                              <span className="text-gray-500">{t('getOffAt')}</span>{' '}
+                              <span className="font-semibold text-gray-900">{place.station.name}</span>
+                            </span>
+                            {stationCode(place.station) && (
+                              <span className="flex-shrink-0 text-[11px] font-semibold text-gray-600 border border-gray-300 rounded px-1">{stationCode(place.station)}</span>
+                            )}
+                          </li>
+                        ) : (
+                          <li className="text-gray-500 italic">{t('stationTbc')}</li>
+                        )}
+                        {place.station && place.walkMeters != null && (
+                          <li className="flex items-center gap-2">
+                            <span className="w-5 flex justify-center flex-shrink-0"><Icon name="directionsWalk" size={18} className="text-gray-500" /></span>
+                            {t('walkFromStation').replace('{m}', String(place.walkMeters)).replace('{n}', String(Math.max(1, Math.round(place.walkMeters / 80))))}
+                          </li>
+                        )}
+                        {place.openingHours && (
+                          <li className="flex items-center gap-2">
+                            <span className="w-5 flex justify-center flex-shrink-0"><Icon name="scheduleOutline" size={18} className="text-gray-500" /></span>
+                            <HoursWeek hours={place.openingHours} />
+                          </li>
+                        )}
+                      </ul>
+
+                      {/* footer: plan button, and whether it's open right now */}
+                      <div className="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                        {place.station ? (
+                          <Link
+                            to={planHref(place.station)}
+                            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#222D52] text-white text-sm font-semibold hover:bg-[#18203D] transition-colors"
+                          >
+                            <Icon name="locationOnOutline" size={16} />
+                            {t('planTripHere')}
+                          </Link>
+                        ) : (
+                          <span />
+                        )}
+                        {place.openingHours && <HoursStatus hours={place.openingHours} />}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </li>
-            )
-          })}
-        </ol>
+                </li>
+              )
+            })}
+          </ol>
+          <p className="mt-6 text-xs text-gray-500">
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="hover:underline">{t('placeInfoCredit')}</a>
+          </p>
+        </div>
       </div>
     </SiteLayout>
   )

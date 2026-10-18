@@ -66,7 +66,7 @@ export type Leg = {
 export type Platform = { station: string; stop_id: string; platform_code: string | null; level_name: string | null }
 export type Entrance = { ref: string | null; name: string | null; wheelchair: boolean | null; level_name: string | null }
 export type OtherLine = { feed_id: string; route_id: string; name: string | null; route_short_name: string | null; colour: string | null }
-export type Stop = { name: string; stop_id?: string; code?: string | null; time: string; estimated?: boolean; is_interchange?: boolean; other_lines?: OtherLine[] }
+export type Stop = { name: string; stop_id?: string; code?: string | null; lat?: number; lon?: number; time: string; estimated?: boolean; is_interchange?: boolean; other_lines?: OtherLine[] }
 
 export type Tag = 'fastest' | 'fewest_changes' | 'least_walking' | 'cheapest' | 'no_exit' | 'uses_airport_rail'
 
@@ -108,13 +108,16 @@ type Props = {
 
 type SortKey = 'fastest' | 'priceLow' | 'priceHigh' | 'transfers' | 'walking'
 
-const GOLD = '#C9A45C'
+const GOLD = '#222D52'
 
 // ---------- helpers ----------
 
 const isBus = (leg: Leg) => leg.route_type === 3
 
 // Badge artwork for a ride: the rail line's official badge, or a bus badge in the route's GTFS colour
+// KTM ETS and Intercity rides with no fare from us: tickets (with seats) are bought from KTMB
+const bookOnKtmb = (leg: Leg) => leg.feed_id === 'ktmb' && /^KTM (ETS|Intercity)/i.test(leg.hop ?? '') && (!leg.fare || leg.fare.amount === null)
+
 function legLine(leg: Leg): Line {
   const line = leg.feed_id && leg.route_id ? lineForRoute(leg.feed_id, leg.route_id) : undefined
   if (line) return line
@@ -246,13 +249,13 @@ function Highlight({ tags }: { tags?: Tag[] }) {
   const { t } = useLanguage()
   const has = (x: Tag) => tags?.includes(x)
   const pick: [TranslationKey, string] | null = has('fastest')
-    ? ['tagFastest', 'bg-[#002472] text-white']
+    ? ['tagFastest', 'bg-[#222D52] text-white']
     : has('least_walking')
       ? ['hlEasiest', 'bg-emerald-600 text-white']
       : has('fewest_changes')
-        ? ['tagFewestChanges', 'bg-[#C9A45C] text-[#131b33]']
+        ? ['tagFewestChanges', 'bg-[#F3EBDD] text-[#222D52]']
         : has('cheapest')
-          ? ['tagCheapest', 'bg-[#C9A45C] text-[#131b33]']
+          ? ['tagCheapest', 'bg-[#F3EBDD] text-[#222D52]']
           : null
   if (!pick) return null
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${pick[1]}`}>{t(pick[0])}</span>
@@ -267,7 +270,7 @@ function Tags({ tags }: { tags?: Tag[] }) {
         <span
           key={tag}
           className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-            tag === 'uses_airport_rail' ? 'bg-amber-50 text-amber-800' : tag === 'no_exit' ? 'bg-emerald-50 text-emerald-800' : 'bg-[#002472]/8 text-[#002472]'
+            tag === 'uses_airport_rail' ? 'bg-amber-50 text-amber-800' : tag === 'no_exit' ? 'bg-emerald-50 text-emerald-800' : 'bg-[#222D52]/8 text-[#222D52]'
           }`}
         >
           {t(TAG_LABEL[tag])}
@@ -280,7 +283,7 @@ function Tags({ tags }: { tags?: Tag[] }) {
 // Material Icons "accessible" (Apache 2.0), same set as the app
 function WheelchairIcon({ label }: { label: string }) {
   return (
-    <Icon name="accessible" size={16} className="inline-block text-[#002472]" label={label} />
+    <Icon name="accessible" size={16} className="inline-block text-[#222D52]" label={label} />
   )
 }
 
@@ -291,7 +294,7 @@ function EntranceLine({ entrance, kind }: { entrance: Entrance; kind: 'enter' | 
     ? t(kind === 'enter' ? 'enterAt' : 'exitAt').replace('{ref}', entrance.ref)
     : t(kind === 'enter' ? 'enterStation' : 'exitStation')
   return (
-    <div className="mt-1 inline-flex items-center gap-1.5 rounded-lg bg-[#002472]/5 px-2 py-1 text-sm font-medium text-[#002472]">
+    <div className="mt-1 inline-flex items-center gap-1.5 rounded-lg bg-[#222D52]/5 px-2 py-1 text-sm font-medium text-[#222D52]">
       {text}
       {entrance.wheelchair && <WheelchairIcon label={t('stepFree')} />}
     </div>
@@ -355,7 +358,13 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
           <span className="text-base font-semibold text-gray-900">{placeName(leg.from)}</span>
         )}
         {legSubLabel(leg) && <span className="text-xs text-gray-500">{legSubLabel(leg)}</span>}
-        {leg.fare && leg.fare.amount === null && (
+        {/* KTM ETS / Intercity: seat tickets sold by KTMB, fares not loaded (checklist G2-05): send riders to KTMB */}
+        {bookOnKtmb(leg) && (
+          <a href="https://www.ktmb.com.my/" target="_blank" rel="noopener noreferrer" className="ms-auto text-xs font-semibold text-[#222D52] underline">
+            {t('fareBookKtmb')}
+          </a>
+        )}
+        {!bookOnKtmb(leg) && leg.fare && leg.fare.amount === null && (
           <span className="ms-auto text-xs text-gray-500" title={leg.fare.note}>
             {t('fareUnknown')}
           </span>
@@ -423,7 +432,7 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
           type="button"
           onClick={() => setOpen(!open)}
           aria-expanded={open}
-          className="mt-2 inline-flex items-center gap-1 text-sm text-gray-600 hover:text-[#002472]"
+          className="mt-2 inline-flex items-center gap-1 text-sm text-gray-600 hover:text-[#222D52]"
         >
           <Icon name="chevronRight" size={14} className={`transition-transform ${open ? 'rotate-90' : 'rtl:rotate-180'}`} />
           {(n === 1 ? t('rideOneStop') : t('rideStops').replace('{n}', String(n))).replace('{dur}', formatDuration(leg.duration_min, t))}
@@ -464,7 +473,8 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
 
 function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [], notice, resident, onResidentChange, payment, onPaymentChange, departAt, onDepartChange, onPlacesChange, onClose }: Props) {
   const { t, lang } = useLanguage()
-  const [sort, setSort] = useState<SortKey>('fastest')
+  // least walking first by default (owner, 15 Oct 2026); the other orders are one tap away
+  const [sort, setSort] = useState<SortKey>('walking')
   const [detail, setDetail] = useState<TripOption | null>(null)
   const [showMore, setShowMore] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -502,10 +512,10 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   const placeName = (p: Place) => (p.name === 'Start' ? from : p.name === 'Destination' ? to : p.name)
 
   const pills: { key: SortKey; label: string }[] = [
+    { key: 'walking', label: t('sortLeastWalking') },
     { key: 'fastest', label: t('sortFastest') },
     { key: sort === 'priceHigh' ? 'priceHigh' : 'priceLow', label: sort === 'priceHigh' ? t('sortPriceHigh') : t('sortPriceLow') },
     { key: 'transfers', label: t('sortFewestTransfers') },
-    { key: 'walking', label: t('sortLeastWalking') },
   ]
   const onPill = (key: SortKey) => {
     // tapping the price pill again flips low <-> high
@@ -521,7 +531,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
       <li key={`${o.departure}-${o.arrival}-${o.hops.join()}-${i}`}>
         <button
           onClick={() => setDetail(o)}
-          className="w-full text-start bg-white rounded-2xl border border-gray-200 p-4 hover:border-[#002472]/50 hover:shadow-md transition"
+          className="w-full text-start bg-white rounded-2xl border border-gray-200 p-4 hover:border-[#222D52]/50 hover:shadow-md transition"
         >
           <div className="flex items-baseline justify-between gap-3">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -532,7 +542,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                 <Tags tags={o.tags} />
               </div>
               {o.next_day && (
-                <span className="ms-2 align-middle inline-block rounded-full bg-[#002472]/10 text-[#002472] text-[11px] font-semibold px-2 py-0.5">
+                <span className="ms-2 align-middle inline-block rounded-full bg-[#222D52]/10 text-[#222D52] text-[11px] font-semibold px-2 py-0.5">
                   {t('tomorrow')}
                 </span>
               )}
@@ -563,7 +573,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={t('yourJourney')}>
       {/* Backdrop */}
-      <div onClick={onClose} className="absolute inset-0 bg-[#001233]/30 backdrop-blur-[2px] transition-opacity duration-200 starting:opacity-0" />
+      <div onClick={onClose} className="absolute inset-0 bg-[#222D52]/30 backdrop-blur-[2px] transition-opacity duration-200 starting:opacity-0" />
 
       {/* Side panel on desktop, bottom sheet on mobile */}
       <div
@@ -573,7 +583,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
           md:starting:translate-y-0 md:starting:translate-x-full rtl:md:starting:-translate-x-full`}
       >
         {/* From / to */}
-        <div className="bg-[#002472] text-white px-5 pt-5 pb-5 md:pt-6">
+        <div className="bg-[#222D52] text-white px-5 pt-5 pb-5 md:pt-6">
           <div className="flex items-center justify-between mb-4">
             {detail ? (
               <button onClick={() => setDetail(null)} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/85 hover:text-white">
@@ -581,7 +591,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                 {t('allRoutes')}
               </button>
             ) : (
-              <span className="text-xs uppercase tracking-wider text-white/60">{t('yourJourney')}</span>
+              <span className="text-xs uppercase tracking-wider text-white/75">{t('yourJourney')}</span>
             )}
             <button onClick={onClose} aria-label={t('closeAria')} className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
               <Icon name="close" size={18} />
@@ -632,7 +642,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
           {/* Fares: for Malaysians or tourists (some buses are free for Malaysians only), paid cashless or cash */}
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             <div className="flex items-center gap-2" role="group" aria-label={t('faresFor')}>
-              <span className="text-white/60">{t('faresFor')}</span>
+              <span className="text-white/75">{t('faresFor')}</span>
               <div className="inline-flex rounded-full bg-white/10 p-0.5">
                 {(['citizen', 'non_citizen'] as const).map((r) => (
                   <button
@@ -641,7 +651,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     onClick={() => r !== resident && onResidentChange(r)}
                     aria-pressed={r === resident}
                     className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
-                      r === resident ? 'bg-white text-[#002472]' : 'text-white/80 hover:text-white'
+                      r === resident ? 'bg-white text-[#222D52]' : 'text-white/80 hover:text-white'
                     }`}
                   >
                     {r === 'citizen' ? t('fareMalaysian') : t('fareTourist')}
@@ -650,7 +660,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
               </div>
             </div>
             <div className="flex items-center gap-2" role="group" aria-label={t('payWith')}>
-              <span className="text-white/60">{t('payWith')}</span>
+              <span className="text-white/75">{t('payWith')}</span>
               <div className="inline-flex rounded-full bg-white/10 p-0.5">
                 {(['cashless', 'cash'] as const).map((p) => (
                   <button
@@ -660,7 +670,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     aria-pressed={p === payment}
                     title={p === 'cashless' ? t('payCashlessHint') : undefined}
                     className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
-                      p === payment ? 'bg-white text-[#002472]' : 'text-white/80 hover:text-white'
+                      p === payment ? 'bg-white text-[#222D52]' : 'text-white/80 hover:text-white'
                     }`}
                   >
                     {p === 'cashless' ? t('payCashless') : t('payCash')}
@@ -685,7 +695,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     disabled={disabled}
                     aria-pressed={active}
                     className={`h-9 px-4 rounded-full text-sm font-medium whitespace-nowrap border transition-colors disabled:opacity-40 ${
-                      active ? 'bg-[#002472] border-[#002472] text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-[#002472]/50'
+                      active ? 'bg-[#222D52] border-[#222D52] text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-[#222D52]/50'
                     }`}
                   >
                     {p.label}
@@ -699,7 +709,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
         <div className="flex-1 overflow-y-auto">
           {loading && (
             <div className="flex flex-col items-center justify-center py-16 text-gray-500 text-sm gap-3">
-              <div className="w-8 h-8 border-2 border-[#002472]/20 border-t-[#002472] rounded-full animate-spin" />
+              <div className="w-8 h-8 border-2 border-[#222D52]/20 border-t-[#222D52] rounded-full animate-spin" />
               {t('findingRoutes')}
             </div>
           )}
@@ -722,7 +732,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     type="button"
                     onClick={() => setShowMore(!showMore)}
                     aria-expanded={showMore}
-                    className="w-full rounded-2xl border border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:border-[#002472]/50 hover:text-[#002472]"
+                    className="w-full rounded-2xl border border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:border-[#222D52]/50 hover:text-[#222D52]"
                   >
                     {showMore ? t('hideMoreOptions') : t('moreOptions').replace('{n}', String(sortedMore.length))}
                   </button>
@@ -745,7 +755,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                       <Tags tags={detail.tags} />
                     </div>
                     {detail.next_day && (
-                      <span className="ms-2 align-middle inline-block rounded-full bg-[#002472]/10 text-[#002472] text-[11px] font-semibold px-2 py-0.5">
+                      <span className="ms-2 align-middle inline-block rounded-full bg-[#222D52]/10 text-[#222D52] text-[11px] font-semibold px-2 py-0.5">
                         {t('tomorrow')}
                       </span>
                     )}
@@ -758,6 +768,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                   <RoutePreview option={detail} />
                 </div>
               </div>
+
 
               <ol className="relative">
                 {detail.legs.map((leg, i) => {

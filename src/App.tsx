@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import RequireAuth from './components/RequireAuth'
+import { SERVICES_ENABLED } from './data/serviceOptions'
 import { LanguageProvider } from './i18n/LanguageProvider'
 import { useLanguage } from './hooks/useLanguage'
 
@@ -24,6 +25,7 @@ const Services = lazy(() => import('./pages/Services'))
 const LiveMap = lazy(() => import('./pages/LiveMap'))
 const Credits = lazy(() => import('./pages/Credits'))
 const Ronda300 = lazy(() => import('./pages/Ronda300'))
+const Hub = lazy(() => import('./pages/Hub'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function PageLoading() {
@@ -51,10 +53,11 @@ function App() {
           <Route path="/trails" element={<Trails />} />
           <Route path="/trails/:slug" element={<TrailDetail />} />
           <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
+          {SERVICES_ENABLED && <Route path="/services" element={<Services />} />}
           <Route path="/live" element={<LiveMap />} />
           <Route path="/credits" element={<Credits />} />
           <Route path="/ronda-300" element={<Ronda300 />} />
+          <Route path="/hub/:slug" element={<Hub />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         </Suspense>

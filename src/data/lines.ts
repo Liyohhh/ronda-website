@@ -1,12 +1,17 @@
 // RONDA rail lines: names, official colours and badge artwork, in one place.
 //
-// Colours come from the operators' own GTFS feeds (route_color / route_text_color):
-//   Prasarana (rapid-rail-kl) and KTMB (ktmb), as loaded into Supabase.
-// ERL's GTFS feed has no route_color, so its two colours are marked `colorSource: 'unverified'`
-// until ERL confirms them. Don't invent colours for new lines: take them from the operator.
+// Colours: `colorSource: 'operator'` = the line icons on Prasarana's own site (myrapid.com.my line pages: Rapid KL
+//   lines, KTM Port Klang and Seremban Lines, KLIA Ekspres and KLIA Transit; sampled from the icon files 15 Oct 2026);
+//   `'gtfs'` = the operator's GTFS feed (route_color) for lines MyRapid does not show (other KTMB lines, BRT).
+// Don't invent colours for new lines: take them from the operator.
+// Icons: every line uses our own vector drawing in the style of MyRapid's line legend (lineBadgeSvg), so all badges
+//   match and stay sharp at any size. Prasarana's icon files (public/lines/myrapid, downloaded from myrapid.com.my
+//   15 Oct 2026 at the owner's request) are no longer shown; they stay on record for the operator permission letter.
 //
 // Plain data + string builders (no React), so scripts/export-line-badges.ts can reuse it to
 // write public/lines/*.svg for the app and other repos.
+
+import { FA_BUS } from './operatorIcons.ts'
 
 export type LineMode = 'MRT' | 'LRT' | 'MONORAIL' | 'BRT' | 'KTM' | 'ETS' | 'ERL' | 'BUS'
 
@@ -18,28 +23,28 @@ export type Line = {
   code?: string // operator line code where one exists (KGL, PYL, ...)
   color: string // background, #RRGGBB
   textColor: string // glyph + label colour on top of `color`
-  colorSource: 'gtfs' | 'unverified'
+  colorSource: 'operator' | 'gtfs' | 'unverified'
   gtfs: { feedId: string; routeIds: string[] }
 }
 
 export const LINES: Line[] = [
   // Prasarana rapidKL rail (feed rapid-rail-kl)
-  { id: 'lrt-ampang', name: 'LRT Ampang Line', short: 'Ampang', mode: 'LRT', code: 'AGL', color: '#E57200', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['AG'] } },
-  { id: 'lrt-sri-petaling', name: 'LRT Sri Petaling Line', short: 'Sri Petaling', mode: 'LRT', code: 'SPL', color: '#76232F', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PH'] } },
-  { id: 'lrt-kelana-jaya', name: 'LRT Kelana Jaya Line', short: 'Kelana Jaya', mode: 'LRT', code: 'KJL', color: '#D50032', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KJ'] } },
-  { id: 'lrt-shah-alam', name: 'LRT Shah Alam Line', short: 'Shah Alam', mode: 'LRT', code: 'SAL', color: '#00A9E0', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['SA'] } },
-  { id: 'mrt-kajang', name: 'MRT Kajang Line', short: 'Kajang', mode: 'MRT', code: 'KGL', color: '#047940', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KGL'] } },
-  { id: 'mrt-putrajaya', name: 'MRT Putrajaya Line', short: 'Putrajaya', mode: 'MRT', code: 'PYL', color: '#FFCD00', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PYL'] } },
-  { id: 'monorail', name: 'KL Monorail Line', short: 'Monorail', mode: 'MONORAIL', code: 'MRL', color: '#84BD00', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['MR'] } },
+  { id: 'lrt-ampang', name: 'LRT Ampang Line', short: 'Ampang', mode: 'LRT', code: 'AGL', color: '#EB7203', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['AG'] } },
+  { id: 'lrt-sri-petaling', name: 'LRT Sri Petaling Line', short: 'Sri Petaling', mode: 'LRT', code: 'SPL', color: '#7A212E', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PH'] } },
+  { id: 'lrt-kelana-jaya', name: 'LRT Kelana Jaya Line', short: 'Kelana Jaya', mode: 'LRT', code: 'KJL', color: '#DD0330', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KJ'] } },
+  { id: 'lrt-shah-alam', name: 'LRT Shah Alam Line', short: 'Shah Alam', mode: 'LRT', code: 'SAL', color: '#00A7E0', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['SA'] } },
+  { id: 'mrt-kajang', name: 'MRT Kajang Line', short: 'Kajang', mode: 'MRT', code: 'KGL', color: '#047835', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['KGL'] } },
+  { id: 'mrt-putrajaya', name: 'MRT Putrajaya Line', short: 'Putrajaya', mode: 'MRT', code: 'PYL', color: '#FCD330', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['PYL'] } },
+  { id: 'monorail', name: 'KL Monorail Line', short: 'Monorail', mode: 'MONORAIL', code: 'MRL', color: '#80BD01', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['MR'] } },
   { id: 'brt-sunway', name: 'BRT Sunway Line', short: 'BRT Sunway', mode: 'BRT', code: 'BRT', color: '#115740', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'rapid-rail-kl', routeIds: ['BRT'] } },
 
   // Express Rail Link (feed erl): no route_color in the feed, colours to be confirmed with ERL
-  { id: 'erl-klia-ekspres', name: 'ERL KLIA Ekspres', short: 'KLIA Ekspres', mode: 'ERL', color: '#6B2C91', textColor: '#FFFFFF', colorSource: 'unverified', gtfs: { feedId: 'erl', routeIds: ['KE'] } },
-  { id: 'erl-klia-transit', name: 'ERL KLIA Transit', short: 'KLIA Transit', mode: 'ERL', color: '#00A19A', textColor: '#FFFFFF', colorSource: 'unverified', gtfs: { feedId: 'erl', routeIds: ['KT'] } },
+  { id: 'erl-klia-ekspres', name: 'ERL KLIA Ekspres', short: 'KLIA Ekspres', mode: 'ERL', color: '#7B4199', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'erl', routeIds: ['KE'] } },
+  { id: 'erl-klia-transit', name: 'ERL KLIA Transit', short: 'KLIA Transit', mode: 'ERL', color: '#00A9A7', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'erl', routeIds: ['KT'] } },
 
   // Keretapi Tanah Melayu (feed ktmb)
-  { id: 'ktm-port-klang', name: 'KTM Port Klang Line', short: 'Port Klang', mode: 'KTM', color: '#DC2420', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['KA15_KD19'] } },
-  { id: 'ktm-seremban', name: 'KTM Seremban Line', short: 'Seremban', mode: 'KTM', color: '#3C5A9F', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['KC05_KB18'] } },
+  { id: 'ktm-port-klang', name: 'KTM Port Klang Line', short: 'Port Klang', mode: 'KTM', color: '#EE3124', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'ktmb', routeIds: ['KA15_KD19'] } },
+  { id: 'ktm-seremban', name: 'KTM Seremban Line', short: 'Seremban', mode: 'KTM', color: '#0067B1', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: 'ktmb', routeIds: ['KC05_KB18'] } },
   { id: 'ktm-shuttle-selatan', name: 'KTM Shuttle Selatan (JB Sentral – Paloh)', short: 'Shuttle Selatan', mode: 'KTM', color: '#0A3D7A', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['SS'] } },
   { id: 'ktm-padang-besar', name: 'KTM Padang Besar Line', short: 'Padang Besar', mode: 'KTM', color: '#018000', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_47300'] } },
   { id: 'ktm-ipoh', name: 'KTM Ipoh Line', short: 'Ipoh', mode: 'KTM', color: '#1964B7', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_9000'] } },
@@ -172,7 +177,7 @@ export function matchLines(query: string, extra: Line[] = []): Line[] {
 
 // Buses aren't in LINES (hundreds of routes). Their badge uses the route's own GTFS colour when the
 // operator publishes one (Rapid KL stage buses do), otherwise RONDA navy (MRT feeder buses, bus stops).
-export const BUS_FALLBACK_COLOR = '#002472'
+export const BUS_FALLBACK_COLOR = '#222D52'
 
 export function busLine(color?: string | null, name = 'Bus'): Line {
   const c = color ? (color.startsWith('#') ? color : `#${color}`) : BUS_FALLBACK_COLOR
@@ -185,31 +190,64 @@ export function linesForStop(feedId: string, routeIds: string[] = []): Line[] {
 }
 
 // ---------- badge artwork ----------
-// Same icons as the RONDA app: a white vehicle glyph on a circle in the line colour.
-// Glyphs are Flutter's icons, 24x24: Material Icons (Apache License 2.0) and, for KTM, Cupertino Icons
-// tram_fill (MIT, outline taken from cupertino_icons 1.0.9).
 
-const GLYPHS: Record<'train' | 'railway' | 'bus' | 'subway' | 'tram', string> = {
-  train: 'M12 2c-4 0-8 .5-8 4v9.5C4 17.43 5.57 19 7.5 19L6 20.5v.5h2.23l2-2H14l2 2h2v-.5L16.5 19c1.93 0 3.5-1.57 3.5-3.5V6c0-3.5-3.58-4-8-4zM7.5 17c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm3.5-7H6V6h5v4zm2 0V6h5v4h-5zm3.5 7c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z', // Icons.train
-  railway: 'M12,2C8,2,4,2.5,4,6v9.5C4,17.43,5.57,19,7.5,19L6,20v1h12v-1l-1.5-1c1.93,0,3.5-1.57,3.5-3.5 V6C20,2.5,16.42,2,12,2z M12,16c-0.83,0-1.5-0.67-1.5-1.5S11.17,13,12,13s1.5,0.67,1.5,1.5S12.83,16,12,16z M18,10H6V7h12V10z', // Icons.directions_railway_filled
-  bus: 'M12,2C8,2,4,2.5,4,6v9.5c0,0.95,0.38,1.81,1,2.44V20c0,0.55,0.45,1,1,1h1c0.55,0,1-0.45,1-1 v-1h8v1c0,0.55,0.45,1,1,1h1c0.55,0,1-0.45,1-1v-2.06c0.62-0.63,1-1.49,1-2.44V6C20,2.5,16.42,2,12,2z M8.5,16 C7.67,16,7,15.33,7,14.5S7.67,13,8.5,13s1.5,0.67,1.5,1.5S9.33,16,8.5,16z M15.5,16c-0.83,0-1.5-0.67-1.5-1.5s0.67-1.5,1.5-1.5 s1.5,0.67,1.5,1.5S16.33,16,15.5,16z M18,10H6V7h12V10z', // Icons.directions_bus_filled
-  subway: 'M12,2C8,2,4,2.5,4,6v9.5C4,17.43,5.57,19,7.5,19L6,20v1h12v-1l-1.5-1c1.93,0,3.5-1.57,3.5-3.5V6C20,2.5,16.42,2,12,2z M8.5,16C7.67,16,7,15.33,7,14.5S7.67,13,8.5,13s1.5,0.67,1.5,1.5S9.33,16,8.5,16z M11,10H6V7h5V10z M15.5,16 c-0.83,0-1.5-0.67-1.5-1.5s0.67-1.5,1.5-1.5s1.5,0.67,1.5,1.5S16.33,16,15.5,16z M18,10h-5V7h5V10z', // Icons.directions_subway_filled
-  tram: 'M4.688 22.969 L7.312 18.797 Q7.125 18.75 6.797 18.75 Q6.469 18.75 6.328 18.703 Q4.453 18.469 4.312 16.359 Q4.031 12.984 4.031 9.562 Q4.031 6.047 4.312 2.672 Q4.453 0.609 6.328 0.375 Q9.328 0.0 12.047 0.0 Q14.672 0.0 17.672 0.375 Q19.547 0.609 19.688 2.672 Q19.969 6.047 19.969 9.562 Q19.969 12.984 19.688 16.359 Q19.547 18.469 17.672 18.703 Q17.531 18.75 17.203 18.75 Q16.875 18.75 16.688 18.797 L19.312 22.969 Q19.453 23.156 19.453 23.438 Q19.453 24.0 18.891 24.0 Q18.469 24.0 18.281 23.672 L18.0 23.109 L6.047 23.109 L5.719 23.672 Q5.531 24.0 5.109 24.0 Q4.547 24.0 4.547 23.438 Q4.547 23.156 4.688 22.969ZM7.547 4.594 L16.453 4.594 Q17.438 4.594 17.438 3.609 Q17.438 2.578 16.453 2.578 L7.547 2.578 Q6.562 2.578 6.562 3.609 Q6.562 4.594 7.547 4.594ZM12.0 12.141 Q14.484 12.141 16.969 11.812 Q17.531 11.719 17.625 11.156 Q17.719 10.125 17.719 9.188 Q17.719 8.25 17.625 7.219 Q17.531 6.609 16.969 6.516 Q14.766 6.281 12.0 6.281 Q9.281 6.281 7.078 6.516 Q6.469 6.562 6.375 7.219 Q6.328 7.734 6.328 9.188 Q6.328 10.641 6.375 11.156 Q6.469 11.766 7.078 11.812 Q10.453 12.141 12.0 12.141ZM8.531 13.594 Q7.922 13.594 7.476 14.039 Q7.031 14.484 7.031 15.141 Q7.031 15.75 7.453 16.195 Q7.875 16.641 8.532 16.641 Q9.188 16.641 9.633 16.195 Q10.078 15.75 10.078 15.14 Q10.078 14.531 9.633 14.062 Q9.188 13.594 8.531 13.594ZM15.516 16.641 Q16.125 16.641 16.57 16.195 Q17.016 15.75 17.016 15.141 Q17.016 14.484 16.57 14.039 Q16.125 13.594 15.515 13.594 Q14.906 13.594 14.438 14.062 Q13.969 14.531 13.969 15.14 Q13.969 15.75 14.414 16.195 Q14.859 16.641 15.516 16.641ZM11.859 19.031 Q9.703 19.031 8.625 18.938 L7.969 20.016 L16.031 20.016 L15.375 18.938 Q14.203 19.031 11.859 19.031ZM6.656 22.078 L17.344 22.078 L16.688 21.047 L7.312 21.047 L6.656 22.078Z', // CupertinoIcons.tram_fill (train on rails)
+// Standalone SVG markup for a line badge (used by the website component and the file export), drawn in the style of
+// MyRapid's line legend (myrapid.com.my, checked 15 Oct 2026): a rounded square in the line colour with a white
+// vehicle. Our own vector drawing, sharp at any size, the same for every line:
+//   LRT / Monorail: rounded train front on rails; MRT: angular front with "MRT"; KTM / ETS: the train front with the
+//   name under it; KLIA Transit: a small train front over "KLIA transit"; KLIA Ekspres: the train from the side over
+//   "KLIA ekspres"; BRT and buses: MyRapid's bus icon (Font Awesome Free, CC BY 4.0).
+// 48 x 48 viewBox.
+const BODY = 'M24 4.3C33 4.3 37.1 7.1 37.6 14L38 26.2C38 29.6 35.2 31.4 31.3 31.4H16.7C12.8 31.4 10 29.6 10 26.2L10.4 14C10.9 7.1 15 4.3 24 4.3Z'
+const WINDOW = 'M15.6 10.7H32.4C33.4 10.7 34 11.5 33.8 12.5C33 18.6 29 23 24 23S15 18.6 14.2 12.5C14 11.5 14.6 10.7 15.6 10.7Z'
+const LIGHTS = 'M12.8 27.4C14.8 27.2 16.7 27.9 17.7 29.6C15.7 29.8 13.8 29.1 12.8 27.4ZM35.2 27.4C33.2 27.2 31.3 27.9 30.3 29.6C32.3 29.8 34.2 29.1 35.2 27.4Z'
+const RAILS = 'M11.6 32.3H14.2L8 41H4.9ZM36.4 32.3H33.8L40 41H43.1ZM14.6 34.1H33.4V35.2H14.6ZM12.9 37.1H35.1V38.2H12.9Z'
+const MRT_BODY = 'M16 8H32C33.5 8 34.6 8.8 35.2 10.2L38.6 22C38.9 23 39 24 39 25V34C39 35 38.6 35.8 37.8 36.6L33.6 41.4C33 42 32.2 42.4 31.4 42.4H16.6C15.8 42.4 15 42 14.4 41.4L10.2 36.6C9.4 35.8 9 35 9 34V25C9 24 9.1 23 9.4 22L12.8 10.2C13.4 8.8 14.5 8 16 8Z'
+const MRT_WINDOW = 'M17 11H31C32 11 32.8 11.6 33.1 12.6L35.8 22.4C36.1 23.6 35.2 24.8 34 24.8H14C12.8 24.8 11.9 23.6 12.2 22.4L14.9 12.6C15.2 11.6 16 11 17 11Z'
+const ERL_SIDE = 'M6 10H31C34.5 10 37.5 11.8 39.6 14.6L42.6 18.6C43.2 19.4 42.6 20.4 41.6 20.4H6Z'
+
+const textEl = (x: number, y: number, size: number, fill: string, text: string, weight = 700) =>
+  `<text x="${x}" y="${y}" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="${weight}" font-size="${size}" fill="${fill}">${text}</text>`
+
+function trainFront(c: string, w: string, rails: boolean) {
+  return `<path fill="${w}" d="${BODY}"/><path fill="${c}" d="${WINDOW}"/><path fill="${c}" d="${LIGHTS}"/>` +
+    (rails ? `<path fill="${w}" d="${RAILS}"/>` : '')
 }
 
-// which glyph each mode uses in the app
-const MODE_GLYPH: Record<LineMode, keyof typeof GLYPHS> = {
-  LRT: 'train', MRT: 'train', MONORAIL: 'railway', BRT: 'bus', BUS: 'bus', KTM: 'tram', ERL: 'subway', ETS: 'subway',
+function badgeGlyph(line: Line): string {
+  const c = line.color, w = line.textColor
+  switch (line.mode) {
+    case 'LRT':
+    case 'MONORAIL':
+      return trainFront(c, w, true)
+    case 'MRT':
+      return `<path fill="${w}" d="${MRT_BODY}"/><path fill="${c}" d="${MRT_WINDOW}"/>` +
+        `<path fill="none" stroke="${c}" stroke-width="1.2" stroke-linecap="round" d="M14.8 30.4L16.6 32.4L18.4 31.4M33.2 30.4L31.4 32.4L29.6 31.4"/>` +
+        textEl(24, 39.4, 4.6, c, 'MRT')
+    case 'KTM':
+    case 'ETS':
+      // the train on rails, a little smaller, with the name under it
+      return `<g transform="translate(4.8 0.6) scale(0.8)">${trainFront(c, w, true)}</g>` + textEl(24, 44.6, 8.6, w, line.mode)
+    case 'ERL':
+      if (line.id === 'erl-klia-transit') {
+        return `<g transform="translate(15.6 1.8) scale(0.35)">${trainFront(c, w, false)}</g>` +
+          `<path fill="${w}" d="M19.6 13.6H28.4V14.5H19.6Z"/>` +
+          textEl(24, 30.6, 11.6, w, 'KLIA', 900) + textEl(24, 40, 8.4, w, 'transit')
+      }
+      return `<path fill="${w}" d="${ERL_SIDE}"/><path fill="${c}" d="M9 12.4H14V15.8H9ZM16 12.4H21V15.8H16ZM34 12.6L38 16H35Z"/>` +
+        `<path fill="${w}" d="M6 21.6H41V22.5H6Z"/>` +
+        textEl(24, 33.4, 11.6, w, 'KLIA', 900) + textEl(24, 42.4, 8.4, w, 'ekspres')
+    default:
+      return `<path transform="translate(10 10) scale(0.0546875)" fill="${w}" d="${FA_BUS}"/>`
+  }
 }
-
-// Standalone SVG markup for a line badge (used by the website component and the file export)
 export function lineBadgeSvg(line: Line, opts: { title?: boolean } = {}): string {
   const title = opts.title === false ? '' : `<title>${escapeXml(line.name)}</title>`
   return (
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="${escapeXml(line.name)}">` +
     title +
-    `<circle cx="24" cy="24" r="24" fill="${line.color}"/>` +
-    `<path transform="translate(11 11) scale(1.0833)" fill="${line.textColor}" d="${GLYPHS[MODE_GLYPH[line.mode]]}"/>` +
+    `<rect width="48" height="48" rx="6" fill="${line.color}"/>` +
+    badgeGlyph(line) +
     `</svg>`
   )
 }

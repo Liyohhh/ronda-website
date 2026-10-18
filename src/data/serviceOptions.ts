@@ -15,27 +15,31 @@ const planToPlace = (lat: number, lon: number, shown: string) => `/?toLat=${lat}
 export type NavItem = { to: string; name?: string; label?: TranslationKey; detail?: string; detailLabel?: TranslationKey; onlyLang?: Lang }
 export type NavColumn = { title: TranslationKey; items: NavItem[] }
 export type NavMenu = {
-  key: 'navTravel' | 'navExplore' | 'navRonda300' | 'navServices' | 'about'
+  key: 'navTravel' | 'navRonda300' | 'navServices' | 'about'
   columns: NavColumn[]
   promo: { title: TranslationKey; text: TranslationKey; cta: TranslationKey; to: string }
 }
 
-export const NAV_MENUS: NavMenu[] = [
+// Chauffeur and transfer services are future work (Lya, 12 Oct 2026): hidden from the menu, Home, Help and /services.
+// Set to true to bring them back; the page, section and texts are kept.
+export const SERVICES_ENABLED = false
+
+const ALL_MENUS: NavMenu[] = [
   {
     key: 'navTravel',
     columns: [
       {
         title: 'navAirports',
         items: [
-          { name: 'KLIA Terminal 1', detail: 'ERL KLIA T1', to: planTo('ERL KLIA T1', 'KLIA Terminal 1') },
-          { name: 'KLIA Terminal 2', detail: 'ERL KLIA T2', to: planTo('ERL KLIA T2', 'KLIA Terminal 2') },
-          { name: 'KL Sentral', detail: 'KLIA Ekspres · KLIA Transit', to: planTo('ERL KL Sentral', 'KL Sentral') },
+          { name: 'KLIA Terminal 1', detail: 'ERL KLIA T1', to: '/hub/klia1' },
+          { name: 'KLIA Terminal 2', detail: 'ERL KLIA T2', to: '/hub/klia2' },
+          { name: 'KL Sentral', detail: 'KLIA Ekspres · KLIA Transit', to: '/hub/kl-sentral' },
         ],
       },
       {
         title: 'navBusTerminals',
         items: [
-          { name: 'Terminal Bersepadu Selatan (TBS)', detail: 'LRT / KTM / ERL Bandar Tasik Selatan', to: planTo('LRT Bandar Tasik Selatan', 'Terminal Bersepadu Selatan (TBS)') },
+          { name: 'Terminal Bersepadu Selatan (TBS)', detail: 'LRT / KTM / ERL Bandar Tasik Selatan', to: '/hub/tbs' },
           { name: 'Pudu Sentral', detail: 'LRT Plaza Rakyat', to: planTo('LRT Plaza Rakyat', 'Pudu Sentral') },
           // OSM way 871914528 (Gombak Integrated Transport Terminal)
           { name: 'Terminal Bersepadu Gombak (TBG)', detail: 'Gombak, Selangor', to: planToPlace(3.2304945, 101.7250658, 'Terminal Bersepadu Gombak (TBG)') },
@@ -49,8 +53,17 @@ export const NAV_MENUS: NavMenu[] = [
     promo: { title: 'navPlanTitle', text: 'navPlanText', cta: 'navPlanCta', to: '/' },
   },
   {
-    key: 'navExplore',
+    // RONDA 300 (was "Explore" + a separate RONDA 300 menu): places within a short walk of each station, the trails,
+    // trail categories and popular places. A click on the menu name goes to the RONDA 300 section on Home.
+    key: 'navRonda300',
     columns: [
+      {
+        title: 'navRonda300',
+        items: [
+          { label: 'r3_navFind', detailLabel: 'r3_navFindD', to: '/ronda-300' },
+          { label: 'navSeeTrails', detailLabel: 'trailsSubtitle', to: '/trails' },
+        ],
+      },
       {
         title: 'navTrailCats',
         items: [
@@ -65,20 +78,6 @@ export const NAV_MENUS: NavMenu[] = [
           { name: 'Pavilion Kuala Lumpur', detail: 'MRT Bukit Bintang', to: planTo('MRT Bukit Bintang', 'Pavilion Kuala Lumpur') },
           { name: 'Batu Caves', detail: 'KTM Batu Caves', to: planTo('KTM Batu Caves', 'Batu Caves') },
           { name: 'Central Market (Pasar Seni)', detail: 'MRT Pasar Seni', to: planTo('MRT Pasar Seni', 'Central Market (Pasar Seni)') },
-        ],
-      },
-    ],
-    promo: { title: 'trailsTitle', text: 'trailsSubtitle', cta: 'navSeeTrails', to: '/trails' },
-  },
-  {
-    // RONDA 300: places within a short walk of each station (curated now, merchants later)
-    key: 'navRonda300',
-    columns: [
-      {
-        title: 'navRonda300',
-        items: [
-          { label: 'r3_navFind', detailLabel: 'r3_navFindD', to: '/ronda-300' },
-          { label: 'navTrailCats', detailLabel: 'trailsSubtitle', to: '/trails' },
         ],
       },
     ],
@@ -123,3 +122,5 @@ export const NAV_MENUS: NavMenu[] = [
     promo: { title: 'navMerchantTitle', text: 'navMerchantText', cta: 'navMerchantCta', to: '/help' },
   },
 ]
+
+export const NAV_MENUS: NavMenu[] = ALL_MENUS.filter((m) => SERVICES_ENABLED || m.key !== 'navServices')

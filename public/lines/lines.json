@@ -4,9 +4,9 @@
     "name": "LRT Ampang Line",
     "mode": "LRT",
     "code": "AGL",
-    "color": "#E57200",
+    "color": "#EB7203",
     "textColor": "#FFFFFF",
-    "colorSource": "gtfs",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "rapid-rail-kl",
       "routeIds": [
@@ -20,9 +20,9 @@
     "name": "LRT Sri Petaling Line",
     "mode": "LRT",
     "code": "SPL",
-    "color": "#76232F",
+    "color": "#7A212E",
     "textColor": "#FFFFFF",
-    "colorSource": "gtfs",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "rapid-rail-kl",
       "routeIds": [
@@ -36,9 +36,9 @@
     "name": "LRT Kelana Jaya Line",
     "mode": "LRT",
     "code": "KJL",
-    "color": "#D50032",
+    "color": "#DD0330",
     "textColor": "#FFFFFF",
-    "colorSource": "gtfs",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "rapid-rail-kl",
       "routeIds": [
@@ -52,9 +52,9 @@
     "name": "LRT Shah Alam Line",
     "mode": "LRT",
     "code": "SAL",
-    "color": "#00A9E0",
+    "color": "#00A7E0",
     "textColor": "#FFFFFF",
-    "colorSource": "gtfs",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "rapid-rail-kl",
       "routeIds": [
@@ -68,9 +68,9 @@
     "name": "MRT Kajang Line",
     "mode": "MRT",
     "code": "KGL",
-    "color": "#047940",
+    "color": "#047835",
     "textColor": "#FFFFFF",
-    "colorSource": "gtfs",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "rapid-rail-kl",
       "routeIds": [
@@ -84,9 +84,9 @@
     "name": "MRT Putrajaya Line",
     "mode": "MRT",
     "code": "PYL",
-    "color": "#FFCD00",
+    "color": "#FCD330",
     "textColor": "#FFFFFF",
-    "colorSource": "gtfs",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "rapid-rail-kl",
       "routeIds": [
@@ -100,9 +100,9 @@
     "name": "KL Monorail Line",
     "mode": "MONORAIL",
     "code": "MRL",
-    "color": "#84BD00",
+    "color": "#80BD01",
     "textColor": "#FFFFFF",
-    "colorSource": "gtfs",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "rapid-rail-kl",
       "routeIds": [
@@ -132,9 +132,9 @@
     "name": "ERL KLIA Ekspres",
     "mode": "ERL",
     "code": null,
-    "color": "#6B2C91",
+    "color": "#7B4199",
     "textColor": "#FFFFFF",
-    "colorSource": "unverified",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "erl",
       "routeIds": [
@@ -148,9 +148,9 @@
     "name": "ERL KLIA Transit",
     "mode": "ERL",
     "code": null,
-    "color": "#00A19A",
+    "color": "#00A9A7",
     "textColor": "#FFFFFF",
-    "colorSource": "unverified",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "erl",
       "routeIds": [
@@ -164,9 +164,9 @@
     "name": "KTM Port Klang Line",
     "mode": "KTM",
     "code": null,
-    "color": "#DC2420",
+    "color": "#EE3124",
     "textColor": "#FFFFFF",
-    "colorSource": "gtfs",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "ktmb",
       "routeIds": [
@@ -180,9 +180,9 @@
     "name": "KTM Seremban Line",
     "mode": "KTM",
     "code": null,
-    "color": "#3C5A9F",
+    "color": "#0067B1",
     "textColor": "#FFFFFF",
-    "colorSource": "gtfs",
+    "colorSource": "operator",
     "gtfs": {
       "feedId": "ktmb",
       "routeIds": [

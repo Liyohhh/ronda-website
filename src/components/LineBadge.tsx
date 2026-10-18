@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { LINES_BY_ID, lineBadgeSvg, type Line } from '../data/lines'
 
-// Coloured line icon (official line colour + vehicle glyph), e.g. <LineBadge line="mrt-kajang" />.
-// Artwork comes from src/data/lines.ts; the same badges are exported to public/lines/*.svg.
+// Coloured line icon (official line colour + vehicle glyph), e.g. <LineBadge line="mrt-kajang" />, drawn in the style
+// of MyRapid's line legend by src/data/lines.ts (also exported to public/lines/*.svg).
 type Props = {
   line: string | Line
   size?: number // px

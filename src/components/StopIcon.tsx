@@ -1,10 +1,10 @@
 import Icon from './Icon'
-import type { IconName } from '../data/icons'
+import type { IconName } from './Icon'
 import type { StopIconKind } from '../data/stopIcon'
 
 const NAMES: Record<StopIconKind, IconName> = {
   train: 'trainOutline',
-  bus: 'directionsBusOutline',
+  bus: 'bus', // MyRapid's bus icon
   airport: 'flight',
   hospital: 'localHospitalOutline',
   school: 'schoolOutline',
@@ -21,7 +21,7 @@ function StopIcon({ kind }: { kind: StopIconKind }) {
   return (
     <span
       className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
-        solid ? 'bg-[#002472] text-white' : 'bg-[#002472]/10 text-[#002472]'
+        solid ? 'bg-[#222D52] text-white' : 'bg-[#222D52]/10 text-[#222D52]'
       }`}
     >
       <Icon name={NAMES[kind]} size={18} />

@@ -37,7 +37,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
 
   return (
     <nav className={className} onMouseLeave={scheduleClose} aria-label="Main">
-      <ul className="flex items-stretch gap-6 text-sm text-[#002472] whitespace-nowrap">
+      <ul className="flex items-center gap-4 py-2 text-[14px] text-[#222D52] whitespace-nowrap">
         {NAV_MENUS.map((m) => (
           <li key={m.key} className="flex">
             <button
@@ -45,8 +45,8 @@ function ServiceNav({ className = '' }: { className?: string }) {
               onMouseEnter={() => open(m.key)}
               onFocus={() => open(m.key)}
               onClick={() => {
-                // Explore: a click goes to the trails on Home (hover / focus still opens the panel)
-                if (m.key === 'navExplore') {
+                // RONDA 300: a click goes to its section on Home (hover / focus still opens the panel)
+                if (m.key === 'navRonda300') {
                   window.clearTimeout(closeTimer.current)
                   setActive(null)
                   navigate('/#explore')
@@ -56,8 +56,8 @@ function ServiceNav({ className = '' }: { className?: string }) {
                 else open(m.key)
               }}
               aria-expanded={active === m.key}
-              className={`py-3 border-b-2 font-medium transition-colors flex items-center gap-1 ${
-                active === m.key ? 'border-[#002472]' : 'border-transparent hover:border-[#002472]/40'
+              className={`h-9 px-3 font-medium transition-colors flex items-center gap-1 ${
+                active === m.key ? 'text-gold-deep' : 'text-[#222D52] hover:text-gold-deep'
               }`}
             >
               {t(m.key)}
@@ -70,19 +70,19 @@ function ServiceNav({ className = '' }: { className?: string }) {
       {/* Hover panel */}
       <div
         onMouseEnter={() => active && open(active)}
-        className={`absolute left-0 right-0 top-full bg-white border-b border-gray-200 shadow-xl transition-all duration-200 ease-out ${
+        className={`absolute inset-x-4 top-full mt-1 bg-white border border-gray-100 rounded-[32px] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.18)] transition-all duration-200 ease-out ${
           isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'
         }`}
       >
         <div className={`max-w-6xl mx-auto px-6 py-7 grid grid-cols-1 gap-8 ${menu.columns.length >= 3 ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
           {menu.columns.map((col) => (
             <div key={col.title}>
-              <h3 className="text-sm font-semibold text-[#002472] mb-3">{t(col.title)}</h3>
+              <h3 className="text-sm font-semibold text-[#222D52] mb-3">{t(col.title)}</h3>
               <ul className="space-y-2.5">
                 {col.items.filter((item) => !item.onlyLang || item.onlyLang === lang).map((item) => (
                   <li key={item.to}>
                     <Link to={item.to} onClick={close} className="block group">
-                      <span className="block text-sm text-gray-800 group-hover:text-[#002472] group-hover:underline">
+                      <span className="block text-sm text-gray-800 group-hover:text-[#222D52] group-hover:underline">
                         {item.label ? t(item.label) : item.name}
                       </span>
                       {(item.detail || item.detailLabel) && (
@@ -95,7 +95,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
             </div>
           ))}
 
-          <div className={`rounded-2xl bg-[#002472] text-white p-6 flex flex-col justify-between ${menu.columns.length === 1 ? 'md:col-span-2' : ''}`}>
+          <div className={`rounded-3xl bg-[#222D52] text-white p-6 flex flex-col justify-between ${menu.columns.length === 1 ? 'md:col-span-2' : ''}`}>
             <div>
               <h3 className="font-semibold text-lg mb-2">{t(menu.promo.title)}</h3>
               <p className="text-sm text-white/70">{t(menu.promo.text)}</p>
@@ -103,7 +103,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
             <Link
               to={menu.promo.to}
               onClick={close}
-              className="mt-6 self-start bg-white text-[#002472] px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-100"
+              className="mt-6 self-start bg-white text-[#222D52] px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-100"
             >
               {t(menu.promo.cta)}
             </Link>

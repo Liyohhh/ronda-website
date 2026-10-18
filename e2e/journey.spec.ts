@@ -18,6 +18,8 @@ test.describe('plan a journey', () => {
 
     const panel = page.getByRole('dialog', { name: 'Your journey' })
     await expect(panel).toBeVisible()
+    // least walking first by default
+    await expect(panel.getByRole('button', { name: 'Least walking', exact: true }).first()).toHaveAttribute('aria-pressed', 'true')
     // each option as the planner sent it: duration and fare, and the bus route number on its chip
     for (const o of PLAN.options) {
       await expect(panel.getByText(`${o.duration_min} min`, { exact: true }).first()).toBeVisible()
@@ -122,7 +124,8 @@ test.describe('lines search', () => {
     await expect(panel).toBeHidden()
     await box.click()
     await expect(panel).toBeVisible()
-    await page.locator('#promo-title').click()
+    // somewhere well clear of the open panel (it can cover the sections just below the hero on a phone)
+    await page.locator('footer').click({ position: { x: 5, y: 5 } })
     await expect(panel).toBeHidden()
   })
 })

@@ -5,7 +5,7 @@ import { expect, test } from './mocks'
 // #section when it has one; every visible button does something when clicked (the page changes, the address
 // changes, or focus moves). Desktop only: the phone layout uses the same links and buttons.
 const ROUTES = [
-  '/', '/?tab=lines', '/about', '/help', '/help/payments', '/help/general', '/help/policies', '/services', '/trails',
+  '/', '/?tab=lines', '/about', '/help', '/help/payments', '/help/general', '/help/policies', '/trails',
   '/trails/heritage', '/ronda-300', '/live', '/credits', '/login', '/register', '/no-such-page',
 ]
 const LANGS = ['en', 'ms', 'zh', 'ar'] as const
@@ -36,6 +36,12 @@ test.describe('links and buttons', () => {
       }
       const broken: string[] = []
       for (const h of [...hrefs].sort()) {
+        // links to files (trail map pictures, PDFs): the file must exist; there is no page to open
+        if (/\.(jpe?g|png|webp|pdf|svg)$/i.test(h)) {
+          const res = await page.request.get(h)
+          if (!res.ok() || !/^(image|application\/pdf)/.test(res.headers()['content-type'] ?? '')) broken.push(`${h}: file missing`)
+          continue
+        }
         await gotoIn(page, h, lang)
         const title = (await page.locator('h1').first().textContent().catch(() => '')) ?? ''
         if (NOT_FOUND.includes(title.trim()) && !h.startsWith('/no-such-page')) broken.push(`${h}: not found`)
@@ -65,6 +71,7 @@ test.describe('links and buttons', () => {
           const b = document.querySelectorAll<HTMLButtonElement>('button')[k]
           if (!b || b.disabled || b.closest('[inert], [aria-hidden="true"]') || !(b.offsetWidth || b.offsetHeight) || getComputedStyle(b).visibility === 'hidden') return 'skip'
           if (b.type === 'submit' && b.form) return 'skip' // form submits are covered by the journey tests
+          if (b.getAttribute('aria-pressed') === 'true') return 'skip' // already the selected tab: nothing to change
           const href = location.href
           let changed = 0
           const mo = new MutationObserver((m) => { changed += m.length })

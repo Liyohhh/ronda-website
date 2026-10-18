@@ -8,6 +8,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import Header from '../components/Header'
 import BusStopName from '../components/BusStopName'
 import Icon from '../components/Icon'
+import { Accent } from '../components/Motion'
 import RouteChip from '../components/RouteChip'
 import { useLanguage } from '../hooks/useLanguage'
 import { usePoll } from '../hooks/usePoll'
@@ -29,7 +30,14 @@ maplibregl.addProtocol('pmtiles', new Protocol().tile)
 
 const KL: [number, number] = [101.6869, 3.139] // lon, lat
 const STOPS_ZOOM = 16
-const NAVY = '#002472'
+// the basemap without its own shop and restaurant icons: they cannot be pressed here and only hide the buses
+// (places near a station are on RONDA 300)
+const liveStyle: typeof mapStyle = (...args) => {
+  const style = mapStyle(...args)
+  return { ...style, layers: style.layers.filter((l) => !l.id.startsWith('pois')) }
+}
+
+const NAVY = '#222D52'
 const ME = '#2563EB'
 
 const STATUS: { key: Exclude<BusStatus, null>; label: TranslationKey; color: string }[] = [
@@ -142,7 +150,7 @@ function LiveMap() {
     const { pmtilesUrl, assetsUrl } = mapConfig()
     const m = new maplibregl.Map({
       container: el.current,
-      style: mapStyle(lang, pmtilesUrl, assetsUrl),
+      style: liveStyle(lang, pmtilesUrl, assetsUrl),
       center: KL,
       zoom: 12,
       maxZoom: 19,
@@ -177,7 +185,7 @@ function LiveMap() {
     if (!m || lang === firstLang.current) return
     firstLang.current = lang
     const { pmtilesUrl, assetsUrl } = mapConfig()
-    if (pmtilesUrl) m.setStyle(mapStyle(lang, pmtilesUrl, assetsUrl))
+    if (pmtilesUrl) m.setStyle(liveStyle(lang, pmtilesUrl, assetsUrl))
   }, [lang])
 
   usePoll(() => {
@@ -325,67 +333,78 @@ function LiveMap() {
   const lastFetch = sources.length ? Math.max(...sources.map((s) => Date.parse(s.fetched_at))) : null
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-white">
       <Header />
-      <main className="relative flex-1 min-h-0">
-        {/* MapLibre's own CSS makes its container position: relative, so the container sits inside the sized box */}
-        <div className="absolute inset-0 z-0">
-          <div ref={el} className="h-full w-full" role="application" aria-label={t('liveMapTitle')} />
-        </div>
-        {tilesFailed && (
-          <div className="absolute z-[400] inset-x-3 bottom-6 md:inset-x-auto md:end-6 md:max-w-sm rounded-xl bg-white border border-amber-300 shadow-lg px-4 py-3 text-sm text-amber-900" role="alert">
-            {t('mapLoadError')}
+      {/* the map as an inset card with round corners, like the home hero; "isolate" keeps the map and its panel under
+          the header and its menus */}
+      <main className="relative isolate flex-1 min-h-0 px-3 sm:px-4 pb-3 sm:pb-4 pt-1">
+        <div className="relative h-full overflow-hidden rounded-[28px] bg-gray-100 shadow-[0_24px_48px_-20px_rgb(34_45_82/0.35)]">
+          {/* MapLibre's own CSS makes its container position: relative, so the container sits inside the sized box */}
+          <div className="absolute inset-0 z-0">
+            <div ref={el} className="h-full w-full" role="application" aria-label={t('liveMapTitle')} />
           </div>
-        )}
-
-        {/* controls */}
-        <section className="absolute z-[500] top-3 start-3 end-3 md:end-auto md:w-[340px] bg-white rounded-2xl shadow-xl border border-gray-200 p-4">
-          <h1 className="text-lg font-bold text-[#002472]">{t('liveMapTitle')}</h1>
-          <p className="text-sm text-gray-600" aria-live="polite">
-            {error && !buses.length ? t('liveError') : fetchedAt ? t('liveBusesCount').replace('{n}', String(shown.length)) : t('liveLoading')}
-            {fetchedAt && shownTrains.length > 0 && <span> · {t('liveTrainsCount').replace('{n}', String(shownTrains.length))}</span>}
-            {lastFetch && <span className="text-gray-500"> · {t('liveUpdated').replace('{time}', new Date(lastFetch).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' }))}</span>}
-          </p>
-          <div className="mt-3 flex gap-2">
-            <input
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              placeholder={t('liveFilterPh')}
-              aria-label={t('liveFilterPh')}
-              className="flex-1 min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#002472]"
-            />
-            <button
-              type="button"
-              onClick={locate}
-              disabled={loc.status === 'locating'}
-              aria-label={t('liveNearMe')}
-              className="inline-flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-[#002472] hover:border-[#002472]/50 whitespace-nowrap"
-            >
-              <Icon name="myLocation" size={16} />
-              <span className="hidden sm:inline">{t('liveNearMe')}</span>
-            </button>
-          </div>
-          {locMessage && (
-            <p className={`mt-2 text-sm ${loc.status === 'error' ? 'text-amber-800' : 'text-gray-600'}`} role="status">
-              {locMessage}
-            </p>
+          {tilesFailed && (
+            <div className="absolute z-[400] inset-x-3 bottom-6 md:inset-x-auto md:end-6 md:max-w-sm rounded-2xl bg-white border border-amber-300 shadow-lg px-4 py-3 text-sm text-amber-900" role="alert">
+              {t('mapLoadError')}
+            </div>
           )}
-          <label className="mt-2 flex items-center gap-2 text-sm text-gray-700">
-            <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#002472]" />
-            {t('liveShowOffTrip')}
-          </label>
-          <ul className="mt-3 hidden md:flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-600">
-            {STATUS.filter((s) => showOff || s.key !== 'off_trip').map((s) => (
-              <li key={s.key} className="inline-flex items-center gap-1">
-                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: s.color }} aria-hidden="true" />
-                {t(s.label)}
-              </li>
-            ))}
-            <li className="inline-flex items-center gap-1">♿ {t('liveWheelchair')}</li>
-          </ul>
-          {zoom < STOPS_ZOOM && <p className="mt-2 hidden md:block text-xs text-gray-500">{t('liveZoomStops')}</p>}
-          <p className="mt-2 text-[11px] text-gray-500">{t('liveSources')}</p>
-        </section>
+
+          {/* controls: a velvet panel over the map */}
+          <section className="absolute z-[500] top-3 start-3 end-3 md:top-5 md:start-5 md:end-auto md:w-[360px] rounded-[24px] bg-[#222D52]/95 backdrop-blur-xl text-white shadow-2xl ring-1 ring-white/10 p-5">
+            <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-gold-light">
+              <span className="relative flex h-2 w-2" aria-hidden="true">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-light opacity-60 motion-reduce:hidden" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-light" />
+              </span>
+              Live
+            </p>
+            <h1 className="mt-2 font-display text-[30px] leading-tight font-semibold"><Accent text={t('liveMapTitle')} dark /></h1>
+            <p className="mt-1 text-sm text-white/80" aria-live="polite">
+              {error && !buses.length ? t('liveError') : fetchedAt ? t('liveBusesCount').replace('{n}', String(shown.length)) : t('liveLoading')}
+              {fetchedAt && shownTrains.length > 0 && <span> · {t('liveTrainsCount').replace('{n}', String(shownTrains.length))}</span>}
+              {lastFetch && <span className="text-white/75"> · {t('liveUpdated').replace('{time}', new Date(lastFetch).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' }))}</span>}
+            </p>
+            <div className="mt-4 flex gap-2">
+              <input
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                placeholder={t('liveFilterPh')}
+                aria-label={t('liveFilterPh')}
+                className="flex-1 min-w-0 rounded-full bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-gold"
+              />
+              <button
+                type="button"
+                onClick={locate}
+                disabled={loc.status === 'locating'}
+                aria-label={t('liveNearMe')}
+                className="inline-flex items-center gap-1.5 rounded-full bg-gold px-4 py-2.5 text-sm font-bold text-[#222D52] hover:bg-gold-hover whitespace-nowrap disabled:opacity-60"
+              >
+                <Icon name="myLocation" size={16} />
+                <span className="hidden sm:inline">{t('liveNearMe')}</span>
+              </button>
+            </div>
+            {locMessage && (
+              <p className={`mt-2 text-sm ${loc.status === 'error' ? 'text-amber-200' : 'text-white/80'}`} role="status">
+                {locMessage}
+              </p>
+            )}
+            <label className="mt-3 flex items-center gap-2 text-sm text-white/85">
+              <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#D2B68A]" />
+              {t('liveShowOffTrip')}
+            </label>
+            <ul className="mt-4 hidden md:flex flex-wrap gap-x-3 gap-y-1.5 border-t border-white/10 pt-3 text-xs text-white/80">
+              {STATUS.filter((s) => showOff || s.key !== 'off_trip').map((s) => (
+                <li key={s.key} className="inline-flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full ring-2 ring-white/30" style={{ backgroundColor: s.color }} aria-hidden="true" />
+                  {t(s.label)}
+                </li>
+              ))}
+              <li className="inline-flex items-center gap-1">♿ {t('liveWheelchair')}</li>
+            </ul>
+            {zoom < STOPS_ZOOM && <p className="mt-2 hidden md:block text-xs text-white/75">{t('liveZoomStops')}</p>}
+            <p className="mt-2 text-[11px] leading-snug text-white/70">{t('liveSources')}</p>
+          </section>
+        </div>
       </main>
     </div>
   )

@@ -1,39 +1,51 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { categoryKey, firstStation, trailDescKey, trailNameKey, type Place, type Trail } from '../data/trails'
+import { CATEGORY_STYLE } from '../data/trailStyles'
 import TrailCover from './TrailCover'
 import LineBadge from './LineBadge'
 
-// Card: cover with a category tag, name, one-line description, stop count and starting station
+// Trail card, the same on Home and /trails: full-bleed cover; starting station (top left) and a category pill in the category colour (top right);
+// stop count, trail name and its one-line description over a light fade at the bottom only, so the photo stays bright.
 function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Record<string, Place>; className?: string }) {
   const { t } = useLanguage()
   const station = firstStation(trail, places)
+  // the trail page's back button returns here (Home, or /trails with the picked category)
+  const here = useLocation()
   return (
     <Link
       to={`/trails/${trail.slug}`}
-      className={`group flex flex-col bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#002472] ${className}`}
+      state={{ from: here.pathname + here.search }}
+      className={`group relative block aspect-[4/3] rounded-[32px] overflow-hidden bg-[#222D52] shadow-[0_16px_40px_-16px_rgb(34_45_82/0.35)] hover:shadow-[0_28px_56px_-16px_rgb(34_45_82/0.45)] hover:-translate-y-1 transition duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222D52] ${className}`}
     >
-      <div className="relative aspect-[16/10] overflow-hidden">
-        <TrailCover trail={trail} className="group-hover:scale-105 transition-transform duration-300" />
-        <span className="absolute top-0 start-0 bg-[#001233]/90 text-white text-[11px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-ee-xl">
+      <TrailCover trail={trail} className="absolute inset-0 group-hover:scale-[1.06] transition-transform duration-700 ease-out" />
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
+
+      <div className="absolute inset-x-0 top-0 p-5 flex items-start justify-between gap-3">
+        {station ? (
+          <span className="inline-flex items-center gap-1.5 min-w-0 bg-black/50 border border-white/15 backdrop-blur-xl text-white text-[11px] font-semibold uppercase tracking-wide ps-1 pe-2.5 py-1 rounded-full">
+            {station.lineIds[0] && <LineBadge line={station.lineIds[0]} size={18} decorative />}
+            <span className="truncate">{station.name}</span>
+          </span>
+        ) : (
+          <span />
+        )}
+        <span
+          className="flex-shrink-0 text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow"
+          style={{ backgroundColor: CATEGORY_STYLE[trail.category].to }}
+        >
           {t(categoryKey(trail.category))}
         </span>
       </div>
-      <div className="flex-1 flex flex-col p-4">
-        <h3 className="font-semibold text-gray-900 leading-snug">{t(trailNameKey(trail))}</h3>
-        <p className="mt-1 text-sm text-gray-500 line-clamp-2">{t(trailDescKey(trail))}</p>
-        <div className="mt-auto pt-3 flex items-center gap-2 text-xs text-gray-600">
-          <span className="font-semibold text-[#002472] whitespace-nowrap">{t('stopsCount').replace('{n}', String(trail.stops.length))}</span>
-          {station && (
-            <>
-              <span className="text-gray-300" aria-hidden="true">·</span>
-              <span className="inline-flex items-center gap-1 min-w-0">
-                {station.lineIds[0] && <LineBadge line={station.lineIds[0]} size={16} decorative />}
-                <span className="truncate">{t('startsAt').replace('{station}', station.name)}</span>
-              </span>
-            </>
-          )}
-        </div>
+
+      <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-white">
+        <p className="text-xs font-semibold uppercase tracking-wider text-white/90 [text-shadow:0_1px_3px_rgb(0_0_0/0.7)]">
+          {t('stopsCount').replace('{n}', String(trail.stops.length))}
+        </p>
+        <h3 className="mt-1 text-[22px] font-medium tracking-[-0.01em] leading-tight line-clamp-2 [text-shadow:0_1px_3px_rgb(0_0_0/0.7)]">{t(trailNameKey(trail))}</h3>
+        <p className="mt-1 text-sm text-white/90 leading-snug line-clamp-2 [text-shadow:0_1px_3px_rgb(0_0_0/0.7)]">
+          {t(trailDescKey(trail))} <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1 rtl:-scale-x-100">→</span>
+        </p>
       </div>
     </Link>
   )

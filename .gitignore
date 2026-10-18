@@ -27,3 +27,7 @@ dist-ssr
 reports
 test-results
 dist-e2e
+
+# brand files (kept local)
+brand-kit/
+RONDA-logo-HD.zip

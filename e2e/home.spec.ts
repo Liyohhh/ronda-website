@@ -1,12 +1,13 @@
 import { expect, test } from './mocks'
 
-// Home page order under the search card: Trails (Explore) -> Promotions -> slides -> "Everything you need" -> Reviews
-const ORDER = ['trails-title', 'promo-title', 'slides-title', 'features-title', 'reviews-title']
+// Home page order under the search card: RONDA 300 trails -> Promotions -> Why RONDA -> "Everything you need"
+// (Services and the feature slides are off the page for now)
+const ORDER = ['trails-title', 'promo-title', 'why-title', 'features-title']
 
 test('home sections come in the agreed order', async ({ page, backend }) => {
   void backend
   await page.goto('/')
-  await expect(page.locator('#reviews-title')).toBeAttached()
+  await expect(page.locator('#features-title')).toBeAttached()
   const ids = await page.locator('main h2[id]').evaluateAll((hs) => hs.map((h) => h.id))
   expect(ids.filter((id) => ORDER.includes(id))).toEqual(ORDER)
   await expect(page.locator('#explore')).toBeAttached()
@@ -16,7 +17,7 @@ test('every promotion is labelled as an ad', async ({ page, backend }) => {
   void backend
   await page.goto('/')
   const cards = page.locator('section[aria-labelledby="promo-title"] [data-promo]')
-  await expect(cards).toHaveCount(4)
+  await expect(cards).toHaveCount(4) // wide banner + 3 cards
   for (const card of await cards.all()) await expect(card.getByText('Ad', { exact: true })).toBeVisible()
 })
 
@@ -25,7 +26,7 @@ for (const width of [375, 768, 1440]) {
     void backend
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/')
-    await expect(page.locator('#reviews-title')).toBeAttached()
+    await expect(page.locator('#features-title')).toBeAttached()
     const boxes = await Promise.all(ORDER.map(async (id) => {
       const sec = page.locator(`section[aria-labelledby="${id}"]`)
       return (await sec.boundingBox())!
