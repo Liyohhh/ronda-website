@@ -73,7 +73,7 @@ function LanguageMenu({ variant = 'pill', compact = false }: Props) {
 
   const buttonClass =
     variant === 'pill'
-      ? 'h-9 px-3 rounded-full hover:bg-[#1F2F5C]/5'
+      ? 'h-9 px-3 rounded-full bg-gray-100 hover:bg-[#1F2F5C] hover:text-white'
       : 'h-9 px-3 rounded-lg border border-gray-300 bg-white hover:border-[#1F2F5C]/40'
 
   return (

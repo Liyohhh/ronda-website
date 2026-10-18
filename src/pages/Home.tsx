@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import LinePicker from '../components/LinePicker'
 import LinePanel from '../components/LinePanel'
 import { LineGrid } from '../components/LineTiles'
@@ -12,6 +12,7 @@ import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
 import FeatureBand from '../components/FeatureBand'
 import PromotionSection from '../components/PromotionSection'
+import LineMarquee from '../components/LineMarquee'
 import WhyRonda from '../components/WhyRonda'
 import ServicesSection from '../components/ServicesSection'
 import { SERVICES_ENABLED } from '../data/serviceOptions'
@@ -24,12 +25,19 @@ import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
 import { useLocate } from '../hooks/useLocate'
+import { AUTH_VIDEO } from '../data/authVideo'
+
+// the hero video plays on wider screens only (phones keep the photo and their data), never with reduced motion
+const wantsHeroVideo = () =>
+  typeof window !== 'undefined' && !!window.matchMedia &&
+  window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)').matches
 
 const LIST_ID = 'place-suggestions'
 
 function Home() {
   const { t } = useLanguage()
   // /?tab=lines opens the Lines tab (the "All lines" link on line pages)
+  const [heroVideo] = useState(wantsHeroVideo)
   const [tab, setTab] = useState<'directions' | 'lines'>(() => (new URLSearchParams(window.location.search).get('tab') === 'lines' ? 'lines' : 'directions'))
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
@@ -359,7 +367,7 @@ function Home() {
     <button
       onClick={() => handleSearch()}
       disabled={loading}
-      className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+      className="w-14 h-14 rounded-full bg-[#1F2F5C] hover:bg-[#152038] active:scale-95 transition text-white flex items-center justify-center flex-shrink-0 shadow-[0_4px_12px_rgb(24_36_63/0.2)] disabled:opacity-60"
       aria-label={t('searchAria')}
     >
       {loading ? (
@@ -371,53 +379,100 @@ function Home() {
   )
 
   return (
-    <SiteLayout>
-      {/* Hero: KL skyline photo, light (clean blue theme): a light indigo wash plus a soft cobalt tint; a soft scrim only
-          behind the text keeps it readable (measured at 375 / 768 / 1440 px with scripts/hero-contrast.mjs); sky-blue
-          brush stroke under the headline; the search card overlaps its bottom */}
-      <section className="relative overflow-x-clip">
-        {/* Photo behind the whole hero; the light strip in the card row hides its lower part,
-            so the photo always ends exactly halfway down the search card (pure CSS, any card height) */}
-        <div className="absolute inset-0 overflow-hidden bg-[#18243F]" aria-hidden="true">
-          <picture>
-            <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-            <img
-              src="/Image/banner-kl.jpg"
-              alt=""
-              fetchPriority="high"
-              className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
-            />
-          </picture>
-          <div className="absolute inset-0 bg-[#2563EB]/10 mix-blend-soft-light" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#18243F]/30 via-[#18243F]/5 to-[#18243F]/25" />
+    <SiteLayout darkEnd>
+      {/* Hero (Blaze layout): an inset card with rounded corners; the KL skyline photo (and on wider screens the KL
+          sunset video, muted) starts slightly zoomed in and settles; the headline sits bottom-left over a dark fade.
+          The search card overlaps the card's bottom edge. */}
+      <section className="relative px-3 sm:px-4 pt-1">
+        <div className="hero-card relative overflow-hidden rounded-[32px] bg-[#18243F] shadow-[0_32px_64px_-12px_rgb(24_36_63/0.25)] min-h-[480px] md:min-h-[600px] lg:h-[76vh] lg:max-h-[760px] flex flex-col justify-end">
+          <div className="absolute inset-0 hero-settle" aria-hidden="true">
+            <picture>
+              <source srcSet="/Image/banner-kl.webp" type="image/webp" />
+              <img
+                src="/Image/banner-kl.jpg"
+                alt=""
+                fetchPriority="high"
+                className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
+              />
+            </picture>
+            {heroVideo && (
+              <video
+                src={AUTH_VIDEO.src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                className="absolute inset-0 w-full h-full object-cover object-[center_40%] opacity-0 transition-opacity duration-1000 [&.is-playing]:opacity-100"
+                onPlaying={(e) => e.currentTarget.classList.add('is-playing')}
+              />
+            )}
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0b1222]/85 via-[#0b1222]/30 to-[#0b1222]/10" aria-hidden="true" />
+
+          {/* right edge: a line with its stations, the current one ringed (decorative, like the Blaze slide dots) */}
+          <div className="hidden md:flex absolute end-8 top-[18%] flex-col items-center" aria-hidden="true">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <span key={i} className="flex flex-col items-center">
+                {i > 0 && <span className="w-px h-7 bg-white/35" />}
+                {i === 1 ? (
+                  <span className="w-8 h-8 rounded-full border border-white/70 flex items-center justify-center"><span className="w-2 h-2 rounded-full bg-white" /></span>
+                ) : (
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
+                )}
+              </span>
+            ))}
+          </div>
+
+          <div className="relative px-6 sm:px-10 md:px-[44px] pb-28 md:pb-32 pt-24 flex flex-col lg:flex-row lg:items-end justify-between gap-y-8 gap-x-10">
+            <div className="space-y-8 max-w-4xl text-start">
+              <h1 className="rise-in max-w-[820px] [text-wrap:balance] text-[38px] sm:text-5xl md:text-[60px] lg:text-[72px] leading-[1.05] font-medium tracking-[-0.03em] text-white drop-shadow-sm">
+                {t('bannerTitle')}
+              </h1>
+              {/* how many stops, then the kinds of transport as glass icon chips */}
+              <div className="rise-in flex flex-wrap items-center gap-6 sm:gap-10" style={{ '--rise-delay': '0.15s' } as CSSProperties}>
+                <p className="max-w-[15rem] text-[12px] sm:text-[13px] leading-tight font-medium uppercase tracking-wider text-white/80">
+                  6,500+ {t('why_stops')}
+                </p>
+                <div className="flex items-center gap-1.5 p-1 rounded-full bg-white/5 backdrop-blur-[20px] border border-white/10" aria-hidden="true">
+                  {(['train', 'directionsBusOutline', 'directionsWalk', 'flight'] as const).map((icon) => (
+                    <span key={icon} className="w-[38px] h-[38px] flex items-center justify-center rounded-full bg-white/10 border border-white/5 text-white">
+                      <Icon name={icon} size={18} />
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="rise-in lg:max-w-[440px] lg:flex-shrink-0 flex flex-col lg:items-end gap-5" style={{ '--rise-delay': '0.3s' } as CSSProperties}>
+              <p className="text-base md:text-lg font-medium leading-snug text-white/90 lg:text-end [text-wrap:balance]">{t('bannerSubtitle')}</p>
+              <ul className="flex flex-wrap lg:flex-nowrap lg:justify-end gap-2">
+                {([['directions', '/#plan', 'route'], ['lines', '/?tab=lines', 'train'], ['trails', '/trails', 'hiking']] as const).map(([key, to, icon]) => (
+                  <li key={key}>
+                    <Link to={to} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-sm font-semibold text-white whitespace-nowrap hover:bg-white hover:text-[#1F2F5C] transition-colors">
+                      <Icon name={icon} size={16} />
+                      {t(key)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          {heroVideo && (
+            <a
+              href={AUTH_VIDEO.page}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute top-4 end-5 rounded-full bg-black/35 px-2.5 py-0.5 text-[10px] text-white/80 backdrop-blur-sm hover:underline"
+            >
+              {t('videoLabel')}: {AUTH_VIDEO.author} · Pexels
+            </a>
+          )}
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4 pt-12 md:pt-16 text-center">
-          <div className="relative inline-block px-4 py-2">
-            {/* local scrim: darkens only behind the text, fading out at the edges */}
-            <div
-              className="absolute -inset-x-16 -inset-y-14 md:-inset-x-32 md:-inset-y-16 bg-[radial-gradient(closest-side,rgb(24_36_63/0.66)_0%,rgb(24_36_63/0.62)_62%,rgb(24_36_63/0.36)_84%,transparent_100%)]"
-              aria-hidden="true"
-            />
-            <h1 className="relative text-4xl md:text-6xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgb(24_36_63/0.7)]">
-              {t('bannerTitle')}
-              <svg className="absolute -bottom-3 md:-bottom-5 inset-x-[8%] w-[84%] h-3 md:h-4 text-accent-light" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M2 8 C 60 2, 140 2, 200 6 S 280 10, 298 4" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-              </svg>
-            </h1>
-            <p className="relative mt-7 text-xl font-bold md:text-2xl md:font-medium text-white/95 [text-shadow:0_1px_12px_rgb(24_36_63/0.8)]">
-              {t('bannerSubtitle')}
-            </p>
-          </div>
-        </div>
-
-        {/* Search card: half on the photo, half on the light page below it */}
-        <div className="relative z-20 mt-16 md:mt-32 px-4 flex justify-center">
-          <div className="absolute inset-x-0 -bottom-px h-[calc(50%+1px)] bg-gray-50" aria-hidden="true">
-            {/* two-blue stripe where the photo ends */}
-            <div className="absolute inset-x-0 top-0 h-1.5 bg-[repeating-linear-gradient(90deg,#1F2F5C_0_28px,#2563EB_28px_56px)]" />
-          </div>
-          <div id="plan" className="relative w-full max-w-6xl bg-white rounded-[2rem] shadow-2xl px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
+        {/* Search card: overlaps the bottom of the hero card */}
+        <div className="relative z-20 -mt-16 md:-mt-20 px-2 sm:px-6 flex justify-center">
+          <div id="plan" className="relative w-full max-w-6xl bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgb(24_36_63/0.22)] ring-1 ring-gray-100 px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
             {/* Tab switcher */}
             <div className="flex justify-center">
               <div className="flex bg-gray-100 rounded-full p-1">
@@ -426,7 +481,7 @@ function Home() {
                   aria-pressed={tab === 'directions'}
                   onClick={() => setTab('directions')}
                   className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
-                    tab === 'directions' ? 'bg-white text-black shadow' : 'text-gray-500'
+                    tab === 'directions' ? 'bg-[#1F2F5C] text-white shadow-[0_4px_12px_rgb(24_36_63/0.2)]' : 'text-gray-600 hover:text-[#1F2F5C]'
                   }`}
                 >
                   {t('directions')}
@@ -436,7 +491,7 @@ function Home() {
                   aria-pressed={tab === 'lines'}
                   onClick={() => setTab('lines')}
                   className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
-                    tab === 'lines' ? 'bg-white text-black shadow' : 'text-gray-500'
+                    tab === 'lines' ? 'bg-[#1F2F5C] text-white shadow-[0_4px_12px_rgb(24_36_63/0.2)]' : 'text-gray-600 hover:text-[#1F2F5C]'
                   }`}
                 >
                   {t('lines')}
@@ -455,12 +510,12 @@ function Home() {
               >
                 {/* directions: Start and End are equal halves around the swap button, each with its own button at the end
                     (my location / search), so the swap button sits in the middle */}
-                <div className={`bg-white rounded-3xl sm:rounded-full shadow-lg border flex flex-wrap sm:flex-nowrap items-center ps-0 sm:ps-2.5 pe-2.5 ${tab === 'directions' ? 'sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]' : ''}`}>
+                <div className={`bg-gray-50 rounded-3xl sm:rounded-full border border-gray-200 flex flex-wrap sm:flex-nowrap items-center ps-0 sm:ps-2.5 pe-2.5 ${tab === 'directions' ? 'sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]' : ''}`}>
                   {tab === 'directions' ? (
                     <>
                       <div className="basis-full flex-1 flex items-center ps-5 pe-2.5 sm:pe-4 py-3 sm:py-4 border-b border-gray-100 sm:border-b-0 min-w-0">
                         <div className="flex-1">
-                          <div className="text-sm text-gray-500">{t('start')}</div>
+                          <div className="text-sm text-gray-600">{t('start')}</div>
                           <input
                             type="text"
                             value={start}
@@ -506,7 +561,7 @@ function Home() {
 
                       <div className="flex-1 flex items-center min-w-0">
                         <div className="flex-1 min-w-0 ps-4 pe-3 py-3 sm:py-4">
-                          <div className="text-sm text-gray-500">{t('end')}</div>
+                          <div className="text-sm text-gray-600">{t('end')}</div>
                           <input
                             type="text"
                             id="end-input"
@@ -535,7 +590,7 @@ function Home() {
                   ) : (
                     <div className="flex-1 flex items-center ps-5 pe-4 py-4">
                       <div className="flex-1">
-                        <div className="text-sm text-gray-500">{t('line')}</div>
+                        <div className="text-sm text-gray-600">{t('line')}</div>
                         <input
                           type="text"
                           id="line-input"
@@ -619,10 +674,11 @@ function Home() {
         </div>
       </section>
 
-      {/* Below the search: RONDA 300 trails, promotions (ads), services (chauffeur and transfers, hidden until SERVICES_ENABLED), the feature slides as a white card that sits over
-          the top of the navy band, then the feature tiles in the band (app banner + footer follow in SiteLayout) */}
+      {/* Below the search: RONDA 300 trails, promotions (ads), Why RONDA, services (chauffeur and transfers, hidden until
+          SERVICES_ENABLED), the feature slides, then the feature tiles in the dark band (app banner + footer follow in SiteLayout) */}
       <TrailsSection />
       <PromotionSection />
+      <LineMarquee />
       <WhyRonda />
       {SERVICES_ENABLED && <ServicesSection />}
       <FeatureCarousel
@@ -636,7 +692,7 @@ function Home() {
           window.scrollTo({ top: 0, behavior: 'smooth' })
         }}
       />
-      <FeatureBand overlap>
+      <FeatureBand>
         <FeatureGrid />
       </FeatureBand>
 

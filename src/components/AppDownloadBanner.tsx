@@ -1,10 +1,5 @@
 import { useLanguage } from '../hooks/useLanguage'
-import BrandLogo from './BrandLogo'
-import LineBadge from './LineBadge'
-import WalkIcon from './WalkIcon'
 
-// "Get the RONDA app" band. SiteLayout always renders it just above the footer.
-// Store links come from env vars; until the app is published the badges show "Coming soon".
 const PLAY_URL = import.meta.env.VITE_PLAY_STORE_URL as string | undefined
 const APPSTORE_URL = import.meta.env.VITE_APP_STORE_URL as string | undefined
 
@@ -20,105 +15,47 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
         <path fill="currentColor" d={iconPath} />
       </svg>
       <span className="flex flex-col leading-none text-start">
-        <span className="text-[10px] tracking-wide text-white/80">{small}</span>
+        <span className="text-[10px] tracking-wide text-gray-600">{small}</span>
         <span className="text-lg font-semibold mt-1">{big}</span>
       </span>
     </>
   )
   const cls =
-    'h-14 w-48 px-4 inline-flex items-center gap-3 rounded-xl bg-black/70 text-white border border-white/25 backdrop-blur-sm'
+    'h-14 w-48 px-5 inline-flex items-center gap-3 rounded-full bg-white text-[#18243F]'
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3">
       {href ? (
-        <a href={href} target="_blank" rel="noreferrer" className={`${cls} hover:bg-black/85 hover:border-white/40 transition`}>
+        <a href={href} target="_blank" rel="noreferrer" className={`${cls} hover:bg-gray-100 active:scale-95 transition`}>
           {body}
         </a>
       ) : (
-        <span className={`${cls} opacity-90`} aria-disabled="true">
+        <span className={cls} aria-disabled="true">
           {body}
         </span>
       )}
-      {!href && <span className="text-xs font-medium text-accent-light uppercase tracking-wider">{soon}</span>}
+      {!href && <span className="text-[11px] font-medium text-white/70 uppercase tracking-wider">{soon}</span>}
     </div>
   )
 }
 
-// Phone mock-up with a simplified RONDA screen (illustration, not live data). It rises above the banner's
-// top edge and is cut off at the bottom, like app banners on bank / airline sites.
-function PhoneMockup() {
-  const { t } = useLanguage()
-  return (
-    <div className="w-[230px] rounded-[2.4rem] bg-[#0b0f1a] p-2.5 shadow-2xl ring-1 ring-white/10" aria-hidden="true">
-      <div className="relative rounded-[1.9rem] overflow-hidden bg-gray-50 h-[440px]">
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-[#0b0f1a]" />
-        <div className="bg-[#1F2F5C] px-4 pt-10 pb-4">
-          <BrandLogo tone="light" size="sm" />
-          <div className="mt-3 rounded-xl bg-white px-3 py-2 space-y-1.5">
-            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full border-2 border-[#1F2F5C]" />KL Sentral</div>
-            <div className="flex items-center gap-2 text-[10px] text-gray-500"><span className="w-2 h-2 rounded-full bg-[#2563EB]" />KLCC</div>
-          </div>
-        </div>
-        <div className="p-3 space-y-2">
-          {[
-            { lines: ['lrt-kelana-jaya'], time: '07:52 – 08:04', dur: t('durMin').replace('{m}', '12') },
-            { lines: ['monorail', 'lrt-kelana-jaya'], time: '07:55 – 08:15', dur: t('durMin').replace('{m}', '20') },
-          ].map((r) => (
-            <div key={r.time} className="rounded-xl bg-white border border-gray-200 p-2.5">
-              <div className="flex items-baseline justify-between">
-                <span className="text-sm font-bold text-gray-900">{r.dur}</span>
-                <span className="text-[9px] text-gray-500">{r.time}</span>
-              </div>
-              <div className="mt-1.5 flex items-center gap-1">
-                <WalkIcon size={12} className="text-gray-500" />
-                {r.lines.map((l) => (
-                  <LineBadge key={l} line={l} size={18} decorative />
-                ))}
-              </div>
-            </div>
-          ))}
-          <div className="rounded-xl bg-white border border-gray-200 p-2.5">
-            <div className="h-2 w-24 rounded bg-gray-200" />
-            <div className="mt-2 h-2 w-16 rounded bg-gray-100" />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
+// "Get the RONDA app": the call to action at the top-left of the footer (Blaze "travel with us"): a small label, the
+// big line, a short text and the two store badges. Store links come from env vars; until the app is published the
+// badges show "Coming soon".
 function AppDownloadBanner() {
   const { t } = useLanguage()
   return (
-    // Full width, and its bottom fades into the footer's navy so the two read as one block.
-    // The phone sits outside the clipped background so it can rise above the banner.
-    <section id="download" aria-labelledby="download-title" className="relative mt-24 text-white">
-      <div className="absolute inset-0 overflow-hidden bg-[#1F2F5C]">
-        {/* KL skyline, darkened so the text reads */}
-        <picture>
-          <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-          <img src="/Image/banner-kl.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[center_40%]" />
-        </picture>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#18243F]/95 via-[#18243F]/80 to-[#18243F]/60" />
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-[#1F2F5C]" />
-      </div>
-
-      <div className="relative max-w-6xl mx-auto grid gap-8 md:grid-cols-[1.1fr_auto_auto] items-center px-4 sm:px-6">
-        <div className="py-12">
-          <h2 id="download-title" className="text-2xl sm:text-3xl font-bold leading-tight">
-            {t('appBannerTitle')}
-          </h2>
-          <p className="mt-2 text-white/75 max-w-md">{t('appBannerText')}</p>
-        </div>
-
-        <div className="flex flex-col gap-3 pb-12 md:pb-0">
-          <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
-          <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
-        </div>
-
-        {/* phone: its top pokes above the banner, its bottom is cut at the banner's bottom edge */}
-        <div className="hidden md:block self-end -mt-20 h-[calc(100%+5rem)] max-h-[340px] overflow-hidden">
-          <PhoneMockup />
-        </div>
+    <section id="download" aria-labelledby="download-title" className="scroll-mt-24">
+      <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.12em] text-white/60">
+        <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-white/60" />
+        {t('getApp')}
+      </p>
+      <h2 id="download-title" className="mt-4 max-w-sm [text-wrap:balance] text-[36px] sm:text-[40px] font-bold leading-[1.1] tracking-[-0.05em] text-white">
+        {t('appBannerTitle')}
+      </h2>
+      <p className="mt-3 max-w-sm text-[15px] text-white/70">{t('appBannerText')}</p>
+      <div className="mt-7 flex flex-col sm:flex-row sm:flex-wrap gap-3">
+        <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
+        <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
       </div>
     </section>
   )

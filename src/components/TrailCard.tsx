@@ -16,14 +16,14 @@ function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Re
     <Link
       to={`/trails/${trail.slug}`}
       state={{ from: here.pathname + here.search }}
-      className={`group relative block aspect-[4/3] rounded-3xl overflow-hidden bg-[#18243F] shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1F2F5C] ${className}`}
+      className={`group relative block aspect-[4/3] rounded-[32px] overflow-hidden bg-[#18243F] shadow-[0_16px_40px_-16px_rgb(24_36_63/0.35)] hover:shadow-[0_28px_56px_-16px_rgb(24_36_63/0.45)] hover:-translate-y-1 transition duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1F2F5C] ${className}`}
     >
-      <TrailCover trail={trail} className="absolute inset-0 group-hover:scale-105 transition-transform duration-300" />
+      <TrailCover trail={trail} className="absolute inset-0 group-hover:scale-[1.06] transition-transform duration-700 ease-out" />
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
 
-      <div className="absolute inset-x-0 top-0 p-4 flex items-start justify-between gap-3">
+      <div className="absolute inset-x-0 top-0 p-5 flex items-start justify-between gap-3">
         {station ? (
-          <span className="inline-flex items-center gap-1.5 min-w-0 bg-black/55 backdrop-blur-sm text-white text-[11px] font-semibold uppercase tracking-wide ps-1 pe-2.5 py-1 rounded-full">
+          <span className="inline-flex items-center gap-1.5 min-w-0 bg-black/50 border border-white/15 backdrop-blur-xl text-white text-[11px] font-semibold uppercase tracking-wide ps-1 pe-2.5 py-1 rounded-full">
             {station.lineIds[0] && <LineBadge line={station.lineIds[0]} size={18} decorative />}
             <span className="truncate">{station.name}</span>
           </span>
@@ -38,11 +38,11 @@ function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Re
         </span>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 text-white">
+      <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-white">
         <p className="text-xs font-semibold uppercase tracking-wider text-white/90 [text-shadow:0_1px_3px_rgb(0_0_0/0.7)]">
           {t('stopsCount').replace('{n}', String(trail.stops.length))}
         </p>
-        <h3 className="mt-1 text-xl font-bold leading-tight line-clamp-2 [text-shadow:0_1px_3px_rgb(0_0_0/0.7)]">{t(trailNameKey(trail))}</h3>
+        <h3 className="mt-1 text-[22px] font-medium tracking-[-0.01em] leading-tight line-clamp-2 [text-shadow:0_1px_3px_rgb(0_0_0/0.7)]">{t(trailNameKey(trail))}</h3>
         <p className="mt-1 text-sm text-white/90 leading-snug line-clamp-2 [text-shadow:0_1px_3px_rgb(0_0_0/0.7)]">
           {t(trailDescKey(trail))} <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1 rtl:-scale-x-100">→</span>
         </p>

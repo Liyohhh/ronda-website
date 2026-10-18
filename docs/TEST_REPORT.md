@@ -1,6 +1,28 @@
 # Test report
 
-## Latest run - 15 Oct 2026 (branch design-2-blue-classic)
+## Latest run - 18 Oct 2026 (branch design-4-blaze)
+
+New home page layout in the style of the Blaze travel template (white page, 32 px round corners, grey pills,
+fade-up and word-by-word headings, sticky stacked promotion cards, dark band and footer), themed on Malaysian rail:
+official line colours, a moving row of every line with its badge, a metro drawing. Text and data unchanged, except the
+slide 2 button label ("Explore stations"), which had gone missing on 15 Oct and is back in all 4 languages, and one new
+footer button "Back to top" (4 languages).
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **206 / 206 passed**, 32 files (new: Motion, LineMarquee; promotions arrows test replaced by stacked-cards test) |
+| Website end-to-end tests (Playwright, desktop + phone, incl. accessibility scan of 14 pages) | **212 passed, 0 failed**, 6 skipped (desktop-only or phone-only tests) |
+| Visual check (full-page screenshots at 375, 768, 1024, 1280, 1440 px; reduced motion too) | checked by eye: no overlap, no sideways scroll, long line names wrap on phones |
+| Trip-planner regression matrix | Not run (no planner or database change) |
+
+Notes: one earlier full run had 2 tests time out under load (journey "use my location", trails "See all trails");
+both passed alone and in the next two full runs. Production workbook (database repo `testing/build_report.py`) not
+regenerated: this branch is not deployed.
+
+---
+
+## Run - 15 Oct 2026 (branch design-2-blue-classic)
 
 | Suite | Result |
 |---|---|

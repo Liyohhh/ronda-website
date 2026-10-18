@@ -34,25 +34,110 @@
 
 html {
   scroll-behavior: smooth;
-  /* in-page links (#download) stop below the sticky header: 64px row + services row on phones */
+  /* in-page links (#plan) stop below the sticky header: 64px row + menus row below 1280px */
   scroll-padding-top: 120px;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   html {
     scroll-padding-top: 80px;
   }
 }
 
+/* Blaze layout (design 4): white page, near-black text in RONDA navy, soft grey pills (#eef1f6) and panels (#f5f7fa),
+   big 32px corners, tight headline tracking. Inter when the device has it, else the system UI font (CSP: fonts are
+   self-hosted only). */
 body {
-  background: #f7f9fc;
+  background: #ffffff;
   color: #18243F;
+  font-family: Inter, "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Fade-up on scroll (useReveal): hidden only once scripts have marked the page, so nothing is lost without them */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.js-reveal .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero photo / video: starts slightly zoomed in and settles */
+@keyframes hero-settle {
+  from { transform: scale(1.12); }
+  to { transform: scale(1); }
+}
+.hero-settle {
+  animation: hero-settle 3.5s ease-in-out both;
+}
+
+/* Hero text: rises in line by line */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+.rise-in {
+  animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+
+/* Endless rows (LineMarquee): two copies of a row side by side, each moving by its own width */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+@keyframes marquee-right {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+@keyframes marquee-up {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
+.marquee-left { animation: marquee-left 45s linear infinite; }
+.marquee-right { animation: marquee-right 40s linear infinite; }
+.marquee-up { animation: marquee-up 30s linear infinite; }
+.marquee:hover .marquee-track,
+.marquee-v:hover .marquee-track { animation-play-state: paused; }
+
+/* Big headings whose words darken one by one as the page scrolls (WordFill) */
+.word-fill > span {
+  transition: color 0.25s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hero-settle,
+  .rise-in,
+  .marquee-track {
+    animation: none;
+  }
+  /* rows stand still: let them wrap instead of running off the screen; the repeat copy is not needed */
+  .marquee {
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-inline: 16px;
+  }
+  .marquee .marquee-track { flex-wrap: wrap; justify-content: center; }
+  /* a long line name wraps inside its pill instead of running off a phone screen */
+  .marquee .marquee-track > li { max-width: 100%; }
+  .marquee .marquee-track > li > span:last-child { white-space: normal; }
+  .marquee .marquee-track[aria-hidden="true"],
+  .marquee-v .marquee-track[aria-hidden="true"] { display: none; }
 }
 
 @keyframes menu-in {

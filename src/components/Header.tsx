@@ -48,20 +48,21 @@ function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85 border-b border-gray-200 transition-shadow ${
-        scrolled ? 'shadow-[0_4px_20px_-8px_rgb(0_36_114/0.25)]' : ''
+      className={`sticky top-0 z-40 bg-white/90 backdrop-blur-xl supports-[backdrop-filter]:bg-white/75 transition-shadow ${
+        scrolled ? 'shadow-[0_8px_30px_-12px_rgb(24_36_63/0.18)]' : ''
       }`}
     >
       {/* One row: logo + services on the left, language / help / account on the right.
           The row is the positioning box for the services dropdown, so it spans the full width. */}
-      <div className="relative flex items-center h-16 px-4 sm:px-6 gap-3 lg:gap-6">
+      <div className="relative flex items-center h-16 xl:h-[72px] px-4 sm:px-6 md:px-[44px] gap-3 lg:gap-6">
         <Link to="/" className="flex items-center flex-shrink-0" aria-label={t('homeAria')}>
           <BrandLogo size="sm" wordmarkClassName="hidden sm:block" />
         </Link>
 
-        <ServiceNav className="hidden lg:flex self-stretch" />
+        {/* menus sit in the middle of the row, like the centre line of the Blaze header */}
+        <ServiceNav className="hidden xl:flex absolute inset-0 items-center justify-center pointer-events-none [&>*]:pointer-events-auto" />
 
-        <div className="ms-auto flex items-center gap-0.5 sm:gap-1 text-sm font-medium text-[#1F2F5C]">
+        <div className="ms-auto flex items-center gap-1 sm:gap-2 text-[13px] font-medium text-[#1F2F5C]">
           <LanguageMenu compact />
 
           {/* Help */}
@@ -90,24 +91,24 @@ function Header() {
                 <ChevronIcon />
               </button>
               {menuOpen && (
-                <div className="absolute end-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+                <div className="absolute end-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden p-1">
                   <Link
                     to="/dashboard"
                     onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2.5 hover:bg-gray-50"
+                    className="block px-4 py-2.5 rounded-xl hover:bg-gray-100"
                   >
                     {t('myDashboard')}
                   </Link>
                   <Link
                     to="/account"
                     onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2.5 hover:bg-gray-50"
+                    className="block px-4 py-2.5 rounded-xl hover:bg-gray-100"
                   >
                     {t('accountLink')}
                   </Link>
                   <button
                     onClick={handleSignOut}
-                    className="w-full text-start px-4 py-2.5 hover:bg-gray-50"
+                    className="w-full text-start px-4 py-2.5 rounded-xl hover:bg-gray-100"
                   >
                     {t('signOut')}
                   </button>
@@ -122,7 +123,7 @@ function Header() {
               </Link>
               <Link
                 to="/register"
-                className="ms-1 h-9 px-3 sm:px-4 inline-flex items-center rounded-full bg-[#1F2F5C] text-white font-semibold whitespace-nowrap hover:bg-[#152038] transition-colors"
+                className="ms-1 h-9 px-4 sm:px-5 inline-flex items-center rounded-full bg-[#1F2F5C] text-white font-semibold whitespace-nowrap shadow-[0_4px_12px_rgb(24_36_63/0.18)] hover:bg-[#152038] active:scale-95 transition"
               >
                 {t('signUp')}
               </Link>
@@ -132,14 +133,14 @@ function Header() {
       </div>
 
       {/* Small screens: services get their own scrollable row */}
-      <ServiceNav className="flex lg:hidden overflow-x-auto [scrollbar-width:none] border-t border-gray-100 px-4 sm:px-6" />
+      <ServiceNav className="flex xl:hidden overflow-x-auto [scrollbar-width:none] px-4 sm:px-6" />
     </header>
   )
 }
 
 // Shared look for the right-side controls: same height, padding, hover and icon gap
 const PILL =
-  'h-9 px-3 inline-flex items-center gap-1.5 rounded-full hover:bg-[#1F2F5C]/5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#1F2F5C]/40'
+  'h-9 px-3 inline-flex items-center gap-1.5 rounded-full bg-gray-100 hover:bg-[#1F2F5C] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#1F2F5C]/40'
 
 function HelpIcon() {
   return (

@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
+import Icon from './Icon'
+import { Eyebrow, Reveal, WordFill } from './Motion'
+import { LINES } from '../data/lines'
+
+const LINE_STRIPE = [...new Set(LINES.map((l) => l.color))]
 
 // Home "Why RONDA?": Malaysia (Peninsula, Sarawak and Sabah) as a dot map. When the section scrolls into view the
 // dots fill in from west to east and the cities with published public transport timetables light up. No transit lines on purpose: the
@@ -98,13 +103,36 @@ function WhyRonda() {
   }, [play])
 
   return (
-    <section ref={ref} aria-labelledby="why-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-16">
-      <div className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-wide text-[#2563EB]">{t('why_tag')}</p>
-        <h2 id="why-title" className="mt-2 text-3xl md:text-4xl font-bold text-[#1F2F5C] max-w-3xl mx-auto">{t('why_title')}</h2>
-      </div>
+    <section ref={ref} aria-labelledby="why-title" className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 md:pt-32">
+      {/* Blaze "testimonials": label and heading on the left; below, a stats card beside a wide card with the map */}
+      <Reveal><Eyebrow icon={<Icon name="star" size={18} />}>{t('why_tag')}</Eyebrow></Reveal>
+      <h2 id="why-title" className="mt-6 max-w-3xl text-[36px] md:text-[58px] leading-[1.1] font-medium tracking-[-0.025em] text-[#1F2F5C]">
+        <WordFill text={t('why_title')} />
+      </h2>
 
-      <figure className="mt-8 rounded-3xl border border-gray-200 bg-white px-2 py-6 sm:px-6 shadow-sm">
+      <div className="mt-12 grid gap-[10px] lg:grid-cols-3">
+      <Reveal className="rounded-[32px] border border-gray-200 bg-gray-50 p-8 flex flex-col">
+        <p className="flex items-end gap-3">
+          <span className="text-[64px] leading-none font-medium tracking-[-0.04em] text-[#1F2F5C]">{stats[0][0]}</span>
+          <span className="pb-1.5 text-sm leading-snug text-gray-600 max-w-[9rem]">{stats[0][1]}</span>
+        </p>
+        <ul className="mt-8 space-y-4">
+          {stats.slice(1).map(([n, label], i) => (
+            <li key={label} className="flex items-center gap-3 text-[15px] text-gray-800">
+              <Icon name={(['train', 'locationOn', 'hiking'] as const)[i]} size={18} className="text-[#1F2F5C]" />
+              <span><b className="font-semibold text-[#1F2F5C]">{n}</b> {label}</span>
+            </li>
+          ))}
+        </ul>
+        {/* the rail-line stripe: every official line colour in a row */}
+        <div className="mt-auto pt-10" aria-hidden="true">
+          <div className="flex h-2 overflow-hidden rounded-full">
+            {LINE_STRIPE.map((c) => <span key={c} className="flex-1" style={{ backgroundColor: c }} />)}
+          </div>
+        </div>
+      </Reveal>
+
+      <figure className="lg:col-span-2 rounded-[32px] bg-gray-50 px-2 py-8 sm:px-8 flex flex-col justify-center">
         <svg viewBox="0 0 1120 430" role="img" aria-labelledby="why-svg-title" className={`why-map w-full h-auto${play ? ' is-playing' : ''}`}>
           <title id="why-svg-title">{t('why_svg')}</title>
           <defs>
@@ -132,7 +160,7 @@ function WhyRonda() {
                 <circle className="why-pulse" cx={x} cy={y} r={r} fill="none" stroke="#F59E0B" strokeWidth="1.5" style={{ animationDelay: `${2 + i * 0.35}s` }} />
                 <circle cx={x} cy={y} r={r} fill="#F59E0B" />
                 <text className={c.big ? undefined : 'why-label-small'} x={x + (c.left ? -(r + 6) : r + 6)} y={y} textAnchor={c.left ? 'end' : 'start'} dominantBaseline="central"
-                  fontSize={c.big ? 16 : 13} fontWeight={c.big ? 700 : 600} fill="#1F2F5C" paintOrder="stroke" stroke="#FFFFFF" strokeWidth="4" strokeLinejoin="round">
+                  fontSize={c.big ? 16 : 13} fontWeight={c.big ? 700 : 600} fill="#1F2F5C" paintOrder="stroke" stroke="#F5F7FA" strokeWidth="4" strokeLinejoin="round">
                   {c.name}
                 </text>
               </g>
@@ -148,17 +176,8 @@ function WhyRonda() {
           <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-[#F59E0B]" />
           {t('why_legend')}
         </p>
-        <figcaption className="mt-4 text-center text-lg italic text-gray-600 max-w-3xl mx-auto">{t('why_caption')}</figcaption>
       </figure>
-
-      <ul className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
-        {stats.map(([n, label]) => (
-          <li key={label} className="rounded-2xl border border-gray-200 bg-white p-4 text-center">
-            <span className="block text-2xl md:text-3xl font-bold text-[#1F2F5C]">{n}</span>
-            <span className="mt-1 block text-sm text-gray-600">{label}</span>
-          </li>
-        ))}
-      </ul>
+      </div>
     </section>
   )
 }

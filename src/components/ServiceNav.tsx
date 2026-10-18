@@ -37,7 +37,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
 
   return (
     <nav className={className} onMouseLeave={scheduleClose} aria-label="Main">
-      <ul className="flex items-stretch gap-6 text-sm text-[#1F2F5C] whitespace-nowrap">
+      <ul className="flex items-center gap-2 py-2 text-[13px] text-[#1F2F5C] whitespace-nowrap">
         {NAV_MENUS.map((m) => (
           <li key={m.key} className="flex">
             <button
@@ -56,8 +56,8 @@ function ServiceNav({ className = '' }: { className?: string }) {
                 else open(m.key)
               }}
               aria-expanded={active === m.key}
-              className={`py-3 border-b-2 font-medium transition-colors flex items-center gap-1 ${
-                active === m.key ? 'border-[#1F2F5C]' : 'border-transparent hover:border-[#1F2F5C]/40'
+              className={`h-9 px-3.5 rounded-full font-medium transition-colors flex items-center gap-1 ${
+                active === m.key ? 'bg-[#1F2F5C] text-white' : 'bg-gray-100 hover:bg-[#1F2F5C] hover:text-white'
               }`}
             >
               {t(m.key)}
@@ -70,7 +70,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
       {/* Hover panel */}
       <div
         onMouseEnter={() => active && open(active)}
-        className={`absolute left-0 right-0 top-full bg-white border-b border-gray-200 shadow-xl transition-all duration-200 ease-out ${
+        className={`absolute inset-x-4 top-full mt-1 bg-white border border-gray-100 rounded-[32px] shadow-[0_32px_64px_-12px_rgb(24_36_63/0.18)] transition-all duration-200 ease-out ${
           isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'
         }`}
       >
@@ -95,7 +95,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
             </div>
           ))}
 
-          <div className={`rounded-2xl bg-[#1F2F5C] text-white p-6 flex flex-col justify-between ${menu.columns.length === 1 ? 'md:col-span-2' : ''}`}>
+          <div className={`rounded-3xl bg-[#1F2F5C] text-white p-6 flex flex-col justify-between ${menu.columns.length === 1 ? 'md:col-span-2' : ''}`}>
             <div>
               <h3 className="font-semibold text-lg mb-2">{t(menu.promo.title)}</h3>
               <p className="text-sm text-white/70">{t(menu.promo.text)}</p>

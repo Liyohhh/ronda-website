@@ -8,7 +8,7 @@ function CategoryPills({ value, onChange }: { value: CategoryFilter; onChange: (
   const { t, lang } = useLanguage()
   const options: CategoryFilter[] = ['all', ...categoriesFor(lang)]
   return (
-    <div className="flex gap-2 overflow-x-auto [scrollbar-width:none] -mx-4 px-4 pb-1" role="group" aria-label={t('trailsTitle')}>
+    <div className="flex gap-2.5 overflow-x-auto [scrollbar-width:none] -mx-4 px-4 pb-1" role="group" aria-label={t('trailsTitle')}>
       {options.map((c) => {
         const active = c === value
         return (
@@ -17,8 +17,10 @@ function CategoryPills({ value, onChange }: { value: CategoryFilter; onChange: (
             type="button"
             onClick={() => onChange(c)}
             aria-pressed={active}
-            className={`h-9 px-4 rounded-full text-sm font-medium whitespace-nowrap border transition-colors ${
-              active ? 'bg-accent border-accent text-white' : 'bg-white border-gray-200 text-[#1F2F5C] hover:border-[#1F2F5C]/40'
+            className={`h-11 px-6 rounded-full text-[15px] whitespace-nowrap transition-all ${
+              active
+                ? 'bg-[#1F2F5C] text-white font-bold shadow-[0_4px_12px_rgb(24_36_63/0.15)]'
+                : 'bg-gray-100 text-[#1F2F5C] font-medium hover:bg-[#1F2F5C] hover:text-white'
             }`}
           >
             {c === 'all' ? t('allCategories') : t(categoryKey(c))}

@@ -1,5 +1,5 @@
-import { fireEvent, screen, within } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { screen, within } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
 import PromotionSection from './PromotionSection'
 import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { renderWithLang } from '../test/render'
@@ -30,24 +30,18 @@ describe('PromotionSection', () => {
     for (const p of [PROMO_FEATURE, ...PROMOTIONS]) expect(screen.getAllByRole('link', { name: p.photo.author }).length).toBeGreaterThan(0)
   })
 
-  it('arrows appear when the row is wider than the screen and scroll it one banner at a time', () => {
+  it('cards come in order, numbered 01 to 04, each with its own photo side and text side', () => {
     const { container } = renderWithLang(<PromotionSection />)
-    const row = container.querySelector<HTMLElement>('[data-promo="ronda300"]')!.parentElement!
-    expect(screen.queryByRole('button', { name: 'More promotions' })).toBeNull()
-    Object.defineProperty(row, 'scrollWidth', { configurable: true, value: 900 })
-    Object.defineProperty(row, 'clientWidth', { configurable: true, value: 300 })
-    const scrollBy = vi.fn()
-    row.scrollBy = scrollBy as unknown as typeof row.scrollBy
-    fireEvent.scroll(row)
-    fireEvent.click(screen.getByRole('button', { name: 'More promotions' }))
-    expect(scrollBy).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'smooth' }))
-    expect(scrollBy.mock.calls[0][0].left).toBeGreaterThan(0)
-    expect(screen.queryByRole('button', { name: 'Previous promotions' })).toBeNull()
-    row.scrollLeft = 600
-    fireEvent.scroll(row)
-    expect(screen.queryByRole('button', { name: 'More promotions' })).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: 'Previous promotions' }))
-    expect(scrollBy.mock.calls[1][0].left).toBeLessThan(0)
+    const all = banners(container)
+    expect(all.map((b) => b.dataset.promo)).toEqual([PROMO_FEATURE.id, ...PROMOTIONS.map((p) => p.id)])
+    all.forEach((b, i) => {
+      expect(within(b).getByText(String(i + 1).padStart(2, '0'))).toHaveAttribute('aria-hidden', 'true')
+      // wide screens: each card sticks a little lower than the one before, so they stack
+      expect(b.style.getPropertyValue('--stack-top')).toBe(`${96 + i * 18}px`)
+    })
+    // only the wide banner shows the three ad places and its button text
+    expect(within(all[0]).getAllByRole('listitem')).toHaveLength(PROMO_FEATURE.tickets.length)
+    expect(within(all[1]).queryAllByRole('listitem')).toHaveLength(0)
   })
 
   it('Arabic labels', () => {
