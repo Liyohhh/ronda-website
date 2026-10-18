@@ -21,7 +21,7 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
     </>
   )
   const cls =
-    'h-14 w-48 px-5 inline-flex items-center gap-3 rounded-full bg-white text-[#18243F]'
+    'h-14 w-48 px-5 inline-flex items-center gap-3 rounded-full bg-white text-[#14213D]'
   return (
     <div className="flex items-center gap-3">
       {href ? (
@@ -46,7 +46,7 @@ function AppDownloadBanner() {
   return (
     <section id="download" aria-labelledby="download-title" className="scroll-mt-24">
       <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.12em] text-white/60">
-        <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-white/60" />
+        <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-gold" />
         {t('getApp')}
       </p>
       <h2 id="download-title" className="mt-4 max-w-sm [text-wrap:balance] text-[36px] sm:text-[40px] font-bold leading-[1.1] tracking-[-0.05em] text-white">

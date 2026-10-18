@@ -17,9 +17,13 @@ describe('Motion', () => {
     render(<h2><WordFill text="Look closer: Malaysia is easier" /></h2>)
     const h = screen.getByRole('heading')
     expect(h).toHaveTextContent('Look closer: Malaysia is easier')
-    const words = Array.from(h.querySelectorAll('.word-fill > span'))
-    expect(words.length).toBeGreaterThan(3)
-    for (const w of words) expect((w as HTMLElement).style.color).toBe('rgb(31, 47, 92)')
+    const fill = h.querySelector<HTMLElement>('.word-fill')!
+    const words = Array.from(fill.querySelectorAll<HTMLElement>(':scope > span'))
+    expect(words.length).toBe(5)
+    // fully filled; each word knows its place in the heading
+    expect(fill.style.getPropertyValue('--p')).toBe('1')
+    expect(fill.style.getPropertyValue('--n')).toBe('5')
+    expect(words.map((w) => w.style.getPropertyValue('--i'))).toEqual(['0', '1', '2', '3', '4'])
   })
 
   it('WordFill splits Chinese text, which has no spaces', () => {

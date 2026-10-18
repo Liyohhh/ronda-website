@@ -26,7 +26,7 @@ function Hub() {
   const hub = data?.hub
   return (
     <SiteLayout>
-      <section className="bg-[#1F2F5C] text-white">
+      <section className="bg-[#14213D] text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
           <div className="mb-5">
             <BackButton to="/" label={t('backToHome')} onDark />
@@ -46,7 +46,7 @@ function Hub() {
         ) : (
           <>
           <GoAnywhere hub={data.hub} />
-          <h2 className="mt-10 text-lg font-semibold text-[#1F2F5C]">{t('hubPopular')}</h2>
+          <h2 className="mt-10 text-lg font-semibold text-[#14213D]">{t('hubPopular')}</h2>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
             {data.destinations.map((d) => (
               <li key={d.dest_slug} className="rounded-2xl border border-gray-200 bg-white p-5">
@@ -62,7 +62,7 @@ function Hub() {
                   <p className="mt-1 text-sm text-gray-500">{t('hubNoTime')}</p>
                 )}
                 {d.hops && d.hops.length > 0 && <p className="mt-1 text-sm text-gray-500">{d.hops.join(' → ')}</p>}
-                <Link to={planFromHub(data.hub, d)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#1F2F5C] hover:underline">
+                <Link to={planFromHub(data.hub, d)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#14213D] hover:underline">
                   {t('hubPlan')}
                   <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
                 </Link>
@@ -98,10 +98,10 @@ function GoAnywhere({ hub }: { hub: HubT }) {
   }
   return (
     <section aria-labelledby="hub-go" className="rounded-2xl border border-gray-200 bg-white p-5 md:p-6">
-      <h2 id="hub-go" className="text-lg font-semibold text-[#1F2F5C]">{t(airport ? 'hubLanded' : 'hubElsewhere')}</h2>
+      <h2 id="hub-go" className="text-lg font-semibold text-[#14213D]">{t(airport ? 'hubLanded' : 'hubElsewhere')}</h2>
       <label htmlFor="hub-go-input" className="mt-1 block text-sm text-gray-600">{t('hubGoLabel')}</label>
       <div className="relative mt-3 max-w-xl">
-        <div className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 focus-within:border-[#1F2F5C]">
+        <div className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 focus-within:border-[#14213D]">
           <Icon name="search" size={20} className="text-gray-500" />
           <input
             id="hub-go-input"

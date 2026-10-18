@@ -1,6 +1,24 @@
 # Test report
 
-## Latest run - 18 Oct 2026 (branch design-4-blaze)
+## Latest run - 18 Oct 2026, evening (branch design-4-blaze, polish + Black & Gold)
+
+Design review fixes: one page grid (every block starts on the same 80 px line on wide screens: header, hero text,
+search card, sections, footer); promotion cards all the same size and sticking at the same place, so each one slides
+over the last and covers it fully (no more slivers of mismatched halves); word-by-word headings now fade smoothly
+(no re-render while scrolling); gentler fade-up; stations in the metro drawing sit on their lines. Colours moved to the
+Black & Gold set across the whole site: navy #14213D, gold #FCA311 for main actions (with navy text), platinum and
+neutral greys, black footer. Official line colours unchanged.
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **206 / 206 passed**, 32 files |
+| Website end-to-end tests (Playwright, desktop + phone, incl. accessibility scan of 14 pages) | **212 passed, 0 failed**, 6 skipped |
+| Visual check | full-page screenshots at 390, 1024, 1280, 1440 px; scroll frames every 200 px through the promotion cards; /trails, /login, /about checked for the new colours |
+
+---
+
+## Run - 18 Oct 2026 (branch design-4-blaze)
 
 New home page layout in the style of the Blaze travel template (white page, 32 px round corners, grey pills,
 fade-up and word-by-word headings, sticky stacked promotion cards, dark band and footer), themed on Malaysian rail:

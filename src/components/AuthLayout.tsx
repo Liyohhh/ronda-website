@@ -30,7 +30,7 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
 
       <div className="flex flex-1">
         {/* Brand panel: KL sunset timelapse, clear (no tint over it); only a short soft shadow at the bottom behind the text */}
-        <aside className="relative hidden md:flex md:w-1/2 overflow-hidden bg-[#1F2F5C] text-white">
+        <aside className="relative hidden md:flex md:w-1/2 overflow-hidden bg-[#14213D] text-white">
           <picture>
             <source srcSet="/Image/banner-kl.webp" type="image/webp" />
             <img src="/Image/banner-kl.jpg" alt="" className="absolute inset-0 w-full h-full object-cover object-[45%_center]" />
@@ -91,7 +91,7 @@ export function AuthField({
       <span className="block text-sm font-medium text-gray-700 mb-1">{label}</span>
       <input
         {...input}
-        className="w-full h-11 border border-gray-300 rounded-lg px-3 bg-white text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#1F2F5C] focus:ring-2 focus:ring-[#1F2F5C]/15 transition"
+        className="w-full h-11 border border-gray-300 rounded-lg px-3 bg-white text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#14213D] focus:ring-2 focus:ring-[#14213D]/15 transition"
       />
     </label>
   )
@@ -105,7 +105,7 @@ export function SubmitButton({ busy, children }: { busy: boolean; children: Reac
       disabled={busy}
       className="w-full h-11 mt-2 bg-accent text-white rounded-lg font-semibold hover:bg-accent-hover disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-2"
     >
-      {busy && <span className="w-4 h-4 border-2 border-[#18243F]/30 border-t-[#18243F] rounded-full animate-spin" />}
+      {busy && <span className="w-4 h-4 border-2 border-[#14213D]/30 border-t-[#14213D] rounded-full animate-spin" />}
       {busy ? t('pleaseWait') : children}
     </button>
   )

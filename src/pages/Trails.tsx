@@ -21,7 +21,7 @@ function Trails() {
 
   return (
     <SiteLayout>
-      <section className="bg-[#1F2F5C] text-white">
+      <section className="bg-[#14213D] text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
           <div className="mb-5">
             <BackButton to="/" label={t('backToHome')} onDark />

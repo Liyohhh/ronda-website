@@ -8,7 +8,7 @@ export const OPEN_LANGUAGE_MENU = 'ronda:open-language'
 
 export type Feature = { key: TranslationKey; icon: IconName; accent: IconName; color: string; to?: string; soon?: boolean }
 export const FEATURES: Feature[] = [
-  { key: 'feat_directions', icon: 'route', accent: 'directionsWalk', color: '#1D4ED8', to: '/#plan' },
+  { key: 'feat_directions', icon: 'route', accent: 'directionsWalk', color: '#14213D', to: '/#plan' },
   { key: 'feat_places', icon: 'locationOn', accent: 'search', color: '#0369A1', to: '/#plan-end' },
   { key: 'feat_lines', icon: 'train', accent: 'palette', color: '#1E40AF', to: '/?tab=lines' },
   { key: 'feat_fares', icon: 'payments', accent: 'sell', color: '#0E7490', to: '/help/payments#payFares' },

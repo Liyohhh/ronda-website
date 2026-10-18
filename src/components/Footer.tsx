@@ -41,13 +41,13 @@ function Footer({ flush = false }: { flush?: boolean }) {
   ]
 
   return (
-    <footer className={`bg-[#18243F] text-white overflow-hidden selection:bg-white selection:text-[#18243F] ${flush ? '-mt-px' : 'mt-24'}`}>
+    <footer className={`bg-black text-white overflow-hidden selection:bg-gold selection:text-[#14213D] ${flush ? '' : 'mt-24'}`}>
       {!flush && (
         <div className="flex h-1.5" aria-hidden="true">
           {STRIPE.map((c) => <span key={c} className="flex-1" style={{ backgroundColor: c }} />)}
         </div>
       )}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 md:pt-20 pb-14 grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+      <div className="wrap pt-16 md:pt-20 pb-14 grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <AppDownloadBanner />
         {columns.map((c) => (
           <nav key={c.title} aria-label={c.title}>
@@ -66,7 +66,7 @@ function Footer({ flush = false }: { flush?: boolean }) {
       </div>
 
       <div className="border-y border-white/10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col md:flex-row gap-3 md:items-center justify-between text-xs text-white/70">
+        <div className="wrap py-5 flex flex-col md:flex-row gap-3 md:items-center justify-between text-xs text-white/70">
           <span className="flex items-center gap-3">
             <BrandLogo tone="light" size="sm" wordmark={false} />
             © {year} RONDA. {t('footerRights')}
@@ -86,7 +86,7 @@ function Footer({ flush = false }: { flush?: boolean }) {
               window.scrollTo({ top: 0, behavior: 'smooth' })
               document.querySelector<HTMLElement>('header a')?.focus({ preventScroll: true })
             }}
-            className="self-start md:self-auto hover:text-white"
+            className="self-start md:self-auto hover:text-gold"
           >
             {t('backToTop')} ↑
           </button>
@@ -94,13 +94,13 @@ function Footer({ flush = false }: { flush?: boolean }) {
       </div>
 
       {/* the brand name, very large, over the KL skyline (decorative; the tagline stays readable below it) */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-6">
-        <div className="relative overflow-hidden rounded-[32px] bg-[#1F2F5C]">
+      <div className="wrap pt-10 pb-6">
+        <div className="relative overflow-hidden rounded-[32px] bg-[#14213D]">
           <picture aria-hidden="true">
             <source srcSet="/Image/banner-kl.webp" type="image/webp" />
             <img src="/Image/banner-kl.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[center_30%]" />
           </picture>
-          <div className="absolute inset-0 bg-[#0b1222]/45" aria-hidden="true" />
+          <div className="absolute inset-0 bg-[#0B1528]/45" aria-hidden="true" />
           <svg viewBox="0 0 1000 300" className="relative block w-full h-auto" aria-hidden="true" focusable="false">
             <text x="500" y="232" textAnchor="middle" direction="ltr" fontSize="230" fontWeight="700" letterSpacing="-10" fill="#ffffff">RONDA</text>
           </svg>

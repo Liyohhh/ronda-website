@@ -21,7 +21,7 @@ try {
 // Name cards and the station pills show from tablet width up; on a phone the numbers match the stop list below,
 // and the summary card sits under the map.
 
-const NAVY = '#1F2F5C'
+const NAVY = '#14213D'
 
 type Rect = { x: number; y: number; w: number; h: number }
 type Side = 'right' | 'left' | 'top' | 'bottom' | 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left' | 'center'
@@ -140,10 +140,10 @@ function TrailMap({ trail, places }: { trail: Trail; places: Record<string, Plac
 
       // START / END stations: ring marker plus a pill with the station and its line colours
       const station = (s: NonNullable<TrailRoute['start']>, label: string, at: [number, number], dark: boolean) => {
-        add(el('div', 'h-4 w-4 rounded-full border-[3px] border-[#1F2F5C] bg-white shadow'), at)
-        const pill = el('div', 'hidden sm:flex items-center gap-2 whitespace-nowrap rounded-full border-2 border-[#1F2F5C] bg-white py-1 ps-1 pe-3 shadow-md')
-        pill.append(el('span', `rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide text-white ${dark ? 'bg-[#1F2F5C]' : 'bg-[#2563EB]'}`, label))
-        pill.append(el('span', 'text-[13px] font-semibold text-[#1F2F5C]', s.name))
+        add(el('div', 'h-4 w-4 rounded-full border-[3px] border-[#14213D] bg-white shadow'), at)
+        const pill = el('div', 'hidden sm:flex items-center gap-2 whitespace-nowrap rounded-full border-2 border-[#14213D] bg-white py-1 ps-1 pe-3 shadow-md')
+        pill.append(el('span', `rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide text-white ${dark ? 'bg-[#14213D]' : 'bg-[#14213D]'}`, label))
+        pill.append(el('span', 'text-[13px] font-semibold text-[#14213D]', s.name))
         const dots = el('span', 'flex gap-0.5')
         for (const id of s.lineIds ?? []) {
           const dot = el('span', 'h-2.5 w-2.5 rounded-full')
@@ -161,18 +161,18 @@ function TrailMap({ trail, places }: { trail: Trail; places: Record<string, Plac
         const pl = places[s.placeId]
         if (!pl) return
         const card = el('div', 'hidden sm:block w-max max-w-[200px] rounded-lg bg-white/95 px-3 py-1.5 shadow-md')
-        card.append(el('div', 'text-[13px] font-bold leading-tight text-[#1F2F5C]', pl.name))
+        card.append(el('div', 'text-[13px] font-bold leading-tight text-[#14213D]', pl.name))
         card.append(el('div', 'mt-0.5 text-[11px] leading-snug text-gray-600 line-clamp-2', t(placeBlurbKey(pl.id))))
         place(card, stops[i], 24, ['right', 'left', 'bottom', 'top', 'bottom-right', 'top-right', 'bottom-left', 'top-left'])
       })
 
       // walk badges, halfway along each leg, nudged off anything already there
       for (const l of route.legs) {
-        const badge = el('div', 'whitespace-nowrap rounded-full bg-[#2563EB] px-2 py-0.5 text-[11px] font-semibold text-white shadow', `${l.minutes} min · ${l.meters} m`)
+        const badge = el('div', 'whitespace-nowrap rounded-full bg-[#14213D] px-2 py-0.5 text-[11px] font-semibold text-white shadow', `${l.minutes} min · ${l.meters} m`)
         place(badge, midpoint(l.path), 16, ['center', 'right', 'left', 'top', 'bottom', 'top-right', 'bottom-right', 'top-left', 'bottom-left'])
       }
       route.stops.forEach((_, i) => {
-        add(el('div', 'flex h-8 w-8 items-center justify-center rounded-full border-[3px] border-white bg-[#1F2F5C] text-sm font-bold text-white shadow-md ring-2 ring-[#2563EB]', String(i + 1)), stops[i])
+        add(el('div', 'flex h-8 w-8 items-center justify-center rounded-full border-[3px] border-white bg-[#14213D] text-sm font-bold text-white shadow-md ring-2 ring-[#14213D]', String(i + 1)), stops[i])
       })
     })
 
@@ -193,11 +193,11 @@ function TrailMap({ trail, places }: { trail: Trail; places: Record<string, Plac
       {/* summary card, like the printed maps (under the map on a phone) */}
       <div
         ref={summary}
-        className="pointer-events-none bg-[#1F2F5C] p-4 text-white sm:absolute sm:bottom-3 sm:start-3 sm:max-w-sm sm:rounded-xl sm:bg-[#1F2F5C]/95 sm:shadow-lg"
+        className="pointer-events-none bg-[#14213D] p-4 text-white sm:absolute sm:bottom-3 sm:start-3 sm:max-w-sm sm:rounded-xl sm:bg-[#14213D]/95 sm:shadow-lg"
       >
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-accent-light">{t('trailMapKicker')}</p>
         <p className="mt-1 text-xl sm:text-2xl font-bold leading-tight">{t(trailNameKey(trail))}</p>
-        <div className="mt-2 h-1 w-16 rounded-full bg-[#2563EB]" />
+        <div className="mt-2 h-1 w-16 rounded-full bg-[#14213D]" />
         <dl className="mt-3 grid grid-cols-3 gap-3">
           <div><dt className="sr-only">{t('trailMapStops')}</dt><dd className="text-lg font-bold">{route.stops.length}</dd><dd className="text-xs text-white/75">{t('trailMapStops')}</dd></div>
           <div><dt className="sr-only">{t('trailMapWalk')}</dt><dd className="text-lg font-bold">{km.toFixed(1)} km</dd><dd className="text-xs text-white/75">{t('trailMapWalk')}</dd></div>
@@ -210,8 +210,8 @@ function TrailMap({ trail, places }: { trail: Trail; places: Record<string, Plac
 
       {/* legend */}
       <div className="pointer-events-none absolute bottom-8 end-3 hidden md:block rounded-xl bg-white/95 px-3 py-2 text-xs text-gray-700 shadow">
-        <p className="flex items-center gap-2"><span className="w-8 border-t-[3px] border-dotted border-[#1F2F5C]" />{t('trailMapLegendRoute')}</p>
-        <p className="mt-1.5 flex items-center gap-2"><span className="rounded-full bg-[#2563EB] px-1.5 py-0.5 text-[10px] font-semibold text-white">6 min · 460 m</span>{t('trailMapLegendLeg')}</p>
+        <p className="flex items-center gap-2"><span className="w-8 border-t-[3px] border-dotted border-[#14213D]" />{t('trailMapLegendRoute')}</p>
+        <p className="mt-1.5 flex items-center gap-2"><span className="rounded-full bg-[#14213D] px-1.5 py-0.5 text-[10px] font-semibold text-white">6 min · 460 m</span>{t('trailMapLegendLeg')}</p>
       </div>
     </section>
   )

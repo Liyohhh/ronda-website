@@ -15,7 +15,7 @@ function Pill({ line }: { line: Line }) {
   return (
     <li className="flex-shrink-0 inline-flex items-center gap-3 ps-2.5 pe-6 py-2.5 rounded-full border border-gray-200 bg-white">
       <LineBadge line={line} size={44} decorative />
-      <span className="text-lg md:text-[28px] font-medium tracking-[-0.01em] text-[#1F2F5C] whitespace-nowrap">{line.name}</span>
+      <span className="text-lg md:text-[28px] font-medium tracking-[-0.01em] text-[#14213D] whitespace-nowrap">{line.name}</span>
     </li>
   )
 }
@@ -25,12 +25,12 @@ function LineMarquee() {
   return (
     <section aria-label={t('lines')} className="mt-24 md:mt-32 bg-gray-50 py-16 md:py-[110px] overflow-hidden">
       <Reveal className="px-4 flex flex-col items-center text-center">
-        <div className="inline-flex items-center gap-3 rounded-full bg-white ps-2 pe-5 py-2 shadow-[0_8px_24px_-12px_rgb(24_36_63/0.25)] ring-1 ring-gray-100">
+        <div className="inline-flex items-center gap-3 rounded-full bg-white ps-2 pe-5 py-2 shadow-[0_8px_24px_-12px_rgb(20_33_61/0.25)] ring-1 ring-gray-100">
           <span className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center">
             <BrandLogo size="sm" wordmark={false} />
           </span>
           <span className="text-start leading-tight">
-            <span className="block text-sm font-semibold text-[#1F2F5C]">RONDA</span>
+            <span className="block text-sm font-semibold text-[#14213D]">RONDA</span>
             <span className="block text-xs text-gray-600">{t('bannerSubtitle')}</span>
           </span>
         </div>

@@ -19,7 +19,7 @@ function SiteLayout({ children, subheader, darkEnd = false }: { children: ReactN
       {CHAT_ENABLED && (
         <Suspense fallback={null}>
           {/* room under the footer so the chat launcher never covers its last line */}
-          <div className="h-20 bg-[#18243F]" aria-hidden="true" />
+          <div className="h-20 bg-black" aria-hidden="true" />
           <ChatWidget />
         </Suspense>
       )}

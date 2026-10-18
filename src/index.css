@@ -1,30 +1,53 @@
 @import "tailwindcss";
 
-/* Clean blue theme (9 Oct 2026): RONDA navy on cool light grey, one crisp cobalt blue for actions, and a range of
-   blues (royal, ocean, teal-blue, indigo, slate) where variety is needed. No warm colours except where colour carries
-   meaning (official line colours, open / closed, live bus status, brand logos).
-   Tokens: navy (bands, text), band (light grey section bands), accent = cobalt (main actions; white text on it),
-   accent-light (sky blue for highlights on navy), accent-text (blue text on light backgrounds), blue-batik (links and icons). */
+/* Black & Gold (18 Oct 2026): navy #14213D for text, main surfaces and dark bands; black #000000 for the footer; gold
+   #FCA311 for the main call to action and highlights (always with navy text: white on gold is too faint to read);
+   platinum #E5E5E5 and plain neutral greys for pills, borders and panels; white page. Official line colours, open /
+   closed and live bus colours keep their own meaning.
+   Tokens: navy (text, dark bands), navy-deep (hover / darker band), gold (+ gold-hover, gold-soft for light tints),
+   band (light grey section bands), accent = navy (buttons with white text), accent-light = gold (highlights on navy),
+   accent-text and blue-batik = navy (links on light backgrounds). */
 @theme {
-  --color-gray-50: #f5f7fa;
-  --color-gray-100: #eef1f6;
-  --color-gray-200: #e1e6ee;
-  --color-gray-300: #cbd3df;
-  --color-gray-400: #97a2b3;
-  --color-gray-500: #5b6779;
-  --color-gray-600: #475467;
-  --color-gray-700: #344054;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #18243f;
-  --color-navy: #1f2f5c;
-  --color-navy-deep: #18243f;
-  --color-band: #eaeef4;
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-light: #8ec0ff;
-  --color-accent-text: #1d4ed8;
-  --color-blue-batik: #1d4ed8;
-  --color-blue-batik-hover: #1e40af;
+  --color-gray-50: #f7f7f7;
+  --color-gray-100: #efefef;
+  --color-gray-200: #e5e5e5;
+  --color-gray-300: #d4d4d4;
+  --color-gray-400: #a3a3a3;
+  --color-gray-500: #6b6b6b;
+  --color-gray-600: #525252;
+  --color-gray-700: #404040;
+  --color-gray-800: #262626;
+  --color-gray-900: #14213D;
+  --color-navy: #14213D;
+  --color-navy-deep: #0B1528;
+  --color-gold: #FCA311;
+  --color-gold-hover: #E8940A;
+  --color-gold-soft: #FEF3DC;
+  --color-band: #efefef;
+  --color-accent: #14213D;
+  --color-accent-hover: #0B1528;
+  --color-accent-light: #FCA311;
+  --color-accent-text: #14213D;
+  --color-blue-batik: #14213D;
+  --color-blue-batik-hover: #0B1528;
+}
+
+/* One page grid for the home page, header and footer (Blaze layout): every block starts on the same left edge.
+   Gutters 16 / 24 / 48 / 80 px, content at most 1280 px wide. */
+@utility wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    padding-inline: 3rem;
+  }
+  @media (min-width: 1280px) {
+    padding-inline: 5rem;
+  }
 }
 
 /* The site is designed light-only: keep native controls (inputs, scrollbars) light too */
@@ -49,7 +72,7 @@ html {
    self-hosted only). */
 body {
   background: #ffffff;
-  color: #18243F;
+  color: #14213D;
   font-family: Inter, "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -62,13 +85,15 @@ body {
 /* Fade-up on scroll (useReveal): hidden only once scripts have marked the page, so nothing is lost without them */
 .js-reveal .reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(0, 20px, 0);
+  transition: opacity 0.7s ease-out, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
   transition-delay: var(--reveal-delay, 0s);
 }
 .js-reveal .reveal.is-visible {
   opacity: 1;
   transform: none;
+  will-change: auto;
 }
 
 /* Hero photo / video: starts slightly zoomed in and settles */
@@ -111,7 +136,9 @@ body {
 
 /* Big headings whose words darken one by one as the page scrolls (WordFill) */
 .word-fill > span {
-  transition: color 0.25s linear;
+  color: #14213D;
+  /* this word's share of the fill: 0 until the words before it are done, then up to 1 */
+  color: color-mix(in srgb, #14213D calc(clamp(0, var(--p) * var(--n) - var(--i), 1) * 100%), #8A8A8A);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -243,7 +270,7 @@ body {
   display: block;
   width: 14px;
   height: 14px;
-  border: 2px solid #1F2F5C;
+  border: 2px solid #14213D;
   border-radius: 9999px;
   background: #fff;
   cursor: pointer;

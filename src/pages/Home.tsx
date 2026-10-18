@@ -367,11 +367,11 @@ function Home() {
     <button
       onClick={() => handleSearch()}
       disabled={loading}
-      className="w-14 h-14 rounded-full bg-[#1F2F5C] hover:bg-[#152038] active:scale-95 transition text-white flex items-center justify-center flex-shrink-0 shadow-[0_4px_12px_rgb(24_36_63/0.2)] disabled:opacity-60"
+      className="w-14 h-14 rounded-full bg-gold hover:bg-gold-hover active:scale-95 transition text-[#14213D] flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(252_163_17/0.4)] disabled:opacity-60"
       aria-label={t('searchAria')}
     >
       {loading ? (
-        <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-[#14213D]/30 border-t-[#14213D] rounded-full animate-spin" />
       ) : (
         <Icon name="search" size={20} />
       )}
@@ -383,8 +383,8 @@ function Home() {
       {/* Hero (Blaze layout): an inset card with rounded corners; the KL skyline photo (and on wider screens the KL
           sunset video, muted) starts slightly zoomed in and settles; the headline sits bottom-left over a dark fade.
           The search card overlaps the card's bottom edge. */}
-      <section className="relative px-3 sm:px-4 pt-1">
-        <div className="hero-card relative overflow-hidden rounded-[32px] bg-[#18243F] shadow-[0_32px_64px_-12px_rgb(24_36_63/0.25)] min-h-[480px] md:min-h-[600px] lg:h-[76vh] lg:max-h-[760px] flex flex-col justify-end">
+      <section className="relative pt-1">
+        <div className="hero-card relative mx-3 sm:mx-4 overflow-hidden rounded-[32px] bg-[#14213D] shadow-[0_32px_64px_-12px_rgb(20_33_61/0.25)] min-h-[480px] md:min-h-[600px] lg:h-[76vh] lg:max-h-[760px] flex flex-col justify-end">
           <div className="absolute inset-0 hero-settle" aria-hidden="true">
             <picture>
               <source srcSet="/Image/banner-kl.webp" type="image/webp" />
@@ -408,15 +408,15 @@ function Home() {
               />
             )}
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b1222]/85 via-[#0b1222]/30 to-[#0b1222]/10" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B1528]/85 via-[#0B1528]/30 to-[#0B1528]/10" aria-hidden="true" />
 
           {/* right edge: a line with its stations, the current one ringed (decorative, like the Blaze slide dots) */}
-          <div className="hidden md:flex absolute end-8 top-[18%] flex-col items-center" aria-hidden="true">
+          <div className="hidden md:flex absolute end-8 xl:end-16 top-[18%] flex-col items-center" aria-hidden="true">
             {[0, 1, 2, 3, 4].map((i) => (
               <span key={i} className="flex flex-col items-center">
                 {i > 0 && <span className="w-px h-7 bg-white/35" />}
                 {i === 1 ? (
-                  <span className="w-8 h-8 rounded-full border border-white/70 flex items-center justify-center"><span className="w-2 h-2 rounded-full bg-white" /></span>
+                  <span className="w-8 h-8 rounded-full border border-gold flex items-center justify-center"><span className="w-2 h-2 rounded-full bg-gold" /></span>
                 ) : (
                   <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
                 )}
@@ -424,7 +424,7 @@ function Home() {
             ))}
           </div>
 
-          <div className="relative px-6 sm:px-10 md:px-[44px] pb-28 md:pb-32 pt-24 flex flex-col lg:flex-row lg:items-end justify-between gap-y-8 gap-x-10">
+          <div className="relative px-6 sm:px-8 xl:px-16 pb-28 md:pb-32 pt-24 flex flex-col lg:flex-row lg:items-end justify-between gap-y-8 gap-x-10">
             <div className="space-y-8 max-w-4xl text-start">
               <h1 className="rise-in max-w-[820px] [text-wrap:balance] text-[38px] sm:text-5xl md:text-[60px] lg:text-[72px] leading-[1.05] font-medium tracking-[-0.03em] text-white drop-shadow-sm">
                 {t('bannerTitle')}
@@ -436,7 +436,7 @@ function Home() {
                 </p>
                 <div className="flex items-center gap-1.5 p-1 rounded-full bg-white/5 backdrop-blur-[20px] border border-white/10" aria-hidden="true">
                   {(['train', 'directionsBusOutline', 'directionsWalk', 'flight'] as const).map((icon) => (
-                    <span key={icon} className="w-[38px] h-[38px] flex items-center justify-center rounded-full bg-white/10 border border-white/5 text-white">
+                    <span key={icon} className="w-[38px] h-[38px] flex items-center justify-center rounded-full bg-white/10 border border-white/5 text-gold">
                       <Icon name={icon} size={18} />
                     </span>
                   ))}
@@ -449,7 +449,7 @@ function Home() {
               <ul className="flex flex-wrap lg:flex-nowrap lg:justify-end gap-2">
                 {([['directions', '/#plan', 'route'], ['lines', '/?tab=lines', 'train'], ['trails', '/trails', 'hiking']] as const).map(([key, to, icon]) => (
                   <li key={key}>
-                    <Link to={to} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-sm font-semibold text-white whitespace-nowrap hover:bg-white hover:text-[#1F2F5C] transition-colors">
+                    <Link to={to} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-sm font-semibold text-white whitespace-nowrap hover:bg-gold hover:border-gold hover:text-[#14213D] transition-colors">
                       <Icon name={icon} size={16} />
                       {t(key)}
                     </Link>
@@ -471,8 +471,8 @@ function Home() {
         </div>
 
         {/* Search card: overlaps the bottom of the hero card */}
-        <div className="relative z-20 -mt-16 md:-mt-20 px-2 sm:px-6 flex justify-center">
-          <div id="plan" className="relative w-full max-w-6xl bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgb(24_36_63/0.22)] ring-1 ring-gray-100 px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
+        <div className="wrap relative z-20 -mt-16 md:-mt-20">
+          <div id="plan" className="relative w-full bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgb(20_33_61/0.22)] ring-1 ring-gray-100 px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
             {/* Tab switcher */}
             <div className="flex justify-center">
               <div className="flex bg-gray-100 rounded-full p-1">
@@ -481,7 +481,7 @@ function Home() {
                   aria-pressed={tab === 'directions'}
                   onClick={() => setTab('directions')}
                   className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
-                    tab === 'directions' ? 'bg-[#1F2F5C] text-white shadow-[0_4px_12px_rgb(24_36_63/0.2)]' : 'text-gray-600 hover:text-[#1F2F5C]'
+                    tab === 'directions' ? 'bg-[#14213D] text-white shadow-[0_4px_12px_rgb(20_33_61/0.2)]' : 'text-gray-600 hover:text-[#14213D]'
                   }`}
                 >
                   {t('directions')}
@@ -491,7 +491,7 @@ function Home() {
                   aria-pressed={tab === 'lines'}
                   onClick={() => setTab('lines')}
                   className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
-                    tab === 'lines' ? 'bg-[#1F2F5C] text-white shadow-[0_4px_12px_rgb(24_36_63/0.2)]' : 'text-gray-600 hover:text-[#1F2F5C]'
+                    tab === 'lines' ? 'bg-[#14213D] text-white shadow-[0_4px_12px_rgb(20_33_61/0.2)]' : 'text-gray-600 hover:text-[#14213D]'
                   }`}
                 >
                   {t('lines')}
@@ -502,7 +502,7 @@ function Home() {
             {/* Search bar + suggestions dropdown */}
             <div className="flex justify-center mt-4 relative">
               <div
-                className="w-full max-w-5xl relative"
+                className="w-full relative"
                 onBlur={(e) => {
                   // Lines tab: the dropdown stays open while focus moves inside it (box -> tiles)
                   if (tab === 'lines' && !e.currentTarget.contains(e.relatedTarget as Node | null)) setLineListOpen(false)
@@ -544,7 +544,7 @@ function Home() {
                           disabled={loc.status === 'locating'}
                           aria-label={t('useMyLocation')}
                           title={t('useMyLocation')}
-                          className="ms-2 w-9 h-9 rounded-full text-[#1F2F5C] hover:bg-[#1F2F5C]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
+                          className="ms-2 w-9 h-9 rounded-full text-[#14213D] hover:bg-[#14213D]/5 flex items-center justify-center flex-shrink-0 disabled:opacity-50"
                         >
                           <Icon name="myLocation" size={20} />
                         </button>
@@ -553,7 +553,7 @@ function Home() {
                       <button
                         onClick={handleSwap}
                         disabled={!start.trim() && !end.trim()}
-                        className="ms-3 sm:ms-0 my-2 sm:my-0 w-12 h-12 rounded-full bg-[#1F2F5C] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                        className="ms-3 sm:ms-0 my-2 sm:my-0 w-12 h-12 rounded-full bg-[#14213D] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                         aria-label={t('swapAria')}
                       >
                         <Icon name="swapVert" size={22} />

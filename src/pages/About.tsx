@@ -63,7 +63,7 @@ const NETWORKS_SOON: { name: string; note?: TranslationKey }[] = [
 function SoonBadge() {
   const { t } = useLanguage()
   return (
-    <span className="inline-block text-[10px] font-bold uppercase tracking-wide text-[#1D4ED8] bg-[#2563EB]/10 px-2 py-0.5 rounded-full">
+    <span className="inline-block text-[10px] font-bold uppercase tracking-wide text-[#14213D] bg-[#14213D]/10 px-2 py-0.5 rounded-full">
       {t('soon')}
     </span>
   )
@@ -71,7 +71,7 @@ function SoonBadge() {
 
 function SectionTitle({ id, children }: { id: string; children: string }) {
   return (
-    <h2 id={id} className="text-2xl md:text-3xl font-bold text-[#1F2F5C]">
+    <h2 id={id} className="text-2xl md:text-3xl font-bold text-[#14213D]">
       {children}
     </h2>
   )
@@ -90,7 +90,7 @@ function About() {
   return (
     <SiteLayout>
       {/* Intro */}
-      <section className="bg-[#1F2F5C] text-white">
+      <section className="bg-[#14213D] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 md:py-16 text-center">
           <h1 className="text-3xl md:text-5xl font-bold">{t('aboutTitle')}</h1>
           <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto">{t('aboutIntro')}</p>
@@ -104,7 +104,7 @@ function About() {
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f) => (
               <li key={f.title} className="bg-white border border-gray-200 rounded-2xl p-5 flex gap-4">
-                <span className="w-12 h-12 rounded-xl bg-[#1F2F5C]/[0.07] text-[#1F2F5C] flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                <span className="w-12 h-12 rounded-xl bg-[#14213D]/[0.07] text-[#14213D] flex items-center justify-center flex-shrink-0" aria-hidden="true">
                   <Icon name={f.icon} size={24} />
                 </span>
                 <div>
@@ -124,7 +124,7 @@ function About() {
           <ol className="mt-6 grid gap-4 md:grid-cols-3">
             {STEPS.map((s, i) => (
               <li key={s.title} className="bg-white border border-gray-200 rounded-2xl p-5">
-                <span className="w-9 h-9 rounded-full bg-[#1F2F5C] text-white font-bold flex items-center justify-center">{i + 1}</span>
+                <span className="w-9 h-9 rounded-full bg-[#14213D] text-white font-bold flex items-center justify-center">{i + 1}</span>
                 <h3 className="mt-3 font-semibold text-gray-900">{t(s.title)}</h3>
                 <p className="mt-1 text-sm text-gray-600">{t(s.text)}</p>
                 {s.soon && (
@@ -143,7 +143,7 @@ function About() {
           <SectionTitle id="about-networks">{t('networksTitle')}</SectionTitle>
           <div className="mt-6 grid gap-6 lg:grid-cols-[2fr_1fr]">
             <div className="bg-white border border-gray-200 rounded-2xl p-5">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-[#1F2F5C]">{t('availableNow')}</h3>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-[#14213D]">{t('availableNow')}</h3>
               <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                 {NETWORKS_NOW.map((n) => (
                   <li key={n.name} className="flex items-center gap-3">
@@ -161,7 +161,7 @@ function About() {
               <ul className="mt-4 space-y-3">
                 {NETWORKS_SOON.map((n) => (
                   <li key={n.name} className="flex items-center gap-3 text-gray-600">
-                    <span className="w-2 h-2 rounded-full bg-[#2563EB] flex-shrink-0" aria-hidden="true" />
+                    <span className="w-2 h-2 rounded-full bg-[#14213D] flex-shrink-0" aria-hidden="true" />
                     <span>
                       {n.name}
                       {n.note && <span className="text-gray-500"> ({t(n.note)})</span>}
@@ -182,7 +182,7 @@ function About() {
               <li key={trail.slug}>
                 <Link
                   to={`/trails/${trail.slug}`}
-                  className="flex gap-3 items-center bg-white border border-gray-200 rounded-2xl p-3 hover:border-[#1F2F5C]/40 hover:shadow-sm transition"
+                  className="flex gap-3 items-center bg-white border border-gray-200 rounded-2xl p-3 hover:border-[#14213D]/40 hover:shadow-sm transition"
                 >
                   <span className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
                     <TrailCover trail={trail} />
@@ -206,7 +206,7 @@ function About() {
               <details key={n} className="group py-4">
                 <summary className="flex items-center justify-between gap-4 cursor-pointer list-none font-semibold text-gray-900 [&::-webkit-details-marker]:hidden">
                   {t(`faq${n}Q` as TranslationKey)}
-                  <Icon name="expandMore" size={18} className="flex-shrink-0 text-[#1F2F5C] transition-transform group-open:rotate-180" />
+                  <Icon name="expandMore" size={18} className="flex-shrink-0 text-[#14213D] transition-transform group-open:rotate-180" />
                 </summary>
                 <p className="mt-2 text-gray-600 leading-relaxed">{t(`faq${n}A` as TranslationKey)}</p>
               </details>
@@ -216,7 +216,7 @@ function About() {
 
         {/* Credits for the trail, trail-stop, promotion and home-page photos (CC BY / BY-SA need them) */}
         <section aria-labelledby="about-credits" className="pt-14 pb-4 max-w-3xl">
-          <h2 id="about-credits" className="text-lg font-semibold text-[#1F2F5C]">{t('photoCredits')}</h2>
+          <h2 id="about-credits" className="text-lg font-semibold text-[#14213D]">{t('photoCredits')}</h2>
           <p className="mt-1 text-sm text-gray-500">{t('photoCreditsIntro')}</p>
           <ul className="mt-3 grid gap-1 sm:grid-cols-2 text-xs text-gray-600">
             {trails.filter((tr) => TRAIL_PHOTOS[tr.slug]).map((tr) => (

@@ -6,47 +6,47 @@ import type { IconName } from './icons'
 // a gradient anchored on RONDA navy plus an outline icon (24x24 paths).
 export const CATEGORY_STYLE: Record<TrailCategory, { from: string; to: string; icon: IconName }> = {
   food: {
-    from: '#1F2F5C',
-    to: '#1D4ED8',
+    from: '#14213D',
+    to: '#14213D',
     icon: 'restaurant',
   },
   culture: {
-    from: '#18243F',
+    from: '#14213D',
     to: '#1E3A8A',
     icon: 'accountBalanceOutline',
   },
   shopping: {
-    from: '#1F2F5C',
+    from: '#14213D',
     to: '#0369A1',
     icon: 'shoppingBagOutline',
   },
   nature: {
-    from: '#18243F',
+    from: '#14213D',
     to: '#0E7490',
     icon: 'parkOutline',
   },
   'halal-fine-dining': {
-    from: '#18243F',
+    from: '#14213D',
     to: '#334155',
     icon: 'restaurant',
   },
   family: {
-    from: '#18243F',
+    from: '#14213D',
     to: '#0369A1',
     icon: 'favorite',
   },
   events: {
-    from: '#18243F',
+    from: '#14213D',
     to: '#3B5BDB',
     icon: 'event',
   },
   activities: {
-    from: '#18243F',
+    from: '#14213D',
     to: '#2563EB',
     icon: 'hiking',
   },
   explore: {
-    from: '#18243F',
+    from: '#14213D',
     to: '#4338CA',
     icon: 'locationOnOutline',
   },
