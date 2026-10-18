@@ -2,6 +2,14 @@
 
 ## Latest run - 18 Oct 2026, night 3 (branch design-4-blaze, all pages, RONDA 300 map, Ainaa-style concept)
 
+- Home hero: "Malaysia" tried in the flag's colours (striped, then letter by letter) and set back to gold at the
+  owner's request.
+  Full e2e: 207 passed, 3 failed under heavy load (forgot password, open chat a11y, map tiles failing); all 3
+  passed when re-run alone.
+- Home "Everything you need for the journey", after how Transit, Citymapper, Omio and Bolt present features: a Live
+  map spotlight (navy card, live dot, gliding vehicles on three lines, "Open the live map"), then the ten features in
+  three groups (Plan your trip / Explore around stations / Made for you), each with one plain line on what it does
+  (4 languages; only what RONDA does today). Unit 210 / 210.
 - RONDA 300: the hand-picked "Places near …" list and "nearest stations with places" removed; before a search the
   page shows a map of all 193 LRT / MRT / Monorail / BRT / ERL stations in their line colours (public.stops); pressing
   a station opens it like the search (display name looked up the same way). E2E: new preview test, old curated-list
