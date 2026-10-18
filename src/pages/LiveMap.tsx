@@ -30,6 +30,13 @@ maplibregl.addProtocol('pmtiles', new Protocol().tile)
 
 const KL: [number, number] = [101.6869, 3.139] // lon, lat
 const STOPS_ZOOM = 16
+// the basemap without its own shop and restaurant icons: they cannot be pressed here and only hide the buses
+// (places near a station are on RONDA 300)
+const liveStyle: typeof mapStyle = (...args) => {
+  const style = mapStyle(...args)
+  return { ...style, layers: style.layers.filter((l) => !l.id.startsWith('pois')) }
+}
+
 const NAVY = '#222D52'
 const ME = '#2563EB'
 
@@ -143,7 +150,7 @@ function LiveMap() {
     const { pmtilesUrl, assetsUrl } = mapConfig()
     const m = new maplibregl.Map({
       container: el.current,
-      style: mapStyle(lang, pmtilesUrl, assetsUrl),
+      style: liveStyle(lang, pmtilesUrl, assetsUrl),
       center: KL,
       zoom: 12,
       maxZoom: 19,
@@ -178,7 +185,7 @@ function LiveMap() {
     if (!m || lang === firstLang.current) return
     firstLang.current = lang
     const { pmtilesUrl, assetsUrl } = mapConfig()
-    if (pmtilesUrl) m.setStyle(mapStyle(lang, pmtilesUrl, assetsUrl))
+    if (pmtilesUrl) m.setStyle(liveStyle(lang, pmtilesUrl, assetsUrl))
   }, [lang])
 
   usePoll(() => {

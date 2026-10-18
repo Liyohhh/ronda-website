@@ -2,6 +2,11 @@
 
 ## Latest run - 18 Oct 2026, night 3 (branch design-4-blaze, all pages, RONDA 300 map, Ainaa-style concept)
 
+- Fix (RONDA 300): the station suggestions were cut off by the header card; the card no longer clips (only when
+  it has a photo), so the list opens over the page. Checked: "klcc" lists 4 stops, picking LRT KLCC shows its places.
+- Live map: "Near me" checked with a test position (dot, accuracy ring, zoom to stops: works). The basemap's own
+  shop and restaurant icons removed from the live map (not pressable there, hid the buses; places near a station
+  are on RONDA 300). Unit 210 / 210; live, site and links specs passed.
 - Fix (live map): the map's panel sat above the header, so the header menus could not be clicked on /live; the map
   now has its own layer under the header (checked: menu link over the panel opens, Back returns). /live redesigned:
   map as an inset card with round corners, velvet control panel with a live dot, serif title, pill filter and gold

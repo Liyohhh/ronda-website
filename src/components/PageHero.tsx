@@ -4,7 +4,8 @@ import { Accent, Eyebrow } from './Motion'
 
 // The top of every inner page, in the home page's style: an inset navy card with round corners (like the home hero),
 // on the page grid; optional back button, a label pill, the page title and a short intro. Anything passed as children
-// (a search box, buttons) sits under the intro. photo: an image behind the card, darkened so the text reads.
+// (a search box, buttons) sits under the intro; the card does not clip, so a search box's suggestions can open below
+// it over the page. photo: an image behind the card, darkened so the text reads.
 function PageHero({
   title,
   eyebrow,
@@ -26,7 +27,7 @@ function PageHero({
 }) {
   return (
     <section className="px-3 sm:px-4 pt-1">
-      <div className="relative overflow-hidden rounded-[32px] bg-navy text-white">
+      <div className={`relative z-20 rounded-[32px] bg-navy text-white ${photo ? 'overflow-hidden' : ''}`}>
         {photo && (
           <>
             <img src={photo} alt="" className="absolute inset-0 h-full w-full object-cover" />
