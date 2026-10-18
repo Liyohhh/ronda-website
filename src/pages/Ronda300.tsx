@@ -3,62 +3,33 @@ import { Link } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import PageHero from '../components/PageHero'
 import StationAroundMap from '../components/StationAroundMap'
+import StationsPreviewMap from '../components/StationsPreviewMap'
 import SuggestionList from '../components/SuggestionList'
-import LineBadge from '../components/LineBadge'
 import Icon from '../components/Icon'
 import { buildItems, type Pick } from '../data/suggestions'
-import { nearestWithPlaces, placesAt, planToPlace, stationsWithPlaces, type StationPlaces } from '../data/ronda300'
-import { placeBlurbKey, type Place, type Station } from '../data/trails'
 import type { TranslationKey } from '../i18n/translations'
 import { useSmartSearch } from '../hooks/useSmartSearch'
-import { useTrails } from '../hooks/useTrails'
 import { useLanguage } from '../hooks/useLanguage'
-import { supabase } from '../services/supabase'
 import { KIND_COLOR, KIND_ICON, PLACE_KINDS, loadPlacesNear, placeName, planToPoint, walkMinutes, type NearPlace, type PlaceKind } from '../services/places'
 
 const LIST_ID = 'r300-list'
 
-// /ronda-300: pick a station, see the places within a short walk of it (curated for now, merchants later)
+// /ronda-300: a map of the rail stations to start from (or search), then the places within a short walk of the picked
+// station, listed beside a map (from OpenStreetMap; merchants later)
 function Ronda300() {
-  const { t, lang } = useLanguage()
-  const { data, error } = useTrails()
+  const { t } = useLanguage()
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [hi, setHi] = useState(-1)
   const [picked, setPicked] = useState<Pick | null>(null)
-  const [nearest, setNearest] = useState<(StationPlaces & { distance: number })[] | null>(null)
 
   // stations only: places of the map search are not stations
   const { stops, loading } = useSmartSearch(query)
   const items = query.trim() ? buildItems(stops, []) : []
   const listOpen = open && items.length > 0
 
-  const all = data ? stationsWithPlaces(data, lang) : []
-  const here = picked ? placesAt(all, picked.name) : null
-
-  // nothing at the picked station: the nearest stations that do have places (positions from public.stops)
-  const missing = picked !== null && data !== null && here === null
-  useEffect(() => {
-    if (!missing || !picked) return
-    let live = true
-    const ids = [...new Set(all.map((s) => s.station.stopId).filter(Boolean))] as string[]
-    supabase
-      .from('stops')
-      .select('feed_id, stop_id, stop_lat, stop_lon')
-      .in('stop_id', ids)
-      .then(({ data: rows }) => {
-        if (!live) return
-        const coords = new Map((rows ?? []).map((r) => [`${r.feed_id}:${r.stop_id}`, { lat: r.stop_lat as number, lon: r.stop_lon as number }]))
-        setNearest(nearestWithPlaces(all, coords, picked))
-      })
-    return () => { live = false }
-    // all is derived from data + lang
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [missing, picked, data, lang])
-
   const pick = (p: Pick) => {
     setPicked(p)
-    setNearest(null)
     setQuery(p.name)
     setOpen(false)
     setHi(-1)
@@ -77,7 +48,6 @@ function Ronda300() {
         eyebrow={t('r3_tag')}
         title="RONDA 300"
         intro={t('r3_intro')}
-        note={t('r3_growing')}
       >
           <label htmlFor="r300-input" className="block text-sm font-semibold text-white/80">{t('r3_searchLabel')}</label>
           <div className="relative mt-2 max-w-xl">
@@ -110,29 +80,11 @@ function Ronda300() {
       </PageHero>
 
       <div className="wrap py-10">
-        <div aria-live="polite" className="mt-8">
-          {!data ? (
-            <p className="text-gray-500" role={error ? 'alert' : 'status'}>{error ? t('trailsLoadError') : t('loading')}</p>
-          ) : !picked ? (
-            <p className="text-gray-600">{t('r3_hint').replace('{n}', String(all.length))}</p>
-          ) : here ? (
-            <>
-              <StationBlock group={here} heading={t('r3_placesAt').replace('{station}', here.station.name)} />
-              <NearbyPlaces key={picked.name} at={picked} />
-            </>
+        <div aria-live="polite">
+          {!picked ? (
+            <StationsPreviewMap onPick={pick} />
           ) : (
-            <>
-              <NearbyPlaces key={picked.name} at={picked} />
-              <p className="mt-8 text-gray-800">{t('r3_none').replace('{station}', picked.name)}</p>
-              {nearest && nearest.length > 0 && (
-                <>
-                  <h2 className="mt-6 text-lg font-semibold text-[#222D52]">{t('r3_nearest')}</h2>
-                  {nearest.map((g) => (
-                    <StationBlock key={g.station.search} group={g} heading={`${g.station.name} · ${t('r3_away').replace('{km}', (g.distance / 1000).toFixed(1))}`} />
-                  ))}
-                </>
-              )}
-            </>
+            <NearbyPlaces key={picked.name} at={picked} />
           )}
         </div>
 
@@ -193,7 +145,7 @@ function NearbyPlaces({ at }: { at: Pick }) {
                 onClick={() => { setKind(k); setActive(null) }}
                 className={`inline-flex items-center gap-2 h-10 px-4 rounded-full text-sm font-medium transition-colors ${kind === k ? 'bg-[#222D52] text-white' : 'bg-gray-100 text-[#222D52] hover:bg-gray-200'}`}
               >
-                {k && <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: KIND_COLOR[k] }} />}
+                {k && <span aria-hidden="true" className="flex" style={{ color: kind === k ? '#FFFFFF' : KIND_COLOR[k] }}><Icon name={KIND_ICON[k]} size={17} /></span>}
                 {k ? t(`r3k_${k}` as TranslationKey) : t('r3_osmAll')}
                 <span className={kind === k ? 'text-white/70' : 'text-gray-500'}>{k ? places.filter((p) => p.kind === k).length : places.length}</span>
               </button>
@@ -239,30 +191,6 @@ function NearbyPlaces({ at }: { at: Pick }) {
           </p>
         </>
       )}
-    </section>
-  )
-}
-
-function StationBlock({ group, heading }: { group: { station: Station; places: Place[] }; heading: string }) {
-  const { t } = useLanguage()
-  return (
-    <section className="mt-4">
-      <h3 className="flex items-center gap-2 text-lg font-semibold text-[#222D52]">
-        {group.station.lineIds.map((id) => <LineBadge key={id} line={id} size={22} decorative />)}
-        {heading}
-      </h3>
-      <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-        {group.places.map((p) => (
-          <li key={p.id} className="rounded-[20px] border border-gray-200 bg-gray-50 p-5">
-            <p className="font-medium text-gray-900">{p.name}</p>
-            <p className="mt-1 text-sm text-gray-600">{t(placeBlurbKey(p.id) as TranslationKey)}</p>
-            <Link to={planToPlace(group.station, p.name)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#222D52] hover:underline">
-              {t('planTripHere')}
-              <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
-            </Link>
-          </li>
-        ))}
-      </ul>
     </section>
   )
 }

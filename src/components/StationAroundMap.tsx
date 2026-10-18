@@ -139,7 +139,7 @@ function StationAroundMap({
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-[28px] border border-gray-200 bg-gray-100">
-      <div ref={box} className="h-full w-full" role="img" aria-label={t('r3_mapAria').replace('{station}', station.name)} />
+      <div ref={box} className="h-full w-full" role="region" aria-label={t('r3_mapAria').replace('{station}', station.name)} />
       <p className="pointer-events-none absolute bottom-3 start-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[#222D52] shadow">
         {t('r3_mapRing')}
       </p>

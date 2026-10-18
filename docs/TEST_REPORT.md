@@ -2,6 +2,11 @@
 
 ## Latest run - 18 Oct 2026, night 3 (branch design-4-blaze, all pages, RONDA 300 map, Ainaa-style concept)
 
+- RONDA 300: the hand-picked "Places near …" list and "nearest stations with places" removed; before a search the
+  page shows a map of all 193 LRT / MRT / Monorail / BRT / ERL stations in their line colours (public.stops); pressing
+  a station opens it like the search (display name looked up the same way). E2E: new preview test, old curated-list
+  tests removed. Filter chips show each kind's icon in its colour instead of a dot; both RONDA 300 maps are labelled
+  as regions (they hold buttons). Unit 210 / 210; RONDA 300 + site specs 66 passed.
 - Fix (RONDA 300): the station suggestions were cut off by the header card; the card no longer clips (only when
   it has a photo), so the list opens over the page. Checked: "klcc" lists 4 stops, picking LRT KLCC shows its places.
 - Live map: "Near me" checked with a test position (dot, accuracy ring, zoom to stops: works). The basemap's own

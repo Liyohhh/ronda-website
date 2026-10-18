@@ -135,10 +135,10 @@ async function mockBackend(page: Page): Promise<Backend> {
         if (body?.action === 'approaching') return json(route, { buses: [] })
         return json(route, { arrivals: [], supported: false })
     }
-    // station positions (RONDA 300 "nearest stations with places"); positions from public.stops
+    // rail station positions (RONDA 300 map preview); positions from public.stops
     if (url.pathname === '/rest/v1/stops') return json(route, [
-      { feed_id: 'rapid-rail-kl', stop_id: 'KG16', stop_lat: 3.142293265, stop_lon: 101.6955642 },
-      { feed_id: 'rapid-rail-kl', stop_id: 'KJ10', stop_lat: 3.158935, stop_lon: 101.713287 },
+      { feed_id: 'rapid-rail-kl', stop_id: 'KG16', stop_name: 'Pasar Seni', stop_lat: 3.142293265, stop_lon: 101.6955642 },
+      { feed_id: 'rapid-rail-kl', stop_id: 'KJ10', stop_name: 'KLCC', stop_lat: 3.158935, stop_lon: 101.713287 },
     ])
     // plain table reads (bus route list etc.): empty
     if (url.pathname.startsWith('/rest/v1/') && req.method() === 'GET') return json(route, [])
