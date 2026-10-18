@@ -2,6 +2,10 @@
 
 ## Latest run - 18 Oct 2026, night 3 (branch design-4-blaze, all pages, RONDA 300 map, Ainaa-style concept)
 
+- Fix (live map): the map's panel sat above the header, so the header menus could not be clicked on /live; the map
+  now has its own layer under the header (checked: menu link over the panel opens, Back returns). /live redesigned:
+  map as an inset card with round corners, velvet control panel with a live dot, serif title, pill filter and gold
+  "Near me". Unit 210 / 210, e2e 212 passed.
 - Later still: the owner's "Luxe & Elegant" palette - velvet navy #222D52, champagne #D2B68A (buttons, velvet text
   6.9:1), #E2CBA4 on dark, #6F5630 for gold text on light, silk #EEE5D9, marble #E8E4E0, warm greys, pearl white;
   the band of numbers is velvet with a champagne glow (onyx tried and dropped); the app band has the phone preview
