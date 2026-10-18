@@ -1,6 +1,22 @@
 # Test report
 
-## Latest run - 18 Oct 2026, evening (branch design-4-blaze, polish + Black & Gold)
+## Latest run - 18 Oct 2026, night (branch design-4-blaze, cards, features band, footer)
+
+Promotion cards are now one solid card each (photo and text on one grey surface, no white backing or shadow), so the
+card on top covers the one below exactly while scrolling (checked frame by frame every 140 px). Features band rebuilt:
+tiles in one grid with even 1 px lines, hover fills the whole tile, "Coming soon" inside its tile; the drawing is now a
+station-map style diagram (straight lines, 45 degree bends, interchanges where lines meet) with a key of line names.
+Large RONDA wordmark removed from the footer.
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **206 / 206 passed**, 32 files |
+| Website end-to-end tests (Playwright, desktop + phone) | **212 passed, 0 failed**, 6 skipped (full run before the footer change); site, home and links specs re-run after it: **75 passed** |
+
+---
+
+## Run - 18 Oct 2026, evening (branch design-4-blaze, polish + Black & Gold)
 
 Design review fixes: one page grid (every block starts on the same 80 px line on wide screens: header, hero text,
 search card, sections, footer); promotion cards all the same size and sticking at the same place, so each one slides

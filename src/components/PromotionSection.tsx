@@ -6,8 +6,8 @@ import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { useLanguage } from '../hooks/useLanguage'
 
 // Home page: promotions (ads) as Blaze-style package cards: photo on the left, a light grey panel with the words on
-// the right, both with big round corners. On wide screens every card is the same height and sticks at the same place
-// under the header, so each one slides up over the last and covers it completely as the page scrolls. Every banner carries one quiet "Ad" tag in the same corner. Data in src/data/promotions.ts.
+// the right, on one light grey card with big round corners. On wide screens every card is the same solid shape and
+// height and sticks at the same place under the header, so each one slides up over the last and covers it exactly. Every banner carries one quiet "Ad" tag in the same corner. Data in src/data/promotions.ts.
 
 // the whole card is the link (stretched over it: the card is the nearest positioned box)
 const STRETCH = 'after:absolute after:inset-0 after:z-[1] after:rounded-[32px] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-4 focus-visible:after:outline-offset-2 focus-visible:after:outline-[#14213D]'
@@ -49,9 +49,9 @@ function PromotionSection() {
               <li
                 key={p.id}
                 data-promo={p.id}
-                className="group relative lg:sticky lg:top-[104px] lg:h-[460px] grid lg:grid-cols-2 gap-[10px] rounded-[32px] bg-white lg:shadow-[0_-30px_50px_-34px_rgb(20_33_61/0.45)]"
+                className="group relative lg:sticky lg:top-[104px] lg:h-[460px] grid lg:grid-cols-2 gap-[10px] p-[10px] rounded-[32px] bg-gray-50 ring-1 ring-inset ring-gray-200"
               >
-                <div className="relative overflow-hidden rounded-[32px] bg-[#14213D] min-h-[240px] lg:min-h-0">
+                <div className="relative overflow-hidden rounded-[24px] bg-[#14213D] min-h-[240px] lg:min-h-0">
                   <img src={p.photo.src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
                   <span className="absolute top-4 start-4"><AdTag text={t('promoAdLabel')} /></span>
                   <p className="absolute inset-x-0 bottom-0 truncate bg-gradient-to-t from-black/60 to-transparent px-4 py-2 text-[10px] text-white/90 [&_a]:relative [&_a]:z-10">
@@ -59,7 +59,7 @@ function PromotionSection() {
                   </p>
                 </div>
 
-                <div className="flex flex-col justify-between gap-8 rounded-[32px] bg-gray-50 p-6 md:p-10">
+                <div className="flex flex-col justify-between gap-8 p-4 pt-6 md:p-8">
                   <div>
                     <div className="flex items-start justify-between gap-4">
                       <h3 className="text-2xl md:text-[28px] leading-snug font-medium tracking-[-0.01em] text-[#14213D]">

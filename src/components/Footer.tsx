@@ -8,7 +8,7 @@ import { LINES } from '../data/lines'
 const STRIPE = [...new Set(LINES.map((l) => l.color))]
 
 // Blaze-style footer: the app call to action on the left, link columns on the right, a thin bar with the copyright,
-// sources and "Back to top", then the brand name very large over the KL skyline in a card with round corners.
+// sources and "Back to top", then the tagline.
 // flush: the page above already ends in the dark band (Home), so no white gap before the footer.
 function Footer({ flush = false }: { flush?: boolean }) {
   const { t } = useLanguage()
@@ -93,19 +93,8 @@ function Footer({ flush = false }: { flush?: boolean }) {
         </div>
       </div>
 
-      {/* the brand name, very large, over the KL skyline (decorative; the tagline stays readable below it) */}
-      <div className="wrap pt-10 pb-6">
-        <div className="relative overflow-hidden rounded-[32px] bg-[#14213D]">
-          <picture aria-hidden="true">
-            <source srcSet="/Image/banner-kl.webp" type="image/webp" />
-            <img src="/Image/banner-kl.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[center_30%]" />
-          </picture>
-          <div className="absolute inset-0 bg-[#0B1528]/45" aria-hidden="true" />
-          <svg viewBox="0 0 1000 300" className="relative block w-full h-auto" aria-hidden="true" focusable="false">
-            <text x="500" y="232" textAnchor="middle" direction="ltr" fontSize="230" fontWeight="700" letterSpacing="-10" fill="#ffffff">RONDA</text>
-          </svg>
-        </div>
-        <p className="mt-6 text-center text-sm text-white/70">{t('footerTagline')}</p>
+      <div className="wrap py-6">
+        <p className="text-center text-sm text-white/70">{t('footerTagline')}</p>
       </div>
     </footer>
   )
