@@ -16,7 +16,7 @@ function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Re
     <Link
       to={`/trails/${trail.slug}`}
       state={{ from: here.pathname + here.search }}
-      className={`group relative block aspect-[4/3] rounded-[32px] overflow-hidden bg-[#14213D] shadow-[0_16px_40px_-16px_rgb(20_33_61/0.35)] hover:shadow-[0_28px_56px_-16px_rgb(20_33_61/0.45)] hover:-translate-y-1 transition duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#14213D] ${className}`}
+      className={`group relative block aspect-[4/3] rounded-[32px] overflow-hidden bg-[#222D52] shadow-[0_16px_40px_-16px_rgb(34_45_82/0.35)] hover:shadow-[0_28px_56px_-16px_rgb(34_45_82/0.45)] hover:-translate-y-1 transition duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222D52] ${className}`}
     >
       <TrailCover trail={trail} className="absolute inset-0 group-hover:scale-[1.06] transition-transform duration-700 ease-out" />
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />

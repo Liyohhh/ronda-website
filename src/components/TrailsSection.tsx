@@ -39,7 +39,7 @@ function TrailsSection() {
       onClick={() => scroll(dir)}
       disabled={dir === 1 ? edge.end : edge.start}
       aria-label={dir === 1 ? t('scrollNext') : t('scrollPrev')}
-      className={`hidden md:flex absolute top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-[#14213D] text-white shadow-[0_8px_20px_rgb(20_33_61/0.25)] items-center justify-center hover:bg-[#0B1528] active:scale-95 transition disabled:opacity-0 disabled:pointer-events-none ${
+      className={`hidden md:flex absolute top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-[#222D52] text-white shadow-[0_8px_20px_rgb(34_45_82/0.25)] items-center justify-center hover:bg-[#18203D] active:scale-95 transition disabled:opacity-0 disabled:pointer-events-none ${
         dir === 1 ? 'end-4 xl:end-8' : 'start-4 xl:start-8'
       }`}
     >
@@ -57,7 +57,7 @@ function TrailsSection() {
             <Eyebrow center>{t('s2_title')}</Eyebrow>
           </h2>
         </Reveal>
-        <p className="mt-6 mx-auto max-w-4xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#14213D]">
+        <p className="mt-6 mx-auto max-w-4xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#222D52]">
           <Accent text={t('r3_homeSub')} />
         </p>
       </div>
@@ -92,7 +92,7 @@ function TrailsSection() {
       <div className="mt-8 flex justify-center px-4">
         <Link
           to={category === 'all' ? '/trails' : `/trails?category=${category}`}
-          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-gold text-[15px] font-bold text-[#14213D] shadow-[0_6px_16px_rgb(200_150_62/0.35)] hover:bg-gold-hover active:scale-95 transition whitespace-nowrap"
+          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-gold text-[15px] font-bold text-[#222D52] shadow-[0_6px_16px_rgb(210_182_138/0.35)] hover:bg-gold-hover active:scale-95 transition whitespace-nowrap"
         >
           {t('seeAllTrails')}
           <Icon name="chevronRight" size={16} className="rtl:rotate-180" />

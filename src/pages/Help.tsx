@@ -48,7 +48,7 @@ function Help() {
             aria-label={t('helpSearchPh')}
             className="flex-1 min-w-0 py-2.5 text-base outline-none bg-transparent"
           />
-          <button type="submit" className="w-11 h-11 rounded-full bg-gold text-[#14213D] flex items-center justify-center flex-shrink-0 hover:bg-gold-hover" aria-label={t('helpResults')}>
+          <button type="submit" className="w-11 h-11 rounded-full bg-gold text-[#222D52] flex items-center justify-center flex-shrink-0 hover:bg-gold-hover" aria-label={t('helpResults')}>
             <Icon name="search" size={22} />
           </button>
         </form>
@@ -62,7 +62,7 @@ function Help() {
             <Link
               key={c.slug}
               to={`/help/${c.slug}`}
-              className="flex items-center gap-4 border border-gray-200 rounded-xl px-5 py-5 hover:border-[#14213D] hover:shadow-sm transition"
+              className="flex items-center gap-4 border border-gray-200 rounded-xl px-5 py-5 hover:border-[#222D52] hover:shadow-sm transition"
             >
               <CategoryIcon icon={c.icon} />
               <span className="text-gray-800">{t(c.labelKey)}</span>
@@ -81,7 +81,7 @@ function Help() {
             <ul className="border-t border-dashed border-gray-200">
               {list.map((a) => (
                 <li key={a.id} className="border-b border-dashed border-gray-200">
-                  <Link to={articleHref(a)} className="block px-2 py-5 text-gray-800 hover:text-[#14213D]">
+                  <Link to={articleHref(a)} className="block px-2 py-5 text-gray-800 hover:text-[#222D52]">
                     {t(articleQ(a.id))}
                   </Link>
                 </li>

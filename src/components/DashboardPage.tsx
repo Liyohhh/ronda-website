@@ -19,7 +19,7 @@ function DashboardPage({ title, intro, tiles }: { title: TranslationKey; intro: 
           {tiles.map((d) => {
             const body = (
               <>
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#14213D]/10 text-[#14213D]" aria-hidden="true">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#222D52]/10 text-[#222D52]" aria-hidden="true">
                   <Icon name={d.icon} size={22} />
                 </span>
                 <span className="mt-3 flex items-center gap-2 font-semibold text-gray-900">
@@ -32,7 +32,7 @@ function DashboardPage({ title, intro, tiles }: { title: TranslationKey; intro: 
             return (
               <li key={d.label}>
                 {d.to ? (
-                  <Link to={d.to} className="block h-full rounded-[24px] border border-gray-200 bg-gray-50 p-6 hover:border-[#14213D]/40 hover:bg-white transition-colors">{body}</Link>
+                  <Link to={d.to} className="block h-full rounded-[24px] border border-gray-200 bg-gray-50 p-6 hover:border-[#222D52]/40 hover:bg-white transition-colors">{body}</Link>
                 ) : (
                   <div className="h-full rounded-[24px] border border-dashed border-gray-300 bg-white p-6">{body}</div>
                 )}

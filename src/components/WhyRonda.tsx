@@ -101,19 +101,19 @@ function WhyRonda() {
     <section ref={ref} aria-labelledby="why-title" className="wrap pt-24 md:pt-32">
       {/* gold label and serif heading on the left; below, the dot map on a cream card (the numbers are in the navy band above) */}
       <Reveal><Eyebrow>{t('why_tag')}</Eyebrow></Reveal>
-      <h2 id="why-title" className="mt-5 max-w-3xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#14213D]">
+      <h2 id="why-title" className="mt-5 max-w-3xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#222D52]">
         <Accent text={t('why_title')} />
       </h2>
 
       <div className="mt-12">
-      <figure className="rounded-[32px] bg-cream px-2 py-8 sm:px-10 flex flex-col justify-center">
+      <figure className="rounded-[32px] bg-[#E8E4E0] px-2 py-8 sm:px-10 flex flex-col justify-center">
         <svg viewBox="0 0 1120 430" role="img" aria-labelledby="why-svg-title" className={`why-map w-full h-auto${play ? ' is-playing' : ''}`}>
           <title id="why-svg-title">{t('why_svg')}</title>
           <defs>
             <linearGradient id="why-land" gradientUnits="userSpaceOnUse" x1="60" y1="0" x2="1080" y2="0">
-              <stop offset="0" stopColor="#14213D" />
-              <stop offset="0.5" stopColor="#2B3D66" />
-              <stop offset="1" stopColor="#4A5F8C" />
+              <stop offset="0" stopColor="#222D52" />
+              <stop offset="0.5" stopColor="#3A4A7A" />
+              <stop offset="1" stopColor="#5A6A9A" />
             </linearGradient>
           </defs>
 
@@ -131,10 +131,10 @@ function WhyRonda() {
             const r = 4.2
             return (
               <g key={c.name} className="why-city" style={{ animationDelay: `${1.3 + i * 0.12}s` }}>
-                <circle className="why-pulse" cx={x} cy={y} r={r} fill="none" stroke="#C8963E" strokeWidth="1.5" style={{ animationDelay: `${2 + i * 0.35}s` }} />
-                <circle cx={x} cy={y} r={r} fill="#C8963E" />
+                <circle className="why-pulse" cx={x} cy={y} r={r} fill="none" stroke="#D2B68A" strokeWidth="1.5" style={{ animationDelay: `${2 + i * 0.35}s` }} />
+                <circle cx={x} cy={y} r={r} fill="#D2B68A" />
                 <text className={c.big ? undefined : 'why-label-small'} x={x + (c.left ? -(r + 6) : r + 6)} y={y} textAnchor={c.left ? 'end' : 'start'} dominantBaseline="central"
-                  fontSize={c.big ? 16 : 13} fontWeight={c.big ? 700 : 600} fill="#14213D" paintOrder="stroke" stroke="#F6F3ED" strokeWidth="4" strokeLinejoin="round">
+                  fontSize={c.big ? 16 : 13} fontWeight={c.big ? 700 : 600} fill="#222D52" paintOrder="stroke" stroke="#F6F3ED" strokeWidth="4" strokeLinejoin="round">
                   {c.name}
                 </text>
               </g>
@@ -147,7 +147,7 @@ function WhyRonda() {
           </text>
         </svg>
         <p className="mt-1 flex items-center justify-center gap-2 text-xs text-gray-500">
-          <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-[#C8963E]" />
+          <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-[#D2B68A]" />
           {t('why_legend')}
         </p>
       </figure>

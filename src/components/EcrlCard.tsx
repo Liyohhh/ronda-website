@@ -11,8 +11,8 @@ function EcrlCard() {
   return (
     <section aria-labelledby="about-ecrl" className="mt-6 rounded-[32px] border border-gray-200 bg-gray-50 p-6 md:p-8">
       <div className="flex flex-wrap items-center gap-3">
-        <h3 id="about-ecrl" className="text-xl md:text-2xl font-bold text-[#14213D]">{t('ecrlTitle')}</h3>
-        <span className="inline-block rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[#14213D]">
+        <h3 id="about-ecrl" className="text-xl md:text-2xl font-bold text-[#222D52]">{t('ecrlTitle')}</h3>
+        <span className="inline-block rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[#222D52]">
           {t('soon')}
         </span>
       </div>
@@ -21,14 +21,14 @@ function EcrlCard() {
       <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_1.4fr]">
         <ul className="space-y-3 text-[15px] text-gray-800">
           <li className="flex gap-3">
-            <span aria-hidden="true" className="mt-2 h-1 w-6 flex-shrink-0 rounded-full bg-[#14213D]" />
+            <span aria-hidden="true" className="mt-2 h-1 w-6 flex-shrink-0 rounded-full bg-[#222D52]" />
             {t('ecrlPhase1')}
           </li>
           <li className="flex gap-3">
             <span aria-hidden="true" className="mt-2 h-1 w-6 flex-shrink-0 rounded-full border-t-4 border-dashed border-gray-400" />
             {t('ecrlPhase2')}
           </li>
-          <li className="flex gap-3 rounded-2xl bg-gold-soft px-4 py-3 font-medium text-[#14213D]">{t('ecrlFares')}</li>
+          <li className="flex gap-3 rounded-2xl bg-gold-soft px-4 py-3 font-medium text-[#222D52]">{t('ecrlFares')}</li>
         </ul>
 
         {/* the stations, north to south, on a drawn line */}
@@ -41,12 +41,12 @@ function EcrlCard() {
                 {!last && (
                   <span
                     aria-hidden="true"
-                    className={`absolute start-[5px] top-3 -bottom-0 w-0.5 ${s.phase === 1 && ECRL_STATIONS[i + 1].phase === 1 ? 'bg-[#14213D]' : 'border-s-2 border-dashed border-gray-400 w-0'}`}
+                    className={`absolute start-[5px] top-3 -bottom-0 w-0.5 ${s.phase === 1 && ECRL_STATIONS[i + 1].phase === 1 ? 'bg-[#222D52]' : 'border-s-2 border-dashed border-gray-400 w-0'}`}
                   />
                 )}
                 <span
                   aria-hidden="true"
-                  className={`absolute start-0 top-1.5 h-3 w-3 rounded-full border-2 bg-white ${s.phase === 1 ? 'border-[#14213D]' : 'border-gray-400'} ${line ? 'ring-2 ring-gold' : ''}`}
+                  className={`absolute start-0 top-1.5 h-3 w-3 rounded-full border-2 bg-white ${s.phase === 1 ? 'border-[#222D52]' : 'border-gray-400'} ${line ? 'ring-2 ring-gold' : ''}`}
                 />
                 <span className="text-[15px] font-medium text-gray-900">{s.name}</span>
                 {line && (
@@ -66,7 +66,7 @@ function EcrlCard() {
         {ECRL_SOURCES.map((s, i) => (
           <span key={s.url}>
             {i > 0 && ' · '}
-            <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-[#14213D]">{s.label}</a>
+            <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-[#222D52]">{s.label}</a>
           </span>
         ))}
       </p>

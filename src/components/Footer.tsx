@@ -37,7 +37,7 @@ function Footer({ flush = false }: { flush?: boolean }) {
   ]
 
   return (
-    <footer className={`bg-white text-[#14213D] overflow-hidden ${flush ? '' : 'mt-24'}`}>
+    <footer className={`bg-white text-[#222D52] overflow-hidden ${flush ? '' : 'mt-24'}`}>
       <AppDownloadBanner />
       <div className="wrap pt-16 md:pt-20 pb-14 grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
@@ -50,7 +50,7 @@ function Footer({ flush = false }: { flush?: boolean }) {
             <ul className="space-y-3.5 text-[15px] text-gray-700">
               {c.links.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="hover:text-[#14213D] transition-colors">
+                  <Link to={l.to} className="hover:text-[#222D52] transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -66,10 +66,10 @@ function Footer({ flush = false }: { flush?: boolean }) {
             © {year} RONDA. {t('footerRights')}
           </span>
           <span>
-            <Link to="/credits" className="underline hover:text-[#14213D]">{t('footerCredits')}</Link>
+            <Link to="/credits" className="underline hover:text-[#222D52]">{t('footerCredits')}</Link>
             {' · '}
             {t('footerMapData')}{' '}
-            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="underline hover:text-[#14213D]">
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="underline hover:text-[#222D52]">
               © OpenStreetMap contributors
             </a>
           </span>
@@ -80,7 +80,7 @@ function Footer({ flush = false }: { flush?: boolean }) {
               window.scrollTo({ top: 0, behavior: 'smooth' })
               document.querySelector<HTMLElement>('header a')?.focus({ preventScroll: true })
             }}
-            className="self-start md:self-auto hover:text-[#14213D]"
+            className="self-start md:self-auto hover:text-[#222D52]"
           >
             {t('backToTop')} ↑
           </button>

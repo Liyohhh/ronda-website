@@ -18,8 +18,8 @@ try {
 // dot in its kind's colour. The list beside it and the map are one: pointing at a place in the list rings its dot,
 // pressing a dot picks that place in the list. Soft basemap without the map's own shop icons, so only our places show.
 
-const NAVY = '#14213D'
-const GOLD = '#C8963E'
+const NAVY = '#222D52'
+const GOLD = '#D2B68A'
 
 // a circle of radius m around a point, as a polygon (good enough at this size)
 function ring(lat: number, lon: number, m: number, n = 64): [number, number][] {
@@ -140,7 +140,7 @@ function StationAroundMap({
   return (
     <div className="relative h-full w-full overflow-hidden rounded-[28px] border border-gray-200 bg-gray-100">
       <div ref={box} className="h-full w-full" role="img" aria-label={t('r3_mapAria').replace('{station}', station.name)} />
-      <p className="pointer-events-none absolute bottom-3 start-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[#14213D] shadow">
+      <p className="pointer-events-none absolute bottom-3 start-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[#222D52] shadow">
         {t('r3_mapRing')}
       </p>
     </div>

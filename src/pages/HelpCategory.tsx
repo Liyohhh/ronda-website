@@ -37,7 +37,7 @@ function HelpCategory() {
   return (
     <HelpLayout>
       <main className="wrap py-10">
-        <Link to="/help" className="text-sm text-[#14213D] hover:underline">
+        <Link to="/help" className="text-sm text-[#222D52] hover:underline">
           ← {t('backToHelp')}
         </Link>
 
@@ -49,7 +49,7 @@ function HelpCategory() {
         <div className="border-t border-gray-200">
           {articles.map((a) => (
             <details key={a.id} id={a.id} className="group border-b border-gray-200 scroll-mt-24">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-2 py-5 text-gray-900 hover:text-[#14213D]">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-2 py-5 text-gray-900 hover:text-[#222D52]">
                 <span className="font-medium">{t(articleQ(a.id))}</span>
                 <span aria-hidden="true" className="text-xl text-gray-500 group-open:rotate-45 transition-transform">+</span>
               </summary>
@@ -63,11 +63,11 @@ function HelpCategory() {
                 {CONTACT_EMAIL && CONTACT_ARTICLES.includes(a.id) && (
                   <p className="mt-3 text-sm">
                     {t('helpEmailUs')}{' '}
-                    <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-[#14213D] underline" dir="ltr">{CONTACT_EMAIL}</a>
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-[#222D52] underline" dir="ltr">{CONTACT_EMAIL}</a>
                   </p>
                 )}
                 {MORE[a.id] && (
-                  <Link to={MORE[a.id].to} className="mt-3 inline-block text-sm font-semibold text-[#14213D] underline">
+                  <Link to={MORE[a.id].to} className="mt-3 inline-block text-sm font-semibold text-[#222D52] underline">
                     {t(MORE[a.id].label)}
                   </Link>
                 )}

@@ -36,7 +36,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
 
   const rtl = lang === 'ar'
   const cta = (s: Slide, active: boolean) => {
-    const cls = 'inline-flex items-center gap-1.5 rounded-full bg-[#14213D] px-7 py-3.5 text-[15px] font-bold text-white shadow-md hover:bg-[#0B1528] active:scale-95 transition'
+    const cls = 'inline-flex items-center gap-1.5 rounded-full bg-[#222D52] px-7 py-3.5 text-[15px] font-bold text-white shadow-md hover:bg-[#18203D] active:scale-95 transition'
     const label = (
       <>
         {t(k(s.n, 'cta'))}
@@ -71,12 +71,12 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
       {/* right column first on phones: the heading leads */}
       <div className="lg:order-2">
         <Reveal>
-          <h2 id="slides-title" className="text-[40px] md:text-[56px] leading-[1.08] font-bold tracking-[-0.05em] text-[#14213D]">
+          <h2 id="slides-title" className="text-[40px] md:text-[56px] leading-[1.08] font-bold tracking-[-0.05em] text-[#222D52]">
             {t('slidesTitle')}
           </h2>
         </Reveal>
         <div className="mt-8 grid sm:grid-cols-[1.15fr_1fr] gap-6 items-center">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] bg-gray-100 shadow-[0_24px_48px_-20px_rgb(20_33_61/0.35)]">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] bg-gray-100 shadow-[0_24px_48px_-20px_rgb(34_45_82/0.35)]">
             {SLIDES.map((s, i) => {
               const photo = SLIDE_PHOTOS[s.key]
               return (
@@ -91,9 +91,9 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
           </div>
           <div aria-hidden="true">
             <span className="inline-block rounded-full bg-gray-100 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-600">{String(index + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}</span>
-            <p className="mt-5 text-xl font-semibold italic leading-snug text-[#14213D]">“{t(k(cur.n, 'tag'))}”</p>
+            <p className="mt-5 text-xl font-semibold italic leading-snug text-[#222D52]">“{t(k(cur.n, 'tag'))}”</p>
             <div className="mt-5 h-px w-12 bg-gray-300" />
-            <p className="mt-4 text-sm font-bold uppercase tracking-wide text-[#14213D]">— RONDA</p>
+            <p className="mt-4 text-sm font-bold uppercase tracking-wide text-[#222D52]">— RONDA</p>
           </div>
         </div>
       </div>
@@ -109,7 +109,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
               aria-label={t('goToSlide').replace('{n}', String(i + 1))}
               aria-current={i === index}
               className={`inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-medium transition-colors ${
-                i === index ? 'bg-[#14213D] text-white shadow-[0_4px_12px_rgb(20_33_61/0.18)]' : 'bg-gray-100 text-[#14213D] hover:bg-gray-200'
+                i === index ? 'bg-[#222D52] text-white shadow-[0_4px_12px_rgb(34_45_82/0.18)]' : 'bg-gray-100 text-[#222D52] hover:bg-gray-200'
               }`}
             >
               <Icon name={CHIP_ICON[s.key]} size={15} />
@@ -135,12 +135,12 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
                   inert={!active}
                   className="w-full flex-shrink-0 p-6 sm:p-10"
                 >
-                  <h3 className="text-2xl md:text-[30px] font-bold tracking-[-0.02em] leading-tight text-[#14213D]">{t(k(s.n, 'title'))}</h3>
+                  <h3 className="text-2xl md:text-[30px] font-bold tracking-[-0.02em] leading-tight text-[#222D52]">{t(k(s.n, 'title'))}</h3>
                   <p className="mt-4 text-gray-600 leading-relaxed">{t(k(s.n, 'body'))}</p>
                   <ul className="mt-6 space-y-3 text-[15px]">
                     {[1, 2, 3].map((p) => (
                       <li key={p} className="flex items-start gap-3 text-gray-800">
-                        <span className="mt-0.5 w-6 h-6 rounded-full bg-[#14213D] text-white flex items-center justify-center flex-shrink-0">
+                        <span className="mt-0.5 w-6 h-6 rounded-full bg-[#222D52] text-white flex items-center justify-center flex-shrink-0">
                           <Icon name="check" size={16} />
                         </span>
                         {t(k(s.n, `p${p}`))}

@@ -19,8 +19,8 @@ function CategoryPills({ value, onChange }: { value: CategoryFilter; onChange: (
             aria-pressed={active}
             className={`h-11 px-6 rounded-full text-[15px] whitespace-nowrap transition-all ${
               active
-                ? 'bg-[#14213D] text-white font-bold shadow-[0_4px_12px_rgb(20_33_61/0.15)]'
-                : 'bg-gray-100 text-[#14213D] font-medium hover:bg-[#14213D] hover:text-white'
+                ? 'bg-[#222D52] text-white font-bold shadow-[0_4px_12px_rgb(34_45_82/0.15)]'
+                : 'bg-gray-100 text-[#222D52] font-medium hover:bg-[#222D52] hover:text-white'
             }`}
           >
             {c === 'all' ? t('allCategories') : t(categoryKey(c))}

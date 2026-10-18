@@ -42,7 +42,7 @@ function Hub() {
         ) : (
           <>
           <GoAnywhere hub={data.hub} />
-          <h2 className="mt-10 text-lg font-semibold text-[#14213D]">{t('hubPopular')}</h2>
+          <h2 className="mt-10 text-lg font-semibold text-[#222D52]">{t('hubPopular')}</h2>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
             {data.destinations.map((d) => (
               <li key={d.dest_slug} className="rounded-2xl border border-gray-200 bg-white p-5">
@@ -58,7 +58,7 @@ function Hub() {
                   <p className="mt-1 text-sm text-gray-500">{t('hubNoTime')}</p>
                 )}
                 {d.hops && d.hops.length > 0 && <p className="mt-1 text-sm text-gray-500">{d.hops.join(' → ')}</p>}
-                <Link to={planFromHub(data.hub, d)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#14213D] hover:underline">
+                <Link to={planFromHub(data.hub, d)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#222D52] hover:underline">
                   {t('hubPlan')}
                   <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
                 </Link>
@@ -94,10 +94,10 @@ function GoAnywhere({ hub }: { hub: HubT }) {
   }
   return (
     <section aria-labelledby="hub-go" className="rounded-2xl border border-gray-200 bg-white p-5 md:p-6">
-      <h2 id="hub-go" className="text-lg font-semibold text-[#14213D]">{t(airport ? 'hubLanded' : 'hubElsewhere')}</h2>
+      <h2 id="hub-go" className="text-lg font-semibold text-[#222D52]">{t(airport ? 'hubLanded' : 'hubElsewhere')}</h2>
       <label htmlFor="hub-go-input" className="mt-1 block text-sm text-gray-600">{t('hubGoLabel')}</label>
       <div className="relative mt-3 max-w-xl">
-        <div className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 focus-within:border-[#14213D]">
+        <div className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 focus-within:border-[#222D52]">
           <Icon name="search" size={20} className="text-gray-500" />
           <input
             id="hub-go-input"

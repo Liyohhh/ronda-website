@@ -38,7 +38,7 @@ function NearbyTransit({ onPick }: { onPick: (p: Pick) => void }) {
       type="button"
       onClick={() => onPick({ name: s.name, lat: s.lat, lon: s.lon })}
       title={t('nearUse')}
-      className="inline-flex items-center gap-1.5 min-w-0 max-w-full rounded-full px-1.5 py-0.5 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#14213D]"
+      className="inline-flex items-center gap-1.5 min-w-0 max-w-full rounded-full px-1.5 py-0.5 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#222D52]"
     >
       {icon}
       <span className="truncate font-medium text-gray-900">{label}</span>
@@ -49,7 +49,7 @@ function NearbyTransit({ onPick }: { onPick: (p: Pick) => void }) {
   const found = state.status === 'found' && near && !failed
   return (
     <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 px-2 text-sm" aria-live="polite">
-      <span className="inline-flex items-center gap-1.5 font-semibold text-[#14213D]">
+      <span className="inline-flex items-center gap-1.5 font-semibold text-[#222D52]">
         <Icon name="myLocation" size={16} />
         {t('nearTitle')}:
       </span>
@@ -65,7 +65,7 @@ function NearbyTransit({ onPick }: { onPick: (p: Pick) => void }) {
           {near.train && near.bus && <span aria-hidden="true" className="hidden sm:inline text-gray-300">|</span>}
           {near.bus && item(
             near.bus,
-            <span aria-hidden="true" className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded bg-[#14213D] text-white">
+            <span aria-hidden="true" className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded bg-[#222D52] text-white">
               <Icon name="bus" size={14} />
             </span>,
             near.bus.code ? `${near.bus.name} (${near.bus.code})` : near.bus.name,
@@ -78,7 +78,7 @@ function NearbyTransit({ onPick }: { onPick: (p: Pick) => void }) {
       ) : state.status === 'locating' || state.status === 'found' ? (
         <span className="text-gray-500">{t('nearLocating')}</span>
       ) : (
-        <button type="button" onClick={locate} className="font-semibold text-[#14213D] hover:underline">{t('nearFind')}</button>
+        <button type="button" onClick={locate} className="font-semibold text-[#222D52] hover:underline">{t('nearFind')}</button>
       )}
     </div>
   )

@@ -36,11 +36,11 @@ function Section({ id, icon, title, text, cards, children }: { id: string; icon:
   return (
     <section aria-labelledby={`${id}-title`} className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 md:p-10">
       <div className="flex items-start gap-4">
-        <span className="w-14 h-14 rounded-2xl bg-[#14213D] text-white flex items-center justify-center flex-shrink-0" aria-hidden="true">
+        <span className="w-14 h-14 rounded-2xl bg-[#222D52] text-white flex items-center justify-center flex-shrink-0" aria-hidden="true">
           <Icon name={icon} size={30} />
         </span>
         <div>
-          <h2 id={`${id}-title`} className="text-2xl md:text-3xl font-bold text-[#14213D]">
+          <h2 id={`${id}-title`} className="text-2xl md:text-3xl font-bold text-[#222D52]">
             {t(title)}
           </h2>
           <p className="mt-1 text-gray-600">{t(text)}</p>
@@ -49,7 +49,7 @@ function Section({ id, icon, title, text, cards, children }: { id: string; icon:
       <ul className="mt-6 grid gap-4 sm:grid-cols-3">
         {cards.map((c) => (
           <li key={c.id} id={c.id} className="scroll-mt-28 rounded-2xl bg-gray-50 border border-gray-200 p-5">
-            <span className="w-10 h-10 rounded-full bg-[#14213D]/8 text-[#14213D] flex items-center justify-center" aria-hidden="true">
+            <span className="w-10 h-10 rounded-full bg-[#222D52]/8 text-[#222D52] flex items-center justify-center" aria-hidden="true">
               <Icon name={c.icon} size={22} />
             </span>
             <h3 className="mt-3 font-semibold text-gray-900">{say(c.title)}</h3>
@@ -58,7 +58,7 @@ function Section({ id, icon, title, text, cards, children }: { id: string; icon:
         ))}
       </ul>
       {children}
-      <Link to="/help/general#services" className="mt-8 inline-flex items-center gap-1.5 rounded-full bg-[#14213D] px-6 py-3 text-sm font-semibold text-white hover:bg-[#2C3F73]">
+      <Link to="/help/general#services" className="mt-8 inline-flex items-center gap-1.5 rounded-full bg-[#222D52] px-6 py-3 text-sm font-semibold text-white hover:bg-[#2C3F73]">
         {t('svc_enquire')}
         <Icon name="chevronRight" size={18} className="rtl:rotate-180" />
       </Link>
@@ -85,18 +85,18 @@ function Services() {
         <Section id="chauffeur-section" icon="badge" title="navChauffeur" text="svc_chauffeurText" cards={CHAUFFEUR}>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             <div>
-              <h3 className="font-semibold text-[#14213D]">{t('svc_daytrips')}</h3>
+              <h3 className="font-semibold text-[#222D52]">{t('svc_daytrips')}</h3>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {DAY_TRIPS.map((d) => (
                   <li key={d} className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-800">
-                    <Icon name="locationOn" size={16} className="text-[#14213D]" />
+                    <Icon name="locationOn" size={16} className="text-[#222D52]" />
                     {d}
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-[#14213D]">{t('svc_vehicles')}</h3>
+              <h3 className="font-semibold text-[#222D52]">{t('svc_vehicles')}</h3>
               <ul className="mt-3 divide-y divide-gray-100 rounded-2xl border border-gray-200">
                 {VEHICLES.map(([name, cap]) => (
                   <li key={name} className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm">

@@ -115,10 +115,11 @@ export function WordFill({ text, className = '' }: { text: string; className?: s
 }
 
 // The label above a section title: small gold capitals with a thin gold line before it (and after it when centred)
-export function Eyebrow({ children, tone = 'light', center = false }: { children: ReactNode; tone?: 'light' | 'dark'; center?: boolean }) {
-  const line = <span aria-hidden="true" className={`h-px w-7 ${tone === 'dark' ? 'bg-gold-light/70' : 'bg-gold-deep/60'}`} />
+// tone: light (deep gold text), dark (champagne on navy) or onTeal (white text, champagne lines, on the teal band)
+export function Eyebrow({ children, tone = 'light', center = false }: { children: ReactNode; tone?: 'light' | 'dark' | 'onTeal'; center?: boolean }) {
+  const line = <span aria-hidden="true" className={`h-px w-7 ${tone === 'light' ? 'bg-gold-deep/60' : 'bg-gold-light/80'}`} />
   return (
-    <span className={`inline-flex items-center gap-3 text-[12.5px] font-bold uppercase tracking-[0.26em] ${tone === 'dark' ? 'text-gold-light' : 'text-gold-deep'}`}>
+    <span className={`inline-flex items-center gap-3 text-[12.5px] font-bold uppercase tracking-[0.26em] ${tone === 'dark' ? 'text-gold-light' : tone === 'onTeal' ? 'text-white' : 'text-gold-deep'}`}>
       {line}
       {children}
       {center && line}

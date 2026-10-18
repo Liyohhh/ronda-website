@@ -49,7 +49,7 @@ function Header() {
   return (
     <header
       className={`sticky top-0 z-40 bg-white/90 backdrop-blur-xl supports-[backdrop-filter]:bg-white/75 transition-shadow ${
-        scrolled ? 'shadow-[0_8px_30px_-12px_rgb(20_33_61/0.18)]' : ''
+        scrolled ? 'shadow-[0_8px_30px_-12px_rgb(34_45_82/0.18)]' : ''
       }`}
     >
       {/* One row: logo + services on the left, language / help / account on the right.
@@ -62,7 +62,7 @@ function Header() {
         {/* menus sit in the middle of the row, like the centre line of the Blaze header */}
         <ServiceNav className="hidden xl:flex absolute inset-0 items-center justify-center pointer-events-none [&>*]:pointer-events-auto" />
 
-        <div className="ms-auto flex items-center gap-1 sm:gap-2 text-[13px] font-medium text-[#14213D]">
+        <div className="ms-auto flex items-center gap-1 sm:gap-2 text-[13px] font-medium text-[#222D52]">
           <LanguageMenu compact />
 
           {/* Help */}
@@ -83,7 +83,7 @@ function Header() {
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="" className="w-7 h-7 rounded-full object-cover" />
                 ) : (
-                  <span className="w-7 h-7 rounded-full bg-[#14213D] text-white flex items-center justify-center">
+                  <span className="w-7 h-7 rounded-full bg-[#222D52] text-white flex items-center justify-center">
                     <UserIcon size={16} />
                   </span>
                 )}
@@ -123,7 +123,7 @@ function Header() {
               </Link>
               <Link
                 to="/register"
-                className="ms-1 h-9 px-4 sm:px-5 inline-flex items-center rounded-full bg-gold text-[#14213D] font-bold whitespace-nowrap shadow-[0_4px_12px_rgb(200_150_62/0.35)] hover:bg-gold-hover active:scale-95 transition"
+                className="ms-1 h-9 px-4 sm:px-5 inline-flex items-center rounded-full bg-gold text-[#222D52] font-bold whitespace-nowrap shadow-[0_4px_12px_rgb(210_182_138/0.35)] hover:bg-gold-hover active:scale-95 transition"
               >
                 {t('signUp')}
               </Link>
@@ -140,7 +140,7 @@ function Header() {
 
 // Shared look for the right-side controls: same height, padding, hover and icon gap
 const PILL =
-  'h-9 px-3 inline-flex items-center gap-1.5 rounded-full bg-gray-100 hover:bg-[#14213D] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#14213D]/40'
+  'h-9 px-3 inline-flex items-center gap-1.5 rounded-full bg-gray-100 hover:bg-[#222D52] hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#222D52]/40'
 
 function HelpIcon() {
   return (

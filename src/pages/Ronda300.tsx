@@ -126,7 +126,7 @@ function Ronda300() {
               <p className="mt-8 text-gray-800">{t('r3_none').replace('{station}', picked.name)}</p>
               {nearest && nearest.length > 0 && (
                 <>
-                  <h2 className="mt-6 text-lg font-semibold text-[#14213D]">{t('r3_nearest')}</h2>
+                  <h2 className="mt-6 text-lg font-semibold text-[#222D52]">{t('r3_nearest')}</h2>
                   {nearest.map((g) => (
                     <StationBlock key={g.station.search} group={g} heading={`${g.station.name} · ${t('r3_away').replace('{km}', (g.distance / 1000).toFixed(1))}`} />
                   ))}
@@ -136,12 +136,12 @@ function Ronda300() {
           )}
         </div>
 
-        <section aria-labelledby="r3-merchant" className="mt-14 rounded-[28px] bg-[#14213D] text-white p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 justify-between">
+        <section aria-labelledby="r3-merchant" className="mt-14 rounded-[28px] bg-[#222D52] text-white p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 justify-between">
           <div>
             <h2 id="r3-merchant" className="text-xl font-semibold">{t('navMerchantTitle')}</h2>
             <p className="mt-1 text-white/75">{t('navMerchantText')}</p>
           </div>
-          <Link to="/help/general#business" className="self-start md:self-auto bg-gold text-[#14213D] px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gold-hover">
+          <Link to="/help/general#business" className="self-start md:self-auto bg-gold text-[#222D52] px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gold-hover">
             {t('navMerchantCta')}
           </Link>
         </section>
@@ -174,7 +174,7 @@ function NearbyPlaces({ at }: { at: Pick }) {
   }, [])
   return (
     <section aria-labelledby="r3-osm" className="mt-10">
-      <h2 id="r3-osm" className="text-[26px] md:text-[32px] font-semibold tracking-[-0.02em] text-[#14213D]">{t('r3_osmTitle').replace('{station}', at.name)}</h2>
+      <h2 id="r3-osm" className="text-[26px] md:text-[32px] font-semibold tracking-[-0.02em] text-[#222D52]">{t('r3_osmTitle').replace('{station}', at.name)}</h2>
       <p className="mt-1 text-sm text-gray-600 max-w-2xl">{t('r3_osmNote')}</p>
       {failed ? (
         <p role="alert" className="mt-3 text-gray-700">{t('r3_osmError')}</p>
@@ -191,7 +191,7 @@ function NearbyPlaces({ at }: { at: Pick }) {
                 type="button"
                 aria-pressed={kind === k}
                 onClick={() => { setKind(k); setActive(null) }}
-                className={`inline-flex items-center gap-2 h-10 px-4 rounded-full text-sm font-medium transition-colors ${kind === k ? 'bg-[#14213D] text-white' : 'bg-gray-100 text-[#14213D] hover:bg-gray-200'}`}
+                className={`inline-flex items-center gap-2 h-10 px-4 rounded-full text-sm font-medium transition-colors ${kind === k ? 'bg-[#222D52] text-white' : 'bg-gray-100 text-[#222D52] hover:bg-gray-200'}`}
               >
                 {k && <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: KIND_COLOR[k] }} />}
                 {k ? t(`r3k_${k}` as TranslationKey) : t('r3_osmAll')}
@@ -214,7 +214,7 @@ function NearbyPlaces({ at }: { at: Pick }) {
                     data-osm={p.osm_id}
                     onMouseEnter={() => setActive(p.osm_id)}
                     onFocus={() => setActive(p.osm_id)}
-                    className={`flex items-start gap-3 rounded-[20px] border p-4 transition-colors ${on ? 'border-[#14213D] bg-white shadow-md' : 'border-gray-200 bg-gray-50 hover:bg-white'}`}
+                    className={`flex items-start gap-3 rounded-[20px] border p-4 transition-colors ${on ? 'border-[#222D52] bg-white shadow-md' : 'border-gray-200 bg-gray-50 hover:bg-white'}`}
                   >
                     <span aria-hidden="true" className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: KIND_COLOR[p.kind] }}>
                       <Icon name={KIND_ICON[p.kind]} size={18} />
@@ -224,7 +224,7 @@ function NearbyPlaces({ at }: { at: Pick }) {
                       <span className="mt-0.5 block text-sm text-gray-600">
                         {t(`r3k_${p.kind}` as TranslationKey)} · {t('r3_osmWalk').replace('{m}', String(p.distance_m)).replace('{min}', String(walkMinutes(p.distance_m)))}
                       </span>
-                      <Link to={planToPoint(p, name)} className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[#14213D] hover:underline">
+                      <Link to={planToPoint(p, name)} className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[#222D52] hover:underline">
                         {t('planTripHere')}
                         <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
                       </Link>
@@ -247,7 +247,7 @@ function StationBlock({ group, heading }: { group: { station: Station; places: P
   const { t } = useLanguage()
   return (
     <section className="mt-4">
-      <h3 className="flex items-center gap-2 text-lg font-semibold text-[#14213D]">
+      <h3 className="flex items-center gap-2 text-lg font-semibold text-[#222D52]">
         {group.station.lineIds.map((id) => <LineBadge key={id} line={id} size={22} decorative />)}
         {heading}
       </h3>
@@ -256,7 +256,7 @@ function StationBlock({ group, heading }: { group: { station: Station; places: P
           <li key={p.id} className="rounded-[20px] border border-gray-200 bg-gray-50 p-5">
             <p className="font-medium text-gray-900">{p.name}</p>
             <p className="mt-1 text-sm text-gray-600">{t(placeBlurbKey(p.id) as TranslationKey)}</p>
-            <Link to={planToPlace(group.station, p.name)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#14213D] hover:underline">
+            <Link to={planToPlace(group.station, p.name)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#222D52] hover:underline">
               {t('planTripHere')}
               <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
             </Link>

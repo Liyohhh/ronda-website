@@ -26,11 +26,11 @@ function PageHero({
 }) {
   return (
     <section className="px-3 sm:px-4 pt-1">
-      <div className="relative overflow-hidden rounded-[32px] bg-navy-2 text-white">
+      <div className="relative overflow-hidden rounded-[32px] bg-navy text-white">
         {photo && (
           <>
             <img src={photo} alt="" className="absolute inset-0 h-full w-full object-cover" />
-            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#0B1528]/90 via-[#0B1528]/60 to-[#0B1528]/40" />
+            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#18203D]/90 via-[#18203D]/60 to-[#18203D]/40" />
           </>
         )}
         <div className={`wrap relative py-12 md:py-16 ${center ? 'text-center' : ''}`}>

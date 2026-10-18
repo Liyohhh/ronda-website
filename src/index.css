@@ -1,37 +1,40 @@
 @import "tailwindcss";
 
-/* Midnight, stone and brass (18 Oct 2026; the idea of the Ainaa site the owner pointed to, in our own shades):
-   midnight navy #14213D for text, #1C3263 for dark bands; stone #F4F1EA for alternate sections and cards; brass
-   #C8963E for buttons (navy text), champagne #E3BE6E for gold on navy, deep bronze #8A6420 for gold text on light
-   backgrounds (4.5:1 on white and stone); cool blue-greys for borders and quiet text. Official line colours, open /
-   closed and live bus colours keep their own meaning. Headings use a serif display face (font-display). */
+/* Luxe & Elegant (18 Oct 2026, the owner's palette): velvet navy #222D52 for text, buttons and the dark bands, onyx
+   (onyx was tried for the band of numbers and dropped; that band is velvet with a champagne glow), champagne #D2B68A for the main buttons (velvet text, 6.9:1) and gold accents,
+   #E2CBA4 for champagne on dark, #6F5630 for gold text on light backgrounds (5.5:1 on silk), silk #EEE5D9 for
+   alternate sections and cards, marble #E8E4E0 and warm greys for borders and quiet fills, pearl white page.
+   Official line colours, open / closed and live bus colours keep their own meaning. Headings use a serif display
+   face (font-display). Token names (navy, gold, cream) are kept from earlier palettes. */
 @theme {
-  --color-gray-50: #f3f5fa;
-  --color-gray-100: #e9edf5;
-  --color-gray-200: #dbe1ec;
-  --color-gray-300: #c4ccda;
-  --color-gray-400: #95a0b4;
-  --color-gray-500: #5a667c;
-  --color-gray-600: #46526a;
-  --color-gray-700: #344058;
-  --color-gray-800: #1f2a40;
-  --color-gray-900: #14213D;
-  --color-navy: #14213D;
-  --color-navy-deep: #0B1528;
-  --color-gold: #C8963E;
-  --color-gold-hover: #B3832F;
-  --color-gold-light: #E3BE6E;
-  --color-gold-deep: #8A6420;
-  --color-gold-soft: #F5ECDA;
-  --color-cream: #F4F1EA;
-  --color-navy-2: #1C3263;
-  --color-band: #e9edf5;
-  --color-accent: #14213D;
-  --color-accent-hover: #0B1528;
-  --color-accent-light: #E3BE6E;
-  --color-accent-text: #14213D;
-  --color-blue-batik: #14213D;
-  --color-blue-batik-hover: #0B1528;
+  --color-gray-50: #faf8f5;
+  --color-gray-100: #f1eeea;
+  --color-gray-200: #e8e4e0;
+  --color-gray-300: #d6d0c8;
+  --color-gray-400: #a39d95;
+  --color-gray-500: #6b655e;
+  --color-gray-600: #57524c;
+  --color-gray-700: #403c37;
+  --color-gray-800: #26231f;
+  --color-gray-900: #222D52;
+  --color-navy: #222D52;
+  --color-navy-deep: #18203D;
+  --color-gold: #D2B68A;
+  --color-gold-hover: #C2A374;
+  --color-gold-light: #E2CBA4;
+  --color-gold-deep: #6F5630;
+  --color-gold-soft: #F3EBDD;
+  --color-cream: #EEE5D9;
+  --color-navy-2: #2E3A66;
+  --color-band: #f1eeea;
+  --color-marble: #E8E4E0;
+  --color-onyx: #000000;
+  --color-accent: #222D52;
+  --color-accent-hover: #18203D;
+  --color-accent-light: #E2CBA4;
+  --color-accent-text: #222D52;
+  --color-blue-batik: #222D52;
+  --color-blue-batik-hover: #18203D;
 }
 
 /* Headings: a serif display face (Playfair Display when the device has it, else Georgia) */
@@ -39,7 +42,7 @@
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
 }
 
-/* The accent word of a heading: italic, in a slowly moving band of bronze (on light) or brass to champagne (on navy) */
+/* The accent word of a heading: italic, in a slowly moving band of deep gold (on light) or gold to champagne (on navy) */
 @keyframes aurora {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -47,18 +50,18 @@
 }
 .accent-word {
   font-style: italic;
-  color: #8A6420;
-  background-image: linear-gradient(135deg, #7A5618, #8A6420, #A87A2C, #8A6420, #7A5618);
+  color: #6F5630;
+  background-image: linear-gradient(135deg, #5E4826, #6F5630, #8C7046, #6F5630, #5E4826);
   background-size: 250% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: aurora 10s ease-in-out infinite;
 }
-/* on navy: brass to champagne */
+/* on velvet or onyx: champagne */
 .accent-word.on-dark {
-  color: #E3BE6E;
-  background-image: linear-gradient(135deg, #C8963E, #E3BE6E, #F3DFAE, #E3BE6E, #C8963E);
+  color: #E2CBA4;
+  background-image: linear-gradient(135deg, #D2B68A, #E2CBA4, #F1E3C8, #E2CBA4, #D2B68A);
 }
 
 /* Gentle float for small cards over a photo */
@@ -108,7 +111,7 @@ html {
    self-hosted only). */
 body {
   background: #ffffff;
-  color: #14213D;
+  color: #222D52;
   font-family: Inter, "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -172,9 +175,9 @@ body {
 
 /* Big headings whose words darken one by one as the page scrolls (WordFill) */
 .word-fill > span {
-  color: #14213D;
+  color: #222D52;
   /* this word's share of the fill: 0 until the words before it are done, then up to 1 */
-  color: color-mix(in srgb, #14213D calc(clamp(0, var(--p) * var(--n) - var(--i), 1) * 100%), #8A8A8A);
+  color: color-mix(in srgb, #222D52 calc(clamp(0, var(--p) * var(--n) - var(--i), 1) * 100%), #8A8A8A);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -308,7 +311,7 @@ body {
   display: block;
   width: 14px;
   height: 14px;
-  border: 2px solid #14213D;
+  border: 2px solid #222D52;
   border-radius: 9999px;
   background: #fff;
   cursor: pointer;

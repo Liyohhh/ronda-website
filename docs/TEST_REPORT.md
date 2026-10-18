@@ -2,6 +2,13 @@
 
 ## Latest run - 18 Oct 2026, night 3 (branch design-4-blaze, all pages, RONDA 300 map, Ainaa-style concept)
 
+- Later still: the owner's "Luxe & Elegant" palette - velvet navy #222D52, champagne #D2B68A (buttons, velvet text
+  6.9:1), #E2CBA4 on dark, #6F5630 for gold text on light, silk #EEE5D9, marble #E8E4E0, warm greys, pearl white;
+  the band of numbers is velvet with a champagne glow (onyx tried and dropped); the app band has the phone preview
+  back, with two floating cards. Small dark-panel labels raised for contrast. Unit 210 / 210, e2e 212 passed.
+- Earlier: colours changed to petrol #0F2E35 / #16434C, sand #F3EEE6, copper #D08A4E (buttons), peach copper #F2B98A
+  (on petrol) and burnt sienna #9A4A1E (accent text on light); the Putra Mosque hero clip replaced by the KL
+  high-rise clip (night to morning, 4.6 MB). Unit 210 / 210 after the change.
 - Every inner page (Trails, trail pages, RONDA 300, Hub, About, Help, Account, dashboards, Services, Credits, 404)
   now opens with the same inset navy card as Home (PageHero) and sits on the same page grid.
 - RONDA 300: search in the page header; after picking a station, the list of places (filter by kind, colour per
