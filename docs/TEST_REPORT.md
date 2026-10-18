@@ -1,6 +1,20 @@
 # Test report
 
-## Latest run - 18 Oct 2026, night (branch design-4-blaze, cards, features band, footer)
+## Latest run - 18 Oct 2026, late (branch design-4-blaze, features band as a route)
+
+"Everything you need for the journey" redesigned: heading and the station-map drawing on the left (they stay in view
+on wide screens), the 10 features on the right as stops on a gold line, each with a station code (RD01-RD10), icon,
+name and arrow; pointing at a stop lights it gold. Same links and texts as before.
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **206 / 206 passed**, 32 files |
+| Website end-to-end tests (Playwright, desktop + phone) | **211 passed, 1 failed**, 6 skipped in the full run; the failed one ("every visible button does something", the trails "Next" arrow on /?tab=lines) **passed** when run again alone, so it is a timing flake under load, not a broken button |
+
+---
+
+## Run - 18 Oct 2026, night (branch design-4-blaze, cards, features band, footer)
 
 Promotion cards are now one solid card each (photo and text on one grey surface, no white backing or shadow), so the
 card on top covers the one below exactly while scrolling (checked frame by frame every 140 px). Features band rebuilt:
