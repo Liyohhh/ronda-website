@@ -123,7 +123,7 @@ function Header() {
               </Link>
               <Link
                 to="/register"
-                className="ms-1 h-9 px-4 sm:px-5 inline-flex items-center rounded-full bg-gold text-[#14213D] font-bold whitespace-nowrap shadow-[0_4px_12px_rgb(252_163_17/0.35)] hover:bg-gold-hover active:scale-95 transition"
+                className="ms-1 h-9 px-4 sm:px-5 inline-flex items-center rounded-full bg-gold text-[#14213D] font-bold whitespace-nowrap shadow-[0_4px_12px_rgb(200_150_62/0.35)] hover:bg-gold-hover active:scale-95 transition"
               >
                 {t('signUp')}
               </Link>

@@ -2,6 +2,7 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { useNavigate } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import PageHero from '../components/PageHero'
 import { AuthField } from '../components/AuthLayout'
 import { supabase } from '../services/supabase'
 import { useLanguage } from '../hooks/useLanguage'
@@ -93,12 +94,7 @@ function AccountForms({ user }: { user: User }) {
 
   return (
     <SiteLayout>
-      <section className="bg-[#14213D] text-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-          <h1 className="text-3xl font-bold">{t('accountTitle')}</h1>
-          <p className="mt-2 text-white/80">{t('accountIntro')}</p>
-        </div>
-      </section>
+      <PageHero title={t('accountTitle')} intro={t('accountIntro')} />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-5">
         <Card title={t('accountProfile')}>

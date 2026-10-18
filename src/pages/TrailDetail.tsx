@@ -11,6 +11,7 @@ import LineBadge from '../components/LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
 import BackButton from '../components/BackButton'
+import { Eyebrow } from '../components/Motion'
 import { useTrails } from '../hooks/useTrails'
 import {
   categoryKey,
@@ -96,20 +97,18 @@ function TrailDetail() {
   return (
     <SiteLayout>
       {/* Cover banner */}
-      <section className="relative h-56 md:h-72 overflow-hidden">
+      <section className="relative mx-3 sm:mx-4 mt-1 h-64 md:h-[360px] overflow-hidden rounded-[32px]">
         <TrailCover trail={trail} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#14213D]/90 via-[#14213D]/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0">
-          <div className={`${box} mx-auto px-4 sm:px-6 pb-6 text-white`}>
-            <span className="inline-block bg-white/15 backdrop-blur text-[11px] font-bold uppercase tracking-wide px-3 py-1 rounded-full">
-              {t(categoryKey(trail.category))}
-            </span>
-            <h1 className="mt-2 text-3xl md:text-4xl font-bold">{t(trailNameKey(trail))}</h1>
+          <div className={`${box} mx-auto px-6 sm:px-10 pb-8 text-white`}>
+            <Eyebrow tone="dark">{t(categoryKey(trail.category))}</Eyebrow>
+            <h1 className="mt-4 [text-wrap:balance] text-[34px] md:text-[52px] leading-[1.05] font-semibold tracking-[-0.035em]">{t(trailNameKey(trail))}</h1>
             <p className="mt-1 text-white/85">{t(trailDescKey(trail))}</p>
           </div>
         </div>
         {TRAIL_PHOTOS[trail.slug] && (
-          <p className="absolute top-2 end-3 text-[10px] text-white/70">
+          <p className="absolute top-4 end-5 rounded-full bg-black/35 px-2.5 py-0.5 text-[10px] text-white/80 backdrop-blur-sm">
             {t('photoLabel')}: <PhotoCredit photo={TRAIL_PHOTOS[trail.slug]} />
           </p>
         )}

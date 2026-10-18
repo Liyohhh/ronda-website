@@ -2,14 +2,10 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import AppDownloadBanner from './AppDownloadBanner'
 import BrandLogo from './BrandLogo'
-import { LINES } from '../data/lines'
 
-// every official line colour once, for the thin rail stripe across the top of the footer
-const STRIPE = [...new Set(LINES.map((l) => l.color))]
-
-// Blaze-style footer: the app call to action on the left, link columns on the right, a thin bar with the copyright,
-// sources and "Back to top", then the tagline.
-// flush: the page above already ends in the dark band (Home), so no white gap before the footer.
+// Footer like the Ainaa site's: the navy app band first, then a white footer with the logo and tagline, link
+// columns under gold labels, and a thin bar with the copyright, sources and "Back to top".
+// flush: no gap above (Home ends in a section that runs straight into the app band).
 function Footer({ flush = false }: { flush?: boolean }) {
   const { t } = useLanguage()
   const year = new Date().getFullYear()
@@ -41,21 +37,20 @@ function Footer({ flush = false }: { flush?: boolean }) {
   ]
 
   return (
-    <footer className={`bg-black text-white overflow-hidden selection:bg-gold selection:text-[#14213D] ${flush ? '' : 'mt-24'}`}>
-      {!flush && (
-        <div className="flex h-1.5" aria-hidden="true">
-          {STRIPE.map((c) => <span key={c} className="flex-1" style={{ backgroundColor: c }} />)}
-        </div>
-      )}
+    <footer className={`bg-white text-[#14213D] overflow-hidden ${flush ? '' : 'mt-24'}`}>
+      <AppDownloadBanner />
       <div className="wrap pt-16 md:pt-20 pb-14 grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
-        <AppDownloadBanner />
+        <div>
+          <BrandLogo size="md" />
+          <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-gray-600">{t('footerTagline')}</p>
+        </div>
         {columns.map((c) => (
           <nav key={c.title} aria-label={c.title}>
-            <h2 className="text-xs font-medium uppercase tracking-[0.12em] text-white/60 mb-5">{c.title}</h2>
-            <ul className="space-y-3.5 text-base text-white">
+            <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-gold-deep mb-5">{c.title}</h2>
+            <ul className="space-y-3.5 text-[15px] text-gray-700">
               {c.links.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="hover:text-white/70 transition-colors">
+                  <Link to={l.to} className="hover:text-[#14213D] transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -65,17 +60,16 @@ function Footer({ flush = false }: { flush?: boolean }) {
         ))}
       </div>
 
-      <div className="border-y border-white/10">
-        <div className="wrap py-5 flex flex-col md:flex-row gap-3 md:items-center justify-between text-xs text-white/70">
+      <div className="wrap"><div className="border-t border-gray-200">
+        <div className="py-6 flex flex-col md:flex-row gap-3 md:items-center justify-between text-xs text-gray-600">
           <span className="flex items-center gap-3">
-            <BrandLogo tone="light" size="sm" wordmark={false} />
             © {year} RONDA. {t('footerRights')}
           </span>
           <span>
-            <Link to="/credits" className="underline hover:text-white">{t('footerCredits')}</Link>
+            <Link to="/credits" className="underline hover:text-[#14213D]">{t('footerCredits')}</Link>
             {' · '}
             {t('footerMapData')}{' '}
-            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="underline hover:text-white">
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="underline hover:text-[#14213D]">
               © OpenStreetMap contributors
             </a>
           </span>
@@ -86,16 +80,12 @@ function Footer({ flush = false }: { flush?: boolean }) {
               window.scrollTo({ top: 0, behavior: 'smooth' })
               document.querySelector<HTMLElement>('header a')?.focus({ preventScroll: true })
             }}
-            className="self-start md:self-auto hover:text-gold"
+            className="self-start md:self-auto hover:text-[#14213D]"
           >
             {t('backToTop')} ↑
           </button>
         </div>
-      </div>
-
-      <div className="wrap py-6">
-        <p className="text-center text-sm text-white/70">{t('footerTagline')}</p>
-      </div>
+      </div></div>
     </footer>
   )
 }

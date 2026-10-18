@@ -37,7 +37,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
 
   return (
     <nav className={className} onMouseLeave={scheduleClose} aria-label="Main">
-      <ul className="flex items-center gap-2 py-2 text-[13px] text-[#14213D] whitespace-nowrap">
+      <ul className="flex items-center gap-4 py-2 text-[14px] text-[#14213D] whitespace-nowrap">
         {NAV_MENUS.map((m) => (
           <li key={m.key} className="flex">
             <button
@@ -56,8 +56,8 @@ function ServiceNav({ className = '' }: { className?: string }) {
                 else open(m.key)
               }}
               aria-expanded={active === m.key}
-              className={`h-9 px-3.5 rounded-full font-medium transition-colors flex items-center gap-1 ${
-                active === m.key ? 'bg-[#14213D] text-white' : 'bg-gray-100 hover:bg-[#14213D] hover:text-white'
+              className={`h-9 px-3 font-medium transition-colors flex items-center gap-1 ${
+                active === m.key ? 'text-gold-deep' : 'text-[#14213D] hover:text-gold-deep'
               }`}
             >
               {t(m.key)}

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import PageHero from '../components/PageHero'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 
@@ -47,8 +48,8 @@ function Credits() {
   const { t } = useLanguage()
   return (
     <SiteLayout>
+      <PageHero eyebrow="RONDA" title={t('creditsTitle')} />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-        <h1 className="text-3xl font-bold text-[#14213D]">{t('creditsTitle')}</h1>
         <p className="mt-3 text-gray-600">{t('creditsIntro')}</p>
         {SECTIONS.map((s) => (
           <section key={s.title} className="mt-8" aria-labelledby={`credits-${s.title}`}>

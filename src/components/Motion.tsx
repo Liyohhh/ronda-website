@@ -114,14 +114,30 @@ export function WordFill({ text, className = '' }: { text: string; className?: s
   )
 }
 
-// Small round icon plus a bordered pill: the label above a section title
-export function Eyebrow({ icon, children, tone = 'light' }: { icon: ReactNode; children: ReactNode; tone?: 'light' | 'dark' }) {
-  const ring = tone === 'dark' ? 'border-white/15 bg-white/5 text-white' : 'border-gray-200 bg-white text-[#14213D]'
-  const dot = tone === 'dark' ? 'border-gold/40 bg-gold text-[#14213D]' : 'border-[#14213D] bg-[#14213D] text-gold'
+// The label above a section title: small gold capitals with a thin gold line before it (and after it when centred)
+export function Eyebrow({ children, tone = 'light', center = false }: { children: ReactNode; tone?: 'light' | 'dark'; center?: boolean }) {
+  const line = <span aria-hidden="true" className={`h-px w-7 ${tone === 'dark' ? 'bg-gold-light/70' : 'bg-gold-deep/60'}`} />
   return (
-    <div className="inline-flex items-center gap-2">
-      <span aria-hidden="true" className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full border flex items-center justify-center ${dot}`}>{icon}</span>
-      <span className={`px-4 py-2 sm:py-2.5 rounded-full border text-sm font-medium ${ring}`}>{children}</span>
-    </div>
+    <span className={`inline-flex items-center gap-3 text-[12.5px] font-bold uppercase tracking-[0.26em] ${tone === 'dark' ? 'text-gold-light' : 'text-gold-deep'}`}>
+      {line}
+      {children}
+      {center && line}
+    </span>
+  )
+}
+
+// A heading's text with its last word as the italic gold accent (works for spaced languages; Chinese gets its last
+// word from Intl.Segmenter, like WordFill)
+export function Accent({ text, dark = false }: { text: string; dark?: boolean }) {
+  const parts = words(text)
+  let last = parts.length - 1
+  while (last > 0 && !parts[last].trim()) last--
+  if (last <= 0) return <>{text}</>
+  return (
+    <>
+      {parts.slice(0, last).join('')}
+      <span className={`accent-word pe-[0.06em]${dark ? ' on-dark' : ''}`}>{parts[last]}</span>
+      {parts.slice(last + 1).join('')}
+    </>
   )
 }

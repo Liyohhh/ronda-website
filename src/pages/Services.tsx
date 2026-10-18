@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import PageHero from '../components/PageHero'
 import Icon from '../components/Icon'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
@@ -78,14 +79,9 @@ function Services() {
 
   return (
     <SiteLayout>
-      <div className="bg-[#14213D] text-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
-          <h1 className="text-3xl md:text-5xl font-bold">{t('navServices')}</h1>
-          <p className="mt-3 max-w-2xl text-white/80 md:text-lg">{t('svc_intro')}</p>
-        </div>
-      </div>
+      <PageHero title={t('navServices')} intro={t('svc_intro')} />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-6 pb-16 space-y-8">
+      <div className="wrap pt-10 pb-16 space-y-8">
         <Section id="chauffeur-section" icon="badge" title="navChauffeur" text="svc_chauffeurText" cards={CHAUFFEUR}>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             <div>

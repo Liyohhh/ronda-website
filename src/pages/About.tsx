@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import PageHero from '../components/PageHero'
 import LineBadge from '../components/LineBadge'
 import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
@@ -8,6 +9,8 @@ import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
 import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { AUTH_VIDEO } from '../data/authVideo'
+import { HERO_VIDEOS } from '../data/heroVideos'
+import EcrlCard from '../components/EcrlCard'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import { busLine } from '../data/lines'
@@ -90,14 +93,9 @@ function About() {
   return (
     <SiteLayout>
       {/* Intro */}
-      <section className="bg-[#14213D] text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 md:py-16 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold">{t('aboutTitle')}</h1>
-          <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto">{t('aboutIntro')}</p>
-        </div>
-      </section>
+      <PageHero eyebrow="RONDA" title={t('aboutTitle')} intro={t('aboutIntro')} center />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="wrap">
         {/* Features */}
         <section aria-labelledby="about-features" className="pt-14">
           <SectionTitle id="about-features">{t('aboutFeaturesTitle')}</SectionTitle>
@@ -171,6 +169,7 @@ function About() {
               </ul>
             </div>
           </div>
+          <EcrlCard />
         </section>
 
         {/* Trails */}
@@ -238,6 +237,12 @@ function About() {
               {t('videoLabel')}, sunset over Kuala Lumpur:{' '}
               <a href={AUTH_VIDEO.page} target="_blank" rel="noopener noreferrer" className="hover:underline">{AUTH_VIDEO.author}</a> · Pexels
             </li>
+            {HERO_VIDEOS.map((v) => (
+              <li key={v.src}>
+                {t('videoLabel')}, {v.alt}:{' '}
+                <a href={v.page} target="_blank" rel="noopener noreferrer" className="hover:underline">{v.author ?? 'Pexels'}</a>{v.author ? ' · Pexels' : ''}
+              </li>
+            ))}
             {Object.entries(SLIDE_PHOTOS).map(([k, ph]) => (
               <li key={k}>
                 {ph.alt}: <PhotoCredit photo={ph} />

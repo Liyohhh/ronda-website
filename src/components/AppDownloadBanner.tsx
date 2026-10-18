@@ -1,4 +1,5 @@
 import { useLanguage } from '../hooks/useLanguage'
+import { Accent, Eyebrow } from './Motion'
 
 const PLAY_URL = import.meta.env.VITE_PLAY_STORE_URL as string | undefined
 const APPSTORE_URL = import.meta.env.VITE_APP_STORE_URL as string | undefined
@@ -33,29 +34,28 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
           {body}
         </span>
       )}
-      {!href && <span className="text-[11px] font-medium text-white/70 uppercase tracking-wider">{soon}</span>}
+      {!href && <span className="text-[11px] font-semibold text-gold-light uppercase tracking-wider">{soon}</span>}
     </div>
   )
 }
 
-// "Get the RONDA app": the call to action at the top-left of the footer (Blaze "travel with us"): a small label, the
-// big line, a short text and the two store badges. Store links come from env vars; until the app is published the
-// badges show "Coming soon".
+// "Get the RONDA app": a navy band at the top of the footer (like the newsletter band of the Ainaa site), centred: a
+// gold label, a serif line with its last word in italic gold, a short text and the two store badges. Store links come
+// from env vars; until the app is published the badges show "Coming soon".
 function AppDownloadBanner() {
   const { t } = useLanguage()
   return (
-    <section id="download" aria-labelledby="download-title" className="scroll-mt-24">
-      <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.12em] text-white/60">
-        <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-gold" />
-        {t('getApp')}
-      </p>
-      <h2 id="download-title" className="mt-4 max-w-sm [text-wrap:balance] text-[36px] sm:text-[40px] font-bold leading-[1.1] tracking-[-0.05em] text-white">
-        {t('appBannerTitle')}
-      </h2>
-      <p className="mt-3 max-w-sm text-[15px] text-white/70">{t('appBannerText')}</p>
-      <div className="mt-7 flex flex-col sm:flex-row sm:flex-wrap gap-3">
-        <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
-        <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
+    <section id="download" aria-labelledby="download-title" className="scroll-mt-24 bg-[#14213D] text-white">
+      <div className="wrap py-20 md:py-24 flex flex-col items-center text-center">
+        <Eyebrow tone="dark" center>{t('getApp')}</Eyebrow>
+        <h2 id="download-title" className="mt-5 max-w-2xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em]">
+          <Accent text={t('appBannerTitle')} dark />
+        </h2>
+        <p className="mt-4 max-w-lg text-base md:text-lg text-white/75">{t('appBannerText')}</p>
+        <div className="mt-8 flex flex-col sm:flex-row flex-wrap justify-center gap-4">
+          <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
+          <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
+        </div>
       </div>
     </section>
   )

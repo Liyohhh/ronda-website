@@ -8,7 +8,6 @@ import { useBusRoutes } from '../data/busRoutes'
 import { supabase } from '../services/supabase'
 import SiteLayout from '../components/SiteLayout'
 import TrailsSection from '../components/TrailsSection'
-import FeatureCarousel from '../components/FeatureCarousel'
 import FeatureGrid from '../components/FeatureGrid'
 import FeatureBand from '../components/FeatureBand'
 import PromotionSection from '../components/PromotionSection'
@@ -25,9 +24,10 @@ import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
 import { useLocate } from '../hooks/useLocate'
-import { AUTH_VIDEO } from '../data/authVideo'
+import HeroVideos from '../components/HeroVideos'
+import { Accent } from '../components/Motion'
 
-// the hero video plays on wider screens only (phones keep the photo and their data), never with reduced motion
+// the hero videos play on wider screens only (phones keep the photo and their data), never with reduced motion
 const wantsHeroVideo = () =>
   typeof window !== 'undefined' && !!window.matchMedia &&
   window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)').matches
@@ -250,6 +250,12 @@ function Home() {
     setLineHi(-1)
   }
   const openFirstLine = () => {
+    // nothing typed yet: show every line to pick from instead of doing nothing
+    if (!line.trim()) {
+      setLineListOpen(true)
+      document.getElementById('line-input')?.focus()
+      return
+    }
     const found = matchLines(line, busLines)
     const l = found[lineHi >= 0 && lineHi < found.length ? lineHi : 0]
     if (l) pickLine(l)
@@ -367,7 +373,7 @@ function Home() {
     <button
       onClick={() => handleSearch()}
       disabled={loading}
-      className="w-14 h-14 rounded-full bg-gold hover:bg-gold-hover active:scale-95 transition text-[#14213D] flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(252_163_17/0.4)] disabled:opacity-60"
+      className="w-14 h-14 rounded-full bg-gold hover:bg-gold-hover active:scale-95 transition text-[#14213D] flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(200_150_62/0.4)] disabled:opacity-60"
       aria-label={t('searchAria')}
     >
       {loading ? (
@@ -380,8 +386,9 @@ function Home() {
 
   return (
     <SiteLayout darkEnd>
-      {/* Hero (Blaze layout): an inset card with rounded corners; the KL skyline photo (and on wider screens the KL
-          sunset video, muted) starts slightly zoomed in and settles; the headline sits bottom-left over a dark fade.
+      {/* Hero (Blaze layout): an inset card with rounded corners; the KL skyline photo starts slightly zoomed in and
+          settles, and on wider screens the hero videos play over it one after another (HeroVideos, with its station
+          line as the slide control); the headline sits bottom-left over a dark fade.
           The search card overlaps the card's bottom edge. */}
       <section className="relative pt-1">
         <div className="hero-card relative mx-3 sm:mx-4 overflow-hidden rounded-[32px] bg-[#14213D] shadow-[0_32px_64px_-12px_rgb(20_33_61/0.25)] min-h-[480px] md:min-h-[600px] lg:h-[76vh] lg:max-h-[760px] flex flex-col justify-end">
@@ -395,53 +402,15 @@ function Home() {
                 className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
               />
             </picture>
-            {heroVideo && (
-              <video
-                src={AUTH_VIDEO.src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                className="absolute inset-0 w-full h-full object-cover object-[center_40%] opacity-0 transition-opacity duration-1000 [&.is-playing]:opacity-100"
-                onPlaying={(e) => e.currentTarget.classList.add('is-playing')}
-              />
-            )}
           </div>
+          {heroVideo && <HeroVideos />}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B1528]/85 via-[#0B1528]/30 to-[#0B1528]/10" aria-hidden="true" />
 
-          {/* right edge: a line with its stations, the current one ringed (decorative, like the Blaze slide dots) */}
-          <div className="hidden md:flex absolute end-8 xl:end-16 top-[18%] flex-col items-center" aria-hidden="true">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <span key={i} className="flex flex-col items-center">
-                {i > 0 && <span className="w-px h-7 bg-white/35" />}
-                {i === 1 ? (
-                  <span className="w-8 h-8 rounded-full border border-gold flex items-center justify-center"><span className="w-2 h-2 rounded-full bg-gold" /></span>
-                ) : (
-                  <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
-                )}
-              </span>
-            ))}
-          </div>
-
           <div className="relative px-6 sm:px-8 xl:px-16 pb-28 md:pb-32 pt-24 flex flex-col lg:flex-row lg:items-end justify-between gap-y-8 gap-x-10">
-            <div className="space-y-8 max-w-4xl text-start">
-              <h1 className="rise-in max-w-[820px] [text-wrap:balance] text-[38px] sm:text-5xl md:text-[60px] lg:text-[72px] leading-[1.05] font-medium tracking-[-0.03em] text-white drop-shadow-sm">
-                {t('bannerTitle')}
+            <div className="max-w-4xl text-start">
+              <h1 className="rise-in max-w-[820px] [text-wrap:balance] font-display text-[40px] sm:text-5xl md:text-[64px] lg:text-[84px] leading-[1.02] font-semibold tracking-[-0.02em] text-white drop-shadow-sm">
+                <Accent text={t('bannerTitle')} dark />
               </h1>
-              {/* how many stops, then the kinds of transport as glass icon chips */}
-              <div className="rise-in flex flex-wrap items-center gap-6 sm:gap-10" style={{ '--rise-delay': '0.15s' } as CSSProperties}>
-                <p className="max-w-[15rem] text-[12px] sm:text-[13px] leading-tight font-medium uppercase tracking-wider text-white/80">
-                  6,500+ {t('why_stops')}
-                </p>
-                <div className="flex items-center gap-1.5 p-1 rounded-full bg-white/5 backdrop-blur-[20px] border border-white/10" aria-hidden="true">
-                  {(['train', 'directionsBusOutline', 'directionsWalk', 'flight'] as const).map((icon) => (
-                    <span key={icon} className="w-[38px] h-[38px] flex items-center justify-center rounded-full bg-white/10 border border-white/5 text-gold">
-                      <Icon name={icon} size={18} />
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
 
             <div className="rise-in lg:max-w-[440px] lg:flex-shrink-0 flex flex-col lg:items-end gap-5" style={{ '--rise-delay': '0.3s' } as CSSProperties}>
@@ -449,7 +418,7 @@ function Home() {
               <ul className="flex flex-wrap lg:flex-nowrap lg:justify-end gap-2">
                 {([['directions', '/#plan', 'route'], ['lines', '/?tab=lines', 'train'], ['trails', '/trails', 'hiking']] as const).map(([key, to, icon]) => (
                   <li key={key}>
-                    <Link to={to} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-sm font-semibold text-white whitespace-nowrap hover:bg-gold hover:border-gold hover:text-[#14213D] transition-colors">
+                    <Link to={to} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full bg-white/10 border border-white/25 backdrop-blur-xl text-sm font-medium text-white whitespace-nowrap hover:bg-white hover:text-[#14213D] transition-colors">
                       <Icon name={icon} size={16} />
                       {t(key)}
                     </Link>
@@ -458,16 +427,6 @@ function Home() {
               </ul>
             </div>
           </div>
-          {heroVideo && (
-            <a
-              href={AUTH_VIDEO.page}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute top-4 end-5 rounded-full bg-black/35 px-2.5 py-0.5 text-[10px] text-white/80 backdrop-blur-sm hover:underline"
-            >
-              {t('videoLabel')}: {AUTH_VIDEO.author} · Pexels
-            </a>
-          )}
         </div>
 
         {/* Search card: overlaps the bottom of the hero card */}
@@ -675,23 +634,13 @@ function Home() {
       </section>
 
       {/* Below the search: RONDA 300 trails, promotions (ads), Why RONDA, services (chauffeur and transfers, hidden until
-          SERVICES_ENABLED), the feature slides, then the feature tiles in the dark band (app banner + footer follow in SiteLayout) */}
+          SERVICES_ENABLED), then the feature tiles in the dark band (footer follows in SiteLayout). The feature slides
+          (FeatureCarousel) are off the page for now (owner, 18 Oct 2026). */}
       <TrailsSection />
       <PromotionSection />
       <LineMarquee />
       <WhyRonda />
       {SERVICES_ENABLED && <ServicesSection />}
-      <FeatureCarousel
-        onPlan={() => {
-          setTab('directions')
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-          setTimeout(() => document.getElementById('start-input')?.focus({ preventScroll: true }), 400)
-        }}
-        onLines={() => {
-          setTab('lines')
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        }}
-      />
       <FeatureBand>
         <FeatureGrid />
       </FeatureBand>

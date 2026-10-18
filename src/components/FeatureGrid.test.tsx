@@ -12,8 +12,9 @@ const lum = (hex: string) => {
 const contrast = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05) }
 
 describe('FeatureGrid', () => {
-  it('every icon colour is at least 3:1 against the white tile', () => {
-    for (const f of FEATURES) expect(contrast(f.color, '#FFFFFF'), `${f.key} ${f.color}`).toBeGreaterThanOrEqual(3)
+  it('every feature colour is at least 4.5:1 against its white icon square, and no two features share one', () => {
+    for (const f of FEATURES) expect(contrast(f.color, '#FFFFFF'), `${f.key} ${f.color}`).toBeGreaterThanOrEqual(4.5)
+    expect(new Set(FEATURES.map((f) => f.color)).size).toBe(FEATURES.length)
   })
 
   it('10 tiles: 9 whole-card links and the languages button', () => {

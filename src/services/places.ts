@@ -12,6 +12,12 @@ export const KIND_ICON: Record<PlaceKind, IconName> = {
   hotel: 'apartment', worship: 'mosqueOutline', useful: 'infoOutline',
 }
 
+// one colour per kind, for the map dots and the filter chips (each readable as a dot on the light map)
+export const KIND_COLOR: Record<PlaceKind, string> = {
+  restaurant: '#EA580C', attraction: '#7C3AED', park: '#16A34A', shopping: '#DB2777',
+  hotel: '#0284C7', worship: '#0F766E', useful: '#475569',
+}
+
 export type NearPlace = {
   osm_id: string; kind: PlaceKind; subkind: string | null; name: string
   name_en: string | null; name_ms: string | null; name_zh: string | null; name_ar: string | null

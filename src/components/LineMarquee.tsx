@@ -1,49 +1,56 @@
 import { useLanguage } from '../hooks/useLanguage'
 import { LINES, type Line } from '../data/lines'
-import BrandLogo from './BrandLogo'
 import LineBadge from './LineBadge'
-import { Reveal } from './Motion'
+import { Accent, Eyebrow, Reveal } from './Motion'
 
-// Home band between Promotions and "Why RONDA?" (Blaze consultant strip): a small RONDA card with the promise in
-// quotes, then every rail line as a pill with its official badge, drifting in two rows (one each way). The first
-// copy of each row is the readable list; the repeat that makes the loop seamless is hidden from screen readers.
-// The rows stop for people who prefer reduced motion (index.css) and pause while hovered.
+// Home band between Promotions and "Why RONDA?" (like the "Loved by thousands" band of the Ainaa site): a gold label,
+// the promise as a serif heading with its last word in italic gold, the network in numbers, then every rail line as a
+// pill with its official badge, drifting in two rows (one each way). The first copy of each row is the readable list;
+// the repeat that makes the loop seamless is hidden from screen readers. The rows stop for people who prefer reduced
+// motion (index.css) and pause while hovered.
 
 const ROWS: Line[][] = [LINES.filter((_, i) => i % 2 === 0), LINES.filter((_, i) => i % 2 === 1)]
 
 function Pill({ line }: { line: Line }) {
   return (
-    <li className="flex-shrink-0 inline-flex items-center gap-3 ps-2.5 pe-6 py-2.5 rounded-full border border-gray-200 bg-white">
-      <LineBadge line={line} size={44} decorative />
-      <span className="text-lg md:text-[28px] font-medium tracking-[-0.01em] text-[#14213D] whitespace-nowrap">{line.name}</span>
+    <li className="flex-shrink-0 inline-flex items-center gap-2.5 ps-2 pe-5 py-2 rounded-full border border-white/10 bg-white/[0.05]">
+      <LineBadge line={line} size={32} decorative />
+      <span className="text-base md:text-lg font-medium text-white/90 whitespace-nowrap">{line.name}</span>
     </li>
   )
 }
 
 function LineMarquee() {
   const { t } = useLanguage()
+  // the numbers, as in "Why RONDA?" (from the database, 15 Oct 2026, rounded down)
+  const stats: [string, string][] = [['14', t('why_lines')], ['6,500+', t('why_stops')], ['18,000+', t('why_places')], ['17', t('why_trails')]]
   return (
-    <section aria-label={t('lines')} className="mt-24 md:mt-32 bg-gray-50 py-16 md:py-[110px] overflow-hidden">
-      <Reveal className="px-4 flex flex-col items-center text-center">
-        <div className="inline-flex items-center gap-3 rounded-full bg-white ps-2 pe-5 py-2 shadow-[0_8px_24px_-12px_rgb(20_33_61/0.25)] ring-1 ring-gray-100">
-          <span className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center">
-            <BrandLogo size="sm" wordmark={false} />
-          </span>
-          <span className="text-start leading-tight">
-            <span className="block text-sm font-semibold text-[#14213D]">RONDA</span>
-            <span className="block text-xs text-gray-600">{t('bannerSubtitle')}</span>
-          </span>
-        </div>
-        <blockquote className="mt-7 max-w-xl text-[15px] leading-relaxed text-gray-600">“{t('why_caption')}”</blockquote>
+    <section aria-label={t('lines')} className="bg-navy-2 py-20 md:py-28 overflow-hidden text-white">
+      <Reveal className="wrap flex flex-col items-center text-center">
+        <Eyebrow tone="dark" center>RONDA</Eyebrow>
+        <p className="mt-5 [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em]">
+          <Accent text={t('s1_tag')} dark />
+        </p>
+        <p className="mt-4 max-w-2xl [text-wrap:balance] text-base md:text-lg text-white/75">{t('why_caption')}</p>
       </Reveal>
 
-      <div className="mt-12 flex flex-col gap-4 [direction:ltr]" dir="ltr">
+      {/* the numbers in soft gold, split by thin lines */}
+      <ul className="wrap mt-12 grid grid-cols-2 md:grid-cols-4">
+        {stats.map(([n, label], i) => (
+          <Reveal as="li" key={label} delay={i * 0.08} className={`px-4 py-4 text-center ${i % 2 ? 'border-s border-white/10' : ''} md:[&:not(:first-child)]:border-s md:border-white/10`}>
+            <span className="block font-display text-[44px] md:text-[56px] leading-none font-semibold text-gold-light">{n}</span>
+            <span className="mt-3 block text-sm text-white/70">{label}</span>
+          </Reveal>
+        ))}
+      </ul>
+
+      <div className="mt-14 flex flex-col gap-3 [direction:ltr]" dir="ltr">
         {ROWS.map((row, r) => (
           <div key={r} className="marquee group flex w-max">
-            <ul className={`marquee-track flex gap-4 pe-4 ${r ? 'marquee-right' : 'marquee-left'}`}>
+            <ul className={`marquee-track flex gap-3 pe-3 ${r ? 'marquee-right' : 'marquee-left'}`}>
               {row.map((l) => <Pill key={l.id} line={l} />)}
             </ul>
-            <ul className={`marquee-track flex gap-4 pe-4 ${r ? 'marquee-right' : 'marquee-left'}`} aria-hidden="true">
+            <ul className={`marquee-track flex gap-3 pe-3 ${r ? 'marquee-right' : 'marquee-left'}`} aria-hidden="true">
               {row.map((l) => <Pill key={l.id} line={l} />)}
             </ul>
           </div>

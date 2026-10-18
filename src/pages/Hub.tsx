@@ -4,7 +4,7 @@ import SuggestionList from '../components/SuggestionList'
 import { buildItems, type Pick } from '../data/suggestions'
 import { useSmartSearch } from '../hooks/useSmartSearch'
 import SiteLayout from '../components/SiteLayout'
-import BackButton from '../components/BackButton'
+import PageHero from '../components/PageHero'
 import Icon from '../components/Icon'
 import { useLanguage } from '../hooks/useLanguage'
 import { formatDuration } from '../i18n/duration'
@@ -26,17 +26,13 @@ function Hub() {
   const hub = data?.hub
   return (
     <SiteLayout>
-      <section className="bg-[#14213D] text-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
-          <div className="mb-5">
-            <BackButton to="/" label={t('backToHome')} onDark />
-          </div>
-          <p className="text-sm font-semibold text-accent-light">{t('hubTag')}</p>
-          <h1 className="mt-1 text-3xl md:text-4xl font-bold">{hub ? t('hubTitle').replace('{hub}', hub.name) : t('hubTag')}</h1>
-          <p className="mt-3 text-white/80 max-w-2xl">{t('hubIntro')}</p>
-        </div>
-      </section>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8" aria-live="polite">
+      <PageHero
+        back={{ to: '/', label: t('backToHome') }}
+        eyebrow={t('hubTag')}
+        title={hub ? t('hubTitle').replace('{hub}', hub.name) : t('hubTag')}
+        intro={t('hubIntro')}
+      />
+      <div className="wrap py-8" aria-live="polite">
         {failed ? (
           <p role="alert" className="text-gray-700">{t('hubError')}</p>
         ) : data === undefined ? (

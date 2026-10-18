@@ -6,7 +6,7 @@ import TrailCard from './TrailCard'
 import CategoryPills, { type CategoryFilter } from './CategoryPills'
 import Icon from './Icon'
 import { isCategoryShown } from '../data/trails'
-import { Eyebrow, Reveal, WordFill } from './Motion'
+import { Accent, Eyebrow, Reveal } from './Motion'
 
 // Home page "RONDA 300" trails: category pills, a swipeable row of trail cards and "See all trails", which opens
 // /trails with the same category picked
@@ -49,16 +49,16 @@ function TrailsSection() {
 
   return (
     <section id="explore" aria-labelledby="trails-title" className="scroll-mt-24 pt-24 md:pt-32 overflow-x-clip">
-      {/* Blaze "activities": a centred label, one big sentence that fills in word by word, centred filter pills,
+      {/* a centred gold label, one big serif sentence with its last word in italic gold, centred filter pills,
           then the cards across the full width */}
       <div className="wrap text-center">
         <Reveal>
           <h2 id="trails-title" className="inline-flex">
-            <Eyebrow icon={<Icon name="train" size={18} />}>{t('s2_title')}</Eyebrow>
+            <Eyebrow center>{t('s2_title')}</Eyebrow>
           </h2>
         </Reveal>
-        <p className="mt-8 mx-auto max-w-4xl text-[36px] md:text-[58px] leading-[1.1] font-medium tracking-[-0.025em]">
-          <WordFill text={t('r3_homeSub')} />
+        <p className="mt-6 mx-auto max-w-4xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#14213D]">
+          <Accent text={t('r3_homeSub')} />
         </p>
       </div>
 
@@ -80,8 +80,8 @@ function TrailsSection() {
             onScroll={onRowScroll}
             className="wrap mt-8 flex items-start gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scroll-px-4 sm:scroll-px-6 lg:scroll-px-12 xl:scroll-px-20 [scrollbar-width:none] pt-4 pb-12 -mb-6"
           >
-            {trails.map((trail, i) => (
-              <li key={trail.slug} className={`snap-start flex-shrink-0 w-[82%] sm:w-[46%] lg:w-[31%] flex ${i % 2 ? 'lg:mt-8' : ''}`}>
+            {trails.map((trail) => (
+              <li key={trail.slug} className="snap-start flex-shrink-0 w-[82%] sm:w-[46%] lg:w-[31%] flex">
                 <TrailCard trail={trail} places={data.places} className="w-full" />
               </li>
             ))}
@@ -92,7 +92,7 @@ function TrailsSection() {
       <div className="mt-8 flex justify-center px-4">
         <Link
           to={category === 'all' ? '/trails' : `/trails?category=${category}`}
-          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-gold text-[15px] font-bold text-[#14213D] shadow-[0_6px_16px_rgb(252_163_17/0.35)] hover:bg-gold-hover active:scale-95 transition whitespace-nowrap"
+          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-gold text-[15px] font-bold text-[#14213D] shadow-[0_6px_16px_rgb(200_150_62/0.35)] hover:bg-gold-hover active:scale-95 transition whitespace-nowrap"
         >
           {t('seeAllTrails')}
           <Icon name="chevronRight" size={16} className="rtl:rotate-180" />

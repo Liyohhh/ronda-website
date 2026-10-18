@@ -13,7 +13,7 @@ export function HelpLayout({ children }: { children: ReactNode }) {
     <SiteLayout
       subheader={
         <div className="border-b border-gray-200 bg-gray-50">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 h-11 flex items-center justify-between text-sm">
+          <div className="wrap h-11 flex items-center justify-between text-sm">
             <Link to="/help" className="font-semibold text-[#14213D]">
               RONDA {t('helpCentre')}
             </Link>

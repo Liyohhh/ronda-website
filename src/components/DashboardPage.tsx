@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import SiteLayout from './SiteLayout'
+import PageHero from './PageHero'
 import Icon from './Icon'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
@@ -12,13 +13,8 @@ function DashboardPage({ title, intro, tiles }: { title: TranslationKey; intro: 
   const { t } = useLanguage()
   return (
     <SiteLayout>
-      <section className="bg-[#14213D] text-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-          <h1 className="text-3xl font-bold">{t(title)}</h1>
-          <p className="mt-2 max-w-2xl text-white/80">{t(intro)}</p>
-        </div>
-      </section>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <PageHero title={t(title)} intro={t(intro)} />
+      <div className="wrap py-10">
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {tiles.map((d) => {
             const body = (
@@ -36,9 +32,9 @@ function DashboardPage({ title, intro, tiles }: { title: TranslationKey; intro: 
             return (
               <li key={d.label}>
                 {d.to ? (
-                  <Link to={d.to} className="block h-full rounded-2xl border border-gray-200 bg-white p-5 hover:border-[#14213D]/40 hover:shadow-sm">{body}</Link>
+                  <Link to={d.to} className="block h-full rounded-[24px] border border-gray-200 bg-gray-50 p-6 hover:border-[#14213D]/40 hover:bg-white transition-colors">{body}</Link>
                 ) : (
-                  <div className="h-full rounded-2xl border border-dashed border-gray-300 bg-white/60 p-5">{body}</div>
+                  <div className="h-full rounded-[24px] border border-dashed border-gray-300 bg-white p-6">{body}</div>
                 )}
               </li>
             )

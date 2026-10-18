@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom'
 import Icon from './Icon'
 import PhotoCredit from './PhotoCredit'
-import { Eyebrow, Reveal } from './Motion'
+import { Accent, Eyebrow, Reveal } from './Motion'
 import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { useLanguage } from '../hooks/useLanguage'
 
-// Home page: promotions (ads) as Blaze-style package cards: photo on the left, a light grey panel with the words on
-// the right, on one light grey card with big round corners. On wide screens every card is the same solid shape and
-// height and sticks at the same place under the header, so each one slides up over the last and covers it exactly. Every banner carries one quiet "Ad" tag in the same corner. Data in src/data/promotions.ts.
+// Home page: promotions (ads), compact: one wide banner (photo beside the words, the three ad places and the button),
+// then three small cards in a row (photo on top). Every banner carries one quiet "Ad" tag in the same corner.
+// Data in src/data/promotions.ts.
 
 // the whole card is the link (stretched over it: the card is the nearest positioned box)
-const STRETCH = 'after:absolute after:inset-0 after:z-[1] after:rounded-[32px] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-4 focus-visible:after:outline-offset-2 focus-visible:after:outline-[#14213D]'
+const STRETCH = 'after:absolute after:inset-0 after:z-[1] after:rounded-[28px] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-4 focus-visible:after:outline-offset-2 focus-visible:after:outline-[#14213D]'
 
 function AdTag({ text }: { text: string }) {
   return (
@@ -23,79 +23,77 @@ function AdTag({ text }: { text: string }) {
 function PromotionSection() {
   const { t } = useLanguage()
   const f = PROMO_FEATURE
-  const cards = [f, ...PROMOTIONS]
+
+  const photo = (p: typeof f | (typeof PROMOTIONS)[number], className: string) => (
+    <div className={`relative overflow-hidden rounded-[20px] bg-[#14213D] ${className}`}>
+      <img src={p.photo.src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
+      <span className="absolute top-3 start-3"><AdTag text={t('promoAdLabel')} /></span>
+      <p className="absolute inset-x-0 bottom-0 truncate bg-gradient-to-t from-black/60 to-transparent px-3 py-1.5 text-[10px] text-white/90 [&_a]:relative [&_a]:z-10">
+        {t('photoLabel')}: <PhotoCredit photo={p.photo} />
+      </p>
+    </div>
+  )
 
   return (
-    <section aria-labelledby="promo-title" className="mt-24 md:mt-32">
+    <section aria-labelledby="promo-title" className="mt-24 md:mt-32 bg-cream py-20 md:py-28">
       <div className="wrap">
-        <Reveal className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+        <Reveal className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-5">
           <div>
-            <h2 id="promo-title" className="flex"><Eyebrow icon={<Icon name="sell" size={18} />}>{t('promoTitle')}</Eyebrow></h2>
-            <p className="mt-6 max-w-3xl [text-wrap:balance] text-[36px] md:text-[58px] leading-[1.1] font-medium tracking-[-0.025em] text-[#14213D]">{t('promoSubtitle')}</p>
+            <h2 id="promo-title"><Eyebrow>{t('promoTitle')}</Eyebrow></h2>
+            <p className="mt-5 max-w-3xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#14213D]"><Accent text={t('promoSubtitle')} /></p>
           </div>
           <Link
             to={f.to}
-            className="inline-flex self-start sm:self-auto flex-shrink-0 items-center gap-1.5 px-7 py-3.5 rounded-full border border-gray-200 bg-white text-[15px] font-bold text-[#14213D] shadow-sm hover:bg-[#14213D] hover:text-white hover:border-[#14213D] transition-all whitespace-nowrap"
+            className="inline-flex self-start sm:self-auto flex-shrink-0 items-center gap-1.5 h-11 px-5 rounded-full border border-gray-200 bg-white text-sm font-semibold text-[#14213D] hover:bg-[#14213D] hover:text-white hover:border-[#14213D] transition-colors whitespace-nowrap"
           >
             {t('promoAdvertiseLink')}
             <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
           </Link>
         </Reveal>
 
-        <ul className="flex flex-col gap-6 lg:gap-16">
-          {cards.map((p, i) => {
-            const feature = p.id === f.id
-            return (
-              <li
-                key={p.id}
-                data-promo={p.id}
-                className="group relative lg:sticky lg:top-[104px] lg:h-[460px] grid lg:grid-cols-2 gap-[10px] p-[10px] rounded-[32px] bg-gray-50 ring-1 ring-inset ring-gray-200"
-              >
-                <div className="relative overflow-hidden rounded-[24px] bg-[#14213D] min-h-[240px] lg:min-h-0">
-                  <img src={p.photo.src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
-                  <span className="absolute top-4 start-4"><AdTag text={t('promoAdLabel')} /></span>
-                  <p className="absolute inset-x-0 bottom-0 truncate bg-gradient-to-t from-black/60 to-transparent px-4 py-2 text-[10px] text-white/90 [&_a]:relative [&_a]:z-10">
-                    {t('photoLabel')}: <PhotoCredit photo={p.photo} />
-                  </p>
-                </div>
+        <ul className="grid gap-3 sm:grid-cols-3">
+          {/* the wide banner: photo beside the words */}
+          <li data-promo={f.id} className="group relative sm:col-span-3 grid md:grid-cols-[1fr_1.15fr] gap-2 p-2 rounded-[28px] bg-white ring-1 ring-inset ring-[#E8E1D3]">
+            {photo(f, 'min-h-[200px] md:min-h-[260px]')}
+            <div className="flex flex-col justify-center gap-5 p-4 md:p-6">
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold tracking-[-0.01em] text-[#14213D]">
+                  <Link to={f.to} className={STRETCH}>{t(f.title)}</Link>
+                </h3>
+                <p className="mt-2 text-gray-600">{t(f.text)}</p>
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {f.tickets.map((k) => (
+                    <li key={k} className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-[13px] font-medium text-[#14213D]">{t(k)}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <span aria-hidden="true" className="inline-flex items-center gap-1.5 h-11 px-5 rounded-full bg-gold text-sm font-bold text-[#14213D] group-hover:bg-gold-hover transition-colors">
+                  {t(f.cta)}
+                  <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+                </span>
+                <span className="text-sm text-gray-600">{t(f.note)}</span>
+              </div>
+            </div>
+          </li>
 
-                <div className="flex flex-col justify-between gap-8 p-4 pt-6 md:p-8">
-                  <div>
-                    <div className="flex items-start justify-between gap-4">
-                      <h3 className="text-2xl md:text-[28px] leading-snug font-medium tracking-[-0.01em] text-[#14213D]">
-                        <Link to={p.to} className={STRETCH}>{t(p.title)}</Link>
-                      </h3>
-                      <span aria-hidden="true" className="mt-2 text-sm text-gray-500 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-                    </div>
-                    <p className="mt-4 text-gray-600 leading-relaxed max-w-md">{t(p.text)}</p>
-                    {feature && (
-                      <ul className="mt-6 flex flex-wrap gap-2">
-                        {f.tickets.map((k) => (
-                          <li key={k} className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-[#14213D]">{t(k)}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-3 border-t border-gray-200 pt-6">
-                    {feature ? (
-                      <>
-                        <span aria-hidden="true" className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-gold text-[15px] font-bold text-[#14213D] shadow-md group-hover:bg-gold-hover transition-colors">
-                          {t(f.cta)}
-                          <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
-                        </span>
-                        <span className="text-sm text-gray-600">{t(f.note)}</span>
-                      </>
-                    ) : (
-                      <span aria-hidden="true" className="ms-auto w-12 h-12 rounded-full bg-[#14213D] text-white flex items-center justify-center shadow-md transition duration-300 group-hover:bg-gold group-hover:text-[#14213D] group-hover:-rotate-45 rtl:group-hover:rotate-45">
-                        <Icon name="chevronRight" size={20} className="rtl:rotate-180" />
-                      </span>
-                    )}
-                  </div>
+          {/* the smaller cards: photo on top, words below */}
+          {PROMOTIONS.map((p) => (
+            <li key={p.id} data-promo={p.id} className="group relative flex flex-col gap-2 p-2 rounded-[28px] bg-white ring-1 ring-inset ring-[#E8E1D3]">
+              {photo(p, 'h-40')}
+              <div className="flex flex-1 items-start justify-between gap-3 p-3">
+                <div>
+                  <h3 className="font-semibold leading-snug text-[#14213D]">
+                    <Link to={p.to} className={STRETCH}>{t(p.title)}</Link>
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-600">{t(p.text)}</p>
                 </div>
-              </li>
-            )
-          })}
+                <span aria-hidden="true" className="mt-0.5 w-8 h-8 flex-shrink-0 rounded-full bg-[#14213D] text-white flex items-center justify-center transition-colors group-hover:bg-gold group-hover:text-[#14213D]">
+                  <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+                </span>
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
     </section>

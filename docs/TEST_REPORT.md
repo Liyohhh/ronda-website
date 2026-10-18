@@ -1,6 +1,53 @@
 # Test report
 
-## Latest run - 18 Oct 2026, late (branch design-4-blaze, features band as a route)
+## Latest run - 18 Oct 2026, night 3 (branch design-4-blaze, all pages, RONDA 300 map, Ainaa-style concept)
+
+- Every inner page (Trails, trail pages, RONDA 300, Hub, About, Help, Account, dashboards, Services, Credits, 404)
+  now opens with the same inset navy card as Home (PageHero) and sits on the same page grid.
+- RONDA 300: search in the page header; after picking a station, the list of places (filter by kind, colour per
+  kind) beside a map that stays in view: the station in the middle, a dashed 300 m ring (about 5 min walk), every
+  place as a coloured dot; pointing at a place rings its dot, pressing a dot picks the place in the list.
+- Look after the Ainaa site the owner pointed to, in our own shades: serif headings with the last word in italic
+  shimmering gold, small gold labels between thin lines, sections alternating white / stone / navy, navy band with the
+  network in big numbers, features as stone cards, navy app band, white footer, plain-text header menus. Palette:
+  midnight navy, #1C3263, stone #F4F1EA, brass #C8963E (buttons), champagne #E3BE6E (on navy), deep bronze #8A6420
+  (gold text on light, 4.5:1).
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **210 / 210 passed**, 34 files |
+| Website end-to-end tests (Playwright, desktop + phone, incl. accessibility scan of 14 pages) | **212 passed, 0 failed**, 6 skipped |
+| RONDA 300 map | checked by eye at 1440 and 390 px with MRT Bukit Bintang (200 places), with the local map file |
+
+---
+
+## Run - 18 Oct 2026, night 2 (branch design-4-blaze, hero videos, ECRL, clean-up)
+
+- Hero: 5 KL / Putrajaya videos from the owner (Pexels; re-encoded to 720p MP4, 1.2-4.4 MB each, first frame as
+  poster) play one after another with a soft fade; slim bars top right switch them; phones and reduced motion keep
+  the photo.
+- About: ECRL "coming soon" card - 20 stations, phase 1 (Kota Bharu - ITT Gombak, target mid-Dec 2026) and phase 2
+  (to Jalan Kastam, service from Jan 2028), interchanges, "fares not announced yet", sources linked. The viral fare
+  poster was not used (The Star fact-check: not official).
+- Clean-up: rainbow stripes removed; section labels as small capitals with a gold dot; one heading scale; hero
+  without decorative chips; even trail row; feature slides off the page for now; navy line band and stats card;
+  cool blue-grey neutrals. Promotions and "Everything you need" made compact (banner + 3 small cards; 5 x 2 icon
+  tiles, each feature with its own colour and icon pair).
+- Later the same night: the line band quote is a large white quote signed with the white logo; feature tiles show
+  plain coloured icons (no tinted boxes or badges) at one even height; section labels are solid pills (navy, or
+  white on the dark band) with a gold dot. Unit 210 / 210, home + site e2e re-run passed.
+- Fix: pressing Search on the Lines tab with an empty box did nothing; it now opens the list of all lines.
+
+| Suite | Result |
+|---|---|
+| Website static checks (ESLint, TypeScript) | clean |
+| Website unit and component tests (Vitest) | **210 / 210 passed**, 34 files (new: EcrlCard, HeroVideos) |
+| Website end-to-end tests (Playwright, desktop + phone) | **211 passed, 1 failed**, 6 skipped in the full run before the fix; after the fix, links + journey specs **19 passed** |
+
+---
+
+## Run - 18 Oct 2026, late (branch design-4-blaze, features band as a route)
 
 "Everything you need for the journey" redesigned: heading and the station-map drawing on the left (they stay in view
 on wide screens), the 10 features on the right as stops on a gold line, each with a station code (RD01-RD10), icon,

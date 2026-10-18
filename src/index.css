@@ -1,36 +1,72 @@
 @import "tailwindcss";
 
-/* Black & Gold (18 Oct 2026): navy #14213D for text, main surfaces and dark bands; black #000000 for the footer; gold
-   #FCA311 for the main call to action and highlights (always with navy text: white on gold is too faint to read);
-   platinum #E5E5E5 and plain neutral greys for pills, borders and panels; white page. Official line colours, open /
-   closed and live bus colours keep their own meaning.
-   Tokens: navy (text, dark bands), navy-deep (hover / darker band), gold (+ gold-hover, gold-soft for light tints),
-   band (light grey section bands), accent = navy (buttons with white text), accent-light = gold (highlights on navy),
-   accent-text and blue-batik = navy (links on light backgrounds). */
+/* Midnight, stone and brass (18 Oct 2026; the idea of the Ainaa site the owner pointed to, in our own shades):
+   midnight navy #14213D for text, #1C3263 for dark bands; stone #F4F1EA for alternate sections and cards; brass
+   #C8963E for buttons (navy text), champagne #E3BE6E for gold on navy, deep bronze #8A6420 for gold text on light
+   backgrounds (4.5:1 on white and stone); cool blue-greys for borders and quiet text. Official line colours, open /
+   closed and live bus colours keep their own meaning. Headings use a serif display face (font-display). */
 @theme {
-  --color-gray-50: #f7f7f7;
-  --color-gray-100: #efefef;
-  --color-gray-200: #e5e5e5;
-  --color-gray-300: #d4d4d4;
-  --color-gray-400: #a3a3a3;
-  --color-gray-500: #6b6b6b;
-  --color-gray-600: #525252;
-  --color-gray-700: #404040;
-  --color-gray-800: #262626;
+  --color-gray-50: #f3f5fa;
+  --color-gray-100: #e9edf5;
+  --color-gray-200: #dbe1ec;
+  --color-gray-300: #c4ccda;
+  --color-gray-400: #95a0b4;
+  --color-gray-500: #5a667c;
+  --color-gray-600: #46526a;
+  --color-gray-700: #344058;
+  --color-gray-800: #1f2a40;
   --color-gray-900: #14213D;
   --color-navy: #14213D;
   --color-navy-deep: #0B1528;
-  --color-gold: #FCA311;
-  --color-gold-hover: #E8940A;
-  --color-gold-soft: #FEF3DC;
-  --color-band: #efefef;
+  --color-gold: #C8963E;
+  --color-gold-hover: #B3832F;
+  --color-gold-light: #E3BE6E;
+  --color-gold-deep: #8A6420;
+  --color-gold-soft: #F5ECDA;
+  --color-cream: #F4F1EA;
+  --color-navy-2: #1C3263;
+  --color-band: #e9edf5;
   --color-accent: #14213D;
   --color-accent-hover: #0B1528;
-  --color-accent-light: #FCA311;
+  --color-accent-light: #E3BE6E;
   --color-accent-text: #14213D;
   --color-blue-batik: #14213D;
   --color-blue-batik-hover: #0B1528;
 }
+
+/* Headings: a serif display face (Playfair Display when the device has it, else Georgia) */
+@utility font-display {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+}
+
+/* The accent word of a heading: italic, in a slowly moving band of bronze (on light) or brass to champagne (on navy) */
+@keyframes aurora {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.accent-word {
+  font-style: italic;
+  color: #8A6420;
+  background-image: linear-gradient(135deg, #7A5618, #8A6420, #A87A2C, #8A6420, #7A5618);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: aurora 10s ease-in-out infinite;
+}
+/* on navy: brass to champagne */
+.accent-word.on-dark {
+  color: #E3BE6E;
+  background-image: linear-gradient(135deg, #C8963E, #E3BE6E, #F3DFAE, #E3BE6E, #C8963E);
+}
+
+/* Gentle float for small cards over a photo */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.float-y { animation: float-y 5s ease-in-out infinite; }
 
 /* One page grid for the home page, header and footer (Blaze layout): every block starts on the same left edge.
    Gutters 16 / 24 / 48 / 80 px, content at most 1280 px wide. */
@@ -149,7 +185,9 @@ body {
   }
   .hero-settle,
   .rise-in,
-  .marquee-track {
+  .marquee-track,
+  .accent-word,
+  .float-y {
     animation: none;
   }
   /* rows stand still: let them wrap instead of running off the screen; the repeat copy is not needed */

@@ -31,9 +31,10 @@ describe('Motion', () => {
     expect(screen.getByRole('heading')).toHaveTextContent('马来西亚比你想的更容易出行')
   })
 
-  it('Eyebrow shows its label next to a decorative icon', () => {
-    render(<Eyebrow icon={<svg data-testid="i" />}>Why RONDA?</Eyebrow>)
-    expect(screen.getByText('Why RONDA?')).toBeVisible()
-    expect(screen.getByTestId('i').parentElement).toHaveAttribute('aria-hidden', 'true')
+  it('Eyebrow shows its label after a decorative dot', () => {
+    render(<Eyebrow>Why RONDA?</Eyebrow>)
+    const label = screen.getByText('Why RONDA?')
+    expect(label).toBeVisible()
+    expect(label.querySelector('span')).toHaveAttribute('aria-hidden', 'true')
   })
 })
