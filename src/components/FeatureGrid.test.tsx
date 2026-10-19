@@ -21,8 +21,8 @@ describe('FeatureGrid', () => {
     renderWithLang(<FeatureGrid />)
     const grid = screen.getByTestId('feature-tiles')
     expect(within(grid).getAllByRole('link')).toHaveLength(9)
-    expect(within(grid).getByRole('link', { name: /Trails/ })).toHaveAttribute('href', '/trails')
-    expect(within(grid).getByRole('link', { name: /RONDA 300/ })).toHaveAttribute('href', '/ronda-300')
+    expect(within(grid).getByRole('link', { name: /^Trails\./ })).toHaveAttribute('href', '/trails')
+    expect(within(grid).getByRole('link', { name: /^RONDA 300\./ })).toHaveAttribute('href', '/ronda-300')
     expect(within(grid).getByRole('link', { name: /Last-train alerts/ })).toHaveTextContent('Coming soon')
   })
 

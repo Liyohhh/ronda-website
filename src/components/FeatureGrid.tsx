@@ -4,53 +4,27 @@ import type { TranslationKey } from '../i18n/translations'
 import Icon from './Icon'
 import { Accent, Eyebrow, Reveal } from './Motion'
 import { FEATURES, OPEN_LANGUAGE_MENU, type Feature } from '../data/features'
-import { LINES_BY_ID } from '../data/lines'
+import FeatureArt, { type ArtKind } from './FeatureArt'
 
-// "Everything you need for the journey", arranged the way transit apps present themselves (Transit, Citymapper,
-// Omio, Bolt): one spotlight for what is live right now, then the features grouped by what a rider wants to do,
-// each with a single plain line on what it does. Only what RONDA does today; planned things say "Coming soon".
+// "Everything you need for the journey", the way Monzo shows its products: a row of picture cards (Trails always
+// first), each a clean drawing of the feature (FeatureArt) on a cream or navy block, then the feature's name, one
+// line and a "Learn more" pill (the whole card is the link); on phones the row scrolls sideways. The smaller
+// features follow in a ruled strip. (The live map is announced in the lines band, LineMarquee.) Only what RONDA does today;
+// planned things say "Coming soon".
 
-const GROUPS: { title: TranslationKey; keys: Feature['key'][] }[] = [
-  { title: 'featGroupPlan', keys: ['feat_directions', 'feat_places', 'feat_fares', 'feat_lines'] },
-  { title: 'featGroupExplore', keys: ['feat_trails', 'feat_ronda300', 'feat_airport'] },
-  { title: 'featGroupYou', keys: ['feat_saved', 'feat_languages', 'feat_alerts'] },
-]
-const desc = (k: Feature['key']) => `featD_${k.slice(5)}` as TranslationKey
-
-// the spotlight's drawing: three lines in their official colours with vehicles gliding along them
-const ROUTES: [string, string][] = [
-  ['lrt-kelana-jaya', 'M20 150 C 120 150, 160 70, 260 70 S 400 110, 500 40'],
-  ['mrt-kajang', 'M20 40 C 140 40, 200 130, 320 130 S 440 150, 500 150'],
-  ['ktm-port-klang', 'M60 190 C 180 170, 300 30, 470 10'],
+const CARDS: { key: Feature['key']; label: TranslationKey; line: TranslationKey; art: ArtKind }[] = [
+  { key: 'feat_trails', label: 'trails', line: 'featCardTrails', art: 'trails' },
+  { key: 'feat_directions', label: 'directions', line: 'featCardDirections', art: 'directions' },
+  { key: 'feat_lines', label: 'lines', line: 'featCardLines', art: 'lines' },
+  { key: 'feat_ronda300', label: 's2_title', line: 'featCardR300', art: 'ronda300' },
 ]
 
 function FeatureGrid() {
   const { t } = useLanguage()
   const byKey = Object.fromEntries(FEATURES.map((f) => [f.key, f])) as Record<Feature['key'], Feature>
 
-  const row = (f: Feature) => {
-    const body = (
-      <>
-        <span aria-hidden="true" className="mt-0.5 w-10 h-10 flex-shrink-0 rounded-xl bg-white border border-[#DCD4C8] flex items-center justify-center" style={{ color: f.color }}>
-          <Icon name={f.icon} size={20} />
-        </span>
-        <span className="min-w-0 flex-1 text-start">
-          <span className="flex flex-wrap items-center gap-2 font-semibold text-[#222D52]">
-            {t(f.key)}
-            {f.soon && <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#222D52]">{t('soon')}</span>}
-          </span>
-          <span className="mt-0.5 block text-sm leading-snug text-gray-600">{t(desc(f.key))}</span>
-        </span>
-        <Icon name="chevronRight" size={18} className="mt-2.5 flex-shrink-0 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-[#222D52] rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
-      </>
-    )
-    const cls = 'group flex w-full items-start gap-3.5 rounded-2xl p-3 transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold'
-    return f.to ? (
-      <Link to={f.to} className={cls}>{body}</Link>
-    ) : (
-      <button type="button" className={cls} aria-haspopup="listbox" onClick={() => window.dispatchEvent(new CustomEvent(OPEN_LANGUAGE_MENU))}>{body}</button>
-    )
-  }
+  const openLanguages = () => window.dispatchEvent(new CustomEvent(OPEN_LANGUAGE_MENU))
+  const small = [byKey.feat_places, byKey.feat_fares, byKey.feat_airport, byKey.feat_saved, byKey.feat_languages, byKey.feat_alerts]
 
   return (
     <section aria-labelledby="features-title" className="relative">
@@ -60,46 +34,57 @@ function FeatureGrid() {
           <Accent text={t('featuresTitle')} />
         </h2>
 
-        {/* spotlight: the live map */}
-        <Reveal className="mt-10 relative overflow-hidden rounded-[28px] bg-[#222D52] text-white grid md:grid-cols-[1fr_1.1fr] items-center">
-          <div className="relative p-7 md:p-10">
-            <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-gold-light">
-              <span className="relative flex h-2 w-2" aria-hidden="true">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-light opacity-60 motion-reduce:hidden" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-light" />
-              </span>
-              {t('navLive')}
-            </p>
-            <h3 className="mt-3 font-display text-[30px] md:text-[38px] leading-tight font-semibold"><Accent text={t('liveMapTitle')} dark /></h3>
-            <p className="mt-3 max-w-md text-white/80">{t('liveMapDetail')}</p>
-            <Link to="/live" className="mt-6 inline-flex items-center gap-1.5 h-11 px-5 rounded-full bg-gold text-sm font-bold text-[#222D52] hover:bg-gold-hover transition-colors">
-              {t('featLiveCta')}
-              <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
-            </Link>
-          </div>
-          <svg viewBox="0 0 520 200" className="block w-full h-auto p-4 md:p-6" aria-hidden="true" focusable="false">
-            <g fill="none" strokeWidth="6" strokeLinecap="round" opacity="0.9">
-              {ROUTES.map(([id, d]) => <path key={id} d={d} stroke={LINES_BY_ID[id].color} />)}
-            </g>
-            {ROUTES.map(([id, d], i) => (
-              <circle key={`v-${id}`} r="7" fill="#FFFFFF" stroke={LINES_BY_ID[id].color} strokeWidth="4">
-                <animateMotion dur={`${9 + i * 3}s`} repeatCount="indefinite" path={d} begin={`-${i * 2}s`} />
-              </circle>
-            ))}
-          </svg>
-        </Reveal>
+        <div data-testid="feature-tiles">
+          {/* a row of picture cards: a drawing on a colour block, then the name, one line and "Learn more" */}
+          <ul className="mt-10 -mx-4 px-4 scroll-px-4 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 sm:overflow-visible">
+            {CARDS.map((c, i) => {
+              const f = byKey[c.key]
+              const dark = i % 2 === 1
+              return (
+                <Reveal as="li" key={c.key} delay={i * 0.06} className="group relative w-[78%] flex-shrink-0 snap-start sm:w-auto">
+                  {/* the picture: a clean drawing of the feature */}
+                  <div className={`aspect-square overflow-hidden rounded-[28px] p-5 ${dark ? 'bg-[#222D52]' : 'bg-cream'}`}>
+                    <FeatureArt kind={c.art} dark={dark} />
+                  </div>
+                  <h3 className="mt-5 text-[22px] font-semibold tracking-[-0.01em] text-[#222D52]">
+                    <Link to={f.to!} className="after:absolute after:inset-0 after:z-[1] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-gold focus-visible:after:rounded-[28px]">
+                      {t(c.label)}
+                      <span className="sr-only">. {t(c.line)}</span>
+                    </Link>
+                  </h3>
+                  <p aria-hidden="true" className="mt-2 text-[15px] leading-relaxed text-gray-600">{t(c.line)}</p>
+                  <span aria-hidden="true" className="mt-4 inline-flex h-9 items-center rounded-full border-[1.5px] border-[#222D52] px-4 text-sm font-semibold text-[#222D52] transition-colors group-hover:bg-[#222D52] group-hover:text-white">
+                    {t('featLearnMore')}
+                  </span>
+                </Reveal>
+              )
+            })}
+          </ul>
 
-        {/* the features, grouped */}
-        <div className="mt-3 grid gap-3 lg:grid-cols-3" data-testid="feature-tiles">
-          {GROUPS.map((g, gi) => (
-            <Reveal key={g.title} delay={gi * 0.08} className="rounded-[28px] border border-[#DCD4C8] bg-cream p-4 md:p-5">
-              <h3 className="px-3 pt-2 text-xs font-bold uppercase tracking-[0.22em] text-gold-deep">{t(g.title)}</h3>
-              <ul className="mt-3 space-y-1">
-                {g.keys.map((k) => <li key={k}>{row(byKey[k])}</li>)}
-              </ul>
-            </Reveal>
-          ))}
+          {/* the smaller features, in a neat strip under the cards */}
+          <ul className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 border-y border-[#DCD4C8] text-[15px] text-[#222D52]">
+            {small.map((f) => {
+              const label = (
+                <>
+                  <span aria-hidden="true" className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-cream" style={{ color: f.color }}><Icon name={f.icon} size={18} /></span>
+                  <span className="min-w-0">
+                    <span className="block font-medium leading-snug">{t(f.key)}</span>
+                    {f.soon && <span className="mt-1 inline-block rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#222D52]">{t('soon')}</span>}
+                  </span>
+                </>
+              )
+              const cls = 'flex h-full w-full items-center gap-3 py-5 pe-3 text-start transition-colors hover:text-gold-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold'
+              return (
+                <li key={f.key}>
+                  {f.to
+                    ? <Link to={f.to} className={cls}>{label}</Link>
+                    : <button type="button" className={cls} aria-haspopup="listbox" onClick={openLanguages}>{label}</button>}
+                </li>
+              )
+            })}
+          </ul>
         </div>
+
       </div>
     </section>
   )

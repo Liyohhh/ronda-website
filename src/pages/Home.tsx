@@ -385,7 +385,7 @@ function Home() {
   )
 
   return (
-    <SiteLayout darkEnd>
+    <SiteLayout>
       {/* Hero (Blaze layout): an inset card with rounded corners; the KL skyline photo starts slightly zoomed in and
           settles, and on wider screens the hero videos play over it one after another (HeroVideos, with its station
           line as the slide control); the headline sits bottom-left over a dark fade.
@@ -633,17 +633,19 @@ function Home() {
         </div>
       </section>
 
-      {/* Below the search: RONDA 300 trails, promotions (ads), Why RONDA, services (chauffeur and transfers, hidden until
-          SERVICES_ENABLED), then the feature tiles in the dark band (footer follows in SiteLayout). The feature slides
+      {/* Below the search, in the order travel and banking sites use (Monzo, Wise, Trainline, Apple Maps): something to
+          explore first (RONDA 300 trails, always on top), promotions (ads) second (owner, 20 Oct 2026), then what RONDA
+          does ("Everything you need"), then the proof (the lines band with its numbers, Why RONDA), and the app band
+          and footer last (SiteLayout). Services (chauffeur and transfers) stay hidden until SERVICES_ENABLED. The feature slides
           (FeatureCarousel) are off the page for now (owner, 18 Oct 2026). */}
       <TrailsSection />
       <PromotionSection />
-      <LineMarquee />
-      <WhyRonda />
-      {SERVICES_ENABLED && <ServicesSection />}
       <FeatureBand>
         <FeatureGrid />
       </FeatureBand>
+      <LineMarquee />
+      <WhyRonda />
+      {SERVICES_ENABLED && <ServicesSection />}
 
       {/* Line stations in the right-side panel; "Plan a trip here" fills the End box */}
       {pickedLine && (

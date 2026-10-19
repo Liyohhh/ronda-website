@@ -1,6 +1,47 @@
 # Test report
 
-## Latest run - 18 Oct 2026, night 3 (branch design-4-blaze, all pages, RONDA 300 map, Ainaa-style concept)
+## Latest run - 20 Oct 2026 (branch design-4-blaze, home order, RONDA 300 map, Monzo-style feature cards, compact app band)
+
+- Home order rearranged after studying Monzo, Wise, Trainline and Apple Maps (all go: tool, something to explore,
+  what the product does, proof, offers, app): search, RONDA 300 trails (always first), Promotions (ads, second at
+  the owner's request), "Everything you need", the lines band with its numbers, Why RONDA, then the app band and
+  footer. e2e order test updated.
+- RONDA 300 maps combined into one: the station map and the places map were two maps doing the same job, now one
+  map (Ronda300Map) inside one panel (Ronda300Explorer) used on the home page and on /ronda-300. It starts with every
+  rail station in its line's colour; picking a station (on the map or in the page's search) flies the same map in
+  to the station with its 300 m ring and places, the other stations fade, and "All stations" flies back out. The
+  old StationsPreviewMap and StationAroundMap are removed.
+- Home RONDA 300: a "Trails / Station map" switch under the heading (both are RONDA 300). Station map shows the panel
+  right on the home page (loads only when picked); "Open RONDA 300" opens the page, with the picked station if
+  there is one (/ronda-300 reads ?station=&lat=&lon=). New e2e test for the switch.
+- RONDA 300 panel, after Rome2rio and Klook's map pages: once a station is picked, the kinds as an icon bar across
+  the top (icon, name, count, underline when picked), then "{n} places within 300 m" and a list of white cards (big
+  icon tile in the kind's colour, name, kind and walk, "Plan a trip here" pill) beside a tall map; the place pointed
+  at in the list gets a callout on the map with its name and walk. Phones: map first, then the list. New text in
+  all four languages.
+- "Everything you need" below the live-map spotlight, after photo tiles, a numbered list, tabs, photo cards and
+  Apple Maps-style cards: a row of four picture cards in the way Monzo shows its products. Each picture is a clean
+  drawing made for the site (src/components/FeatureArt.tsx: route to a pin, three lines in their official colours,
+  station with places around it and a "300 m" walk label using the site's icons, winding trail to a flag) on a
+  cream or navy block (alternating), then the name, one
+  line and a "Learn more" pill; the whole card is one link (Trails always first, then Directions, Lines, RONDA 300). Four across from
+  1024 px, two from 640 px, a sideways-scrolling row on phones. Phone screenshots dropped. The other six features
+  follow in a ruled strip (icon in a cream circle, six across on desktop, two on phones); Languages stays a button, Coming soon kept. New text ("Learn more" and the
+  one-line descriptions) in all four languages.
+- Live map card taken out of "Everything you need" (it sat apart from the cards) and joined to the lines band: under
+  the drifting line pills, a glass bar with the pulsing "Live" label, what the live map shows and "Open the live map"
+  (a pill on desktop, a stacked card on phones). New unit test for its link. The animated drawing is gone.
+- "Get the app" band made smaller and joined to the top of the footer as in the earlier design: less padding,
+  smaller heading, phone 220 px wide whose top rises above the band and whose bottom is cut off where the band meets
+  the footer; text and store badges left, phone right as before. The floating cards (6,500+ stations, 12 min) show
+  from 1024 px up; the phone from 768 px up. Footer gap prop for Home removed (Home no longer ends in a dark band).
+- Unit 211 / 211. Playwright home, site (incl. accessibility scan) and links/access on desktop and mobile: all pass
+  after fixing a sideways scroll at 768 px (floating cards now hidden below 1024 px, footer clips sideways only).
+  1440, 768 and 375 px, no sideways scroll.
+
+---
+
+## Run - 18 Oct 2026, night 3 (branch design-4-blaze, all pages, RONDA 300 map, Ainaa-style concept)
 
 - Home hero: "Malaysia" tried in the flag's colours (striped, then letter by letter) and set back to gold at the
   owner's request.

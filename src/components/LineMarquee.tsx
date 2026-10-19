@@ -1,11 +1,14 @@
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { LINES, type Line } from '../data/lines'
+import Icon from './Icon'
 import LineBadge from './LineBadge'
 import { Accent, Eyebrow, Reveal } from './Motion'
 
-// Home band (velvet navy, with a champagne glow) between Promotions and "Why RONDA?" (like the "Loved by thousands" band of the Ainaa site): a gold label,
+// Home band (velvet navy, with a champagne glow) between "Everything you need" and "Why RONDA?" (like the "Loved by thousands" band of the Ainaa site): a gold label,
 // the promise as a serif heading with its last word in italic gold, the network in numbers, then every rail line as a
-// pill with its official badge, drifting in two rows (one each way). The first copy of each row is the readable list;
+// pill with its official badge, drifting in two rows (one each way), and last the live map: a glass bar with a
+// pulsing "Live" label, what it shows and a link to it. The first copy of each row is the readable list;
 // the repeat that makes the loop seamless is hidden from screen readers. The rows stop for people who prefer reduced
 // motion (index.css) and pause while hovered.
 
@@ -58,6 +61,24 @@ function LineMarquee() {
           </div>
         ))}
       </div>
+
+      {/* the live map: the lines above, moving */}
+      <Reveal className="wrap mt-14">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-[28px] border border-white/15 bg-white/[0.06] px-6 py-5 text-center backdrop-blur-sm md:flex-row md:rounded-full md:py-3 md:pe-3 md:ps-6 md:text-start">
+          <span className="inline-flex flex-shrink-0 items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-gold-light">
+            <span className="relative flex h-2 w-2" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-light opacity-60 motion-reduce:hidden" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-light" />
+            </span>
+            {t('navLive')}
+          </span>
+          <p className="flex-1 text-sm md:text-[15px] text-white/85">{t('liveMapDetail')}</p>
+          <Link to="/live" className="inline-flex flex-shrink-0 items-center gap-1.5 h-11 px-5 rounded-full bg-gold text-sm font-bold text-[#222D52] hover:bg-gold-hover transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-light">
+            {t('featLiveCta')}
+            <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+          </Link>
+        </div>
+      </Reveal>
     </section>
   )
 }

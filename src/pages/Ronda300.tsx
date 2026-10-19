@@ -1,27 +1,29 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, type KeyboardEvent } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import PageHero from '../components/PageHero'
-import StationAroundMap from '../components/StationAroundMap'
-import StationsPreviewMap from '../components/StationsPreviewMap'
+import Ronda300Explorer from '../components/Ronda300Explorer'
 import SuggestionList from '../components/SuggestionList'
 import Icon from '../components/Icon'
 import { buildItems, type Pick } from '../data/suggestions'
-import type { TranslationKey } from '../i18n/translations'
 import { useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
-import { KIND_COLOR, KIND_ICON, PLACE_KINDS, loadPlacesNear, placeName, planToPoint, walkMinutes, type NearPlace, type PlaceKind } from '../services/places'
 
 const LIST_ID = 'r300-list'
 
-// /ronda-300: a map of the rail stations to start from (or search), then the places within a short walk of the picked
-// station, listed beside a map (from OpenStreetMap; merchants later)
+// /ronda-300: search for a station, or pick one on the map, and see the places within a short walk of it
+// (Ronda300Explorer, the same panel as on the home page; from OpenStreetMap; merchants later)
 function Ronda300() {
   const { t } = useLanguage()
-  const [query, setQuery] = useState('')
+  const [params, setParams] = useSearchParams()
+  const [query, setQuery] = useState(() => params.get('station') ?? '')
   const [open, setOpen] = useState(false)
   const [hi, setHi] = useState(-1)
-  const [picked, setPicked] = useState<Pick | null>(null)
+  // a station picked on the home page map comes in the address (?station=&lat=&lon=)
+  const [picked, setPicked] = useState<Pick | null>(() => {
+    const name = params.get('station'), lat = Number(params.get('lat')), lon = Number(params.get('lon'))
+    return name && Number.isFinite(lat) && Number.isFinite(lon) && params.get('lat') && params.get('lon') ? { name, lat, lon } : null
+  })
 
   // stations only: places of the map search are not stations
   const { stops, loading } = useSmartSearch(query)
@@ -80,13 +82,7 @@ function Ronda300() {
       </PageHero>
 
       <div className="wrap py-10">
-        <div aria-live="polite">
-          {!picked ? (
-            <StationsPreviewMap onPick={pick} />
-          ) : (
-            <NearbyPlaces key={picked.name} at={picked} />
-          )}
-        </div>
+        <Ronda300Explorer picked={picked} onPick={(p: Pick | null) => { if (p) pick(p); else { setPicked(null); setQuery(''); setParams({}, { replace: true }) } }} />
 
         <section aria-labelledby="r3-merchant" className="mt-14 rounded-[28px] bg-[#222D52] text-white p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 justify-between">
           <div>
@@ -99,99 +95,6 @@ function Ronda300() {
         </section>
       </div>
     </SiteLayout>
-  )
-}
-
-// Everything mapped on OpenStreetMap within 300 m of the picked station, nearest first: a filter by kind, then the
-// list beside a map (the map stays in view while the list scrolls; on phones the map comes first). Pointing at a place
-// in the list rings it on the map; pressing a dot on the map picks the place in the list.
-function NearbyPlaces({ at }: { at: Pick }) {
-  const { t, lang } = useLanguage()
-  const [places, setPlaces] = useState<NearPlace[] | null>(null)
-  const [failed, setFailed] = useState(false)
-  const [kind, setKind] = useState<PlaceKind | null>(null)
-  const [active, setActive] = useState<string | null>(null)
-  const listRef = useRef<HTMLUListElement>(null)
-  useEffect(() => {
-    let live = true
-    loadPlacesNear(at.lat, at.lon).then((p) => { if (live) setPlaces(p) }).catch(() => { if (live) setFailed(true) })
-    return () => { live = false }
-  }, [at.lat, at.lon])
-  const kinds = PLACE_KINDS.filter((k) => places?.some((p) => p.kind === k))
-  const matching = useMemo(() => (places ?? []).filter((p) => !kind || p.kind === kind), [places, kind])
-  const pickOnMap = useCallback((id: string) => {
-    setActive(id)
-    const li = listRef.current?.querySelector<HTMLElement>(`[data-osm="${CSS.escape(id)}"]`)
-    li?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-  }, [])
-  return (
-    <section aria-labelledby="r3-osm" className="mt-10">
-      <h2 id="r3-osm" className="text-[26px] md:text-[32px] font-semibold tracking-[-0.02em] text-[#222D52]">{t('r3_osmTitle').replace('{station}', at.name)}</h2>
-      <p className="mt-1 text-sm text-gray-600 max-w-2xl">{t('r3_osmNote')}</p>
-      {failed ? (
-        <p role="alert" className="mt-3 text-gray-700">{t('r3_osmError')}</p>
-      ) : !places ? (
-        <p role="status" className="mt-3 text-gray-500">{t('loading')}</p>
-      ) : places.length === 0 ? (
-        <p className="mt-3 text-gray-700">{t('r3_osmNone')}</p>
-      ) : (
-        <>
-          <div role="group" aria-label={t('r3_osmFilter')} className="mt-5 flex flex-wrap gap-2">
-            {[null, ...kinds].map((k) => (
-              <button
-                key={k ?? 'all'}
-                type="button"
-                aria-pressed={kind === k}
-                onClick={() => { setKind(k); setActive(null) }}
-                className={`inline-flex items-center gap-2 h-10 px-4 rounded-full text-sm font-medium transition-colors ${kind === k ? 'bg-[#222D52] text-white' : 'bg-gray-100 text-[#222D52] hover:bg-gray-200'}`}
-              >
-                {k && <span aria-hidden="true" className="flex" style={{ color: kind === k ? '#FFFFFF' : KIND_COLOR[k] }}><Icon name={KIND_ICON[k]} size={17} /></span>}
-                {k ? t(`r3k_${k}` as TranslationKey) : t('r3_osmAll')}
-                <span className={kind === k ? 'text-white/70' : 'text-gray-500'}>{k ? places.filter((p) => p.kind === k).length : places.length}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
-            <div className="h-[340px] sm:h-[420px] lg:order-2 lg:sticky lg:top-24 lg:h-[640px]">
-              <StationAroundMap station={{ name: at.name, lat: at.lat, lon: at.lon }} places={matching} active={active} onPick={pickOnMap} />
-            </div>
-            <ul ref={listRef} className="lg:order-1 space-y-2 max-h-[65vh] overflow-y-auto pe-1 lg:max-h-[640px] [scrollbar-width:thin]">
-              {matching.map((p) => {
-                const name = placeName(p, lang)
-                const on = active === p.osm_id
-                return (
-                  <li
-                    key={p.osm_id}
-                    data-osm={p.osm_id}
-                    onMouseEnter={() => setActive(p.osm_id)}
-                    onFocus={() => setActive(p.osm_id)}
-                    className={`flex items-start gap-3 rounded-[20px] border p-4 transition-colors ${on ? 'border-[#222D52] bg-white shadow-md' : 'border-gray-200 bg-gray-50 hover:bg-white'}`}
-                  >
-                    <span aria-hidden="true" className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: KIND_COLOR[p.kind] }}>
-                      <Icon name={KIND_ICON[p.kind]} size={18} />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-semibold text-gray-900 break-words">{name}</span>
-                      <span className="mt-0.5 block text-sm text-gray-600">
-                        {t(`r3k_${p.kind}` as TranslationKey)} · {t('r3_osmWalk').replace('{m}', String(p.distance_m)).replace('{min}', String(walkMinutes(p.distance_m)))}
-                      </span>
-                      <Link to={planToPoint(p, name)} className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[#222D52] hover:underline">
-                        {t('planTripHere')}
-                        <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
-                      </Link>
-                    </span>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-          <p className="mt-3 text-xs text-gray-500">
-            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline">© OpenStreetMap contributors</a>
-          </p>
-        </>
-      )}
-    </section>
   )
 }
 

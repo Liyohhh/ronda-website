@@ -71,6 +71,10 @@
 }
 .float-y { animation: float-y 5s ease-in-out infinite; }
 
+/* RONDA 300 map: the callout over the place picked in the list */
+.r3-callout .maplibregl-popup-content { border-radius: 14px; padding: 8px 12px; box-shadow: 0 10px 24px -8px rgb(34 45 82 / 0.35); }
+
+
 /* One page grid for the home page, header and footer (Blaze layout): every block starts on the same left edge.
    Gutters 16 / 24 / 48 / 80 px, content at most 1280 px wide. */
 @utility wrap {

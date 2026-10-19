@@ -1,8 +1,8 @@
 import { expect, test } from './mocks'
 
-// Home page order under the search card: RONDA 300 trails -> Promotions -> Why RONDA -> "Everything you need"
-// (Services and the feature slides are off the page for now)
-const ORDER = ['trails-title', 'promo-title', 'why-title', 'features-title']
+// Home page order under the search card: RONDA 300 trails (always first) -> Promotions -> "Everything you need" ->
+// Why RONDA (Services and the feature slides are off the page for now)
+const ORDER = ['trails-title', 'promo-title', 'features-title', 'why-title']
 
 test('home sections come in the agreed order', async ({ page, backend }) => {
   void backend
@@ -39,3 +39,14 @@ for (const width of [375, 768, 1440]) {
     expect(doc).toBeLessThanOrEqual(width)
   })
 }
+
+test('RONDA 300 switches between the trails and the station map', async ({ page, backend }) => {
+  void backend
+  await page.goto('/')
+  const section = page.locator('#explore')
+  await section.getByRole('button', { name: 'Station map' }).click()
+  await expect(section.getByRole('button', { name: 'Station map' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(section.getByRole('link', { name: /Open RONDA 300/ })).toHaveAttribute('href', '/ronda-300')
+  await section.getByRole('button', { name: 'Trails' }).click()
+  await expect(section.getByRole('link', { name: /See all trails/i })).toBeVisible()
+})

@@ -5,8 +5,7 @@ import BrandLogo from './BrandLogo'
 
 // Footer like the Ainaa site's: the navy app band first, then a white footer with the logo and tagline, link
 // columns under gold labels, and a thin bar with the copyright, sources and "Back to top".
-// flush: no gap above (Home ends in a section that runs straight into the app band).
-function Footer({ flush = false }: { flush?: boolean }) {
+function Footer() {
   const { t } = useLanguage()
   const year = new Date().getFullYear()
 
@@ -37,7 +36,7 @@ function Footer({ flush = false }: { flush?: boolean }) {
   ]
 
   return (
-    <footer className={`bg-white text-[#222D52] overflow-hidden ${flush ? '' : 'mt-24'}`}>
+    <footer className="bg-white text-[#222D52] overflow-x-clip">
       <AppDownloadBanner />
       <div className="wrap pt-16 md:pt-20 pb-14 grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
