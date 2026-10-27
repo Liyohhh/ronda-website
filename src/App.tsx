@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import RequireAuth from './components/RequireAuth'
+import ScrollToTop from './components/ScrollToTop'
 import { SERVICES_ENABLED } from './data/serviceOptions'
 import { LanguageProvider } from './i18n/LanguageProvider'
 import { useLanguage } from './hooks/useLanguage'
@@ -23,8 +24,8 @@ const TrailDetail = lazy(() => import('./pages/TrailDetail'))
 const About = lazy(() => import('./pages/About'))
 const Services = lazy(() => import('./pages/Services'))
 const LiveMap = lazy(() => import('./pages/LiveMap'))
-const Credits = lazy(() => import('./pages/Credits'))
 const Ronda300 = lazy(() => import('./pages/Ronda300'))
+const Credits = lazy(() => import('./pages/Credits'))
 const Hub = lazy(() => import('./pages/Hub'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
@@ -37,6 +38,7 @@ function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Suspense fallback={<PageLoading />}>
         <Routes>
           <Route path="/" element={<Home />} />

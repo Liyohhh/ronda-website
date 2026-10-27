@@ -43,7 +43,7 @@ function LineMarquee() {
       <ul className="wrap mt-12 grid grid-cols-2 md:grid-cols-4">
         {stats.map(([n, label], i) => (
           <Reveal as="li" key={label} delay={i * 0.08} className={`px-4 py-4 text-center ${i % 2 ? 'border-s border-gold-light/40' : ''} md:[&:not(:first-child)]:border-s md:border-gold-light/40`}>
-            <span className="block font-display text-[44px] md:text-[56px] leading-none font-semibold text-gold-light">{n}</span>
+            <span className="block font-display text-[34px] sm:text-[44px] md:text-[56px] leading-none font-semibold text-gold-light">{n}</span>
             <span className="mt-3 block text-sm text-white">{label}</span>
           </Reveal>
         ))}

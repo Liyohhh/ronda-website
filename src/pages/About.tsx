@@ -28,6 +28,7 @@ const FEATURES: { title: TranslationKey; text: TranslationKey; icon: IconName; s
   { title: 'feat_ronda300', text: 'aboutRonda300Text', icon: 'adjust' },
   { title: 'aboutAirportTitle', text: 'aboutAirportText', icon: 'flight' },
   { title: 'aboutMultiTitle', text: 'aboutMultiText', icon: 'translate' },
+  { title: 'parkShowTitle', text: 'aboutParkingText', icon: 'directionsCar' },
 ]
 
 const STEPS: { title: TranslationKey; text: TranslationKey; soon?: TranslationKey }[] = [
@@ -218,12 +219,12 @@ function About() {
           <h2 id="about-credits" className="text-lg font-semibold text-[#222D52]">{t('photoCredits')}</h2>
           <p className="mt-1 text-sm text-gray-500">{t('photoCreditsIntro')}</p>
           <ul className="mt-3 grid gap-1 sm:grid-cols-2 text-xs text-gray-600">
-            {trails.filter((tr) => TRAIL_PHOTOS[tr.slug]).map((tr) => (
+            {trails.filter((tr) => TRAIL_PHOTOS[tr.slug] && !TRAIL_PHOTOS[tr.slug].owner).map((tr) => (
               <li key={tr.slug}>
                 {t(trailNameKey(tr))}: <PhotoCredit photo={TRAIL_PHOTOS[tr.slug]} />
               </li>
             ))}
-            {Object.entries(PLACE_PHOTOS).filter(([id]) => places[id]).map(([id, ph]) => (
+            {Object.entries(PLACE_PHOTOS).filter(([id, ph]) => places[id] && !ph.owner).map(([id, ph]) => (
               <li key={id}>
                 {places[id].name}: <PhotoCredit photo={ph} />
               </li>

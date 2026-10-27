@@ -3,12 +3,13 @@ import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { HelpLayout, CategoryIcon } from '../components/HelpLayout'
 import { HELP_ARTICLES, articleA, articleQ, findCategory } from '../data/helpCategories'
+import { RONDA300_MAP } from '../data/ronda300Link'
 
 // links shown under an answer (pages the answer mentions)
 const MORE: Record<string, { to: string; label: 'footerCredits' | 'liveMapTitle' | 'navRonda300' }> = {
   genData: { to: '/credits', label: 'footerCredits' },
   genLive: { to: '/live', label: 'liveMapTitle' },
-  business: { to: '/ronda-300', label: 'navRonda300' },
+  business: { to: RONDA300_MAP, label: 'navRonda300' },
 }
 
 // Business and service enquiries: an @ronda.com address, set at build time once it exists (VITE_CONTACT_EMAIL)

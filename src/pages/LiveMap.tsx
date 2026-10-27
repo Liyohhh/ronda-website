@@ -1,22 +1,27 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import * as maplibregl from 'maplibre-gl'
 import type { Feature, Polygon } from 'geojson'
 import { Protocol } from 'pmtiles'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import { useSearchParams } from 'react-router-dom'
 import Header from '../components/Header'
 import BusStopName from '../components/BusStopName'
 import Icon from '../components/Icon'
 import { Accent } from '../components/Motion'
 import RouteChip from '../components/RouteChip'
+import SuggestionList from '../components/SuggestionList'
 import { useLanguage } from '../hooks/useLanguage'
 import { usePoll } from '../hooks/usePoll'
 import { useLocate } from '../hooks/useLocate'
+import { useSmartSearch } from '../hooks/useSmartSearch'
+import { buildItems, type Pick } from '../data/suggestions'
 import { supabase } from '../services/supabase'
 import { mapConfig, mapStyle } from '../services/mapStyle'
 import { ago, lateMinutes, liveVehicles, textOn, LIVE_POLL_MS, routeKey, stopArrivals, type Arrival, type BusStatus, type LiveBus, type LiveSource, type LiveTrain } from '../services/live'
 import type { TranslationKey } from '../i18n/translations'
+import { carParkName, loadCarParks, rm, type CarPark } from '../services/parking'
 
 // /live: every Rapid KL and MRT feeder bus and every KTMB train that is sending its position, on RONDA's own
 // Malaysia map (MapLibre + OpenStreetMap data, src/services/mapStyle.ts), refreshed every 30 s. Filter by route,
@@ -51,6 +56,26 @@ const statusColor = (b: LiveBus) => (b.status && b.status !== 'on_trip' ? STATUS
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
 
 type Stop = { feed_id: string; stop_id: string; name: string; code: string | null; lat: number; lon: number }
+
+const PARK = '#1E5AA8' // Park & Ride; other car parks a lighter blue
+
+// Car park popup, kept short: the name, one fare line and how far the station is; source in small print
+function parkPopup(c: CarPark, t: (k: TranslationKey) => string) {
+  const fare = c.is_free
+    ? `<b>${esc(t('parkFree'))}</b>`
+    : c.train_user_rate_rm !== null
+      ? `<b>${esc(rm(c.train_user_rate_rm))}</b> ${esc(t('parkPerDay'))}${c.park_ride ? ` · ${esc(t('parkTrainUsers'))}` : ''}`
+      : c.first_hour_rm !== null
+        ? `<b>${esc(rm(c.first_hour_rm))}</b> ${esc(t('parkFirstHour'))}`
+        : c.daily_max_rm !== null
+          ? esc(t('parkMaxDay').replace('{rm}', rm(c.daily_max_rm)))
+          : `<span class="text-gray-500">${esc(t('parkFareUnknown'))}</span>`
+  const away = c.distance_m !== null ? `<div class="text-xs text-gray-500">${esc(t('parkToStation').replace('{n}', String(c.distance_m)))}</div>` : ''
+  return `<div class="text-sm leading-snug"><div class="font-semibold text-gray-900">${esc(carParkName(c.carpark_name, t))}` +
+    `${c.park_ride ? ` <span class="text-[11px] text-[#1E5AA8]">${esc(t('parkRide'))}</span>` : ''}</div>` +
+    `<div class="mt-0.5">${fare}</div>${away}` +
+    `<a class="mt-1 inline-block text-[10px] text-gray-400 underline" target="_blank" rel="noreferrer" href="${esc(c.source_url.split(' ; ').find((u) => u.startsWith('http')) ?? '')}">${esc(t('parkSource'))}</a></div>`
+}
 
 // a circle of `m` metres around a point, as a GeoJSON polygon (location accuracy)
 function circle(lon: number, lat: number, m: number): Feature<Polygon> {
@@ -200,7 +225,12 @@ function LiveMap() {
       .catch(() => setError(true))
   }, LIVE_POLL_MS, 'all')
 
-  const key = routeKey(filter.trim())
+  // the box filters the vehicles by route; text that matches no vehicle ("mrt maluri") is a station or place search
+  // instead, so the map keeps every vehicle while the list below the box offers places to go to
+  const typed = routeKey(filter.trim())
+  const busMatch = (b: LiveBus) => routeKey(b.label ?? b.route_id).startsWith(typed)
+  const trainMatch = (tr: LiveTrain) => [tr.train_no, tr.line, tr.network, tr.unit].some((x) => x && routeKey(x).includes(typed))
+  const key = typed && (buses.some(busMatch) || trains.some(trainMatch)) ? typed : ''
   const shown = useMemo(
     () => buses.filter((b) => (showOff || b.status !== 'off_trip') && (!key || routeKey(b.label ?? b.route_id).startsWith(key))),
     [buses, showOff, key],
@@ -295,6 +325,70 @@ function LiveMap() {
     }
   }, [])
 
+  // car parks at and near stations (public.station_parking), when the rider turns them on: a blue P each; the popup
+  // gives the fares, or says none are published
+  // /live?parking=1 (the home page's Park & Ride card) opens with the car parks on
+  const [params] = useSearchParams()
+  const [showParking, setShowParking] = useState(() => params.get('parking') === '1')
+  const [parkingFailed, setParkingFailed] = useState(false)
+  const parkMarkers = useRef<maplibregl.Marker[]>([])
+  useEffect(() => {
+    const m = map.current
+    const clear = () => { for (const mk of parkMarkers.current) mk.remove(); parkMarkers.current = [] }
+    if (!m || !ready || !showParking) { clear(); return }
+    let cancelled = false
+    loadCarParks()
+      .then((all) => {
+        if (cancelled) return
+        clear()
+        setParkingFailed(false)
+        for (const c of all) {
+          if (c.lat === null || c.lon === null) continue
+          const dot = document.createElement('button')
+          dot.type = 'button'
+          dot.textContent = 'P'
+          dot.setAttribute('aria-label', `${t('parking')}: ${carParkName(c.carpark_name, t)}`)
+          dot.style.cssText = `width:20px;height:20px;border-radius:4px;background:${c.park_ride ? PARK : '#5B7FB5'};color:#fff;font:700 13px/20px sans-serif;text-align:center;border:1.5px solid #fff;box-shadow:0 1px 3px rgb(0 0 0/.35);cursor:pointer`
+          const popup = new maplibregl.Popup({ offset: 12, maxWidth: '240px', focusAfterOpen: false }).setHTML(parkPopup(c, t))
+          parkMarkers.current.push(new maplibregl.Marker({ element: dot }).setLngLat([c.lon, c.lat]).setPopup(popup).addTo(m))
+        }
+      })
+      .catch(() => !cancelled && setParkingFailed(true))
+    return () => {
+      cancelled = true
+      clear()
+    }
+    // waits for the map, so ?parking=1 works on arrival
+  }, [showParking, ready, t])
+
+  // station / place search in the same box: pick one and the map flies there, with a gold pin on it
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [hi, setHi] = useState(-1)
+  const { stops, places, routeStops, loading: searching } = useSmartSearch(filter)
+  const items = filter.trim().length >= 2 ? buildItems(stops, places, routeStops) : []
+  const listOpen = searchOpen && items.length > 0
+  const pinMarker = useRef<maplibregl.Marker | null>(null)
+  const goTo = (p: Pick) => {
+    const m = map.current
+    setSearchOpen(false)
+    setHi(-1)
+    setFilter('') // the vehicles show again around the picked place
+    if (!m) return
+    pinMarker.current?.remove()
+    const pin = document.createElement('div')
+    pin.className = 'w-5 h-5 rounded-full bg-gold border-[3px] border-[#222D52] shadow-lg'
+    pin.setAttribute('aria-label', p.name)
+    pinMarker.current = new maplibregl.Marker({ element: pin }).setLngLat([p.lon, p.lat])
+      .setPopup(new maplibregl.Popup({ offset: 14 }).setText(p.name)).addTo(m)
+    m.flyTo({ center: [p.lon, p.lat], zoom: Math.max(m.getZoom(), 15) })
+  }
+  const onSearchKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setSearchOpen(true); setHi((i) => Math.min(i + 1, items.length - 1)) }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setHi((i) => Math.max(i - 1, 0)) }
+    else if (e.key === 'Enter' && listOpen && (hi >= 0 || !key)) { e.preventDefault(); goTo(items[Math.max(hi, 0)].pick) }
+    else if (e.key === 'Escape') setSearchOpen(false)
+  }
+
   // "Near me": centre on the rider and mark where they are (dot + accuracy circle); every failure is explained
   const meMarker = useRef<maplibregl.Marker | null>(null)
   const { state: loc, locate } = useLocate()
@@ -364,14 +458,28 @@ function LiveMap() {
               {fetchedAt && shownTrains.length > 0 && <span> · {t('liveTrainsCount').replace('{n}', String(shownTrains.length))}</span>}
               {lastFetch && <span className="text-white/75"> · {t('liveUpdated').replace('{time}', new Date(lastFetch).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' }))}</span>}
             </p>
-            <div className="mt-4 flex gap-2">
+            <div className="relative mt-4 flex gap-2">
               <input
                 value={filter}
-                onChange={(e) => setFilter(e.target.value)}
+                onChange={(e) => { setFilter(e.target.value); setSearchOpen(true); setHi(-1) }}
+                onFocus={() => setSearchOpen(true)}
+                onBlur={() => setSearchOpen(false)}
+                onKeyDown={onSearchKey}
+                role="combobox"
+                aria-expanded={listOpen}
+                aria-controls="live-search-list"
+                aria-autocomplete="list"
+                aria-activedescendant={listOpen && hi >= 0 ? `live-search-list-${hi}` : undefined}
+                autoComplete="off"
                 placeholder={t('liveFilterPh')}
                 aria-label={t('liveFilterPh')}
                 className="flex-1 min-w-0 rounded-full bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-gold"
               />
+              {listOpen && (
+                <div className="absolute inset-x-0 top-full z-20 text-start">
+                  <SuggestionList compact id="live-search-list" items={items} query={filter} loading={searching} highlighted={hi} onHover={setHi} onPick={goTo} />
+                </div>
+              )}
               <button
                 type="button"
                 onClick={locate}
@@ -392,6 +500,12 @@ function LiveMap() {
               <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#D2B68A]" />
               {t('liveShowOffTrip')}
             </label>
+            <label className="mt-2 flex items-center gap-2 text-sm text-white/85">
+              <input type="checkbox" checked={showParking} onChange={(e) => setShowParking(e.target.checked)} className="accent-[#D2B68A]" />
+              <span className="inline-flex h-4 w-4 items-center justify-center rounded-[3px] text-[10px] font-bold text-white" style={{ backgroundColor: PARK }} aria-hidden="true">P</span>
+              {t('parkLayer')}
+            </label>
+            {showParking && parkingFailed && <p className="mt-1 text-sm text-amber-200" role="status">{t('parkLoadError')}</p>}
             <ul className="mt-4 hidden md:flex flex-wrap gap-x-3 gap-y-1.5 border-t border-white/10 pt-3 text-xs text-white/80">
               {STATUS.filter((s) => showOff || s.key !== 'off_trip').map((s) => (
                 <li key={s.key} className="inline-flex items-center gap-1.5">

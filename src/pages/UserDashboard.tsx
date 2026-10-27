@@ -1,4 +1,5 @@
 import DashboardPage from '../components/DashboardPage'
+import { RONDA300_MAP } from '../data/ronda300Link'
 
 // /dashboard (signed in): the rider's page. Saved places and trips are not built yet.
 function UserDashboard() {
@@ -9,7 +10,7 @@ function UserDashboard() {
       tiles={[
         { label: 'dash_plan', text: 'dash_planText', icon: 'route', to: '/#plan' },
         { label: 'dash_live', text: 'dash_liveText', icon: 'train', to: '/live' },
-        { label: 'dash_r300', text: 'dash_r300Text', icon: 'myLocation', to: '/ronda-300' },
+        { label: 'dash_r300', text: 'dash_r300Text', icon: 'myLocation', to: RONDA300_MAP },
         { label: 'dash_saved', text: 'dash_savedText', icon: 'bookmark' },
         { label: 'dash_alerts', text: 'dash_alertsText', icon: 'notifications' },
         { label: 'dash_help', text: 'dash_helpText', icon: 'helpOutline', to: '/help' },

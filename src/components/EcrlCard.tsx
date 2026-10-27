@@ -4,7 +4,7 @@ import { ECRL_SOURCES, ECRL_STATIONS } from '../data/ecrl'
 import LineBadge from './LineBadge'
 
 // About page: the ECRL as a line that is coming. Its 20 stations north to south on a drawn line (phase 1 solid,
-// phase 2 dashed), the two phases with their target dates, "fares not announced yet", and the sources.
+// phase 2 dashed) with the starting fare from Gombak, the two phases with their dates, the fare rules, and the sources.
 // Data and sources: src/data/ecrl.ts. Station names stay as they are in every language.
 function EcrlCard() {
   const { t } = useLanguage()
@@ -28,7 +28,11 @@ function EcrlCard() {
             <span aria-hidden="true" className="mt-2 h-1 w-6 flex-shrink-0 rounded-full border-t-4 border-dashed border-gray-400" />
             {t('ecrlPhase2')}
           </li>
-          <li className="flex gap-3 rounded-2xl bg-gold-soft px-4 py-3 font-medium text-[#222D52]">{t('ecrlFares')}</li>
+          <li className="rounded-2xl bg-gold-soft px-4 py-3 text-[#222D52]">
+            <p className="font-medium">{t('ecrlFares')}</p>
+            <p className="mt-1.5 text-sm">{t('ecrlFareNote')}</p>
+            <p className="mt-1.5 text-sm">{t('ecrlConcession')}</p>
+          </li>
         </ul>
 
         {/* the stations, north to south, on a drawn line */}
@@ -49,6 +53,7 @@ function EcrlCard() {
                   className={`absolute start-0 top-1.5 h-3 w-3 rounded-full border-2 bg-white ${s.phase === 1 ? 'border-[#222D52]' : 'border-gray-400'} ${line ? 'ring-2 ring-gold' : ''}`}
                 />
                 <span className="text-[15px] font-medium text-gray-900">{s.name}</span>
+                {s.fareRm !== undefined && <span className="ms-2 text-xs font-semibold text-[#222D52]">RM {s.fareRm}</span>}
                 {line && (
                   <span className="mt-1 flex items-center gap-1.5 text-xs text-gray-600">
                     <LineBadge line={line} size={16} decorative />

@@ -1,24 +1,209 @@
 # Test report
 
-## Latest run - 20 Oct 2026 (branch design-4-blaze, home order, RONDA 300 map, Monzo-style feature cards, compact app band)
+## Latest run - 27 Oct 2026, later (owner's own photos for 8 stops and 2 trail covers)
+
+- The owner's photos now show for Central Market, Guan Di Temple, Masjid India, Masjid Jamek, Masjid Negara, Masjid
+  Putra, River of Life and Sultan Abdul Samad Building, and as the Mosque Trail and Heritage Trail covers. Resized to
+  at most 1280 px, served from our own site (public/places), file details removed. Masjid Putra and Sultan Abdul
+  Samad cropped to show the dome and the clock tower.
+- Not used: the "Sri Mahamariamman" photo (a different temple, with an Indian sculptor's sign).
+- Source and licence: marked TODO, for the owner to fill in docs/RONDA_Photo_Credits.xlsx (several look like stock
+  photos; only licensed ones should stay). Left out of the About page credit list until then.
+- Unit 227 / 227 (new: owner photos are site files and stay out of the credit list). Mosque trail page checked in
+  Chrome: every photo loads.
+
+## Run - 27 Oct 2026 (checklist step 1: staging gate, new city feeds imported hidden)
+
+- Database (owner's approval): new feeds stay hidden until checked (feeds.published). Website queries run as a
+  visitor before and after: line stations, stop search, nearest transit, map stops, bus route search, bus routes all
+  return the same results; stop search about 90 ms (was about 50).
+- Rapid KL timetables were stuck since 11 Oct (the weekly import clashed with another job and died). Fixed the
+  schedule and re-imported: rider planner now has 8,837 trips (was 7,887).
+- Imported hidden: Rapid Penang, myBAS Johor Bahru, Melaka, Ipoh, Seremban A and B, Kuching, Kota Bharu, Kuala
+  Terengganu, Alor Setar, Kangar. Checked: no broken trips, coordinates fine (1 bad stop in Ipoh, filtered), search
+  labels built. Rapid Kuantan is not on data.gov.my (404). Riders still see only the old feeds (rider planner
+  snapshot unchanged at 6,571 stops).
+- Problems seen: the database stopped answering for 2 to 4 minutes three times and restarted twice during the heavy
+  rebuilds (03:00 MYT, few users). With every city the planner data is 3 times bigger (21.5 MB). Publishing waits for
+  a decision on database size. Ipoh and Seremban timetables are for one day only and need a daily refresh.
+- Website code unchanged in this step.
+
+## Run - 26 Oct 2026, late night (photos for the Michelin and Extreme Park trails and more stops)
+
+- New covers: Michelin trail (a plated dish, Flickr, CC BY 2.0) and Extreme Park trail (Putrajaya Challenge Park,
+  U.S. Embassy Kuala Lumpur, public domain; cropped so the skater shows).
+- New stop photos, each checked by eye to show the place: The Starhill, MVEC (the Mid Valley Megamall it is part of),
+  Masjid India, Feeka Coffee Roasters, Pulp by Papa Palheta, Shah Alam Extreme Park, Putrajaya Challenge Park.
+  Sources: Wikimedia Commons and Flickr (Creative Commons, commercial use allowed), found through Openverse.
+- Still no free photo (24 stops): the Michelin restaurants, most cafés, KidZania, Jump Street, MAZE, the night markets,
+  the KL Urban and Batu skate parks, Camp5, Heli Lounge, Cindai, Madam Zee. Candidates found were other places
+  (KidZania Lisbon, a Hong Kong night market, Menara FELDA instead of Naza Tower) and were not used.
+- Site security policy now allows images from live.staticflickr.com (scripts/csp.mjs), or Flickr photos would not
+  show on the live site. Credits added to docs/RONDA_Photo_Credits.xlsx (143) and the Pictures list (24 missing).
+- Unit 226 / 226 (photo check now allows Flickr). Trail pages checked in Chrome: all images load.
+
+## Run - 26 Oct 2026, night (ECRL line with fares, photo credits moved off the photos)
+
+- ECRL: now a line in the Lines tab ("East Coast (ECRL)" group) with its own badge. It opens a panel with the 20
+  stations north to south, the starting fare and distance from Gombak (RM 24 Bentong to RM 125 Kota Bharu), Express
+  fares where it stops (KotaSAS RM 68, Kuala Terengganu RM 110, Kota Bharu RM 147), phase 2 dashed (2028), the
+  changes at ITT Gombak and Jalan Kastam, the fare rules (starting fares, dynamic pricing, same both ways), the
+  discounts (50% / 40%), opening 12 Dec 2026, tickets from mid-November. About page card shows the same fares.
+  Fares announced by MRL 19 Oct 2026 (Bernama, theSun, DagangNews); three confirmed in the news, the rest from MRL's
+  chart as reposted (owner's picture), marked to recheck when ticket sales open. Line colour TODO from MRL.
+  Not in trip planning (no timetable yet). Checked in Chrome (screenshots).
+- Photo credits: removed from on top of every photo and video (home video, sign-in video, promotions, slides, trail
+  covers, trail stops). The full list stays on the About page photo credits and /credits (CC BY / BY-SA photos need a
+  credit somewhere on the site), and in docs/RONDA_Photo_Credits.xlsx (134 photos and videos).
+- Owner's 9 new photos: on hold. Their files show stock or unknown sources (copyright names in the files, a stock
+  preview size, an editorial stock caption) and the "Sri Mahamariamman" one is a different temple. Waiting for the
+  owner to confirm the licences.
+- Missing photos: searched Wikimedia Commons again for all 33; no free photo fits (restaurants, cafés, small venues;
+  Commons has none of KL's Masjid India itself). Left on the category cover.
+- Unit 226 / 226. Playwright home, site (incl. accessibility), links, trails: all pass.
+
+## Run - 26 Oct 2026, evening (car park names, short car park popup, compact live search, Mosque Trail)
+
+- Live map car parks: each one now shows a name instead of just "Car park". OpenStreetMap leaves 517 of 603
+  unnamed, so the database build names them after their OSM operator, a mall / hotel / sight / place of worship /
+  park next to them ("Lot 10 Car Park"), the nearest named place ("Car park near Sungei Wang Plaza") or the
+  station. "Car park near ..." is translated in all four languages. Built in the database repo
+  (scripts/build_station_parking.py); loaded 26 Oct 2026 with the owner's approval: 0 of 667 left as plain "Car park".
+- Maluri (at-grade) Park & Ride: free for now (owner parked there, 26 Oct 2026), noted with the date; MyRapid page
+  still says RM 4.50 a day, recheck later. Loaded; the popup shows "Free" (checked in Chrome).
+- Car park popup cut to three lines: name (+ Park & Ride), one fare line, "256 m to the station", small Source link.
+  The popup no longer jumps focus to the link.
+- Live map search list: compact size for the small panel (smaller rows, badges and text, shorter list).
+- Trails: "Mosques & Culture" split into a Mosque Trail (Masjid India, Masjid Jamek, National Mosque, Putra, Iron,
+  Blue Mosque) and a Culture Trail (St. Mary's, Sri Mahamariamman, Guan Di, Thean Hou). Old link /trails/cultural-
+  harmony still works (Culture Trail). New names, texts and cover photos (Masjid Jamek, Thean Hou). Database
+  migration 20261026120000_trail_mosques.sql applied with the owner's approval; both trail pages checked in Chrome. Pictures list: 165 rows.
+- Unit 226 / 226 (new: car park names). Playwright live, site (incl. accessibility), trails, journey, hub: all pass
+  (trails test data has the split). Checked in Chrome: popup and search list (screenshots).
+
+## Run - 26 Oct 2026, later (brighter home video, live map search, new Petronas Towers clip)
+
+- Home top banner: lighter shade over the videos (bottom 55%, top 25%, nothing in the middle; it was 80% / 15% /
+  35%) and the videos and photo drawn 10% brighter and more colourful. Headline and quick links still readable
+  (their text shadow stays). Checked at 1440 px.
+- Live map: the box now finds stations and places too ("mrt maluri" lists MRT Maluri, the Maluri bus stops and
+  LRT Maluri; picking one flies the map there with a gold pin and shows every vehicle again). Route codes and train
+  numbers still filter the vehicles ("T789", "9999"); text that matches no vehicle no longer empties the map.
+  Arrow keys, Enter and Escape work in the list. New box text in all four languages ("Search a route, station or
+  place, e.g. T808 or MRT Maluri").
+- Home videos: the Petronas Towers night clip is replaced by the owner's new Pexels clip (Pexels video 15668866,
+  daytime aerial of the Petronas Towers), cut to 12 s, 1280x720, 4.2 MB like the others, with its first frame as the
+  poster. It plays second so the clips still go from day to night. Pictures list refreshed (164 rows, hero and brand
+  still left out).
+- Unit 225 / 225. Playwright live (new test: station search keeps every bus and drops a pin), home: all pass. One
+  live-map test (feed error) failed once and passed in two full reruns (36 / 36); watched.
+
+## Run - 26 Oct 2026 (Lines interchange badges, layout check of every page, Park & Ride showcase)
+
+- Lines panel: each station now shows where you can change, as on the MyRapid line maps: the station's own lines,
+  then ⇌ and the lines reached without tapping out, then a walking person and the lines reached on foot (e.g. Ampang
+  Line at Titiwangsa: Ampang + Sri Petaling ⇌ Monorail, MRT Putrajaya; Sri Petaling at PWTC: walk to KTM). Built from
+  public.line_stations for every rail line and public.rail_interchanges (src/services/stationConnections.ts), on
+  every rail line. The badges sit to the right of the station name (under it only when the row is full, e.g. on
+  phones). The header shows the line's square badge with a white ring instead of squeezing it into a circle, and the
+  parking button is now the square P sign itself (it was a square inside a round border).
+  New text in all four languages; new unit tests (connections, Accent).
+- Layout check: every page at 1440 and 375 px (home, trails, a trail, RONDA 300, about, help, live map, hub, login,
+  credits, 404): no sideways scroll, no script errors. Fixed on phones: the network numbers (18,000+ ran into the
+  divider), the Malaysia dot map (only Kuala Lumpur and the country name kept, drawn larger), the RONDA 300 map
+  legend (moved to the top, it covered the map credit), trail card chips (wrap instead of cutting the station to
+  "LRT ..."). Everywhere: a number at the end of a heading goes with the word before it ("KLIA Terminal 1" instead
+  of a lone italic "1").
+- Park & Ride shown to riders: a card on the home page under "Everything you need" (big P sign, short text, "Car
+  parks on the map" and "Find by line"), a feature card on About, and a Help article "Where can I park near a
+  station?" (also on the Help home page). "Car parks on the map" opens /live?parking=1, which now opens with the car
+  parks on (fixed: the car parks waited for the map only when ticked by hand). Checked: 651 car parks on the map.
+  New text in all four languages.
+- Unit 225 / 225. Playwright home, site (incl. accessibility scan), links, RONDA 300, trails, journey, hub, access:
+  all pass.
+
+## Run - 26 Oct 2026 (branch design-4-blaze, parking near stations)
+
+- Database: public.station_parking applied 25 Oct 2026 (owner's approval): 667 car parks at 246 of 313 rail
+  stations; operator Park & Ride fares in RM (MyRapid, KLIA Ekspres) and OpenStreetMap car parks with a location
+  only. Counts, distances, bays and TODO notes match data/station_parking.csv in the database repo. Public read only:
+  an anonymous insert is refused.
+- Line panel: a blue "P" next to each station with car parks (36 of 37 on the Kelana Jaya Line; Wawasan has none on
+  record). It opens the car parks under the station: Park & Ride first with the train-user rate, other rates, bays,
+  distance, date checked and source link; mapped car parks without fares say "Fare not published yet".
+- /live: a "Car parks" switch puts 651 P markers on the map (the 16 without a location are left out); a popup gives
+  the fares or says none are published. Checked in English and Arabic (right to left).
+- Trip plan: when the first train is boarded at a station with car parks, a separate line under the trip says
+  "Driving to LRT Gombak? Park & Ride: RM 4.30 per day (train users)" and that parking is not in the trip fare
+  (Gombak -> KLCC: fare stays RM 3.00).
+- New text in all four languages (23 labels). Unit 221 / 221 (new: parking point decoding, stop-to-station lookup,
+  no made-up fares). Typecheck and lint clean. Line panel list key fixed (KJ3 + 35 and KJ33 + 5 gave the same key).
+
+## Run - 25 Oct 2026 (branch design-4-blaze, service alerts on trips)
+
+- Operator service alerts, like Moovit's: a ride on a line with an alert in force shows a small amber "!" on its line
+  badge, in the route list and on the step; the step shows the alert itself (type such as "Modified service", the
+  title and details in the reader's language, falling back to English, when it was published, and a link to the
+  operator's notice). Alerts never block a trip: if they fail to load, trips show as before.
+- /admin: a Service alerts editor. An admin copies a notice (e.g. from MyRapid's alerts page), picks the lines, writes
+  the title and details (English required; Malay, Chinese, Arabic optional), saves a draft, then publishes; ending an
+  alert stamps its end time. Riders only ever see published alerts that have started and not ended.
+- Database (ronda-database repo): migration 20261025100000_service_alerts.sql written, **not applied** (waits for the
+  owner's approval): table, admin-only writes, public read of live alerts, and the current MyRapid Ampang Line notice
+  (23 Oct 2026) as a draft with its planner rule for the next step.
+- Migration applied 25 Oct 2026 (owner's approval); the Ampang notice is a draft until an admin publishes it. Owner's
+  account given the admin role.
+- Trip planner (plan-trip, ronda-database repo; **not deployed**, waits for approval): a published alert's rule
+  "turn_back" cuts that route at the named station while the alert is in force (rules re-read every minute; the live
+  function v24 is otherwise unchanged). New Deno test on real Rapid KL rail data: Ampang -> Titiwangsa becomes
+  Ampang Line to Chan Sow Lin, then Sri Petaling Line (normally one ride); no option rides the Ampang Line north of
+  Chan Sow Lin; Pudu -> Maluri changes at Chan Sow Lin; Maluri -> Ampang stays direct; ending the rule restores the
+  line. All 12 plan-trip test files pass.
+- Live 25 Oct 2026: plan-trip v25 deployed (identical to the repo), the Ampang notice published; the planner first
+  could not read the alerts table (service role grant missing, added to the migration and applied), then Ampang ->
+  Titiwangsa came back as Ampang Line to Chan Sow Lin + Sri Petaling Line to Titiwangsa (38 min).
+- 26 Oct 2026: /admin alert editor can set the turn-back rule (line from the alert's lines, "trains from" end and
+  "turn back at" station; the line's GTFS ids are filled in); alerts with a rule show "Reroutes trips". Unit 218 / 218.
+- New text in all four languages. Unit 217 / 217 (new: alert loading and language fallback, admin editor). Playwright
+  journey (new alert test), site (incl. accessibility scan), links and access on desktop and mobile: all pass.
+  Screenshots at 1440 and 375 px.
+
+## Run - 20 Oct 2026 (branch design-4-blaze, home order, RONDA 300 page with nearby places, Monzo-style feature cards, compact app band)
 
 - Home order rearranged after studying Monzo, Wise, Trainline and Apple Maps (all go: tool, something to explore,
   what the product does, proof, offers, app): search, RONDA 300 trails (always first), Promotions (ads, second at
   the owner's request), "Everything you need", the lines band with its numbers, Why RONDA, then the app band and
   footer. e2e order test updated.
-- RONDA 300 maps combined into one: the station map and the places map were two maps doing the same job, now one
-  map (Ronda300Map) inside one panel (Ronda300Explorer) used on the home page and on /ronda-300. It starts with every
-  rail station in its line's colour; picking a station (on the map or in the page's search) flies the same map in
-  to the station with its 300 m ring and places, the other stations fade, and "All stations" flies back out. The
-  old StationsPreviewMap and StationAroundMap are removed.
-- Home RONDA 300: a "Trails / Station map" switch under the heading (both are RONDA 300). Station map shows the panel
-  right on the home page (loads only when picked); "Open RONDA 300" opens the page, with the picked station if
-  there is one (/ronda-300 reads ?station=&lat=&lon=). New e2e test for the switch.
-- RONDA 300 panel, after Rome2rio and Klook's map pages: once a station is picked, the kinds as an icon bar across
-  the top (icon, name, count, underline when picked), then "{n} places within 300 m" and a list of white cards (big
-  icon tile in the kind's colour, name, kind and walk, "Plan a trip here" pill) beside a tall map; the place pointed
-  at in the list gets a callout on the map with its name and walk. Phones: map first, then the list. New text in
-  all four languages.
+- RONDA 300 map polished: places are round markers in their kind's colour with the kind's white icon (drawn from the
+  site's own icons) instead of plain dots, a little bigger the closer in, the nearest the middle on top; the place
+  pointed at in the list grows and gets a soft halo and a callout without a tip. Stations show as small dots in the
+  line's colour from afar and as the line's badge with the station's name from street level. Softer dashed 300 m
+  rings; the zoom buttons are one white pill with a soft shadow. Checked in the browser; RONDA 300, site and CSP e2e
+  pass. The SiteLayout chat-switch unit test timed out when the whole suite ran at once (it loads a fresh copy of the
+  page frame); it now has more time. Unit 211 / 211.
+- Home hero: "Plan your journey across Malaysia" moved to the top-left corner and made smaller (30 to 52 px, was 40 to
+  84 px) with a soft shadow, so the skyline shows; the line and quick links stay bottom-right. Checked at 1440, 800
+  and 375 px.
+- Home RONDA 300 trails: a "Nearby places" button beside "See all trails" opens the RONDA 300 page. New text in all
+  four languages.
+- Opening another page now starts at its top (ScrollToTop in App): before, pressing a link low on Home (e.g. the
+  RONDA 300 card) opened the new page at the same scroll depth. Links to a #section still go to that section; Back
+  keeps the browser's own behaviour. Checked in the browser (Home at 2,979 px, RONDA 300 card, new page at 0) and
+  with a new e2e test.
+- RONDA 300 is a full page again (/ronda-300), rebuilt around nearby places, after Klook and Rome2rio: under the
+  header (with the station search) one panel with the kinds of place as an icon bar across the top (icon, name, how
+  many in view), the places in the part of the map in view on the left, and one map on the right (phones: map
+  first). The list follows the map as it moves: from street level (zoom 14.5) it shows what OpenStreetMap has within
+  300 m of each station in view (up to 8 stations nearest the middle, loaded once each and kept), each place with
+  "About {min} min walk from {station}" and "Plan a trip here"; zoomed further out it asks to zoom in or search. The
+  map opens on KLCC to Bukit Bintang; the search (or ?station=&lat=&lon=) flies it to a station; pressing a station
+  flies in. Stations are dots in their lines' colours, a dashed 300 m ring around each station shown, places as
+  dots in their kind's colour; pointing at a place puts a callout on its dot, pressing a dot picks it in the list.
+  Station names from the table's capitals shown as "Sentul Timur" (KLCC and other short forms kept).
+- The home page Trails / Station map switch and the station list are removed (Home's RONDA 300 section is trails
+  again); all RONDA 300 links point to the page. The old StationsPreviewMap and StationAroundMap are replaced by
+  Ronda300Map + Ronda300Explorer. New text in all four languages; unused RONDA 300 texts removed. e2e RONDA 300
+  spec rewritten for the new page.
 - "Everything you need" below the live-map spotlight, after photo tiles, a numbered list, tabs, photo cards and
   Apple Maps-style cards: a row of four picture cards in the way Monzo shows its products. Each picture is a clean
   drawing made for the site (src/components/FeatureArt.tsx: route to a pin, three lines in their official colours,

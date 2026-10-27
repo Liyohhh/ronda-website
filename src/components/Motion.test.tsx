@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { Eyebrow, Reveal, WordFill } from './Motion'
+import { Accent, Eyebrow, Reveal, WordFill } from './Motion'
 
 // jsdom has no IntersectionObserver, like an old browser: everything must show in its finished state
 describe('Motion', () => {
@@ -36,5 +36,12 @@ describe('Motion', () => {
     const label = screen.getByText('Why RONDA?')
     expect(label).toBeVisible()
     expect(label.querySelector('span')).toHaveAttribute('aria-hidden', 'true')
+  })
+})
+
+describe('Accent with a number at the end', () => {
+  it('keeps the number with the word before it ("Terminal 1")', () => {
+    const { container } = render(<p><Accent text="From KLIA Terminal 1" /></p>)
+    expect(container.querySelector('.accent-word')?.textContent).toBe('Terminal 1')
   })
 })

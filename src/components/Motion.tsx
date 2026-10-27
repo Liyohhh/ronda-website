@@ -134,10 +134,17 @@ export function Accent({ text, dark = false }: { text: string; dark?: boolean })
   let last = parts.length - 1
   while (last > 0 && !parts[last].trim()) last--
   if (last <= 0) return <>{text}</>
+  // a number on its own ("KLIA Terminal 1") is not a word: it takes the word before it along
+  let first = last
+  if (/^\d+$/.test(parts[last].trim())) {
+    let k = last - 1
+    while (k > 0 && !parts[k].trim()) k--
+    if (k > 0) first = k
+  }
   return (
     <>
-      {parts.slice(0, last).join('')}
-      <span className={`accent-word pe-[0.06em]${dark ? ' on-dark' : ''}`}>{parts[last]}</span>
+      {parts.slice(0, first).join('')}
+      <span className={`accent-word pe-[0.06em]${dark ? ' on-dark' : ''}`}>{parts.slice(first, last + 1).join('')}</span>
       {parts.slice(last + 1).join('')}
     </>
   )

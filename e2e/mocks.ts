@@ -53,6 +53,7 @@ export type Backend = {
   planTrip: (body: Record<string, unknown>) => { status?: number; json: unknown }
   chat: (body: Record<string, unknown>) => { status?: number; json: unknown }
   deleteAccount: () => { status?: number; json: unknown }
+  alerts: unknown[] // published service alerts (public.service_alerts)
   calls: { path: string; body: unknown }[]
   unexpected: string[]
 }
@@ -60,7 +61,7 @@ export type Backend = {
 const PNG_1PX = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/6X4lb8AAAAASUVORK5CYII=', 'base64')
 
 async function mockBackend(page: Page): Promise<Backend> {
-  const be: Backend = { planTrip: () => ({ json: PLAN }), chat: () => ({ json: CHAT }), deleteAccount: () => ({ json: { deleted: true } }), calls: [], unexpected: [] }
+  const be: Backend = { planTrip: () => ({ json: PLAN }), chat: () => ({ json: CHAT }), deleteAccount: () => ({ json: { deleted: true } }), alerts: [], calls: [], unexpected: [] }
   const json = (route: Route, body: unknown, status = 200) =>
     route.fulfill({ status, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) })
 
@@ -140,6 +141,8 @@ async function mockBackend(page: Page): Promise<Backend> {
       { feed_id: 'rapid-rail-kl', stop_id: 'KG16', stop_name: 'Pasar Seni', stop_lat: 3.142293265, stop_lon: 101.6955642 },
       { feed_id: 'rapid-rail-kl', stop_id: 'KJ10', stop_name: 'KLCC', stop_lat: 3.158935, stop_lon: 101.713287 },
     ])
+    // operator service alerts in force (none unless a test sets them)
+    if (url.pathname === '/rest/v1/service_alerts') return json(route, be.alerts)
     // plain table reads (bus route list etc.): empty
     if (url.pathname.startsWith('/rest/v1/') && req.method() === 'GET') return json(route, [])
     if (url.pathname.startsWith('/auth/v1/')) return json(route, {})

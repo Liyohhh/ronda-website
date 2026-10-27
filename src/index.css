@@ -73,6 +73,11 @@
 
 /* RONDA 300 map: the callout over the place picked in the list */
 .r3-callout .maplibregl-popup-content { border-radius: 14px; padding: 8px 12px; box-shadow: 0 10px 24px -8px rgb(34 45 82 / 0.35); }
+.r3-callout .maplibregl-popup-tip { display: none; }
+/* its zoom buttons: one white pill with a soft shadow, as on Klook's map */
+.r3-map .maplibregl-ctrl-group { border-radius: 999px; overflow: hidden; box-shadow: 0 8px 20px -8px rgb(34 45 82 / 0.35); }
+.r3-map .maplibregl-ctrl-group button { width: 38px; height: 38px; }
+.r3-map .maplibregl-ctrl-top-right { margin: 6px; }
 
 
 /* One page grid for the home page, header and footer (Blaze layout): every block starts on the same left edge.
@@ -263,10 +268,18 @@ body {
   0% { opacity: 0.7; transform: scale(1); }
   100% { opacity: 0; transform: scale(3.2); }
 }
-/* on phones the drawing is too small for every city name: only Kuala Lumpur keeps its label */
+/* on phones the drawing is too small for every city name: only Kuala Lumpur keeps its label, drawn larger so it
+   stays readable (the drawing is scaled down about three times), as does the country name */
 @media (max-width: 639px) {
   .why-map .why-label-small {
     display: none;
+  }
+  .why-map .why-label-big {
+    font-size: 40px;
+    stroke-width: 8px;
+  }
+  .why-map .why-name {
+    font-size: 40px;
   }
 }
 /* riders who asked for less motion get the finished picture */

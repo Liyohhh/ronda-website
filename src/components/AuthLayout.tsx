@@ -50,9 +50,6 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
             <BrandLogo tone="light" size="lg" className="mb-6" />
             <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 [text-shadow:0_2px_10px_rgb(0_0_0/0.6)]">{promoTitle}</h1>
             <p className="text-white text-lg max-w-md [text-shadow:0_1px_6px_rgb(0_0_0/0.55)]">{promoText}</p>
-            <a href={AUTH_VIDEO.page} target="_blank" rel="noopener noreferrer" className="absolute bottom-3 end-4 rounded bg-black/45 px-2 py-0.5 text-[11px] text-white/85 hover:underline">
-              {t('videoLabel')}: {AUTH_VIDEO.author} · Pexels
-            </a>
           </div>
         </aside>
 

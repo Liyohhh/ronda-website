@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import Icon from './Icon'
-import PhotoCredit from './PhotoCredit'
 import { Accent, Eyebrow, Reveal } from './Motion'
 import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { useLanguage } from '../hooks/useLanguage'
@@ -28,9 +27,6 @@ function PromotionSection() {
     <div className={`relative overflow-hidden rounded-[20px] bg-[#222D52] ${className}`}>
       <img src={p.photo.src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
       <span className="absolute top-3 start-3"><AdTag text={t('promoAdLabel')} /></span>
-      <p className="absolute inset-x-0 bottom-0 truncate bg-gradient-to-t from-black/60 to-transparent px-3 py-1.5 text-[10px] text-white/90 [&_a]:relative [&_a]:z-10">
-        {t('photoLabel')}: <PhotoCredit photo={p.photo} />
-      </p>
     </div>
   )
 

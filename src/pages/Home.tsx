@@ -388,7 +388,8 @@ function Home() {
     <SiteLayout>
       {/* Hero (Blaze layout): an inset card with rounded corners; the KL skyline photo starts slightly zoomed in and
           settles, and on wider screens the hero videos play over it one after another (HeroVideos, with its station
-          line as the slide control); the headline sits bottom-left over a dark fade.
+          line as the slide control); the headline sits small in the top-left corner so the buildings stay in view,
+          the line and quick links bottom-right over a dark fade.
           The search card overlaps the card's bottom edge. */}
       <section className="relative pt-1">
         <div className="hero-card relative mx-3 sm:mx-4 overflow-hidden rounded-[32px] bg-[#222D52] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.25)] min-h-[480px] md:min-h-[600px] lg:h-[76vh] lg:max-h-[760px] flex flex-col justify-end">
@@ -399,21 +400,23 @@ function Home() {
                 src="/Image/banner-kl.jpg"
                 alt=""
                 fetchPriority="high"
-                className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
+                className="absolute inset-0 w-full h-full object-cover object-[center_35%] brightness-110 saturate-110"
               />
             </picture>
           </div>
           {heroVideo && <HeroVideos />}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#18203D]/85 via-[#18203D]/30 to-[#18203D]/10" aria-hidden="true" />
+          {/* a light fade: just enough behind the headline (top) and the quick links (bottom), the city stays bright */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#18203D]/55 via-transparent to-[#18203D]/25" aria-hidden="true" />
 
-          <div className="relative px-6 sm:px-8 xl:px-16 pb-28 md:pb-32 pt-24 flex flex-col lg:flex-row lg:items-end justify-between gap-y-8 gap-x-10">
-            <div className="max-w-4xl text-start">
-              <h1 className="rise-in max-w-[820px] [text-wrap:balance] font-display text-[40px] sm:text-5xl md:text-[64px] lg:text-[84px] leading-[1.02] font-semibold tracking-[-0.02em] text-white drop-shadow-sm">
+          <div className="relative flex-1 px-6 sm:px-8 xl:px-16 pb-28 md:pb-32 pt-8 md:pt-10 flex flex-col justify-between gap-y-8">
+            {/* the headline sits small in the top-left corner, so the skyline stays in view */}
+            <div className="max-w-xl text-start">
+              <h1 className="rise-in [text-wrap:balance] font-display text-[30px] sm:text-[36px] md:text-[44px] lg:text-[52px] leading-[1.05] font-semibold tracking-[-0.02em] text-white [text-shadow:0_2px_16px_rgb(24_32_61/0.45)]">
                 <Accent text={t('bannerTitle')} dark />
               </h1>
             </div>
 
-            <div className="rise-in lg:max-w-[440px] lg:flex-shrink-0 flex flex-col lg:items-end gap-5" style={{ '--rise-delay': '0.3s' } as CSSProperties}>
+            <div className="rise-in lg:max-w-[440px] lg:self-end flex flex-col lg:items-end gap-5" style={{ '--rise-delay': '0.3s' } as CSSProperties}>
               <p className="text-base md:text-lg font-medium leading-snug text-white/90 lg:text-end [text-wrap:balance]">{t('bannerSubtitle')}</p>
               <ul className="flex flex-wrap lg:flex-nowrap lg:justify-end gap-2">
                 {([['directions', '/#plan', 'route'], ['lines', '/?tab=lines', 'train'], ['trails', '/trails', 'hiking']] as const).map(([key, to, icon]) => (

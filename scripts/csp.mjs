@@ -18,7 +18,7 @@ export function buildCsp(env) {
     `script-src ${list("'self'", turnstile)}`,
     // React and MapLibre set style attributes
     `style-src 'self' 'unsafe-inline'`,
-    `img-src ${list("'self'", 'data:', 'blob:', 'https://upload.wikimedia.org', osmTiles)}`,
+    `img-src ${list("'self'", 'data:', 'blob:', 'https://upload.wikimedia.org', 'https://live.staticflickr.com', osmTiles)}`,
     `font-src 'self' data:`,
     `connect-src ${list("'self'", supabase, supabase && supabase.replace(/^https:/, 'wss:'), map, assets, osmTiles)}`,
     `worker-src 'self' blob:`,

@@ -1,10 +1,8 @@
 import { Link, useLocation, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import TrailCover from '../components/TrailCover'
-import PhotoCredit from '../components/PhotoCredit'
 import { TRAIL_MAPS } from '../data/trailMaps'
 import { HoursStatus, HoursWeek } from '../components/PlaceHours'
-import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
 import { CATEGORY_STYLE } from '../data/trailStyles'
 import LineBadge from '../components/LineBadge'
@@ -107,11 +105,6 @@ function TrailDetail() {
             <p className="mt-1 text-white/85">{t(trailDescKey(trail))}</p>
           </div>
         </div>
-        {TRAIL_PHOTOS[trail.slug] && (
-          <p className="absolute top-4 end-5 rounded-full bg-black/35 px-2.5 py-0.5 text-[10px] text-white/80 backdrop-blur-sm">
-            {t('photoLabel')}: <PhotoCredit photo={TRAIL_PHOTOS[trail.slug]} />
-          </p>
-        )}
       </section>
 
       <div className={`${box} mx-auto px-4 sm:px-6 pt-8`}>
@@ -185,9 +178,6 @@ function TrailDetail() {
                       {PLACE_PHOTOS[place.id] ? (
                         <>
                           <img src={PLACE_PHOTOS[place.id].src} alt={place.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" style={PLACE_PHOTOS[place.id].focus ? { objectPosition: PLACE_PHOTOS[place.id].focus } : undefined} />
-                          <p className="absolute inset-x-0 bottom-0 px-2 py-1 text-[9px] leading-tight text-white/90 bg-gradient-to-t from-black/60 to-transparent truncate">
-                            {t('photoLabel')}: <PhotoCredit photo={PLACE_PHOTOS[place.id]} />
-                          </p>
                         </>
                       ) : (
                         <div

@@ -2053,8 +2053,8 @@
    "category": "culture"
   },
   {
-   "key": "harmony",
-   "slug": "cultural-harmony",
+   "key": "mosques",
+   "slug": "mosques",
    "stops": [
     {
      "placeId": "masjidIndia"
@@ -2062,6 +2062,25 @@
     {
      "placeId": "masjidJamek"
     },
+    {
+     "placeId": "masjidNegara"
+    },
+    {
+     "placeId": "masjidPutra"
+    },
+    {
+     "placeId": "masjidBesi"
+    },
+    {
+     "placeId": "masjidShahAlam"
+    }
+   ],
+   "category": "culture"
+  },
+  {
+   "key": "harmony",
+   "slug": "cultural-harmony",
+   "stops": [
     {
      "placeId": "stMarys"
     },
@@ -2072,19 +2091,7 @@
      "placeId": "guanDi"
     },
     {
-     "placeId": "masjidNegara"
-    },
-    {
      "placeId": "theanHou"
-    },
-    {
-     "placeId": "masjidPutra"
-    },
-    {
-     "placeId": "masjidBesi"
-    },
-    {
-     "placeId": "masjidShahAlam"
     }
    ],
    "category": "culture"

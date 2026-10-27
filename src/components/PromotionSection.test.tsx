@@ -7,7 +7,7 @@ import { renderWithLang } from '../test/render'
 const banners = (c: HTMLElement) => Array.from(c.querySelectorAll<HTMLElement>('[data-promo]'))
 
 describe('PromotionSection', () => {
-  it('a wide banner plus the smaller cards, each one link (besides the photo credit) with a visible Ad label', () => {
+  it('a wide banner plus the smaller cards, each one link with a visible Ad label', () => {
     const { container } = renderWithLang(<PromotionSection />)
     const all = banners(container)
     expect(all).toHaveLength(PROMOTIONS.length + 1)
@@ -22,12 +22,12 @@ describe('PromotionSection', () => {
     expect(screen.getByText('Ad places opening soon')).toBeInTheDocument()
   })
 
-  it('photos are decorative (the text says it all) and each one is credited', () => {
+  it('photos are decorative (the text says it all), with no credit on them (credits are on the About page)', () => {
     const { container } = renderWithLang(<PromotionSection />)
     const imgs = container.querySelectorAll('[data-promo] img')
     expect(imgs).toHaveLength(PROMOTIONS.length + 1)
     for (const img of imgs) expect(img).toHaveAttribute('alt', '')
-    for (const p of [PROMO_FEATURE, ...PROMOTIONS]) expect(screen.getAllByRole('link', { name: p.photo.author }).length).toBeGreaterThan(0)
+    for (const p of [PROMO_FEATURE, ...PROMOTIONS]) expect(screen.queryByRole('link', { name: p.photo.author })).toBeNull()
   })
 
   it('the wide banner comes first, then the three small cards; only the banner shows the ad places', () => {

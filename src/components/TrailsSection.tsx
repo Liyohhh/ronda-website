@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTrails } from '../hooks/useTrails'
@@ -7,20 +7,13 @@ import CategoryPills, { type CategoryFilter } from './CategoryPills'
 import Icon from './Icon'
 import { isCategoryShown } from '../data/trails'
 import { Accent, Eyebrow, Reveal } from './Motion'
-import type { Pick } from '../data/suggestions'
+import { RONDA300_MAP } from '../data/ronda300Link'
 
-// the RONDA 300 map loads only when asked for (it brings the map library with it)
-const Ronda300Explorer = lazy(() => import('./Ronda300Explorer'))
-
-// Home page "RONDA 300": a switch between the trails and the station map (both are RONDA 300). Trails: category pills,
-// a swipeable row of trail cards and "See all trails", which opens /trails with the same category picked. Station map:
-// the same RONDA 300 panel as on /ronda-300 (every rail station; pick one to see its places right here), and
-// "Open RONDA 300" opens the page, with the picked station if there is one.
+// Home page "RONDA 300" trails: category pills, a swipeable row of trail cards, "See all trails", which opens
+// /trails with the same category picked, and "Nearby places", which opens the RONDA 300 map page
 function TrailsSection() {
   const { t, lang } = useLanguage()
   const [category, setCategory] = useState<CategoryFilter>('all')
-  const [view, setView] = useState<'trails' | 'map'>('trails')
-  const [station, setStation] = useState<Pick | null>(null)
   const rowRef = useRef<HTMLUListElement>(null)
   // which ends of the row are showing: an arrow with nowhere to go is greyed out
   const [edge, setEdge] = useState({ start: true, end: false })
@@ -70,27 +63,7 @@ function TrailsSection() {
         </p>
       </div>
 
-      {/* trails or the station map */}
-      <div className="mt-8 flex justify-center">
-        <div className="flex rounded-full bg-gray-100 p-1">
-          {([['trails', t('trails'), 'hiking'], ['map', t('r3_viewMap'), 'map']] as const).map(([v, label, icon]) => (
-            <button
-              key={v}
-              type="button"
-              aria-pressed={view === v}
-              onClick={() => setView(v)}
-              className={`inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${view === v ? 'bg-[#222D52] text-white shadow-[0_4px_12px_rgb(34_45_82/0.2)]' : 'text-gray-600 hover:text-[#222D52]'}`}
-            >
-              <Icon name={icon} size={18} />
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {view === 'trails' ? (
-        <>
-      <div className="wrap mt-6 flex justify-center [&>div]:min-w-0">
+      <div className="wrap mt-10 flex justify-center [&>div]:min-w-0">
         <CategoryPills value={category} onChange={(c) => { setCategory(c); rowRef.current?.scrollTo({ left: 0 }); setEdge({ start: true, end: false }) }} />
       </div>
 
@@ -117,7 +90,8 @@ function TrailsSection() {
         </div>
       )}
 
-      <div className="mt-8 flex justify-center px-4">
+      {/* the trails, or what is near the stations (the RONDA 300 page) */}
+      <div className="mt-8 flex flex-wrap justify-center gap-3 px-4">
         <Link
           to={category === 'all' ? '/trails' : `/trails?category=${category}`}
           className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-gold text-[15px] font-bold text-[#222D52] shadow-[0_6px_16px_rgb(210_182_138/0.35)] hover:bg-gold-hover active:scale-95 transition whitespace-nowrap"
@@ -125,26 +99,14 @@ function TrailsSection() {
           {t('seeAllTrails')}
           <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
         </Link>
-      </div>
-        </>
-      ) : (
-        <>
-      <div className="wrap mt-8">
-        <Suspense fallback={<div className="h-[380px] sm:h-[480px] lg:h-[560px] rounded-[28px] bg-gray-100" role="status" aria-label={t('loading')} />}>
-          <Ronda300Explorer picked={station} onPick={setStation} />
-        </Suspense>
-      </div>
-      <div className="mt-8 flex justify-center px-4">
         <Link
-          to={station ? `/ronda-300?${new URLSearchParams({ station: station.name, lat: String(station.lat), lon: String(station.lon) })}` : '/ronda-300'}
-          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-gold text-[15px] font-bold text-[#222D52] shadow-[0_6px_16px_rgb(210_182_138/0.35)] hover:bg-gold-hover active:scale-95 transition whitespace-nowrap"
+          to={RONDA300_MAP}
+          className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border-[1.5px] border-[#222D52] text-[15px] font-bold text-[#222D52] hover:bg-[#222D52] hover:text-white active:scale-95 transition whitespace-nowrap"
         >
-          {t('r3_openPage')}
-          <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+          <Icon name="myLocation" size={18} />
+          {t('r3_nearbyCta')}
         </Link>
       </div>
-        </>
-      )}
     </section>
   )
 }

@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import PageHero from '../components/PageHero'
 import Ronda300Explorer from '../components/Ronda300Explorer'
+import type { FlyTarget } from '../components/Ronda300Map'
 import SuggestionList from '../components/SuggestionList'
 import Icon from '../components/Icon'
 import { buildItems, type Pick } from '../data/suggestions'
@@ -10,20 +11,21 @@ import { useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
 
 const LIST_ID = 'r300-list'
+// where the map opens: KLCC to Bukit Bintang, close enough in for the places to show
+const START: FlyTarget = { lat: 3.1528, lon: 101.7108, zoom: 15.3, n: 0 }
 
-// /ronda-300: search for a station, or pick one on the map, and see the places within a short walk of it
-// (Ronda300Explorer, the same panel as on the home page; from OpenStreetMap; merchants later)
+// /ronda-300: everything within a short walk of the stations, on one map with the places in view listed beside it
+// (Ronda300Explorer). The search in the header flies the map to a station; so does ?station=&lat=&lon= in the address.
 function Ronda300() {
   const { t } = useLanguage()
-  const [params, setParams] = useSearchParams()
+  const [params] = useSearchParams()
+  const [fly, setFly] = useState<FlyTarget>(() => {
+    const lat = Number(params.get('lat')), lon = Number(params.get('lon'))
+    return params.get('lat') && params.get('lon') && Number.isFinite(lat) && Number.isFinite(lon) ? { lat, lon, zoom: 16, n: 0 } : START
+  })
   const [query, setQuery] = useState(() => params.get('station') ?? '')
   const [open, setOpen] = useState(false)
   const [hi, setHi] = useState(-1)
-  // a station picked on the home page map comes in the address (?station=&lat=&lon=)
-  const [picked, setPicked] = useState<Pick | null>(() => {
-    const name = params.get('station'), lat = Number(params.get('lat')), lon = Number(params.get('lon'))
-    return name && Number.isFinite(lat) && Number.isFinite(lon) && params.get('lat') && params.get('lon') ? { name, lat, lon } : null
-  })
 
   // stations only: places of the map search are not stations
   const { stops, loading } = useSmartSearch(query)
@@ -31,10 +33,11 @@ function Ronda300() {
   const listOpen = open && items.length > 0
 
   const pick = (p: Pick) => {
-    setPicked(p)
     setQuery(p.name)
     setOpen(false)
     setHi(-1)
+    setFly((f) => ({ lat: p.lat, lon: p.lon, zoom: 16, n: f.n + 1 }))
+    document.getElementById('r3-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
   const onKey = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); setHi((i) => Math.min(i + 1, items.length - 1)) }
@@ -82,7 +85,9 @@ function Ronda300() {
       </PageHero>
 
       <div className="wrap py-10">
-        <Ronda300Explorer picked={picked} onPick={(p: Pick | null) => { if (p) pick(p); else { setPicked(null); setQuery(''); setParams({}, { replace: true }) } }} />
+        <div id="r3-panel" className="scroll-mt-24">
+          <Ronda300Explorer fly={fly} />
+        </div>
 
         <section aria-labelledby="r3-merchant" className="mt-14 rounded-[28px] bg-[#222D52] text-white p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 justify-between">
           <div>

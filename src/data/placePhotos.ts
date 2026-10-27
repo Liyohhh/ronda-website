@@ -1,11 +1,12 @@
 // Photos of trail stops (shown on each stop of a trail page), from Wikimedia Commons. Same licence rules as
 // trailPhotos.ts: commercial use allowed; CC BY / BY-SA credited on the About page. Picked 9 Oct 2026 from each
-// place's Wikipedia lead image or a Commons search, checked by eye; author and licence from the Commons API.
+// place's Wikipedia lead image or a Commons search, checked by eye; author and licence from the Commons API. Flickr
+// photos (Creative Commons, commercial use allowed) where Commons has none.
 // Places without a fitting free photo (most restaurants, some night markets) have none and show the category cover.
 
 import type { TrailPhoto } from './trailPhotos'
 
-export const PLACE_PHOTOS: Record<string, TrailPhoto> = {
+const COMMONS_PHOTOS: Record<string, TrailPhoto> = {
   batuCaves: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Batu_Caves_stairs_2022-05.jpg/960px-Batu_Caves_stairs_2022-05.jpg', author: 'Chainwit.', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Batu_Caves_stairs_2022-05.jpg' },
   batuCavesSteps: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Batu_Caves_stairs_2022-05.jpg/960px-Batu_Caves_stairs_2022-05.jpg', author: 'Chainwit.', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Batu_Caves_stairs_2022-05.jpg' },
   brickfields: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Little_India_Fountain%2C_Brickfields%2C_Kuala_Lumpur%2C_2023_%2801%29.jpg/960px-Little_India_Fountain%2C_Brickfields%2C_Kuala_Lumpur%2C_2023_%2801%29.jpg', author: 'Bahnfrend', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Little_India_Fountain,_Brickfields,_Kuala_Lumpur,_2023_(01).jpg' },
@@ -109,4 +110,31 @@ export const PLACE_PHOTOS: Record<string, TrailPhoto> = {
   klBirdPark: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/World%27s_largest_covered_aviary_%287856555628%29.jpg/960px-World%27s_largest_covered_aviary_%287856555628%29.jpg', author: 'shankar s. from Dubai, united arab emirates', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0', page: 'https://commons.wikimedia.org/wiki/File:World%27s_largest_covered_aviary_(7856555628).jpg' },
   marinis: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/KL_-_Menara_Carigali%2C_KLCC.JPG/960px-KL_-_Menara_Carigali%2C_KLCC.JPG', author: 'Azreey', license: 'CC BY-SA 3.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0', page: 'https://commons.wikimedia.org/wiki/File:KL_-_Menara_Carigali,_KLCC.JPG', focus: '50% 35%' },
   vcr: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/2-18%2C_Jalan_Galloway%2C_central_Kuala_Lumpur.jpg/960px-2-18%2C_Jalan_Galloway%2C_central_Kuala_Lumpur.jpg', author: 'Two hundred percent.', license: 'CC BY-SA 3.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0', page: 'https://commons.wikimedia.org/wiki/File:2-18,_Jalan_Galloway,_central_Kuala_Lumpur.jpg' },
+  // 26 Oct 2026: more stops from Wikimedia Commons and Flickr (found through Openverse); commercial use allowed, checked by
+  // eye that each shows the place (MVEC: the Mid Valley Megamall it is part of)
+  starhill: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Starhill_Gallery_%28211030%29.jpg/960px-Starhill_Gallery_%28211030%29.jpg', author: '*angys*', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Starhill_Gallery_(211030).jpg' },
+  mvec: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Mid_Valley_Megamall_2020_3.jpg/960px-Mid_Valley_Megamall_2020_3.jpg', author: 'Brownc', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Mid_Valley_Megamall_2020_3.jpg' },
+  masjidIndia: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Kuala_Lumpur_Little_India_0016.jpg/960px-Kuala_Lumpur_Little_India_0016.jpg', author: 'Stefan Fussan', license: 'CC BY-SA 3.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0', page: 'https://commons.wikimedia.org/wiki/File:Kuala_Lumpur_Little_India_0016.jpg' },
+  feeka: { src: 'https://live.staticflickr.com/65535/48852528681_b72b607cac_b.jpg', author: 'Bex.Walton', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/', page: 'https://www.flickr.com/photos/7831824@N04/48852528681' },
+  pulp: { src: 'https://live.staticflickr.com/2818/34162509361_da68c0d7fe_b.jpg', author: 'jonolist', license: 'CC BY-SA 2.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0/', page: 'https://www.flickr.com/photos/46635911@N00/34162509361' },
+  shahAlamExtremePark: { src: 'https://live.staticflickr.com/2710/5705487898_0d691872b7_b.jpg', author: 'azlan fauzi', license: 'CC BY-SA 2.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0/', page: 'https://www.flickr.com/photos/46176214@N02/5705487898' },
+  putrajayaChallengePark: { src: 'https://live.staticflickr.com/926/29294654448_f5021eecb4_b.jpg', author: 'U.S. Embassy Kuala Lumpur', license: 'Public domain', licenseUrl: 'https://creativecommons.org/publicdomain/mark/1.0/', page: 'https://www.flickr.com/photos/52445638@N06/29294654448' },
 }
+
+// The owner's own picks (26 Oct 2026), shown instead of the Commons photo for these stops. Mostly stock photos: the owner
+// records source and licence in docs/RONDA_Photo_Credits.xlsx. TODO: fill author / licence / page here when known.
+const owner = (id: string, focus?: string): TrailPhoto =>
+  ({ src: `/places/${id}.jpg`, author: 'TODO', license: 'TODO', licenseUrl: null, page: '', focus, owner: true })
+
+const OWNER_PHOTOS: Record<string, TrailPhoto> = {
+  centralMarket: owner('centralMarket'),
+  guanDi: owner('guanDi'),
+  masjidIndia: owner('masjidIndia'),
+  masjidJamek: owner('masjidJamek'),
+  masjidNegara: owner('masjidNegara'),
+  masjidPutra: owner('masjidPutra', '50% 35%'),
+  riverOfLife: owner('riverOfLife'),
+  sultanAbdulSamad: owner('sultanAbdulSamad', '50% 30%'),
+}
+
+export const PLACE_PHOTOS: Record<string, TrailPhoto> = { ...COMMONS_PHOTOS, ...OWNER_PHOTOS }

@@ -26,7 +26,6 @@ function HeroVideos() {
     v.play().catch(() => {})
   }, [index])
 
-  const v = HERO_VIDEOS[index]
   return (
     <>
       <div className="absolute inset-0 hero-settle" aria-hidden="true">
@@ -44,7 +43,7 @@ function HeroVideos() {
               playsInline
               autoPlay={i === index}
               preload="auto"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out ${i === index ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-cover brightness-110 saturate-110 transition-opacity duration-[1200ms] ease-in-out ${i === index ? 'opacity-100' : 'opacity-0'}`}
             />
           )
         })}
@@ -66,14 +65,6 @@ function HeroVideos() {
         ))}
       </div>
 
-      <a
-        href={v.page}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="absolute bottom-3 end-5 z-10 rounded-full bg-black/35 px-2.5 py-0.5 text-[10px] text-white/80 backdrop-blur-sm hover:underline md:bottom-auto md:top-16 md:end-8 xl:end-16"
-      >
-        {t('videoLabel')}: {v.author ? `${v.author} · ` : ''}Pexels
-      </a>
     </>
   )
 }

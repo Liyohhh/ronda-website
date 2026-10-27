@@ -133,7 +133,7 @@ function WhyRonda() {
               <g key={c.name} className="why-city" style={{ animationDelay: `${1.3 + i * 0.12}s` }}>
                 <circle className="why-pulse" cx={x} cy={y} r={r} fill="none" stroke="#D2B68A" strokeWidth="1.5" style={{ animationDelay: `${2 + i * 0.35}s` }} />
                 <circle cx={x} cy={y} r={r} fill="#D2B68A" />
-                <text className={c.big ? undefined : 'why-label-small'} x={x + (c.left ? -(r + 6) : r + 6)} y={y} textAnchor={c.left ? 'end' : 'start'} dominantBaseline="central"
+                <text className={c.big ? 'why-label-big' : 'why-label-small'} x={x + (c.left ? -(r + 6) : r + 6)} y={y} textAnchor={c.left ? 'end' : 'start'} dominantBaseline="central"
                   fontSize={c.big ? 16 : 13} fontWeight={c.big ? 700 : 600} fill="#222D52" paintOrder="stroke" stroke="#F6F3ED" strokeWidth="4" strokeLinejoin="round">
                   {c.name}
                 </text>

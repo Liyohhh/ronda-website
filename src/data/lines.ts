@@ -13,7 +13,7 @@
 
 import { FA_BUS } from './operatorIcons.ts'
 
-export type LineMode = 'MRT' | 'LRT' | 'MONORAIL' | 'BRT' | 'KTM' | 'ETS' | 'ERL' | 'BUS'
+export type LineMode = 'MRT' | 'LRT' | 'MONORAIL' | 'BRT' | 'KTM' | 'ETS' | 'ERL' | 'ECRL' | 'BUS'
 
 export type Line = {
   id: string // stable slug, also the SVG filename
@@ -50,15 +50,23 @@ export const LINES: Line[] = [
   { id: 'ktm-ipoh', name: 'KTM Ipoh Line', short: 'Ipoh', mode: 'KTM', color: '#1964B7', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_9000'] } },
   { id: 'ktm-ets', name: 'KTM ETS', short: 'ETS', mode: 'ETS', color: '#FFC72C', textColor: '#000000', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['ETS'] } },
   { id: 'ktm-intercity', name: 'KTM Intercity', short: 'Intercity', mode: 'KTM', color: '#6E6E6E', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['ERT', 'SH', 'ST'] } },
+
+  // ECRL (Malaysia Rail Link): opens 12 Dec 2026; no GTFS feed yet, so its stations and fares come from src/data/ecrl.ts.
+  // Colour: TODO take it from MRL's line branding when published (blue of the train livery until then).
+  { id: 'ecrl', name: 'ECRL East Coast Rail Link', short: 'ECRL', mode: 'ECRL', color: '#1B3F8F', textColor: '#FFFFFF', colorSource: 'unverified', gtfs: { feedId: '', routeIds: [] } },
 ]
+
+// lines with a GTFS feed in the database (the ECRL has none yet)
+export const hasFeed = (l: Line) => l.gtfs.feedId !== ''
 
 export const LINES_BY_ID: Record<string, Line> = Object.fromEntries(LINES.map((l) => [l.id, l]))
 
 // Rail lines grouped for the line picker (headings translated by `key`)
-export const LINE_GROUPS: { key: 'linesGroupRapid' | 'linesGroupKtm' | 'linesGroupAirport'; ids: string[] }[] = [
+export const LINE_GROUPS: { key: 'linesGroupRapid' | 'linesGroupKtm' | 'linesGroupAirport' | 'linesGroupEastCoast'; ids: string[] }[] = [
   { key: 'linesGroupRapid', ids: ['lrt-ampang', 'lrt-sri-petaling', 'lrt-kelana-jaya', 'lrt-shah-alam', 'mrt-kajang', 'mrt-putrajaya', 'monorail', 'brt-sunway'] },
   { key: 'linesGroupKtm', ids: ['ktm-port-klang', 'ktm-seremban', 'ktm-ets', 'ktm-intercity', 'ktm-padang-besar', 'ktm-ipoh', 'ktm-shuttle-selatan'] },
   { key: 'linesGroupAirport', ids: ['erl-klia-ekspres', 'erl-klia-transit'] },
+  { key: 'linesGroupEastCoast', ids: ['ecrl'] },
 ]
 
 // Find a line from a GTFS route (e.g. a plan-trip leg's feed + route)
@@ -237,6 +245,9 @@ function badgeGlyph(line: Line): string {
       return `<path fill="${w}" d="${ERL_SIDE}"/><path fill="${c}" d="M9 12.4H14V15.8H9ZM16 12.4H21V15.8H16ZM34 12.6L38 16H35Z"/>` +
         `<path fill="${w}" d="M6 21.6H41V22.5H6Z"/>` +
         textEl(24, 33.4, 11.6, w, 'KLIA', 900) + textEl(24, 42.4, 8.4, w, 'ekspres')
+    case 'ECRL':
+      // the train on rails with the line's name under it, like the KTM badges
+      return `<g transform="translate(4.8 0.6) scale(0.8)">${trainFront(c, w, true)}</g>` + textEl(24, 44.6, 7.6, w, 'ECRL')
     default:
       return `<path transform="translate(10 10) scale(0.0546875)" fill="${w}" d="${FA_BUS}"/>`
   }

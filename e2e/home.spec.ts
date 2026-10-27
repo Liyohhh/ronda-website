@@ -40,13 +40,13 @@ for (const width of [375, 768, 1440]) {
   })
 }
 
-test('RONDA 300 switches between the trails and the station map', async ({ page, backend }) => {
+test('opening another page from Home starts at its top', async ({ page, backend }) => {
   void backend
   await page.goto('/')
-  const section = page.locator('#explore')
-  await section.getByRole('button', { name: 'Station map' }).click()
-  await expect(section.getByRole('button', { name: 'Station map' })).toHaveAttribute('aria-pressed', 'true')
-  await expect(section.getByRole('link', { name: /Open RONDA 300/ })).toHaveAttribute('href', '/ronda-300')
-  await section.getByRole('button', { name: 'Trails' }).click()
-  await expect(section.getByRole('link', { name: /See all trails/i })).toBeVisible()
+  const card = page.getByTestId('feature-tiles').locator('a[href="/ronda-300"]')
+  await card.evaluate((el) => el.scrollIntoView({ block: 'center' }))
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(500)
+  await card.click()
+  await expect(page).toHaveURL(/\/ronda-300$/)
+  await expect.poll(() => page.evaluate(() => scrollY)).toBe(0)
 })

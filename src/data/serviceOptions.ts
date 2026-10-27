@@ -5,6 +5,7 @@
 import type { TranslationKey } from '../i18n/translations'
 import type { Lang } from '../i18n/translations'
 import { ARABIC_ONLY_CATEGORIES, TRAIL_CATEGORIES, categoryKey } from './trails'
+import { RONDA300_MAP } from './ronda300Link'
 
 // /?to=<stop name>&toName=<shown name> opens Home with the End box filled in
 const planTo = (stop: string, shown = stop) => `/?to=${encodeURIComponent(stop)}&toName=${encodeURIComponent(shown)}`
@@ -60,7 +61,7 @@ const ALL_MENUS: NavMenu[] = [
       {
         title: 'navRonda300',
         items: [
-          { label: 'r3_navFind', detailLabel: 'r3_navFindD', to: '/ronda-300' },
+          { label: 'r3_navFind', detailLabel: 'r3_navFindD', to: RONDA300_MAP },
           { label: 'navSeeTrails', detailLabel: 'trailsSubtitle', to: '/trails' },
         ],
       },

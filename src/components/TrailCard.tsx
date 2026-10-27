@@ -21,7 +21,7 @@ function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Re
       <TrailCover trail={trail} className="absolute inset-0 group-hover:scale-[1.06] transition-transform duration-700 ease-out" />
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
 
-      <div className="absolute inset-x-0 top-0 p-5 flex items-start justify-between gap-3">
+      <div className="absolute inset-x-0 top-0 p-5 flex flex-wrap-reverse items-start justify-between gap-2">
         {station ? (
           <span className="inline-flex items-center gap-1.5 min-w-0 bg-black/50 border border-white/15 backdrop-blur-xl text-white text-[11px] font-semibold uppercase tracking-wide ps-1 pe-2.5 py-1 rounded-full">
             {station.lineIds[0] && <LineBadge line={station.lineIds[0]} size={18} decorative />}

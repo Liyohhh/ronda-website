@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import Icon from './Icon'
+import { ParkingSign } from './ParkingInfo'
 import { Accent, Eyebrow, Reveal } from './Motion'
 import { FEATURES, OPEN_LANGUAGE_MENU, type Feature } from '../data/features'
 import FeatureArt, { type ArtKind } from './FeatureArt'
@@ -9,7 +10,8 @@ import FeatureArt, { type ArtKind } from './FeatureArt'
 // "Everything you need for the journey", the way Monzo shows its products: a row of picture cards (Trails always
 // first), each a clean drawing of the feature (FeatureArt) on a cream or navy block, then the feature's name, one
 // line and a "Learn more" pill (the whole card is the link); on phones the row scrolls sideways. The smaller
-// features follow in a ruled strip. (The live map is announced in the lines band, LineMarquee.) Only what RONDA does today;
+// features follow in a ruled strip, then a Park & Ride card (car parks on the live map and on each line's stations).
+// (The live map is announced in the lines band, LineMarquee.) Only what RONDA does today;
 // planned things say "Coming soon".
 
 const CARDS: { key: Feature['key']; label: TranslationKey; line: TranslationKey; art: ArtKind }[] = [
@@ -84,6 +86,25 @@ function FeatureGrid() {
             })}
           </ul>
         </div>
+
+        {/* Park & Ride: drive to the station, then ride. Car parks are on the live map and on each line's stations */}
+        <Reveal className="mt-10 flex flex-col gap-6 rounded-[28px] bg-cream p-6 md:flex-row md:items-center md:p-8">
+          <ParkingSign size={64} />
+          <div className="min-w-0 flex-1">
+            <h3 className="font-display text-[24px] md:text-[28px] font-semibold leading-tight text-[#222D52]">{t('parkShowTitle')}</h3>
+            <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-gray-600">{t('parkShowText')}</p>
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row md:flex-col lg:flex-row">
+            <Link to="/live?parking=1" className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-[#222D52] px-5 text-sm font-semibold text-white hover:bg-[#18203D] transition-colors">
+              <Icon name="map" size={18} />
+              {t('parkShowMap')}
+            </Link>
+            <Link to="/?tab=lines" className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border-[1.5px] border-[#222D52] px-5 text-sm font-semibold text-[#222D52] hover:bg-[#222D52] hover:text-white transition-colors">
+              <Icon name="train" size={18} />
+              {t('parkShowLines')}
+            </Link>
+          </div>
+        </Reveal>
 
       </div>
     </section>

@@ -13,7 +13,7 @@ test.describe('live bus map', () => {
   test('route filter accepts a typed route code', async ({ page, backend }) => {
     void backend
     await page.goto('/live')
-    await page.getByRole('textbox', { name: /route/i }).fill('t 789')
+    await page.getByRole('combobox', { name: /route/i }).fill('t 789')
     await expect(page.locator('.ronda-bus:not(.ronda-train)')).toHaveCount(1)
   })
 
@@ -34,9 +34,20 @@ test.describe('live bus map', () => {
   test('filter by train number shows that train only', async ({ page, backend }) => {
     void backend
     await page.goto('/live')
-    await page.getByRole('textbox', { name: /route/i }).fill('9999')
+    await page.getByRole('combobox', { name: /route/i }).fill('9999')
     await expect(page.locator('.ronda-train')).toHaveCount(1)
     await expect(page.locator('.ronda-bus:not(.ronda-train)')).toHaveCount(0)
+  })
+
+  test('a station name finds the station, keeps every bus on the map and flies there with a pin', async ({ page, backend }) => {
+    void backend
+    await page.goto('/live')
+    const inService = LIVE.vehicles.filter((v) => v.status !== 'off_trip').length
+    await page.getByRole('combobox', { name: /station/i }).fill('klcc')
+    await expect(page.locator('.ronda-bus:not(.ronda-train)')).toHaveCount(inService)
+    await page.getByRole('option', { name: /LRT KLCC/ }).first().click()
+    await expect(page.getByLabel('LRT KLCC', { exact: true })).toBeVisible()
+    await expect(page.getByRole('combobox', { name: /station/i })).toHaveValue('')
   })
 
   test('feed error is shown instead of an empty map', async ({ page, backend }) => {

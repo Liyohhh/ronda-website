@@ -25,6 +25,7 @@ const ALL_ARTICLES: HelpArticle[] = [
   { id: 'payVisitor', category: 'payments' },
   { id: 'genCover', category: 'general' },
   { id: 'genLive', category: 'general' },
+  { id: 'genParking', category: 'general' },
   { id: 'genAccount', category: 'general' },
   { id: 'genData', category: 'general' },
   { id: 'genLanguages', category: 'general' },
@@ -39,7 +40,7 @@ const ALL_ARTICLES: HelpArticle[] = [
 export const HELP_ARTICLES = ALL_ARTICLES.filter((a) => SERVICES_ENABLED || a.id !== 'services')
 
 // shown on the Help home page
-export const HOT_QUESTIONS = ['genLive', 'payWhere', 'payVisitor', 'payFares', 'business']
+export const HOT_QUESTIONS = ['genLive', 'genParking', 'payWhere', 'payVisitor', 'payFares', 'business']
 
 export const articleQ = (id: string) => `help_${id}_q` as TranslationKey
 export const articleA = (id: string) => `help_${id}_a` as TranslationKey

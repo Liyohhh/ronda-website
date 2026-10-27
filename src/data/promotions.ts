@@ -8,6 +8,7 @@
 
 import type { TranslationKey } from '../i18n/translations'
 import type { TrailPhoto } from './trailPhotos'
+import { RONDA300_MAP } from './ronda300Link'
 
 const commons = (path: string, file: string, width = 960) => `https://upload.wikimedia.org/wikipedia/commons/thumb/${path}/${file}/${width}px-${file}`
 
@@ -47,7 +48,7 @@ export const PROMO_FEATURE = {
 // the row of smaller cards under it
 export const PROMOTIONS: Promotion[] = [
   {
-    id: 'ronda300', title: 'promoRonda300Title', text: 'promoRonda300Text', to: '/ronda-300',
+    id: 'ronda300', title: 'promoRonda300Title', text: 'promoRonda300Text', to: RONDA300_MAP,
     photo: {
       src: commons('9/9f', 'Teh_tarik_20260427_-_01.jpg'), alt: 'A glass of teh tarik',
       author: 'Wiki Asmah', license: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0',

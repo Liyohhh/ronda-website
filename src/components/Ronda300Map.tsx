@@ -5,10 +5,10 @@ import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useLanguage } from '../hooks/useLanguage'
 import { mapConfig, softMapStyle } from '../services/mapStyle'
-import { supabase } from '../services/supabase'
-import { LINES_BY_ID } from '../data/lines'
-import type { Pick } from '../data/suggestions'
-import { KIND_COLOR, placeName, walkMinutes, type NearPlace } from '../services/places'
+import type { RailStation } from '../hooks/useRailStations'
+import { KIND_COLOR, KIND_ICON, PLACE_KINDS, placeName, walkMinutes, type NearPlace } from '../services/places'
+import { ICONS } from '../data/icons'
+import { LINES, lineBadgeSvg } from '../data/lines'
 
 maplibregl.setWorkerUrl(workerUrl)
 try {
@@ -17,34 +17,39 @@ try {
   // already added by another map on the page
 }
 
-// The one RONDA 300 map. With no station picked it shows every LRT, MRT, Monorail, BRT and ERL station of the Klang
-// Valley as a dot in its line's official colour (positions from public.stops); pressing a dot picks that station.
-// With a station picked it flies there: the station with its name, a dashed ring at 300 m (about 5 minutes on foot)
-// and every place as a dot in its kind's colour; the other stations fade. Pointing at a place in the list puts a
-// callout over it (name and walk, as Rome2rio labels its stops); pressing a place's dot picks it in the list.
-// Soft basemap without the map's own shop icons, so only our dots show.
+// The RONDA 300 map (the right half of the RONDA 300 page): the rail stations (small dots in their lines' official
+// colours from afar, each line's badge with the station's name closer in), a dashed 300 m ring (about 5 minutes on
+// foot) around each station whose places are shown, and those places as round markers with their kind's icon. It reports the area in view after every move (the list beside it follows the map).
+// Pointing at a place in the list puts a callout over it (name and walk, as Rome2rio labels its stops); pressing a
+// place's dot picks it in the list; pressing a station flies in to it. Soft basemap without the map's own shop icons.
 
-const NAVY = '#222D52'
-const GOLD = '#D2B68A'
-const OVERVIEW = { center: [101.69, 3.12] as [number, number], zoom: 10.6 }
+export type AreaPlace = NearPlace & { station: string } // distance_m is from that station
+export type MapView = { bounds: maplibregl.LngLatBounds; zoom: number }
+export type FlyTarget = { lat: number; lon: number; zoom: number; n: number } // n: a new number for every fly
 
-// rapid-rail-kl stop codes start with the line's letters (KJ10 = Kelana Jaya Line); ERL stops are all ERL
-const PREFIX: [string, string][] = [
-  ['KJ', 'lrt-kelana-jaya'], ['AG', 'lrt-ampang'], ['SP', 'lrt-sri-petaling'], ['SA', 'lrt-shah-alam'],
-  ['KG', 'mrt-kajang'], ['PY', 'mrt-putrajaya'], ['MR', 'monorail'], ['SB', 'brt-sunway'],
-]
-const MODE_NAME: Record<string, string> = { LRT: 'LRT', MRT: 'MRT', MONORAIL: 'Monorail', BRT: 'BRT', ERL: 'ERL' }
-
-type Row = { feed_id: string; stop_id: string; stop_name?: string | null; stop_lat: number; stop_lon: number }
-
-function lineOf(r: Row) {
-  if (r.feed_id === 'erl') return LINES_BY_ID['erl-klia-transit']
-  const hit = PREFIX.find(([p]) => r.stop_id.toUpperCase().startsWith(p))
-  return hit ? LINES_BY_ID[hit[1]] : undefined
+// map images drawn from our own SVGs: a round marker per kind of place (the kind's colour, a white icon, a white
+// edge) and each line's badge for the stations; drawn at twice the size for sharp screens
+function svgImage(svg: string) {
+  return new Promise<HTMLImageElement>((done, fail) => {
+    const img = new Image()
+    img.onload = () => done(img)
+    img.onerror = fail
+    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
+  })
+}
+const kindMarker = (color: string, icon: string) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="${color}" stroke="#FFFFFF" stroke-width="4"/>` +
+  `<g transform="translate(15 15) scale(1.0833)" color="#FFFFFF">${icon}</g></svg>`
+async function addImages(map: maplibregl.Map) {
+  const add = async (id: string, svg: string) => { if (!map.hasImage(id)) map.addImage(id, await svgImage(svg), { pixelRatio: 2 }) }
+  await Promise.all([
+    ...PLACE_KINDS.map((k) => add(`kind-${k}`, kindMarker(KIND_COLOR[k], ICONS[KIND_ICON[k] as keyof typeof ICONS] ?? ''))),
+    ...LINES.map((l) => add(`line-${l.id}`, lineBadgeSvg(l, { title: false }).replace('width="48" height="48"', 'width="56" height="56"'))),
+  ])
 }
 
 // a circle of radius m around a point, as a polygon (good enough at this size)
-function ring(lat: number, lon: number, m: number, n = 64): [number, number][] {
+function ring(lat: number, lon: number, m: number, n = 48): [number, number][] {
   const dLat = m / 111320
   const dLon = m / (111320 * Math.cos((lat * Math.PI) / 180))
   return Array.from({ length: n + 1 }, (_, i) => {
@@ -52,43 +57,33 @@ function ring(lat: number, lon: number, m: number, n = 64): [number, number][] {
     return [lon + dLon * Math.cos(a), lat + dLat * Math.sin(a)]
   })
 }
-const EMPTY: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] }
 
 function Ronda300Map({
-  focus,
+  stations,
+  rings,
   places,
   active,
-  onPickStation,
+  fly,
   onPickPlace,
+  onView,
 }: {
-  focus: Pick | null
-  places: NearPlace[]
+  stations: RailStation[]
+  rings: RailStation[] // the stations whose places are shown
+  places: AreaPlace[]
   active: string | null
-  onPickStation: (p: Pick) => void
+  fly: FlyTarget
   onPickPlace: (osmId: string) => void
+  onView: (v: MapView) => void
 }) {
   const { t, lang } = useLanguage()
   const box = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
-  const markerRef = useRef<maplibregl.Marker | null>(null)
   const calloutRef = useRef<maplibregl.Popup | null>(null)
   const [loaded, setLoaded] = useState(false)
-  const [rows, setRows] = useState<Row[] | null>(null)
-  const stationRef = useRef(onPickStation)
   const placeRef = useRef(onPickPlace)
-  const focusRef = useRef(focus)
-  useEffect(() => { stationRef.current = onPickStation; placeRef.current = onPickPlace; focusRef.current = focus })
-
-  // the stations, once
-  useEffect(() => {
-    let live = true
-    supabase
-      .from('stops')
-      .select('feed_id, stop_id, stop_name, stop_lat, stop_lon')
-      .in('feed_id', ['rapid-rail-kl', 'erl'])
-      .then(({ data }) => { if (live) setRows((data ?? []) as Row[]) })
-    return () => { live = false }
-  }, [])
+  const viewRef = useRef(onView)
+  const flyRef = useRef(fly)
+  useEffect(() => { placeRef.current = onPickPlace; viewRef.current = onView; flyRef.current = fly })
 
   // the map, once (rebuilt when the language changes, for the labels)
   useEffect(() => {
@@ -96,83 +91,97 @@ function Ronda300Map({
     const { pmtilesUrl, assetsUrl } = mapConfig()
     const style = softMapStyle(lang, pmtilesUrl, assetsUrl)
     style.layers = style.layers.filter((l) => !l.id.startsWith('pois'))
-    const f = focusRef.current
+    const f = flyRef.current
     const map = new maplibregl.Map({
       container: box.current,
       style,
-      center: f ? [f.lon, f.lat] : OVERVIEW.center,
-      zoom: f ? 16 : OVERVIEW.zoom,
+      center: [f.lon, f.lat],
+      zoom: f.zoom,
       attributionControl: { compact: true },
       cooperativeGestures: true,
     })
     mapRef.current = map
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
     const hover = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10 })
+    const EMPTY: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] }
 
-    map.on('load', () => {
+    map.on('load', async () => {
+      try { await addImages(map) } catch { /* without the images the markers below simply do not draw */ }
+      if (mapRef.current !== map) return
+      map.addSource('rings', { type: 'geojson', data: EMPTY })
       map.addSource('stations', { type: 'geojson', data: EMPTY })
-      map.addSource('walk', { type: 'geojson', data: EMPTY })
       map.addSource('places', { type: 'geojson', data: EMPTY })
-      map.addLayer({ id: 'walk-fill', type: 'fill', source: 'walk', paint: { 'fill-color': NAVY, 'fill-opacity': 0.05 } })
-      map.addLayer({ id: 'walk-line', type: 'line', source: 'walk', paint: { 'line-color': NAVY, 'line-width': 1.5, 'line-dasharray': [3, 2], 'line-opacity': 0.6 } })
-      map.addLayer({
-        id: 'stations', type: 'circle', source: 'stations',
-        paint: {
-          'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, 4, 14, 8],
-          'circle-color': ['get', 'color'], 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 1.5,
-          'circle-opacity-transition': { duration: 400 }, 'circle-stroke-opacity-transition': { duration: 400 },
-        },
-      })
-      if (style.glyphs) map.addLayer({
-        id: 'stations-label', type: 'symbol', source: 'stations', minzoom: 13,
-        layout: { 'text-field': ['get', 'name'], 'text-size': 11, 'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-font': ['Noto Sans Medium'] },
-        paint: { 'text-color': NAVY, 'text-halo-color': '#FFFFFF', 'text-halo-width': 1.5 },
-      })
+      map.addLayer({ id: 'rings-fill', type: 'fill', source: 'rings', paint: { 'fill-color': '#222D52', 'fill-opacity': 0.035 } })
+      map.addLayer({ id: 'rings-line', type: 'line', source: 'rings', paint: { 'line-color': '#222D52', 'line-width': 1.4, 'line-dasharray': [2, 2], 'line-opacity': 0.45 } })
+      // the place pointed at: a soft halo under its marker
       map.addLayer({
         id: 'places-active', type: 'circle', source: 'places', filter: ['==', ['get', 'id'], ''],
-        paint: { 'circle-radius': 14, 'circle-color': ['get', 'color'], 'circle-opacity': 0.25 },
+        paint: { 'circle-radius': 22, 'circle-color': ['get', 'color'], 'circle-opacity': 0.22, 'circle-blur': 0.2 },
+      })
+      // places: a round marker with the kind's icon, a little bigger the closer in (nearest the middle on top)
+      map.addLayer({
+        id: 'places', type: 'symbol', source: 'places',
+        layout: {
+          'icon-image': ['concat', 'kind-', ['get', 'kind']],
+          'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.62, 17, 0.9],
+          'icon-allow-overlap': true,
+          'symbol-sort-key': ['get', 'rank'],
+        },
       })
       map.addLayer({
-        id: 'places', type: 'circle', source: 'places',
-        paint: { 'circle-radius': 6.5, 'circle-color': ['get', 'color'], 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 2 },
+        id: 'places-on', type: 'symbol', source: 'places', filter: ['==', ['get', 'id'], ''],
+        layout: { 'icon-image': ['concat', 'kind-', ['get', 'kind']], 'icon-size': 1.15, 'icon-allow-overlap': true },
       })
-      // names on the dots when zoomed in (only with our own map file: the fallback map has no fonts)
+      // stations: small dots in the line's colour from afar, the line's badge with the station's name closer in
+      map.addLayer({
+        id: 'stations-dot', type: 'circle', source: 'stations', maxzoom: 13,
+        paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, 3.5, 13, 5.5], 'circle-color': ['get', 'color'], 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 1.5 },
+      })
+      map.addLayer({
+        id: 'stations', type: 'symbol', source: 'stations', minzoom: 13,
+        layout: {
+          'icon-image': ['concat', 'line-', ['get', 'line']],
+          'icon-size': ['interpolate', ['linear'], ['zoom'], 13, 0.5, 16, 0.75],
+          'icon-allow-overlap': true,
+          ...(style.glyphs ? {
+            'text-field': ['get', 'name'], 'text-size': 12, 'text-offset': [0, 1.5], 'text-anchor': 'top', 'text-optional': true,
+            'text-font': ['Noto Sans Medium'], 'text-max-width': 10,
+          } : {}),
+        },
+        paint: { 'text-color': '#222D52', 'text-halo-color': '#FFFFFF', 'text-halo-width': 2 },
+      })
+      // names on the place markers when zoomed right in (only with our own map file: the fallback map has no fonts)
       if (style.glyphs) map.addLayer({
-        id: 'places-label', type: 'symbol', source: 'places', minzoom: 16.5,
-        layout: { 'text-field': ['get', 'name'], 'text-size': 11, 'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-max-width': 9, 'text-font': ['Noto Sans Medium'] },
-        paint: { 'text-color': '#1f2a40', 'text-halo-color': '#FFFFFF', 'text-halo-width': 1.5 },
+        id: 'places-label', type: 'symbol', source: 'places', minzoom: 17.2,
+        layout: { 'text-field': ['get', 'name'], 'text-size': 11, 'text-offset': [0, 1.4], 'text-anchor': 'top', 'text-max-width': 9, 'text-font': ['Noto Sans Medium'], 'text-optional': true },
+        paint: { 'text-color': '#1f2a40', 'text-halo-color': '#FFFFFF', 'text-halo-width': 1.6 },
       })
 
       map.on('click', 'places', (e) => { const id = e.features?.[0]?.properties?.id; if (id) placeRef.current(String(id)) })
-      map.on('click', 'stations', (e) => {
-        // a place's dot on top of a station wins
-        if (map.queryRenderedFeatures(e.point, { layers: ['places'] }).length) return
+      const flyToStation = (e: maplibregl.MapLayerMouseEvent) => {
         const ft = e.features?.[0]
-        if (!ft) return
+        if (!ft || map.queryRenderedFeatures(e.point, { layers: ['places'] }).length) return
         const [lon, lat] = (ft.geometry as GeoJSON.Point).coordinates
-        const { stopId, raw, name } = ft.properties as { stopId: string; raw: string; name: string }
-        hover.remove()
-        // the same display name the search shows (the table's own name can be in capitals)
-        supabase.rpc('search_stops', { query: raw }).then(({ data }) => {
-          const hit = ((data ?? []) as { stop_id: string; stop_name: string }[]).find((d) => d.stop_id === stopId)
-          stationRef.current({ name: hit?.stop_name ?? name, lat, lon })
-        }, () => stationRef.current({ name, lat, lon }))
-      })
-      for (const layer of ['places', 'stations']) {
+        map.flyTo({ center: [lon, lat], zoom: Math.max(map.getZoom(), 16), duration: 800 })
+      }
+      map.on('click', 'stations', flyToStation)
+      map.on('click', 'stations-dot', flyToStation)
+      for (const layer of ['places', 'stations', 'stations-dot']) {
         map.on('mouseenter', layer, (e) => {
           map.getCanvas().style.cursor = 'pointer'
           const ft = e.features?.[0]
-          if (layer === 'stations' && ft && !focusRef.current) hover.setLngLat((ft.geometry as GeoJSON.Point).coordinates as [number, number]).setText(String(ft.properties?.name)).addTo(map)
+          if (layer === 'stations-dot' && ft) hover.setLngLat((ft.geometry as GeoJSON.Point).coordinates as [number, number]).setText(String(ft.properties?.name)).addTo(map)
         })
         map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; hover.remove() })
       }
+      const report = () => viewRef.current({ bounds: map.getBounds(), zoom: map.getZoom() })
+      map.on('moveend', report)
+      report()
       setLoaded(true)
     })
     return () => {
       calloutRef.current?.remove()
       calloutRef.current = null
-      markerRef.current?.remove()
-      markerRef.current = null
       hover.remove()
       map.remove()
       mapRef.current = null
@@ -180,76 +189,51 @@ function Ronda300Map({
     }
   }, [lang])
 
-  // stations in their lines' colours
+  // flying somewhere asked for (a station from the search)
+  useEffect(() => {
+    if (loaded && fly.n) mapRef.current?.flyTo({ center: [fly.lon, fly.lat], zoom: fly.zoom, duration: 900 })
+  }, [loaded, fly])
+
   useEffect(() => {
     const src = mapRef.current?.getSource('stations') as maplibregl.GeoJSONSource | undefined
-    if (!loaded || !src || !rows) return
+    if (!loaded || !src) return
     src.setData({
       type: 'FeatureCollection',
-      features: rows.flatMap((r) => {
-        const line = lineOf(r)
-        if (!line || !Number.isFinite(r.stop_lat)) return []
-        const name = `${MODE_NAME[line.mode] ?? line.mode} ${r.stop_name ?? r.stop_id}`
-        return [{ type: 'Feature' as const, properties: { name, raw: r.stop_name ?? r.stop_id, stopId: r.stop_id, color: line.color }, geometry: { type: 'Point' as const, coordinates: [r.stop_lon, r.stop_lat] } }]
-      }),
+      features: stations.map((st) => ({ type: 'Feature' as const, properties: { name: st.name, color: st.line.color, line: st.line.id }, geometry: { type: 'Point' as const, coordinates: [st.lon, st.lat] } })),
     })
-  }, [loaded, rows])
+  }, [loaded, stations])
 
-  // the picked station: fly in and draw its ring, or fly back out to every station
   useEffect(() => {
-    const map = mapRef.current
-    if (!loaded || !map) return
-    markerRef.current?.remove()
-    markerRef.current = null
-    const walk = map.getSource('walk') as maplibregl.GeoJSONSource
-    const dim = focus ? 0.3 : 1
-    map.setPaintProperty('stations', 'circle-opacity', dim)
-    map.setPaintProperty('stations', 'circle-stroke-opacity', dim)
-    if (map.getLayer('stations-label')) map.setLayoutProperty('stations-label', 'visibility', focus ? 'none' : 'visible')
-    if (!focus) {
-      walk.setData(EMPTY)
-      map.flyTo({ ...OVERVIEW, duration: 900 })
-      return
-    }
-    walk.setData({ type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [ring(focus.lat, focus.lon, 300)] } })
-    // the station: navy ring with a gold middle and its name
-    const pin = document.createElement('div')
-    pin.className = 'flex flex-col items-center pointer-events-none'
-    const label = document.createElement('span')
-    label.className = 'mb-1 whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold text-white shadow-lg'
-    label.style.backgroundColor = NAVY
-    label.textContent = focus.name
-    const dot = document.createElement('span')
-    dot.className = 'block h-5 w-5 rounded-full shadow'
-    dot.style.cssText = `border:5px solid ${NAVY};background:${GOLD}`
-    pin.append(label, dot)
-    markerRef.current = new maplibregl.Marker({ element: pin, anchor: 'bottom' }).setLngLat([focus.lon, focus.lat]).addTo(map)
-    const outer = ring(focus.lat, focus.lon, 330)
-    map.fitBounds(outer.reduce((b, p) => b.extend(p), new maplibregl.LngLatBounds(outer[0], outer[0])), { padding: 24, duration: 900 })
-  }, [loaded, focus])
+    const src = mapRef.current?.getSource('rings') as maplibregl.GeoJSONSource | undefined
+    if (!loaded || !src) return
+    src.setData({
+      type: 'FeatureCollection',
+      features: rings.map((st) => ({ type: 'Feature' as const, properties: {}, geometry: { type: 'Polygon' as const, coordinates: [ring(st.lat, st.lon, 300)] } })),
+    })
+  }, [loaded, rings])
 
-  // the places (they change with the station and the kind filter)
   useEffect(() => {
     const src = mapRef.current?.getSource('places') as maplibregl.GeoJSONSource | undefined
     if (!loaded || !src) return
     src.setData({
       type: 'FeatureCollection',
-      features: (focus ? places : []).map((p) => ({
+      features: places.map((p, i) => ({
         type: 'Feature',
-        properties: { id: p.osm_id, color: KIND_COLOR[p.kind], name: placeName(p, lang) },
+        properties: { id: p.osm_id, kind: p.kind, color: KIND_COLOR[p.kind], name: placeName(p, lang), rank: -i },
         geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
       })),
     })
-  }, [loaded, places, focus, lang])
+  }, [loaded, places, lang])
 
   // the place pointed at / picked in the list
   useEffect(() => {
     const map = mapRef.current
     if (!loaded || !map) return
     map.setFilter('places-active', ['==', ['get', 'id'], active ?? ''])
+    map.setFilter('places-on', ['==', ['get', 'id'], active ?? ''])
     calloutRef.current?.remove()
     calloutRef.current = null
-    const p = focus ? places.find((x) => x.osm_id === active) : undefined
+    const p = places.find((x) => x.osm_id === active)
     if (!p) return
     const content = document.createElement('div')
     const name = document.createElement('strong')
@@ -257,18 +241,17 @@ function Ronda300Map({
     name.textContent = placeName(p, lang)
     const walk = document.createElement('span')
     walk.className = 'block text-xs text-gray-600'
-    walk.textContent = t('r3_osmWalk').replace('{m}', String(p.distance_m)).replace('{min}', String(walkMinutes(p.distance_m)))
+    walk.textContent = t('r3_walkFrom').replace('{station}', p.station).replace('{min}', String(walkMinutes(p.distance_m)))
     content.append(name, walk)
-    calloutRef.current = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, className: 'r3-callout', maxWidth: '220px' })
+    calloutRef.current = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 22, className: 'r3-callout', maxWidth: '240px' })
       .setLngLat([p.lon, p.lat]).setDOMContent(content).addTo(map)
-    if (!map.getBounds().contains([p.lon, p.lat])) map.easeTo({ center: [p.lon, p.lat], duration: 400 })
-  }, [loaded, active, places, focus, lang, t])
+  }, [loaded, active, places, lang, t])
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-[22px] bg-gray-100">
-      <div ref={box} className="h-full w-full" role="region" aria-label={focus ? t('r3_mapAria').replace('{station}', focus.name) : t('r3_previewAria')} />
-      <p className="pointer-events-none absolute bottom-3 start-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[#222D52] shadow">
-        {focus ? t('r3_mapRing') : t('r3_previewHint')}
+    <div className="r3-map relative h-full w-full overflow-hidden rounded-[22px] bg-gray-100">
+      <div ref={box} className="h-full w-full" role="region" aria-label={t('r3_previewAria')} />
+      <p className="pointer-events-none absolute top-3 start-3 max-w-[calc(100%-4.5rem)] rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[#222D52] shadow">
+        {t('r3_mapRing')}
       </p>
     </div>
   )
