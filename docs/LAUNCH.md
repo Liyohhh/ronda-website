@@ -25,6 +25,13 @@
 
 - [ ] Supabase: Pro + Large compute chosen (about RM551 a month with SST); the owner pays and switches later and says
       so first, so no import is running at the time. admin@ronda2u.com is an Owner of the Supabase organisation.
+- [ ] AWS account (made 28 Oct 2026, login admin@ronda2u.com, company Movinexa): boss to approve the switch from the
+      Free plan to the Paid plan (Billing -> Upgrade plan; the US$100 credit stays) and add his phone as a second MFA
+      device. Needed before asking SES for production access. The Free plan also locks the account to Sydney
+      (ap-southeast-2): after upgrading, use Settings -> "Activate advanced features" to open Singapore, then set up
+      SES there (ronda2u.com identity, DKIM + MAIL FROM records in Cloudflare, SMTP into Supabase).
+- [ ] After the switch to Pro: Supabase -> Authentication -> Sign In / Providers -> Email -> "Prevent use of leaked
+      passwords" on, then Save (Pro only; on Free the switch shows on but does nothing). Owner asked to be reminded.
 - [ ] After the switch: run `npm run test:load` in the database repo on Large and record p95 per endpoint
       (checklist G12-16).
 - [ ] Self-host Photon geocoding for Malaysia only, likely on the AWS walking-router server; the public Photon server

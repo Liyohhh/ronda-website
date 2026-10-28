@@ -7,6 +7,7 @@ import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
 import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
+import { FEATURED_PLACES } from '../data/featuredPlaces'
 import { PROMO_FEATURE } from '../data/promotions'
 import { AUTH_VIDEO } from '../data/authVideo'
 import { HERO_VIDEOS } from '../data/heroVideos'
@@ -227,6 +228,11 @@ function About() {
             {Object.entries(PLACE_PHOTOS).filter(([id, ph]) => places[id] && !ph.owner).map(([id, ph]) => (
               <li key={id}>
                 {places[id].name}: <PhotoCredit photo={ph} />
+              </li>
+            ))}
+            {FEATURED_PLACES.flatMap((f) => (f.photo ? [{ ...f, photo: f.photo }] : [])).map((f) => (
+              <li key={`featured-${f.id}`}>
+                {f.name}: <PhotoCredit photo={f.photo} />
               </li>
             ))}
             {[PROMO_FEATURE].map((p) => (

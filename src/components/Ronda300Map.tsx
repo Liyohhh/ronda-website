@@ -30,6 +30,8 @@ export type MapView = { bounds: maplibregl.LngLatBounds; zoom: number }
 export type FlyTarget = { lat: number; lon: number; zoom: number; n: number } // n: a new number for every fly
 export type StationBubble = { station: RailStation; count: number } // places within 300 m
 export type PhotoPin = { id: string; lat: number; lon: number; src: string; name: string }
+// the short description shown on the map when a pick is pressed
+export type PinCard = { id: string; lat: number; lon: number; name: string; text: string; walk: string; href: string }
 
 // map images drawn from our own SVGs: a round marker per kind of place (the kind's colour, a white icon, a white
 // edge) and each line's badge for the stations; drawn at twice the size for sharp screens
@@ -75,6 +77,9 @@ function Ronda300Map({
   onPickPlace,
   onPickPin,
   onView,
+  pinCard = null,
+  onGo,
+  onClosePin,
 }: {
   stations: RailStation[]
   rings: RailStation[] // the station in focus (its 300 m)
@@ -87,17 +92,25 @@ function Ronda300Map({
   onPickPlace: (osmId: string) => void
   onPickPin: (id: string) => void
   onView: (v: MapView) => void
+  pinCard?: PinCard | null
+  onGo?: (href: string) => void // to the trip planner, without reloading the page
+  onClosePin?: () => void
 }) {
   const { t, lang } = useLanguage()
   const box = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
   const calloutRef = useRef<maplibregl.Popup | null>(null)
+  const pinCardRef = useRef<maplibregl.Popup | null>(null)
+  const goRef = useRef(onGo)
+  const closePinRef = useRef(onClosePin)
+  useEffect(() => { goRef.current = onGo; closePinRef.current = onClosePin })
   const [loaded, setLoaded] = useState(false)
   const placeRef = useRef(onPickPlace)
   const pinRef = useRef(onPickPin)
   const viewRef = useRef(onView)
   const flyRef = useRef(fly)
-  useEffect(() => { placeRef.current = onPickPlace; pinRef.current = onPickPin; viewRef.current = onView; flyRef.current = fly })
+  const tRef = useRef(t)
+  useEffect(() => { placeRef.current = onPickPlace; pinRef.current = onPickPin; viewRef.current = onView; flyRef.current = fly; tRef.current = t })
 
   // the map, once (rebuilt when the language changes, for the labels)
   useEffect(() => {
@@ -105,14 +118,16 @@ function Ronda300Map({
     const { pmtilesUrl, assetsUrl } = mapConfig()
     const style = softMapStyle(lang, pmtilesUrl, assetsUrl)
     style.layers = style.layers.filter((l) => !l.id.startsWith('pois'))
-    const f = flyRef.current
+    const f = flyRef.current, tr = tRef.current
     const map = new maplibregl.Map({
       container: box.current,
       style,
       center: [f.lon, f.lat],
       zoom: f.zoom,
       attributionControl: { compact: true },
+      // the page scrolls over the map; Ctrl / ⌘ + scroll or two fingers move it (the hint in the reader's language)
       cooperativeGestures: true,
+      locale: { 'CooperativeGesturesHandler.WindowsHelpText': tr('r3_mapCtrl'), 'CooperativeGesturesHandler.MacHelpText': tr('r3_mapCmd'), 'CooperativeGesturesHandler.MobileHelpText': tr('r3_mapTwo') },
     })
     mapRef.current = map
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
@@ -277,7 +292,11 @@ function Ronda300Map({
       const img = document.createElement('img')
       img.src = p.src
       img.alt = ''
-      el.append(img)
+      // a gold star badge marks it as a RONDA pick
+      const star = document.createElement('span')
+      star.className = 'r3-star'
+      star.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>'
+      el.append(img, star)
       el.addEventListener('click', (e) => { e.stopPropagation(); pinRef.current(p.id) })
       els.set(p.id, el)
       return new maplibregl.Marker({ element: el }).setLngLat([p.lon, p.lat]).addTo(map)
@@ -302,13 +321,60 @@ function Ronda300Map({
     const name = document.createElement('strong')
     name.className = 'block text-[13px] font-semibold text-[#222D52]'
     name.textContent = placeName(p, lang)
+    // the walk from the station, after its lines' badges (an interchange has one per line)
     const walk = document.createElement('span')
-    walk.className = 'block text-xs text-gray-600'
-    walk.textContent = t('r3_walkFrom').replace('{station}', p.station).replace('{min}', String(walkMinutes(p.distance_m)))
+    walk.className = 'mt-0.5 flex items-start gap-1.5 text-xs text-gray-600'
+    const badges = document.createElement('span')
+    badges.className = 'flex flex-shrink-0 gap-0.5 pt-px'
+    const seen = new Set<string>()
+    for (const s of stations) {
+      if (s.name !== p.station || seen.has(s.line.id)) continue
+      seen.add(s.line.id)
+      const b = document.createElement('span')
+      b.className = 'block h-4 w-4 [&>svg]:h-full [&>svg]:w-full'
+      b.innerHTML = lineBadgeSvg(s.line, { title: true }) // our own static line data, not user input
+      badges.append(b)
+    }
+    const text = document.createElement('span')
+    text.textContent = t('r3_walkFrom').replace('{station}', p.station).replace('{min}', String(walkMinutes(p.distance_m)))
+    walk.append(badges, text)
     content.append(name, walk)
     calloutRef.current = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 22, className: 'r3-callout', maxWidth: '240px' })
       .setLngLat([p.lon, p.lat]).setDOMContent(content).addTo(map)
-  }, [loaded, active, places, lang, t])
+  }, [loaded, active, places, stations, lang, t])
+
+  // a pressed pick: its name, what it is, the walk, and Go (closing it, by its button or the map, tells the page)
+  useEffect(() => {
+    const map = mapRef.current
+    const old = pinCardRef.current
+    pinCardRef.current = null // first, so removing it here is not taken as the reader closing it
+    old?.remove()
+    if (!loaded || !map || !pinCard) return
+    const content = document.createElement('div')
+    const name = document.createElement('strong')
+    name.className = 'block pe-5 font-display text-[16px] font-normal leading-snug text-[#222D52]'
+    name.textContent = pinCard.name
+    const text = document.createElement('p')
+    text.className = 'mt-1 text-[12.5px] leading-relaxed text-[#4A4740]'
+    text.textContent = pinCard.text
+    const row = document.createElement('div')
+    row.className = 'mt-2 flex items-center justify-between gap-3'
+    const walk = document.createElement('span')
+    walk.className = 'text-[11.5px] text-[#6B675E]'
+    walk.textContent = pinCard.walk
+    const go = document.createElement('a')
+    go.href = pinCard.href
+    go.className = 'inline-flex h-8 flex-shrink-0 items-center rounded-full bg-[#222D52] px-3.5 text-[12.5px] font-semibold text-white hover:bg-[#2f3d6e]'
+    go.textContent = t('r3_go')
+    go.setAttribute('aria-label', `${t('r3_go')}, ${t('r3_goTo').replace('{name}', pinCard.name)}`)
+    go.addEventListener('click', (e) => { if (goRef.current) { e.preventDefault(); goRef.current(pinCard.href) } })
+    row.append(walk, go)
+    content.append(name, text, row)
+    const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, offset: 34, className: 'r3-callout r3-pincard', maxWidth: '260px' })
+      .setLngLat([pinCard.lon, pinCard.lat]).setDOMContent(content).addTo(map)
+    popup.on('close', () => { if (pinCardRef.current === popup) { pinCardRef.current = null; closePinRef.current?.() } })
+    pinCardRef.current = popup
+  }, [loaded, pinCard, t])
 
   return (
     <div className="r3-map relative h-full w-full overflow-hidden bg-gray-100">

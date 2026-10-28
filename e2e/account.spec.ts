@@ -54,14 +54,14 @@ test('reset password: checks length and match, then saves', async ({ page, backe
   await page.getByRole('button', { name: 'Save password' }).click()
   // the browser's own minLength check stops the form first; nothing is sent
   expect(backend.calls.some((c) => c.path === '/auth/v1/user')).toBe(false)
-  await page.getByLabel('New password').fill('a-long-password-1')
-  await page.getByLabel('Confirm password').fill('a-long-password-2')
+  await page.getByLabel('New password').fill('Kereta-Api-77!')
+  await page.getByLabel('Confirm password').fill('Kereta-Api-78!')
   await page.getByRole('button', { name: 'Save password' }).click()
   await expect(page.getByRole('alert')).toHaveText('Passwords do not match.')
-  await page.getByLabel('Confirm password').fill('a-long-password-1')
+  await page.getByLabel('Confirm password').fill('Kereta-Api-77!')
   await page.getByRole('button', { name: 'Save password' }).click()
   await expect(page.getByRole('status')).toContainText('Password changed')
-  expect(backend.calls.find((c) => c.path === '/auth/v1/user')?.body).toMatchObject({ password: 'a-long-password-1' })
+  expect(backend.calls.find((c) => c.path === '/auth/v1/user')?.body).toMatchObject({ password: 'Kereta-Api-77!' })
 })
 
 test('account page needs sign-in', async ({ page, backend }) => {

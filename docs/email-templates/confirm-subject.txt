@@ -1,0 +1,1 @@
+{{ $lang := or .Data.lang "en" }}{{ if eq $lang "ms" }}Sahkan akaun RONDA anda{{ else if eq $lang "zh" }}确认您的 RONDA 账户{{ else if eq $lang "ar" }}أكّد حسابك في RONDA{{ else }}Confirm your RONDA account{{ end }}

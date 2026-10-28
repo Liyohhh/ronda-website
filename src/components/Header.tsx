@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { supabase } from '../services/supabase'
-import { useSession } from '../hooks/useSession'
+import { signOut } from '../services/auth'
+import { useAuth } from '../hooks/useSession'
 import { useLanguage } from '../hooks/useLanguage'
 import ServiceNav from './ServiceNav'
 import BrandLogo from './BrandLogo'
@@ -10,7 +10,7 @@ import Icon from './Icon'
 
 function Header() {
   const { t } = useLanguage()
-  const session = useSession()
+  const { session, loading } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   // sticky header: add a shadow once the page has scrolled under it
@@ -41,8 +41,8 @@ function Header() {
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
     setMenuOpen(false)
+    await signOut()
     navigate('/')
   }
 
@@ -72,7 +72,10 @@ function Header() {
           </Link>
 
           {/* Account access / profile */}
-          {user ? (
+          {loading ? (
+            // session not read yet: keep the space, so Login / Sign Up don't flash for a signed-in person
+            <span className="w-24 sm:w-44 h-9" aria-hidden="true" />
+          ) : user ? (
             <div className="relative ms-1" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen((o) => !o)}

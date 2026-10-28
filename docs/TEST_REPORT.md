@@ -1,5 +1,66 @@
 # Test report
 
+## Run - 28 Oct 2026, evening (account emails)
+
+- New RONDA confirm-sign-up and reset-password emails (docs/email-templates/, built by scripts/email-templates.mjs).
+  Owner picked option A of six designs, with the dark RONDA logo: white top with the logo and a champagne line, serif
+  title, one velvet button, the link written out as a fallback,
+  "ignore if not you" and support@ronda2u.com. Each email comes in the language the person used on the site: the
+  language is now saved at sign-up (user_metadata.lang); no language saved = English. Previews checked in headless
+  Edge (English 800 px, Malay, Arabic right to left at 390 px).
+- Site text no longer says the link works for 24 hours (Supabase is set to 1 hour).
+- Supabase Email settings checked from the owner's screenshot: minimum 8, lower + upper + digits + symbols, link
+  expiry 3600 s; they match the website rules. Leaked-password protection needs Pro (reminder in docs/LAUNCH.md).
+- Unit tests for sign-up updated (language sent); type check and lint clean.
+- Logo: public Storage bucket "brand" made by migration 20261028210000_brand_bucket.sql (database repo, owner
+  approved; read-only, PNG only, 512 KB max); owner uploaded ronda-logo-email.png in the dashboard. Public address
+  checked: 200, image/png, same file as public/brand/email/ronda-logo-email.png.
+- Open: owner to paste the templates into Supabase; sender name stays "Supabase Auth" until Amazon SES is set up.
+
+## Run - 28 Oct 2026, later (stronger sign-up)
+
+- Password rules on sign-up, reset and the Account page: 8 to 72 characters, upper and lower case, a number, a
+  symbol, and not the email name. A live checklist and bar tick each rule off as the person types; the form will not
+  send until all are met. Supabase still checks on the server.
+- Show / hide button on every password field (Edge's own extra eye hidden so there is only one).
+- Confirm password says "Passwords do not match." as soon as it differs.
+- Sign-up needs the box "I agree to RONDA's terms and privacy policy" ticked; the time of agreement is saved on the
+  account (terms_accepted_at) as a PDPA consent record.
+- Bot check (Cloudflare Turnstile) on sign-up, sign-in, resend and forgot password, switched on by setting
+  VITE_CAPTCHA_SITE_KEY. Not on yet: needs the owner to turn CAPTCHA on in Supabase Auth -> Attack Protection at the
+  same time, or every sign-in fails.
+- All new text in English, Malay, Chinese and Arabic (right to left checked on a 375 px phone).
+- Unit 244 / 244 (new: password rules 4, bot-check token passed on 1, Register page 5). Type check and lint clean.
+  Playwright auth, account, access, site and CSP 122 / 122. Full Playwright run 232 passed, 6 skipped by design, 0 failed.
+- Open (owner, Supabase dashboard): set the same password rules in Auth -> Providers -> Email (minimum 8; lower,
+  upper, digits and symbols), turn on leaked-password protection (needs Pro), and decide on CAPTCHA.
+
+## Run - 28 Oct 2026 (sign up, sign in, sign out, password reset)
+
+- Sign up: name, email, password (8+ characters). After sending, a "Check your inbox" screen names the email and can
+  send the confirmation email again. The account works once the link is opened; the link signs the person in and
+  opens My RONDA. An email that already has an account gets the same screen (the form can't reveal who is registered).
+- Sign in: wrong email or password, unconfirmed email (with "send confirmation email again"), too many tries and no
+  connection each get a plain message in the reader's language (Supabase's own messages are English only). An
+  expired or used email link says so and offers a new one. A signed-in person visiting /login or /register goes on.
+- Sign out (header menu) now signs out of this browser only; "Sign out on all devices" stays on the Account page.
+  The header no longer flashes Login / Sign Up for a signed-in person while the session loads.
+- Forgot / reset password: same flow as before, messages now translated.
+- Look: form straight on one plain white background (no card, owner's choice), serif headings, champagne rule and links, velvet buttons. English,
+  Malay, Chinese and Arabic (right to left) for every new message.
+- Checked on the local dev server against the live Supabase project: a wrong password gives "Wrong email or
+  password." Live Auth settings read (public endpoint): email sign-up on, email confirmation required, no Google /
+  Apple / Facebook switched on. No account was created in production.
+- Unit 237 / 237 (new: auth service 5, Register page 3). Type check and lint clean. Playwright sign-in, account and
+  access 46 / 46 (new auth.spec.ts, 8 tests x desktop + mobile: sign up + resend, sign-up error, sign in + header
+  name + sign out, back to the page that asked, wrong password + unconfirmed email, confirmation link signs in,
+  expired link, Malay / Chinese / Arabic). Full Playwright run 232 passed, 6 skipped (phone-only / desktop-only by design), 0 failed.
+- Open (owner): Supabase Auth -> URL Configuration needs the site's address in Site URL and these in Redirect URLs:
+  `https://<site>/login`, `https://<site>/reset-password` (and `http://localhost:5173/**` for local testing);
+  otherwise email links fall back to the Site URL. Emails still come from Supabase's built-in mailer (low hourly
+  limit, Supabase sender name) until Amazon SES is set up; email templates still Supabase's defaults. Google /
+  Apple / Facebook buttons show but those providers are off. A real sign-up with a real inbox is not tested yet.
+
 ## Run - 28 Oct 2026 (Explore trails: Selangor, Putrajaya, Pahang, Terengganu)
 
 - Four trails in Explore: Explore Selangor (8 stops: Shah Alam by LRT Shah Alam Line, Klang by KTM), Explore
@@ -32,6 +93,60 @@
 - Text sizes kept as they were (a larger size was tried and undone at the owner's request).
 - Merchant section then made compact on request: one short band (headline, three points in a row, button) beside a
   small sample listing.
+- Merchant section spaced out on request: more room above and below, the three points stacked one per line, wider
+  gap to the sample listing, and a white gap between the map and the band. Checked with headless Edge at 1440 px
+  and 375 px.
+- Merchant section redone as a partner pitch on owner feedback ("doesn't look like users want to be a partner"):
+  navy band, headline and one line on why riders will find the shop, three benefits with icons, gold "Partner with
+  us" button and the support@ronda2u.com address, beside a sample card of what riders see (the market stall scene,
+  a partner listing with opening hours and walk time, and the Go button). New text in 4 languages. Unit 244 / 244;
+  Playwright site (axe) and RONDA 300: 64 / 64. Checked with headless Edge at 1440 px and 375 px.
+- Partner section made smaller on request (less padding, smaller headline and card). RONDA picks stand out on the
+  map: gold ring and a navy badge with a gold star on each photo pin (navy ring on hover); star beside the "RONDA
+  picks" heading in the panel. Unit 244 / 244; Playwright site (axe) and RONDA 300: 64 / 64.
+- UDA Holdings buildings near the trains put first (owner request). Researched from UDA's own pages
+  (udamalls.com.my, uda.com.my) and the Chinatown 1974 opening news; positions from OpenStreetMap; nearest station
+  from our transit data: Chinatown 1974 (Tunas Utama, Jalan Petaling; Monorail Maharajalela 290 m, Pasar Seni),
+  Pudu Sentral (LRT Plaza Rakyat 220 m), Pertama Complex (LRT Bandaraya 210 m), LaLaport Bukit Bintang City Centre
+  (UDA 40% joint venture; Monorail Hang Tuah 220 m), Cahaya Suria (LRT Plaza Rakyat 410 m), Sinar Kota (LRT Masjid
+  Jamek 390 m). Left out: Hentian Duta (no train near), City Parking, townships, malls outside KL.
+  They show first among the RONDA picks (with a photo, or a navy star tile where no free photo exists yet), first
+  as map photo pins, first in the places list with a "RONDA pick" star, and first in the place search of the trip
+  planner and RONDA 300 (typo-tolerant: "lalapot", "pertma", "puduraya", "petaling street"). A trail stop in the
+  same building is not listed twice. Photos from Wikimedia Commons, credited on About and in
+  docs/RONDA_Photo_Credits.xlsx. Checked with headless Edge at Pasar Seni and Hang Tuah. Unit 248 / 248 (new:
+  search matching); Playwright full run 232 / 232.
+- Photos added for the last three UDA places (owner request; no "Partner" label, owner decided). Commons has no
+  photo of the buildings themselves, so they show their street: Chinatown 1974 the lanterns on Jalan Petaling
+  (CC0), Cahaya Suria and Sinar Kota Jalan Tun Perak by the Lebuh Pudu hub (CC BY-SA 4.0, credited on About and in
+  docs/RONDA_Photo_Credits.xlsx). Checked with headless Edge at Pasar Seni and Plaza Rakyat. Unit 248 / 248.
+- Open: Kompleks Jalan Raja Bot not on OpenStreetMap (TODO); a real photo of each building when one is free to use.
+- RONDA 300 scrolling (owner: hard to move between the map and the page): the list panel no longer holds the
+  scroll at its end, so the page carries on; the map already lets the page scroll (Ctrl / Cmd + scroll or two
+  fingers move it), and its hint is now in all 4 languages. Headless Edge at 1440 px: wheel over the map moves the
+  page 400 px; wheel over the panel at the end of the list moves the page 1200 px.
+- RONDA 300 map: the place callout now shows the station's line logos before "About N min walk from ..." (one
+  per line at an interchange: LRT Masjid Jamek shows three). Checked with headless Edge.
+- RONDA picks: pressing a pick (or its photo pin) opens a short description on the map itself, by the pin: what the
+  place is, the walk from its nearest station and a Go button to plan the trip (an in-panel card was tried first and
+  replaced at the owner's request). Short descriptions added in 4 languages for Pudu Sentral, Pertama Complex, Cahaya
+  Suria and Sinar Kota (Chinatown 1974 and LaLaport use their trail descriptions).
+- Less clutter on the RONDA 300 map (owner idea: a checklist). The kind tabs are now one checklist that drives both
+  the map dots and the list (nothing shown twice): tick or untick each kind, or All. Food, banks and everyday services
+  start unticked as they are most of the dots (Bukit Bintang: 297 places, 85 shown at first); the choice is kept in
+  the browser. UDA featured places always show. Playwright RONDA 300 updated (map description and Go link, Eat starts
+  unticked, All shows 3, none, then Parks 1): 4 / 4 one at a time; site and accessibility (axe) 60 / 60. Unit 248 / 248.
+- Checklist redesigned on owner feedback: one row like the old tabs (All, Eat, Sights, ...), each with a real
+  checkbox (filled in the kind's colour with a tick when on, empty when off). A boxed two-column legend and tabs with
+  only a tick were tried and dropped. All ticks every kind, or clears them when all are ticked. Checked with headless
+  Edge at 1440 px and 375 px. Playwright RONDA 300 4 / 4; site (axe) on /ronda-300 4 / 4; unit 248 / 248.
+- Fix (owner: "it bugs out"): sliding the checkbox row sideways moved the whole list with it (the group did not shrink
+  to the panel). Now only the row slides (no scrollbar shown, owner request); the panel and list stay put. Wrapping the row was
+  tried; the owner prefers the sliding row. Headless Edge at 1440 and 375 px after sliding the row and ticking two
+  boxes: row moved 422 / 116 px, panel 0, list in place.
+- The sliding row of kinds shows a tiny arrow over a soft fade on the side that has more (right at first, left once
+  slid; none when everything fits); pressing it slides the row. Works right to left in Arabic. Checked with headless
+  Edge. Playwright RONDA 300 4 / 4; site (axe) on /ronda-300 4 / 4; unit 248 / 248.
 - Home page: the three small promotion cards now show small isometric city scenes in place of photos (owner picked
   this style from three): a train on its viaduct in the line's colour (LRT Kelana Jaya, MRT Kajang, Monorail),
   buildings, park, river and a gold pin; a station with its 300 m ring, twin towers and hotels, the walk to a row of

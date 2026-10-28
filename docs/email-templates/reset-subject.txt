@@ -1,0 +1,1 @@
+{{ $lang := or .Data.lang "en" }}{{ if eq $lang "ms" }}Tetapkan kata laluan RONDA baharu{{ else if eq $lang "zh" }}设置新的 RONDA 密码{{ else if eq $lang "ar" }}عيّن كلمة مرور جديدة لـ RONDA{{ else }}Set a new RONDA password{{ end }}

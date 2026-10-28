@@ -10,7 +10,7 @@ import fs from 'node:fs'
 const NAMES = [
   // arrows and controls
   'chevron-left-rounded', 'chevron-right-rounded', 'expand-more-rounded', 'expand-less-rounded',
-  'close-rounded', 'check-rounded', 'search-rounded', 'search-off-rounded', 'swap-vert-rounded', 'edit-outline-rounded',
+  'close-rounded', 'check-rounded', 'visibility-outline-rounded', 'visibility-off-outline-rounded', 'search-rounded', 'search-off-rounded', 'swap-vert-rounded', 'edit-outline-rounded',
   // header, time, notices
   'help-outline-rounded', 'person-outline-rounded', 'language-rounded', 'calendar-month-outline-rounded',
   'schedule-outline-rounded', 'dark-mode-outline-rounded', 'star-rounded', 'info-outline-rounded', 'description-outline-rounded',

@@ -53,15 +53,27 @@ export type Backend = {
   planTrip: (body: Record<string, unknown>) => { status?: number; json: unknown }
   chat: (body: Record<string, unknown>) => { status?: number; json: unknown }
   deleteAccount: () => { status?: number; json: unknown }
+  signIn: (body: Record<string, unknown>) => { status?: number; json: unknown } // POST /auth/v1/token (email + password)
+  signUp: (body: Record<string, unknown>) => { status?: number; json: unknown }
   alerts: unknown[] // published service alerts (public.service_alerts)
   calls: { path: string; body: unknown }[]
   unexpected: string[]
 }
 
+// made-up account for sign-in tests (the same one the account tests put in storage)
+export const TEST_USER = { id: '00000000-0000-4000-8000-000000000001', aud: 'authenticated', role: 'authenticated', email: 'tester@example.test',
+  app_metadata: { provider: 'email' }, user_metadata: { full_name: 'Test Rider' }, identities: [{ provider: 'email' }], created_at: '2026-10-01T00:00:00Z' }
+export const testSession = () => ({ access_token: 'e2e-access-token', refresh_token: 'e2e-refresh-token', token_type: 'bearer', expires_in: 3600,
+  expires_at: Math.floor(Date.now() / 1000) + 3600, user: TEST_USER })
+
 const PNG_1PX = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/6X4lb8AAAAASUVORK5CYII=', 'base64')
 
 async function mockBackend(page: Page): Promise<Backend> {
-  const be: Backend = { planTrip: () => ({ json: PLAN }), chat: () => ({ json: CHAT }), deleteAccount: () => ({ json: { deleted: true } }), alerts: [], calls: [], unexpected: [] }
+  const be: Backend = { planTrip: () => ({ json: PLAN }), chat: () => ({ json: CHAT }), deleteAccount: () => ({ json: { deleted: true } }),
+    signIn: () => ({ json: testSession() }),
+    // email confirmation on: a new user and no session until the link in the email is opened
+    signUp: (b) => ({ json: { ...TEST_USER, email: b.email, user_metadata: (b.data as object) ?? {}, confirmation_sent_at: new Date().toISOString() } }),
+    alerts: [], calls: [], unexpected: [] }
   const json = (route: Route, body: unknown, status = 200) =>
     route.fulfill({ status, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) })
 
@@ -126,9 +138,18 @@ async function mockBackend(page: Page): Promise<Backend> {
       }
       // account changes (name / password): echo a user back, as Supabase Auth does
       case '/auth/v1/user':
+        if (req.method() === 'GET') return json(route, TEST_USER) // who the token belongs to (after an email link)
         if (req.method() === 'PUT') return json(route, { id: '00000000-0000-4000-8000-000000000001', aud: 'authenticated', email: 'tester@example.test',
           app_metadata: { provider: 'email' }, user_metadata: body?.data ?? {}, identities: [{ provider: 'email' }], created_at: '2026-10-01T00:00:00Z' })
         break
+      case '/auth/v1/token': {
+        const r = be.signIn(body)
+        return json(route, r.json, r.status ?? 200)
+      }
+      case '/auth/v1/signup': {
+        const r = be.signUp(body)
+        return json(route, r.json, r.status ?? 200)
+      }
       case '/auth/v1/logout':
         return route.fulfill({ status: 204, headers: { 'access-control-allow-origin': '*' } })
       case '/functions/v1/live':

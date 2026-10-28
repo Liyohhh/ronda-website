@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../services/supabase'
+import { matchFeatured } from '../data/featuredPlaces'
 
 // Autocomplete data for the Start / End boxes: transit stops (search_stops RPC), our own OpenStreetMap places
 // (search_pois RPC: hotels, sights, malls) and any other place
-// (geocode Edge Function, OpenStreetMap). Debounced, cached per query for the session, and the
+// (geocode Edge Function, OpenStreetMap), with the featured places (data/featuredPlaces.ts) first. Debounced, cached per query for the session, and the
 // previous results stay on screen while new ones load so the list doesn't flicker.
 
 export type StopResult = {
@@ -117,9 +118,17 @@ export function useSmartSearch(query: string) {
     }
   }, [key])
 
+  const found = key.length < 3 ? [] : (placeCache.get(key) ?? placeRes)
+  const places = useMemo(() => {
+    const featured: PlaceResult[] = matchFeatured(key).map((f) => ({ name: f.name, detail: f.detail, lat: f.lat, lon: f.lon, kind: f.kind === 'shopping' ? 'mall' : 'place', osm: f.osm }))
+    // the same building under another OpenStreetMap id (a shop node inside the mall) goes too: within about 80 m, same name
+    const same = (p: PlaceResult) => featured.some((f) => f.osm === p.osm ||
+      (Math.abs(f.lat - p.lat) < 0.0008 && Math.abs(f.lon - p.lon) < 0.0008 && p.name.toLowerCase().includes(f.name.toLowerCase().split(' ')[0])))
+    return [...featured, ...found.filter((p) => !same(p))]
+  }, [key, found])
   return {
     stops: key.length < 2 ? [] : (stopCache.get(key) ?? stopRes),
-    places: key.length < 3 ? [] : (placeCache.get(key) ?? placeRes),
+    places,
     routeStops: !isCode ? [] : (routeCache.get(key) ?? routeRes),
     loading: (key.length >= 2 && !stopCache.has(key)) || (key.length >= 3 && !placeCache.has(key)) || (isCode && !routeCache.has(key)),
   }

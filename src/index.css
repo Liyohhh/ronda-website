@@ -74,6 +74,8 @@
 /* RONDA 300 map: the callout over the place picked in the list */
 .r3-callout .maplibregl-popup-content { border-radius: 14px; padding: 8px 12px; box-shadow: 0 10px 24px -8px rgb(34 45 82 / 0.35); }
 .r3-callout .maplibregl-popup-tip { display: none; }
+.r3-pincard .maplibregl-popup-content { padding: 12px 14px; }
+.r3-pincard .maplibregl-popup-close-button { top: 6px; right: 8px; font-size: 18px; color: #6B675E; }
 /* its zoom buttons: one white pill with a soft shadow, as on Klook's map */
 .r3-map .maplibregl-ctrl-group { border-radius: 999px; overflow: hidden; box-shadow: 0 8px 20px -8px rgb(34 45 82 / 0.35); }
 .r3-map .maplibregl-ctrl-group button { width: 38px; height: 38px; }
@@ -81,9 +83,12 @@
 .r3-bubble { display: flex; align-items: center; gap: 6px; background: #222D52; color: #fff; border-radius: 4px; padding: 3px 4px 3px 8px; font: 500 11.5px/1.3 inherit; white-space: nowrap; cursor: pointer; box-shadow: 0 2px 6px rgb(0 0 0 / 0.18); }
 .r3-bubble:hover, .r3-bubble:focus-visible { background: #2f3d6e; outline: none; }
 .r3-bubble-n { background: #D2B68A; color: #222D52; border-radius: 3px; padding: 0 5px; font-variant-numeric: tabular-nums; }
-.r3-photo { width: 42px; height: 42px; border-radius: 50%; padding: 2px; background: #222D52; box-shadow: 0 3px 10px rgb(0 0 0 / 0.25); cursor: pointer; transition: width .15s, height .15s; }
+.r3-photo { width: 42px; height: 42px; border-radius: 50%; padding: 2px; background: #D2B68A; box-shadow: 0 3px 10px rgb(0 0 0 / 0.25); cursor: pointer; transition: width .15s, height .15s; }
 .r3-photo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2.5px solid #fff; display: block; }
-.r3-photo.on, .r3-photo:hover, .r3-photo:focus-visible { width: 56px; height: 56px; background: #D2B68A; outline: none; z-index: 2; }
+.r3-photo.on, .r3-photo:hover, .r3-photo:focus-visible { width: 56px; height: 56px; background: #222D52; outline: none; z-index: 2; }
+/* the marker itself is absolutely placed by MapLibre, so the badge sits against it */
+.r3-star { position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; border-radius: 50%; background: #222D52; border: 1.5px solid #fff; display: grid; place-items: center; box-shadow: 0 1px 4px rgb(0 0 0 / 0.3); }
+.r3-star svg { width: 12px; height: 12px; fill: #D2B68A; }
 
 
 /* One page grid for the home page, header and footer (Blaze layout): every block starts on the same left edge.
@@ -370,3 +375,9 @@ body {
 .pm-pin, .pm-pin-dot { transition: fill .2s ease; }
 .group:hover .pm-pin, .group:focus-within .pm-pin { fill: #222D52; }
 .group:hover .pm-pin-dot, .group:focus-within .pm-pin-dot { fill: #D2B68A; }
+
+/* password fields have their own show / hide button; hide Edge's built-in one so there aren't two */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}

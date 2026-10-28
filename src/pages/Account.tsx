@@ -3,11 +3,13 @@ import type { User } from '@supabase/supabase-js'
 import { useNavigate } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import PageHero from '../components/PageHero'
-import { AuthField } from '../components/AuthLayout'
+import { AuthField, PasswordChecklist, PasswordField } from '../components/AuthLayout'
+import { PASSWORD_MAX, passwordOk, passwordRules } from '../data/passwordRules'
 import { supabase } from '../services/supabase'
 import { useLanguage } from '../hooks/useLanguage'
 import { SUPPORT_EMAIL } from '../data/contact'
 import { useSession } from '../hooks/useSession'
+import { authErrorKey } from '../services/auth'
 
 // /account (signed in): name, password, sign out everywhere, delete the account (PDPA: the person can remove
 // their data themselves). Deleting goes through the delete-account Edge Function (needs the server key).
@@ -58,12 +60,12 @@ function AccountForms({ user }: { user: User }) {
 
   const savePassword = async (e: FormEvent) => {
     e.preventDefault()
-    if (pw.length < 8) return setPwMsg({ kind: 'error', text: t('passwordTooShort') })
+    if (!passwordOk(pw, user.email)) return setPwMsg({ kind: 'error', text: t('pwNotStrong') })
     if (pw !== pw2) return setPwMsg({ kind: 'error', text: t('passwordsMismatch') })
     setBusy('pw')
     const { error } = await supabase.auth.updateUser({ password: pw })
     setBusy('')
-    if (error) return setPwMsg({ kind: 'error', text: error.message })
+    if (error) return setPwMsg({ kind: 'error', text: t(authErrorKey(error) ?? 'authErrGeneric') })
     setPw('')
     setPw2('')
     setPwMsg({ kind: 'ok', text: t('accountPasswordSaved') })
@@ -113,8 +115,9 @@ function AccountForms({ user }: { user: User }) {
           {hasPassword && (
             <form onSubmit={savePassword} className="mb-6">
               <h3 className="mb-2 font-medium text-gray-900">{t('accountPassword')}</h3>
-              <AuthField label={t('newPassword')} type="password" autoComplete="new-password" minLength={8} value={pw} onChange={(e) => setPw(e.target.value)} required />
-              <AuthField label={t('confirmPassword')} type="password" autoComplete="new-password" minLength={8} value={pw2} onChange={(e) => setPw2(e.target.value)} required />
+              <PasswordField id="acct-password" label={t('newPassword')} autoComplete="new-password" minLength={8} maxLength={PASSWORD_MAX} aria-describedby="acct-password-rules" value={pw} onChange={(e) => setPw(e.target.value)} required />
+              <PasswordChecklist id="acct-password-rules" rules={passwordRules(pw, user.email)} />
+              <PasswordField id="acct-password2" label={t('confirmPassword')} autoComplete="new-password" maxLength={PASSWORD_MAX} value={pw2} onChange={(e) => setPw2(e.target.value)} required />
               <button type="submit" disabled={busy !== ''} className={`${btn} bg-[#222D52] text-white hover:bg-[#18203D]`}>{t('resetSave')}</button>
               {pwMsg && <Note kind={pwMsg.kind}>{pwMsg.text}</Note>}
             </form>
