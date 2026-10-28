@@ -2024,6 +2024,323 @@
    },
    "walkMeters": 302,
    "todo": "No train station within 5 km; bus T772"
+  },
+  {
+   "id": "muziumSultanAlamShah",
+   "name": "Muzium Sultan Alam Shah",
+   "address": "Persiaran Bandaraya, Seksyen 14, 40604 Shah Alam",
+   "walkMeters": 932,
+   "station": {
+    "name": "LRT Dato' Menteri",
+    "search": "LRT Dato' Menteri - Sa Sentral",
+    "lineIds": [
+     "lrt-shah-alam"
+    ],
+    "feedId": "rapid-rail-kl",
+    "stopId": "SA12"
+   }
+  },
+  {
+   "id": "iCity",
+   "name": "i-City",
+   "todo": "Ticket prices and hours: TODO (iticket.i-city.my)",
+   "address": "Jalan Siber, i-City, Seksyen 7, Shah Alam",
+   "walkMeters": 961,
+   "station": {
+    "name": "LRT Seksyen 7",
+    "search": "LRT Seksyen 7",
+    "lineIds": [
+     "lrt-shah-alam"
+    ],
+    "feedId": "rapid-rail-kl",
+    "stopId": "SA15"
+   }
+  },
+  {
+   "id": "galeriDirajaSultanAbdulAziz",
+   "name": "Galeri Diraja Sultan Abdul Aziz (Royal Gallery)",
+   "address": "Jalan Dato Hamzah, 41000 Klang",
+   "walkMeters": 254,
+   "station": {
+    "name": "KTM Klang",
+    "search": "KTM Klang",
+    "lineIds": [
+     "ktm-port-klang"
+    ],
+    "feedId": "ktmb",
+    "stopId": "54700"
+   }
+  },
+  {
+   "id": "littleIndiaKlang",
+   "name": "Little India Klang (Jalan Tengku Kelana)",
+   "address": "Jalan Tengku Kelana, 41000 Klang",
+   "walkMeters": 762,
+   "station": {
+    "name": "KTM Klang",
+    "search": "KTM Klang",
+    "lineIds": [
+     "ktm-port-klang"
+    ],
+    "feedId": "ktmb",
+    "stopId": "54700"
+   }
+  },
+  {
+   "id": "istanaAlamShah",
+   "name": "Istana Alam Shah",
+   "todo": "Not open to visitors; walk is to the middle of the palace grounds",
+   "address": "Jalan Istana, 41000 Klang",
+   "walkMeters": 1048,
+   "station": {
+    "name": "KTM Klang",
+    "search": "KTM Klang",
+    "lineIds": [
+     "ktm-port-klang"
+    ],
+    "feedId": "ktmb",
+    "stopId": "54700"
+   }
+  },
+  {
+   "id": "masjidDirajaSultanSulaiman",
+   "name": "Masjid Diraja Sultan Sulaiman",
+   "address": "Jalan Raja Jumaat, 41000 Klang",
+   "walkMeters": 1138,
+   "station": {
+    "name": "KTM Klang",
+    "search": "KTM Klang",
+    "lineIds": [
+     "ktm-port-klang"
+    ],
+    "feedId": "ktmb",
+    "stopId": "54700"
+   }
+  },
+  {
+   "id": "dataranPutra",
+   "name": "Dataran Putra (Putra Square)",
+   "todo": "Bus P101 to \"Putra Square\"",
+   "address": "Presint 1, 62514 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "search": "MRT Putrajaya Sentral",
+    "lineIds": [
+     "mrt-putrajaya"
+    ],
+    "feedId": "rapid-rail-kl",
+    "stopId": "PY41"
+   }
+  },
+  {
+   "id": "tamanWetlandPutrajaya",
+   "name": "Taman Wetland Putrajaya",
+   "todo": "Bus TODO: OSM bus stop \"Taman Wetland Putrajaya\" (PPJ295) has no route in RONDA's data",
+   "address": "Presint 13, 62502 Putrajaya",
+   "station": {
+    "name": "MRT Putrajaya Sentral",
+    "search": "MRT Putrajaya Sentral",
+    "lineIds": [
+     "mrt-putrajaya"
+    ],
+    "feedId": "rapid-rail-kl",
+    "stopId": "PY41"
+   }
+  },
+  {
+   "id": "masjidSultanAhmadShah",
+   "name": "Masjid Sultan Ahmad Shah (Pahang State Mosque)",
+   "todo": "Kota SAS = the Kuantan town station; not in OSM yet, distance TODO",
+   "address": "Jalan Masjid, 25503 Kuantan",
+   "station": {
+    "name": "ECRL Kota SAS",
+    "search": "ECRL Kota SAS",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kota SAS"
+   }
+  },
+  {
+   "id": "telukCempedak",
+   "name": "Teluk Cempedak",
+   "todo": "Kota SAS = the Kuantan town station; not in OSM yet, distance TODO",
+   "address": "Teluk Cempedak, 25050 Kuantan",
+   "station": {
+    "name": "ECRL Kota SAS",
+    "search": "ECRL Kota SAS",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kota SAS"
+   }
+  },
+  {
+   "id": "pantaiBalok",
+   "name": "Pantai Balok",
+   "todo": "5.5 km from the station in a straight line",
+   "address": "Kampung Balok, 26100 Kuantan",
+   "station": {
+    "name": "ECRL Kuantan Port City",
+    "search": "ECRL Kuantan Port City",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kuantan Port City"
+   }
+  },
+  {
+   "id": "pantaiCherating",
+   "name": "Pantai Cherating",
+   "todo": "3.9 km from the station in a straight line",
+   "address": "Cherating, Kuantan, Pahang",
+   "station": {
+    "name": "ECRL Cherating",
+    "search": "ECRL Cherating",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Cherating"
+   }
+  },
+  {
+   "id": "cheratingTurtleSanctuary",
+   "name": "Cherating Turtle Sanctuary",
+   "todo": "3.8 km from the station in a straight line; opening hours TODO (Department of Fisheries site down 28 Oct 2026)",
+   "address": "Jalan Kuantan - Kuala Terengganu, Kampung Kubang Ikan, Kuantan",
+   "station": {
+    "name": "ECRL Cherating",
+    "search": "ECRL Cherating",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Cherating"
+   }
+  },
+  {
+   "id": "pantaiKemasik",
+   "name": "Pantai Kemasik",
+   "todo": "10.4 km from the station in a straight line",
+   "address": "Jalan Kuantan - Kuala Terengganu, 24100 Kemasik, Kemaman",
+   "station": {
+    "name": "ECRL Kemasik",
+    "search": "ECRL Kemasik",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kemasik"
+   }
+  },
+  {
+   "id": "pulauKapas",
+   "name": "Pulau Kapas (Marang jetty)",
+   "todo": "Jetty 12.8 km from the station in a straight line; boat times and fares TODO (local operators)",
+   "address": "Jalan Tanah Lot Bandar Marang, 21600 Marang",
+   "station": {
+    "name": "ECRL Kuala Terengganu",
+    "search": "ECRL Kuala Terengganu",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kuala Terengganu"
+   }
+  },
+  {
+   "id": "masjidTerapung",
+   "name": "Masjid Tengku Tengah Zaharah (Floating Mosque)",
+   "todo": "14.8 km from the station in a straight line",
+   "address": "Jalan Sultan Mahmud, 21080 Kuala Terengganu",
+   "station": {
+    "name": "ECRL Kuala Terengganu",
+    "search": "ECRL Kuala Terengganu",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kuala Terengganu"
+   }
+  },
+  {
+   "id": "masjidKristal",
+   "name": "Masjid Kristal (Crystal Mosque)",
+   "todo": "16.8 km from the station in a straight line",
+   "address": "Persiaran Abdul Rahman Limbong, 21000 Kuala Terengganu",
+   "station": {
+    "name": "ECRL Kuala Terengganu",
+    "search": "ECRL Kuala Terengganu",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kuala Terengganu"
+   }
+  },
+  {
+   "id": "pasarPayang",
+   "name": "Pasar Payang",
+   "todo": "18.7 km from the station in a straight line",
+   "address": "Jalan Kampung Daik, 20100 Kuala Terengganu",
+   "station": {
+    "name": "ECRL Kuala Terengganu",
+    "search": "ECRL Kuala Terengganu",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kuala Terengganu"
+   }
+  },
+  {
+   "id": "kampungCinaKt",
+   "name": "Kampung Cina (Chinatown)",
+   "todo": "18.3 km from the station in a straight line",
+   "address": "Jalan Kampung Cina, 20100 Kuala Terengganu",
+   "station": {
+    "name": "ECRL Kuala Terengganu",
+    "search": "ECRL Kuala Terengganu",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kuala Terengganu"
+   }
+  },
+  {
+   "id": "pulauRedang",
+   "name": "Pulau Redang (Shahbandar Jetty)",
+   "todo": "Jetty 18.9 km from the station in a straight line; boat times and fares TODO (operators)",
+   "address": "Jalan Tok Lam, 20000 Kuala Terengganu",
+   "station": {
+    "name": "ECRL Kuala Terengganu",
+    "search": "ECRL Kuala Terengganu",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Kuala Terengganu"
+   }
+  },
+  {
+   "id": "pulauPerhentian",
+   "name": "Pulau Perhentian (Kuala Besut jetty)",
+   "todo": "Jerteh station not in OSM yet, distance TODO; boat times and fares TODO (operators)",
+   "address": "Lorong Tujuh, 22300 Kuala Besut",
+   "station": {
+    "name": "ECRL Jerteh",
+    "search": "ECRL Jerteh",
+    "lineIds": [
+     "ecrl"
+    ],
+    "feedId": "ecrl",
+    "stopId": "Jerteh"
+   }
   }
  ],
  "trails": [
@@ -2129,9 +2446,44 @@
    "category": "culture"
   },
   {
-   "key": "putrajaya",
-   "slug": "putrajaya",
+   "slug": "explore-selangor",
+   "key": "exploreSelangor",
+   "category": "explore",
    "stops": [
+    {
+     "placeId": "muziumSultanAlamShah"
+    },
+    {
+     "placeId": "masjidShahAlam"
+    },
+    {
+     "placeId": "tamanTasikShahAlam"
+    },
+    {
+     "placeId": "iCity"
+    },
+    {
+     "placeId": "galeriDirajaSultanAbdulAziz"
+    },
+    {
+     "placeId": "littleIndiaKlang"
+    },
+    {
+     "placeId": "istanaAlamShah"
+    },
+    {
+     "placeId": "masjidDirajaSultanSulaiman"
+    }
+   ]
+  },
+  {
+   "slug": "putrajaya",
+   "key": "explorePutrajaya",
+   "category": "explore",
+   "stops": [
+    {
+     "placeId": "dataranPutra"
+    },
     {
      "placeId": "perdanaPutra"
     },
@@ -2154,10 +2506,65 @@
      "placeId": "tamanBotaniPutrajaya"
     },
     {
+     "placeId": "tamanWetlandPutrajaya"
+    },
+    {
      "placeId": "tamanSaujanaHijau"
     }
-   ],
-   "category": "explore"
+   ]
+  },
+  {
+   "slug": "explore-pahang",
+   "key": "explorePahang",
+   "category": "explore",
+   "stops": [
+    {
+     "placeId": "masjidSultanAhmadShah"
+    },
+    {
+     "placeId": "telukCempedak"
+    },
+    {
+     "placeId": "pantaiBalok"
+    },
+    {
+     "placeId": "pantaiCherating"
+    },
+    {
+     "placeId": "cheratingTurtleSanctuary"
+    }
+   ]
+  },
+  {
+   "slug": "explore-terengganu",
+   "key": "exploreTerengganu",
+   "category": "explore",
+   "stops": [
+    {
+     "placeId": "pantaiKemasik"
+    },
+    {
+     "placeId": "pulauKapas"
+    },
+    {
+     "placeId": "masjidTerapung"
+    },
+    {
+     "placeId": "masjidKristal"
+    },
+    {
+     "placeId": "pasarPayang"
+    },
+    {
+     "placeId": "kampungCinaKt"
+    },
+    {
+     "placeId": "pulauRedang"
+    },
+    {
+     "placeId": "pulauPerhentian"
+    }
+   ]
   },
   {
    "key": "food",

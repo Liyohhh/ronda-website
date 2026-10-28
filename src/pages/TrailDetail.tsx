@@ -16,6 +16,7 @@ import {
   cuisineKey,
   dietKey,
   findTrail,
+  inPlanner,
   placeBlurbKey,
   trailDescKey,
   trailNameKey,
@@ -124,7 +125,7 @@ function TrailDetail() {
               {end && end.name !== start?.name && stationRow(t('trailEndLabel'), end)}
             </dl>
             <div className="mt-5 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-2 md:mt-auto">
-              {start && (
+              {start && inPlanner(start) && (
                 <Link
                   to={planHref(start)}
                   className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#222D52] text-white text-sm font-semibold hover:bg-[#18203D] transition-colors"
@@ -245,6 +246,12 @@ function TrailDetail() {
                         ) : (
                           <li className="text-gray-500 italic">{t('stationTbc')}</li>
                         )}
+                        {place.station && !inPlanner(place.station) && (
+                          <li className="flex items-center gap-2">
+                            <span className="w-5 flex justify-center flex-shrink-0"><Icon name="scheduleOutline" size={18} className="text-gray-500" /></span>
+                            {t('trailEcrlNote')}
+                          </li>
+                        )}
                         {place.station && place.walkMeters != null && (
                           <li className="flex items-center gap-2">
                             <span className="w-5 flex justify-center flex-shrink-0"><Icon name="directionsWalk" size={18} className="text-gray-500" /></span>
@@ -261,7 +268,7 @@ function TrailDetail() {
 
                       {/* footer: plan button, and whether it's open right now */}
                       <div className="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                        {place.station ? (
+                        {place.station && inPlanner(place.station) ? (
                           <Link
                             to={planHref(place.station)}
                             className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#222D52] text-white text-sm font-semibold hover:bg-[#18203D] transition-colors"

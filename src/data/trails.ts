@@ -66,5 +66,8 @@ export const placeBlurbKey = (id: string) => `place_${id}` as TranslationKey
 export const categoryKey = (c: TrailCategory) => `trailCat_${c}` as TranslationKey
 export const weekdayKey = (d: Weekday) => `day_${d}` as TranslationKey
 
+// ECRL stations (feedId 'ecrl') have no timetable yet: no trip planning to them, the trail page says when it opens
+export const inPlanner = (s: Station) => !s.lineIds.includes('ecrl')
+
 // first known station of a trail (for the card footer)
 export const firstStation = (t: Trail, places: Record<string, Place>) => t.stops.map((s) => places[s.placeId]?.station).find(Boolean) ?? null

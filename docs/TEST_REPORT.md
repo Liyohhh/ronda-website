@@ -1,5 +1,27 @@
 # Test report
 
+## Run - 28 Oct 2026 (Explore trails: Selangor, Putrajaya, Pahang, Terengganu)
+
+- Four trails in Explore: Explore Selangor (8 stops: Shah Alam by LRT Shah Alam Line, Klang by KTM), Explore
+  Putrajaya (the old Putrajaya Trail, same link, now 10 stops with Dataran Putra and Taman Wetland), Explore Pahang
+  (5 stops by ECRL: Kuantan, Teluk Cempedak, Balok, Cherating) and Explore Terengganu (8 stops by ECRL: Kemasik,
+  Kuala Terengganu, and the jetties for Kapas, Redang and Perhentian).
+- Places from OpenStreetMap (position, address); walks from the station by OSM foot routing; names and blurbs in
+  English, Malay, Chinese and Arabic; a photo for every new stop and the 3 new covers (Wikimedia Commons, credits in
+  docs/RONDA_Photo_Credits.xlsx and the About page list).
+- ECRL stops: the stop card says "ECRL station: the line opens 12 Dec 2026. Not in trip planning yet." and has no
+  plan button; ECRL stations are left out of RONDA 300 (no timetable to plan with).
+- Database: migration 20261028120000_trails_explore_states.sql applied to production 28 Oct 2026 (owner approved).
+  Production trails_data() checked against the e2e trails fixture: all 26 live trails and 150 places match exactly.
+  The fixture also keeps the Paintball and Karting trails (3 places): their migration 20261015180000 is not live yet.
+  Playwright trails rerun after applying: 10 / 10.
+- Unit 229 / 229 (new: ECRL stations stay out of RONDA 300). Type check and lint clean. Playwright trails 10 / 10
+  (new: the four Explore trails listed; Explore Pahang shows the ECRL note on all 5 stops and no plan buttons;
+  Explore Selangor keeps its 8). CSP passed. RONDA 300 desktop test fails ("0 places in this area") with the old
+  fixture too: comes from the RONDA 300 work in progress, not from this change.
+- Open: KotaSAS and Jerteh ECRL stations are not on OpenStreetMap yet (distance to Kuantan town and Kuala Besut TODO);
+  Taman Wetland Putrajaya bus route TODO; island boat times and fares TODO; turtle sanctuary hours TODO.
+
 ## Latest run - 28 Oct 2026 (RONDA 300: Mosque and Religion sections, sticky header, merchant section)
 
 - Places of worship split: mosques and surau (OpenStreetMap religion "muslim") under Mosque; temples, churches,
@@ -15,6 +37,10 @@
   buildings, park, river and a gold pin; a station with its 300 m ring, twin towers and hotels, the walk to a row of
   stalls. Checked with headless Edge at 1440 px and 375 px: nothing cut off.
   The wide banner keeps its photo; the three card photos are no longer used, so they left the About credits.
+- Promotion cards revised on owner feedback: the Offers card's plain coloured blocks are now market stalls with
+  striped awnings and goods on the counter, with riders in front (a discount tag was tried and removed); trains on
+  all three cards now sit on the viaduct deck with windows, a side stripe in the line's colour and a coloured front
+  car. Checked with headless Edge at 1440 px; PromotionSection tests 4 / 4, type check clean. Owner approved.
 - Checked with headless Edge at 1440 px with live data at Pasar Seni: tabs All 152, Eat 103, Sights 5, Parks 1,
   Shop 1, Stay 26, Mosque 2, Religion 5, Bank 2, Useful 7. Unit test added for the sorting.
 

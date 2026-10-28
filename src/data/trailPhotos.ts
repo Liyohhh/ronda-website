@@ -37,6 +37,10 @@ export const TRAIL_PHOTOS: Record<string, TrailPhoto> = {
   // 26 Oct 2026: covers for the last two trails (Flickr through Openverse): a plated dish, and Putrajaya Challenge Park
   michelin: { src: 'https://live.staticflickr.com/3482/3462048736_0ef84fcd6b_b.jpg', author: 'Geoff Peters', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/', page: 'https://www.flickr.com/photos/54359128@N00/3462048736' },
   'extreme-park': { src: 'https://live.staticflickr.com/1788/29294647418_76109d5a73_b.jpg', author: 'U.S. Embassy Kuala Lumpur', license: 'Public domain', licenseUrl: 'https://creativecommons.org/publicdomain/mark/1.0/', page: 'https://www.flickr.com/photos/52445638@N06/29294647418', focus: '50% 10%' },
+  // 28 Oct 2026: covers for the Explore Selangor, Pahang and Terengganu trails, a photo of one of the stops (placePhotos.ts)
+  'explore-selangor': { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Sultan_Abdul_Aziz_Royal_Gallery_%28211027%29.jpg/1280px-Sultan_Abdul_Aziz_Royal_Gallery_%28211027%29.jpg', author: '*angys*', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0', page: 'https://commons.wikimedia.org/wiki/File:Sultan_Abdul_Aziz_Royal_Gallery_(211027).jpg' },
+  'explore-pahang': { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Cherating%2C_Malaysia%2C_Cherating_Beach.jpg/1280px-Cherating%2C_Malaysia%2C_Cherating_Beach.jpg', author: 'Vyacheslav Argenberg', license: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0', page: 'https://commons.wikimedia.org/wiki/File:Cherating,_Malaysia,_Cherating_Beach.jpg' },
+  'explore-terengganu': { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Crystal_Mosque_in_2016.jpg/1280px-Crystal_Mosque_in_2016.jpg', author: 'Yun Huang Yong from Harbord, Australia', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0', page: 'https://commons.wikimedia.org/wiki/File:Crystal_Mosque_in_2016.jpg' },
 }
 
 // Home page slides ("Travel made effortless"): iconic KL places, same licence rules and credits as above.
