@@ -4,6 +4,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import { HelpLayout, CategoryIcon } from '../components/HelpLayout'
 import { HELP_ARTICLES, articleA, articleQ, findCategory } from '../data/helpCategories'
 import { RONDA300_MAP } from '../data/ronda300Link'
+import { FEEDBACK_EMAIL, SUPPORT_EMAIL } from '../data/contact'
 
 // links shown under an answer (pages the answer mentions)
 const MORE: Record<string, { to: string; label: 'footerCredits' | 'liveMapTitle' | 'navRonda300' }> = {
@@ -12,9 +13,8 @@ const MORE: Record<string, { to: string; label: 'footerCredits' | 'liveMapTitle'
   business: { to: RONDA300_MAP, label: 'navRonda300' },
 }
 
-// Business and service enquiries: an @ronda.com address, set at build time once it exists (VITE_CONTACT_EMAIL)
-const CONTACT_EMAIL = (import.meta.env.VITE_CONTACT_EMAIL as string | undefined) ?? ''
-const CONTACT_ARTICLES = ['business', 'services']
+// the address shown under an answer: support for help with RONDA and for partners, feedback for data riders spot
+const CONTACT: Record<string, 'support' | 'feedback'> = { business: 'support', services: 'support', genAccount: 'support', polRights: 'support', genData: 'feedback' }
 
 function HelpCategory() {
   const { t } = useLanguage()
@@ -61,10 +61,12 @@ function HelpCategory() {
                   </p>
                 )}
                 <p>{t(articleA(a.id))}</p>
-                {CONTACT_EMAIL && CONTACT_ARTICLES.includes(a.id) && (
+                {CONTACT[a.id] && (
                   <p className="mt-3 text-sm">
-                    {t('helpEmailUs')}{' '}
-                    <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-[#222D52] underline" dir="ltr">{CONTACT_EMAIL}</a>
+                    {t(CONTACT[a.id] === 'feedback' ? 'helpFeedbackUs' : 'helpEmailUs')}{' '}
+                    <a href={`mailto:${CONTACT[a.id] === 'feedback' ? FEEDBACK_EMAIL : SUPPORT_EMAIL}`} className="font-semibold text-[#222D52] underline" dir="ltr">
+                      {CONTACT[a.id] === 'feedback' ? FEEDBACK_EMAIL : SUPPORT_EMAIL}
+                    </a>
                   </p>
                 )}
                 {MORE[a.id] && (

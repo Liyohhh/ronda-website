@@ -7,7 +7,7 @@ import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
 import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
-import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
+import { PROMO_FEATURE } from '../data/promotions'
 import { AUTH_VIDEO } from '../data/authVideo'
 import { HERO_VIDEOS } from '../data/heroVideos'
 import EcrlCard from '../components/EcrlCard'
@@ -229,7 +229,7 @@ function About() {
                 {places[id].name}: <PhotoCredit photo={ph} />
               </li>
             ))}
-            {[PROMO_FEATURE, ...PROMOTIONS].map((p) => (
+            {[PROMO_FEATURE].map((p) => (
               <li key={`promo-${p.id}`}>
                 {p.photo.alt}: <PhotoCredit photo={p.photo} />
               </li>

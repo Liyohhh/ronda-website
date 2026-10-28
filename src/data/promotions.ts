@@ -1,14 +1,15 @@
 // Promotions on the home page. Every banner is an ad and is labelled "Ad" on screen.
 // For now these are RONDA's own house ads (so the section is never empty); later they will come from the
 // merchant tier in the database (paid placements), with the same shape. No tracking scripts, no third-party ad tags.
-// Photos from Wikimedia Commons (licence allows commercial use; credited on the banner and on the About page).
-// Chosen 9 Oct 2026 without recognisable brands or named shops, so no business looks like an advertiser it isn't.
+// The wide banner has a Wikimedia Commons photo (licence allows commercial use; credited on the About page), chosen
+// without recognisable brands or named shops; the smaller cards have small drawn maps (PromoMap), no photos.
 // All words stay real text so they translate and read aloud.
 // Never put an offer, price or discount here that a real partner has not given us in writing.
 
 import type { TranslationKey } from '../i18n/translations'
 import type { TrailPhoto } from './trailPhotos'
 import { RONDA300_MAP } from './ronda300Link'
+import type { PromoMapKind } from '../components/PromoMap'
 
 const commons = (path: string, file: string, width = 960) => `https://upload.wikimedia.org/wikipedia/commons/thumb/${path}/${file}/${width}px-${file}`
 
@@ -17,7 +18,7 @@ export type Promotion = {
   title: TranslationKey
   text: TranslationKey
   to: string
-  photo: TrailPhoto & { alt: string }
+  map: PromoMapKind
 }
 
 // the wide banner on top: photo with a navy fade, the three ad places as chips, one button
@@ -47,29 +48,7 @@ export const PROMO_FEATURE = {
 
 // the row of smaller cards under it
 export const PROMOTIONS: Promotion[] = [
-  {
-    id: 'ronda300', title: 'promoRonda300Title', text: 'promoRonda300Text', to: RONDA300_MAP,
-    photo: {
-      src: commons('9/9f', 'Teh_tarik_20260427_-_01.jpg'), alt: 'A glass of teh tarik',
-      author: 'Wiki Asmah', license: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0',
-      page: 'https://commons.wikimedia.org/wiki/File:Teh_tarik_20260427_-_01.jpg',
-    },
-  },
-  {
-    id: 'partners', title: 'promoPartnersTitle', text: 'promoPartnersText', to: '/help/general#business',
-    photo: {
-      src: commons('6/68', 'Kuala_Lumpur_skyline_and_Petronas_Twin_Towers_night_view_from_Kampung_Baru.jpg_05.jpg'),
-      alt: 'Rooftop pool with the Kuala Lumpur skyline at night',
-      author: 'ELIZABETH XIONG', license: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0',
-      page: 'https://commons.wikimedia.org/wiki/File:Kuala_Lumpur_skyline_and_Petronas_Twin_Towers_night_view_from_Kampung_Baru.jpg_05.jpg',
-    },
-  },
-  {
-    id: 'offers', title: 'promoOffersTitle', text: 'promoOffersText', to: '/help/general#business',
-    photo: {
-      src: commons('f/f8', 'Pasar_Malam_Rice_Stall.jpg'), alt: 'Dishes at a pasar malam rice stall',
-      author: 'Dr.Francostein1975', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0',
-      page: 'https://commons.wikimedia.org/wiki/File:Pasar_Malam_Rice_Stall.jpg',
-    },
-  },
+  { id: 'ronda300', title: 'promoRonda300Title', text: 'promoRonda300Text', to: RONDA300_MAP, map: 'ronda300' },
+  { id: 'partners', title: 'promoPartnersTitle', text: 'promoPartnersText', to: '/help/general#business', map: 'partners' },
+  { id: 'offers', title: 'promoOffersTitle', text: 'promoOffersText', to: '/help/general#business', map: 'offers' },
 ]

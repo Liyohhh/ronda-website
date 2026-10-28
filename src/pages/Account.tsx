@@ -6,11 +6,12 @@ import PageHero from '../components/PageHero'
 import { AuthField } from '../components/AuthLayout'
 import { supabase } from '../services/supabase'
 import { useLanguage } from '../hooks/useLanguage'
+import { SUPPORT_EMAIL } from '../data/contact'
 import { useSession } from '../hooks/useSession'
 
 // /account (signed in): name, password, sign out everywhere, delete the account (PDPA: the person can remove
 // their data themselves). Deleting goes through the delete-account Edge Function (needs the server key).
-const CONTACT_EMAIL = (import.meta.env.VITE_CONTACT_EMAIL as string | undefined) ?? ''
+const CONTACT_EMAIL = SUPPORT_EMAIL
 
 function Card({ title, children, danger = false }: { title: string; children: ReactNode; danger?: boolean }) {
   return (

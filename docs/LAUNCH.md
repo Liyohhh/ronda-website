@@ -2,17 +2,37 @@
 
 ## Owner (blocking)
 
-- [x] Domain bought (GoDaddy; stays there). Email @ronda.com on Exabytes.
-- [ ] Point the domain's nameservers (GoDaddy -> Nameservers) to the two Cloudflare gives; **first copy the Exabytes
-      email records (MX, SPF/TXT, DKIM, autodiscover) into Cloudflare DNS**, or email stops.
-- [ ] Create the Cloudflare account (add a card if asked; Pages and R2 free tiers apply).
+- [x] Domain bought: **ronda2u.com** at Exabytes (domain only, no hosting package), paid to 27 Oct 2029, auto-renew on.
+- [x] Cloudflare account created (free) and the nameservers pointed to it at Exabytes (27 Oct 2026:
+      carla.ns.cloudflare.com, chase.ns.cloudflare.com). All DNS records now live in Cloudflare.
+- [x] Email @ronda2u.com on Google Workspace Business Starter (27 Oct 2026). Cloudflare DNS has MX (smtp.google.com),
+      SPF and DKIM (checked 27 Oct 2026).
+- [ ] Add DMARC in Cloudflare: TXT `_dmarc` = `v=DMARC1; p=none; rua=mailto:admin@ronda2u.com`.
+- [ ] When the site is live on ronda2u.com: Supabase secret `ALLOWED_ORIGINS=https://ronda2u.com,https://www.ronda2u.com`
+      (ai-chat, delete-account), Supabase Auth Site URL and redirect URLs to https://ronda2u.com, and the Amazon SES
+      sender on ronda2u.com (add `include:amazonses.com` to the same SPF record, plus SES's DKIM records).
 - [ ] Supabase production setup (full scale from launch, owner decision 7 Oct 2026), about RM1,418 a month:
       Billing -> **Pro**; Project -> Settings -> Compute and Disk -> **Large** (2 dedicated vCPU, 8 GB; under 2 min
       downtime, do it 8 Oct); Add-ons -> **PITR 7 days**; Database -> Read Replicas -> **1 replica** (Singapore);
       Billing -> Spend cap **off** (PITR is not covered by it anyway). Re-run the load test afterwards.
 - [ ] Supabase -> Authentication -> turn on leaked password protection.
 - [ ] Supabase -> Project Settings -> Vault: secret `discord_webhook_url` (alerts to Discord).
-- [ ] When the `@ronda.com` business address exists: set `VITE_CONTACT_EMAIL` on Pages (Help shows it).
+- [x] Official addresses (28 Oct 2026, in `src/data/contact.ts`): support@ronda2u.com (help for riders and partners,
+      shown in Help and Account) and feedback@ronda2u.com (rider feedback, shown in Help). admin@ronda2u.com is for
+      RONDA's own accounts (Cloudflare, AWS, Supabase, app stores, codes and bills) and is never shown on the site.
+
+## Ready for 50,000 users (agreed 28 Oct 2026)
+
+- [ ] Supabase: Pro + Large compute chosen (about RM551 a month with SST); the owner pays and switches later and says
+      so first, so no import is running at the time. admin@ronda2u.com is an Owner of the Supabase organisation.
+- [ ] After the switch: run `npm run test:load` in the database repo on Large and record p95 per endpoint
+      (checklist G12-16).
+- [ ] Self-host Photon geocoding for Malaysia only, likely on the AWS walking-router server; the public Photon server
+      is fair-use and may block RONDA (G12-17).
+- [ ] Remove the tile.openstreetmap.org fallback in `src/services/mapStyle.ts` and always use our PMTiles on R2;
+      OpenStreetMap's tile policy does not allow public apps (G12-18).
+- [x] Per-IP rate limits on plan-trip, geocode and live: already in place since 2 Oct 2026 (120 / 120 / 240 a minute,
+      G12-05). Re-check the limits against the load test results.
 
 ## After launch (not needed on 10 Oct)
 

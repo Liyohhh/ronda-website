@@ -78,6 +78,12 @@
 .r3-map .maplibregl-ctrl-group { border-radius: 999px; overflow: hidden; box-shadow: 0 8px 20px -8px rgb(34 45 82 / 0.35); }
 .r3-map .maplibregl-ctrl-group button { width: 38px; height: 38px; }
 .r3-map .maplibregl-ctrl-top-right { margin: 6px; }
+.r3-bubble { display: flex; align-items: center; gap: 6px; background: #222D52; color: #fff; border-radius: 4px; padding: 3px 4px 3px 8px; font: 500 11.5px/1.3 inherit; white-space: nowrap; cursor: pointer; box-shadow: 0 2px 6px rgb(0 0 0 / 0.18); }
+.r3-bubble:hover, .r3-bubble:focus-visible { background: #2f3d6e; outline: none; }
+.r3-bubble-n { background: #D2B68A; color: #222D52; border-radius: 3px; padding: 0 5px; font-variant-numeric: tabular-nums; }
+.r3-photo { width: 42px; height: 42px; border-radius: 50%; padding: 2px; background: #222D52; box-shadow: 0 3px 10px rgb(0 0 0 / 0.25); cursor: pointer; transition: width .15s, height .15s; }
+.r3-photo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2.5px solid #fff; display: block; }
+.r3-photo.on, .r3-photo:hover, .r3-photo:focus-visible { width: 56px; height: 56px; background: #D2B68A; outline: none; z-index: 2; }
 
 
 /* One page grid for the home page, header and footer (Blaze layout): every block starts on the same left edge.
@@ -359,3 +365,8 @@ body {
   border-radius: 9999px;
   padding: 1px;
 }
+
+/* home promotion cards: the gold pin on the drawn city turns navy while the card is pointed at */
+.pm-pin, .pm-pin-dot { transition: fill .2s ease; }
+.group:hover .pm-pin, .group:focus-within .pm-pin { fill: #222D52; }
+.group:hover .pm-pin-dot, .group:focus-within .pm-pin-dot { fill: #D2B68A; }

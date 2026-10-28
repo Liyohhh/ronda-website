@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Icon from './Icon'
+import PromoMap from './PromoMap'
 import { Accent, Eyebrow, Reveal } from './Motion'
 import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
 import { useLanguage } from '../hooks/useLanguage'
@@ -23,9 +24,16 @@ function PromotionSection() {
   const { t } = useLanguage()
   const f = PROMO_FEATURE
 
-  const photo = (p: typeof f | (typeof PROMOTIONS)[number], className: string) => (
+  const photo = (className: string) => (
     <div className={`relative overflow-hidden rounded-[20px] bg-[#222D52] ${className}`}>
-      <img src={p.photo.src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
+      <img src={f.photo.src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
+      <span className="absolute top-3 start-3"><AdTag text={t('promoAdLabel')} /></span>
+    </div>
+  )
+  // the smaller cards: a small drawn map instead of a photo
+  const map = (p: (typeof PROMOTIONS)[number]) => (
+    <div className="relative h-40 overflow-hidden rounded-[20px] ring-1 ring-inset ring-[#E4DED3]">
+      <PromoMap kind={p.map} className="absolute inset-0 h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
       <span className="absolute top-3 start-3"><AdTag text={t('promoAdLabel')} /></span>
     </div>
   )
@@ -50,7 +58,7 @@ function PromotionSection() {
         <ul className="grid gap-3 sm:grid-cols-3">
           {/* the wide banner: photo beside the words */}
           <li data-promo={f.id} className="group relative sm:col-span-3 grid md:grid-cols-[1fr_1.15fr] gap-2 p-2 rounded-[28px] bg-white ring-1 ring-inset ring-[#DCD4C8]">
-            {photo(f, 'min-h-[200px] md:min-h-[260px]')}
+            {photo('min-h-[200px] md:min-h-[260px]')}
             <div className="flex flex-col justify-center gap-5 p-4 md:p-6">
               <div>
                 <h3 className="text-xl md:text-2xl font-semibold tracking-[-0.01em] text-[#222D52]">
@@ -76,7 +84,7 @@ function PromotionSection() {
           {/* the smaller cards: photo on top, words below */}
           {PROMOTIONS.map((p) => (
             <li key={p.id} data-promo={p.id} className="group relative flex flex-col gap-2 p-2 rounded-[28px] bg-white ring-1 ring-inset ring-[#DCD4C8]">
-              {photo(p, 'h-40')}
+              {map(p)}
               <div className="flex flex-1 items-start justify-between gap-3 p-3">
                 <div>
                   <h3 className="font-semibold leading-snug text-[#222D52]">

@@ -6,8 +6,8 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { useLanguage } from '../hooks/useLanguage'
 import { mapConfig, softMapStyle } from '../services/mapStyle'
 import type { RailStation } from '../hooks/useRailStations'
-import { KIND_COLOR, KIND_ICON, PLACE_KINDS, placeName, walkMinutes, type NearPlace } from '../services/places'
-import { ICONS } from '../data/icons'
+import { KIND_COLOR, PLACE_KINDS, placeName, walkMinutes, type NearPlace } from '../services/places'
+import { PLACE_GLYPH } from '../data/placeIcons'
 import { LINES, lineBadgeSvg } from '../data/lines'
 
 maplibregl.setWorkerUrl(workerUrl)
@@ -17,15 +17,19 @@ try {
   // already added by another map on the page
 }
 
-// The RONDA 300 map (the right half of the RONDA 300 page): the rail stations (small dots in their lines' official
+// The RONDA 300 map (the left of the RONDA 300 page): the rail stations (small dots in their lines' official
 // colours from afar, each line's badge with the station's name closer in), a dashed 300 m ring (about 5 minutes on
-// foot) around each station whose places are shown, and those places as round markers with their kind's icon. It reports the area in view after every move (the list beside it follows the map).
+// foot) around the station in focus, a label over each other station in view with how many places are around it,
+// the places as small dots in their kind's colour (the one picked or pointed at grows into a marker with its kind's
+// drawing), and the hand-picked places that have a photo as round photo pins. It reports the area in view after every move (the panel beside it follows).
 // Pointing at a place in the list puts a callout over it (name and walk, as Rome2rio labels its stops); pressing a
 // place's dot picks it in the list; pressing a station flies in to it. Soft basemap without the map's own shop icons.
 
 export type AreaPlace = NearPlace & { station: string } // distance_m is from that station
 export type MapView = { bounds: maplibregl.LngLatBounds; zoom: number }
 export type FlyTarget = { lat: number; lon: number; zoom: number; n: number } // n: a new number for every fly
+export type StationBubble = { station: RailStation; count: number } // places within 300 m
+export type PhotoPin = { id: string; lat: number; lon: number; src: string; name: string }
 
 // map images drawn from our own SVGs: a round marker per kind of place (the kind's colour, a white icon, a white
 // edge) and each line's badge for the stations; drawn at twice the size for sharp screens
@@ -37,13 +41,14 @@ function svgImage(svg: string) {
     img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
   })
 }
-const kindMarker = (color: string, icon: string) =>
-  `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="${color}" stroke="#FFFFFF" stroke-width="4"/>` +
-  `<g transform="translate(15 15) scale(1.0833)" color="#FFFFFF">${icon}</g></svg>`
+// the place picked or pointed at: a white disc ringed in the kind's colour, its drawing inside in the same colour
+const kindMarker = (color: string, glyph: string) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFFFFF" stroke="${color}" stroke-width="3"/>` +
+  `<g transform="translate(18 18) scale(1.1667)" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${glyph}</g></svg>`
 async function addImages(map: maplibregl.Map) {
   const add = async (id: string, svg: string) => { if (!map.hasImage(id)) map.addImage(id, await svgImage(svg), { pixelRatio: 2 }) }
   await Promise.all([
-    ...PLACE_KINDS.map((k) => add(`kind-${k}`, kindMarker(KIND_COLOR[k], ICONS[KIND_ICON[k] as keyof typeof ICONS] ?? ''))),
+    ...PLACE_KINDS.map((k) => add(`kind-${k}`, kindMarker(KIND_COLOR[k], PLACE_GLYPH[k]))),
     ...LINES.map((l) => add(`line-${l.id}`, lineBadgeSvg(l, { title: false }).replace('width="48" height="48"', 'width="56" height="56"'))),
   ])
 }
@@ -61,18 +66,26 @@ function ring(lat: number, lon: number, m: number, n = 48): [number, number][] {
 function Ronda300Map({
   stations,
   rings,
+  bubbles,
+  pins,
+  activePin,
   places,
   active,
   fly,
   onPickPlace,
+  onPickPin,
   onView,
 }: {
   stations: RailStation[]
-  rings: RailStation[] // the stations whose places are shown
+  rings: RailStation[] // the station in focus (its 300 m)
+  bubbles: StationBubble[]
+  pins: PhotoPin[]
+  activePin: string | null
   places: AreaPlace[]
   active: string | null
   fly: FlyTarget
   onPickPlace: (osmId: string) => void
+  onPickPin: (id: string) => void
   onView: (v: MapView) => void
 }) {
   const { t, lang } = useLanguage()
@@ -81,9 +94,10 @@ function Ronda300Map({
   const calloutRef = useRef<maplibregl.Popup | null>(null)
   const [loaded, setLoaded] = useState(false)
   const placeRef = useRef(onPickPlace)
+  const pinRef = useRef(onPickPin)
   const viewRef = useRef(onView)
   const flyRef = useRef(fly)
-  useEffect(() => { placeRef.current = onPickPlace; viewRef.current = onView; flyRef.current = fly })
+  useEffect(() => { placeRef.current = onPickPlace; pinRef.current = onPickPin; viewRef.current = onView; flyRef.current = fly })
 
   // the map, once (rebuilt when the language changes, for the labels)
   useEffect(() => {
@@ -116,21 +130,22 @@ function Ronda300Map({
       // the place pointed at: a soft halo under its marker
       map.addLayer({
         id: 'places-active', type: 'circle', source: 'places', filter: ['==', ['get', 'id'], ''],
-        paint: { 'circle-radius': 22, 'circle-color': ['get', 'color'], 'circle-opacity': 0.22, 'circle-blur': 0.2 },
+        paint: { 'circle-radius': 20, 'circle-color': ['get', 'color'], 'circle-opacity': 0.18, 'circle-blur': 0.2 },
       })
-      // places: a round marker with the kind's icon, a little bigger the closer in (nearest the middle on top)
+      // places: small dots in the kind's colour with a white edge, a little bigger the closer in
       map.addLayer({
-        id: 'places', type: 'symbol', source: 'places',
-        layout: {
-          'icon-image': ['concat', 'kind-', ['get', 'kind']],
-          'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.62, 17, 0.9],
-          'icon-allow-overlap': true,
-          'symbol-sort-key': ['get', 'rank'],
+        id: 'places', type: 'circle', source: 'places',
+        paint: {
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, 3, 17, 6],
+          'circle-color': ['get', 'color'],
+          'circle-stroke-color': '#FFFFFF',
+          'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 14, 1, 17, 1.6],
         },
+        layout: { 'circle-sort-key': ['get', 'rank'] },
       })
       map.addLayer({
         id: 'places-on', type: 'symbol', source: 'places', filter: ['==', ['get', 'id'], ''],
-        layout: { 'icon-image': ['concat', 'kind-', ['get', 'kind']], 'icon-size': 1.15, 'icon-allow-overlap': true },
+        layout: { 'icon-image': ['concat', 'kind-', ['get', 'kind']], 'icon-size': 0.75, 'icon-allow-overlap': true },
       })
       // stations: small dots in the line's colour from afar, the line's badge with the station's name closer in
       map.addLayer({
@@ -225,6 +240,54 @@ function Ronda300Map({
     })
   }, [loaded, places, lang])
 
+  // a label over each other station in view: its name and how many places are around it (pressing it flies there)
+  useEffect(() => {
+    const map = mapRef.current
+    if (!loaded || !map) return
+    const markers = bubbles.map(({ station, count }) => {
+      const el = document.createElement('button')
+      el.type = 'button'
+      el.className = 'r3-bubble'
+      const name = document.createElement('span')
+      name.textContent = station.name
+      const n = document.createElement('span')
+      n.className = 'r3-bubble-n'
+      n.textContent = String(count)
+      el.append(name, n)
+      el.addEventListener('click', (e) => {
+        e.stopPropagation()
+        map.flyTo({ center: [station.lon, station.lat], zoom: Math.max(map.getZoom(), 16), duration: 800 })
+      })
+      return new maplibregl.Marker({ element: el, anchor: 'bottom', offset: [0, -14] }).setLngLat([station.lon, station.lat]).addTo(map)
+    })
+    return () => markers.forEach((m) => m.remove())
+  }, [loaded, bubbles])
+
+  // the hand-picked places with a photo: round photo pins (pressing one picks it in the panel)
+  const pinEls = useRef(new Map<string, HTMLElement>())
+  useEffect(() => {
+    const map = mapRef.current
+    if (!loaded || !map) return
+    const els = pinEls.current
+    const markers = pins.map((p) => {
+      const el = document.createElement('button')
+      el.type = 'button'
+      el.className = 'r3-photo'
+      el.setAttribute('aria-label', p.name)
+      const img = document.createElement('img')
+      img.src = p.src
+      img.alt = ''
+      el.append(img)
+      el.addEventListener('click', (e) => { e.stopPropagation(); pinRef.current(p.id) })
+      els.set(p.id, el)
+      return new maplibregl.Marker({ element: el }).setLngLat([p.lon, p.lat]).addTo(map)
+    })
+    return () => { markers.forEach((m) => m.remove()); els.clear() }
+  }, [loaded, pins])
+  useEffect(() => {
+    for (const [id, el] of pinEls.current) el.classList.toggle('on', id === activePin)
+  }, [activePin, pins])
+
   // the place pointed at / picked in the list
   useEffect(() => {
     const map = mapRef.current
@@ -248,7 +311,7 @@ function Ronda300Map({
   }, [loaded, active, places, lang, t])
 
   return (
-    <div className="r3-map relative h-full w-full overflow-hidden rounded-[22px] bg-gray-100">
+    <div className="r3-map relative h-full w-full overflow-hidden bg-gray-100">
       <div ref={box} className="h-full w-full" role="region" aria-label={t('r3_previewAria')} />
       <p className="pointer-events-none absolute top-3 start-3 max-w-[calc(100%-4.5rem)] rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-[#222D52] shadow">
         {t('r3_mapRing')}

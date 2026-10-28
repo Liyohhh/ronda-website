@@ -22,12 +22,13 @@ describe('PromotionSection', () => {
     expect(screen.getByText('Ad places opening soon')).toBeInTheDocument()
   })
 
-  it('photos are decorative (the text says it all), with no credit on them (credits are on the About page)', () => {
+  it("the banner photo and the small cards' drawn maps are decorative, with no credit on them (credits are on the About page)", () => {
     const { container } = renderWithLang(<PromotionSection />)
     const imgs = container.querySelectorAll('[data-promo] img')
-    expect(imgs).toHaveLength(PROMOTIONS.length + 1)
-    for (const img of imgs) expect(img).toHaveAttribute('alt', '')
-    for (const p of [PROMO_FEATURE, ...PROMOTIONS]) expect(screen.queryByRole('link', { name: p.photo.author })).toBeNull()
+    expect(imgs).toHaveLength(1)
+    expect(imgs[0]).toHaveAttribute('alt', '')
+    expect(container.querySelectorAll('[data-promo] svg[aria-hidden="true"]').length).toBeGreaterThanOrEqual(PROMOTIONS.length)
+    expect(screen.queryByRole('link', { name: PROMO_FEATURE.photo.author })).toBeNull()
   })
 
   it('the wide banner comes first, then the three small cards; only the banner shows the ad places', () => {

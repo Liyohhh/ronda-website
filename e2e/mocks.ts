@@ -141,6 +141,11 @@ async function mockBackend(page: Page): Promise<Backend> {
       { feed_id: 'rapid-rail-kl', stop_id: 'KG16', stop_name: 'Pasar Seni', stop_lat: 3.142293265, stop_lon: 101.6955642 },
       { feed_id: 'rapid-rail-kl', stop_id: 'KJ10', stop_name: 'KLCC', stop_lat: 3.158935, stop_lon: 101.713287 },
     ])
+    // where two hand-picked trail places near KLCC are (RONDA picks on the RONDA 300 map; both have photos)
+    if (url.pathname === '/rest/v1/trail_places') return json(route, [
+      { id: 'klccPark', lat: 3.1553, lon: 101.7146 },
+      { id: 'petrosains', lat: 3.1579, lon: 101.7119 },
+    ])
     // operator service alerts in force (none unless a test sets them)
     if (url.pathname === '/rest/v1/service_alerts') return json(route, be.alerts)
     // plain table reads (bus route list etc.): empty

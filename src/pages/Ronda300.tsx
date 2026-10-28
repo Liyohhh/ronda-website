@@ -84,21 +84,46 @@ function Ronda300() {
           </div>
       </PageHero>
 
-      <div className="wrap py-10">
-        <div id="r3-panel" className="scroll-mt-24">
-          <Ronda300Explorer fly={fly} />
-        </div>
-
-        <section aria-labelledby="r3-merchant" className="mt-14 rounded-[28px] bg-[#222D52] text-white p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 justify-between">
-          <div>
-            <h2 id="r3-merchant" className="text-xl font-semibold">{t('navMerchantTitle')}</h2>
-            <p className="mt-1 text-white/75">{t('navMerchantText')}</p>
-          </div>
-          <Link to="/help/general#business" className="self-start md:self-auto bg-gold text-[#222D52] px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gold-hover">
-            {t('navMerchantCta')}
-          </Link>
-        </section>
+      {/* the map and its panel run the full width of the screen */}
+      <div id="r3-panel" className="mt-8 scroll-mt-16">
+        <Ronda300Explorer fly={fly} />
       </div>
+
+      {/* for businesses: a short band with a sample of how a partner shop shows in the list above */}
+      <section aria-labelledby="r3-merchant" className="border-b border-[#DCD4C8] bg-[#F3EEE6]">
+        <div className="wrap grid gap-6 py-9 md:grid-cols-[minmax(0,1fr)_380px] md:items-center md:gap-12 md:py-10">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6F5F3C]">{t('navMerchantTitle')}</p>
+            <h2 id="r3-merchant" className="mt-2 font-display text-[26px] leading-tight text-[#222D52] md:text-[30px]">{t('r3_mHead')}</h2>
+            <ul className="mt-3 flex flex-col gap-1 text-[14.5px] text-[#4A4740] md:flex-row md:flex-wrap md:gap-x-5">
+              {(['r3_mP1', 'r3_mP2', 'r3_mP3'] as const).map((k, i) => (
+                <li key={k} className="flex gap-2"><span className="font-display text-[#6F5F3C]">0{i + 1}</span>{t(k)}</li>
+              ))}
+            </ul>
+            <Link to="/help/general#business" className="mt-5 inline-flex h-11 items-center gap-2 rounded-full bg-[#222D52] px-5 text-sm font-semibold text-white hover:bg-[#2f3d6e] transition-colors">
+              {t('navMerchantCta')}
+              <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+            </Link>
+          </div>
+
+          {/* a sample listing (not a real place), drawn like a row of the RONDA 300 list */}
+          <div aria-hidden="true" className="rounded-xl border border-[#DCD4C8] bg-[#FBFAF7] px-4 pb-1 pt-3 shadow-[0_14px_30px_-22px_rgb(34_45_82/0.4)]">
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#6F5F3C]">{t('r3_mSample')} · Pasar Seni</p>
+            <div className="mt-2 flex items-center gap-3 border-s-2 border-s-[#D2B68A] bg-white py-2.5 ps-2.5 pe-2">
+              <span className="h-10 w-10 flex-shrink-0 rounded-md bg-[#E4DCCD]" />
+              <span className="min-w-0 flex-1">
+                <span className="text-[10.5px] font-semibold uppercase tracking-[0.09em] text-[#99691A]">{t('r3_mPartner')}</span>
+                <span className="block text-[14px] font-semibold text-[#222D52]">{t('r3_mYours')}</span>
+              </span>
+              <span className="text-[15px] font-semibold tabular-nums text-[#222D52]">2<small className="ms-0.5 text-[11px] font-normal text-[#6B675E]">min</small></span>
+            </div>
+            <div className="flex items-center gap-3 border-t border-[#ECE7DD] py-2.5 ps-3 pe-2">
+              <span className="h-2.5 flex-1 rounded bg-[#ECE8E0]" />
+              <span className="text-[13px] font-semibold tabular-nums text-[#6B675E]">4<small className="ms-0.5 text-[11px] font-normal">min</small></span>
+            </div>
+          </div>
+        </div>
+      </section>
     </SiteLayout>
   )
 }

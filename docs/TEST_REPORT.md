@@ -1,6 +1,49 @@
 # Test report
 
-## Latest run - 27 Oct 2026, later (owner's own photos for 8 stops and 2 trail covers)
+## Latest run - 28 Oct 2026 (RONDA 300: Mosque and Religion sections, sticky header, merchant section)
+
+- Places of worship split: mosques and surau (OpenStreetMap religion "muslim") under Mosque; temples, churches,
+  gurdwaras and other places of worship under Religion. Banks and ATMs stay under Bank.
+- Station header stays at the top of the panel while the list scrolls (desktop).
+- Merchant section redesigned: full-width cream band, serif headline, three points, a sample listing showing how a
+  partner shop appears in the RONDA 300 list (marked as a sample).
+- Text sizes kept as they were (a larger size was tried and undone at the owner's request).
+- Merchant section then made compact on request: one short band (headline, three points in a row, button) beside a
+  small sample listing.
+- Home page: the three small promotion cards now show small isometric city scenes in place of photos (owner picked
+  this style from three): a train on its viaduct in the line's colour (LRT Kelana Jaya, MRT Kajang, Monorail),
+  buildings, park, river and a gold pin; a station with its 300 m ring, twin towers and hotels, the walk to a row of
+  stalls. Checked with headless Edge at 1440 px and 375 px: nothing cut off.
+  The wide banner keeps its photo; the three card photos are no longer used, so they left the About credits.
+- Checked with headless Edge at 1440 px with live data at Pasar Seni: tabs All 152, Eat 103, Sights 5, Parks 1,
+  Shop 1, Stay 26, Mosque 2, Religion 5, Bank 2, Useful 7. Unit test added for the sorting.
+
+## Run - 27 Oct 2026, night (RONDA 300: full width, plainer look, banks)
+
+- Owner feedback: gap above and below the map, icons looked generic. Map and panel now run the full screen width at
+  the full window height; the panel scrolls on its own, so no gaps.
+- Plainer look: places are small dots in muted colours on the map (the one pointed at grows into a marker with a line
+  drawing); other stations get a navy label with a place count; list rows are plain text with thin dividers, a
+  small-caps kind label, walk minutes on the right; text tabs instead of icon pills; station name in the serif face.
+- Banks: banks, ATMs and money changers have their own Bank section instead of Useful.
+- Checked in the browser with live data at Monorail Raja Chulan, 1440 px and 375 px: dots, ring, labels and 9 photo
+  pins show, Bank tab shows 6, no sideways scroll. Unit 227 / 227; Playwright RONDA 300 and CSP 20 / 20.
+
+## Run - 27 Oct 2026, evening (RONDA 300 redesign, style 1)
+
+- New RONDA 300 layout: map on the left, station panel on the right (on phones the map comes first). Panel: the
+  station nearest the middle of the map, its line badges, places within a 5 min walk, up to 3 "RONDA picks" (trail
+  places with photos within 450 m), kind chips with counts, then the places in view with a "Go" button.
+- Map: RONDA's own icons for the 7 kinds of place (white markers), a bubble over each other station in view with its
+  3 most found kinds and counts, and round photo pins for the trail places (pressing one flies to it).
+- Trail place positions read from trail_places (public read already on); no database change.
+- Checked in the browser with live data at LRT Masjid Jamek, desktop 1440 px and phone 375 px: 153 places, 3 picks,
+  bubbles for Bandaraya, Plaza Rakyat, Pasar Seni and Merdeka, all 12 photo pins load, no sideways scroll.
+- Fixed while checking: photo pins off screen stayed empty (lazy loading); now load straight away.
+- Unit 227 / 227. Playwright RONDA 300, CSP and links: 25 passed, 5 skipped (test updated for picks, photo pin and
+  "Go" button). Type check and lint clean.
+
+## Run - 27 Oct 2026, later (owner's own photos for 8 stops and 2 trail covers)
 
 - The owner's photos now show for Central Market, Guan Di Temple, Masjid India, Masjid Jamek, Masjid Negara, Masjid
   Putra, River of Life and Sultan Abdul Samad Building, and as the Mosque Trail and Heritage Trail covers. Resized to
