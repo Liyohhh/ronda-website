@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
+import { countryOptions } from '../data/countries'
 import AuthLayout, { AuthField, AuthNote, PasswordChecklist, PasswordField, SubmitButton, AUTH_LINK } from '../components/AuthLayout'
 import { useAuthCaptcha } from '../components/AuthCaptcha'
 import { useLanguage } from '../hooks/useLanguage'
@@ -12,9 +13,11 @@ import type { TranslationKey } from '../i18n/translations'
 // terms and privacy notice, a bot check when one is set up. The account works once the emailed link is opened.
 function Register() {
   const { t, lang } = useLanguage()
+  const countries = useMemo(() => countryOptions(lang), [lang])
   const { session, loading } = useAuth()
   const captcha = useAuthCaptcha()
   const [name, setName] = useState('')
+  const [country, setCountry] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -35,7 +38,7 @@ function Register() {
     if (!captcha.ready) return setError('authCaptchaWait')
 
     setBusy(true)
-    const err = await signUp(name, email, password, lang, captcha.token)
+    const err = await signUp(name, email, password, lang, captcha.token, country || undefined)
     setBusy(false)
     captcha.reset()
     if (err) return setError(authErrorKey(err))
@@ -55,7 +58,7 @@ function Register() {
     setResent(true)
   }
 
-  if (!loading && session) return <Navigate to="/dashboard" replace />
+  if (!loading && session) return <Navigate to="/account" replace />
 
   return (
     <AuthLayout
@@ -83,7 +86,7 @@ function Register() {
             type="button"
             onClick={resend}
             disabled={busy || resent}
-            className="w-full h-11 rounded-full border border-gold text-navy font-semibold hover:bg-gold-soft disabled:opacity-60 transition-colors"
+            className="w-full h-11 rounded-full border border-[#2F6BD8] text-[#222D52] font-semibold hover:bg-[#EAF1FB] disabled:opacity-60 transition-colors"
           >
             {busy ? t('pleaseWait') : t('authResendConfirm')}
           </button>
@@ -93,6 +96,24 @@ function Register() {
           {error && <AuthNote kind="error">{t(error)}</AuthNote>}
           <AuthField label={t('fullName')} type="text" autoComplete="name" maxLength={80} value={name} onChange={(e) => setName(e.target.value)} required />
           <AuthField label={t('emailAddress')} type="email" autoComplete="email" maxLength={254} value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <div className="mb-3">
+            <label htmlFor="reg-country" className="block text-sm font-medium text-gray-700 mb-1">{t('regCountry')}</label>
+            <select
+              id="reg-country"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              autoComplete="country"
+              required
+              aria-describedby="reg-country-help"
+              className={`w-full h-11 border border-gray-300 rounded-xl px-3 bg-white outline-none focus:border-[#2F6BD8] focus:ring-2 focus:ring-[#2F6BD8]/30 transition ${country ? 'text-gray-900' : 'text-gray-500'}`}
+            >
+              <option value="" disabled>{t('regCountryPick')}</option>
+              {countries.map(([code, label]) => (
+                <option key={code} value={code} className="text-gray-900">{label}</option>
+              ))}
+            </select>
+            <span id="reg-country-help" className="mt-1 block text-xs text-gray-500">{t('regCountryHelp')}</span>
+          </div>
           <PasswordField
             id="reg-password"
             label={t('password')}

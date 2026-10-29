@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import { trackOnce } from '../services/analytics'
 import TrailCover from '../components/TrailCover'
 import { TRAIL_MAPS } from '../data/trailMaps'
 import { HoursStatus, HoursWeek } from '../components/PlaceHours'
@@ -42,6 +44,7 @@ function TrailDetail() {
   const { t } = useLanguage()
   const { slug } = useParams()
   const { data, error } = useTrails()
+  useEffect(() => { if (slug) trackOnce(`trail:${slug}`, 'trail_view', { slug }) }, [slug])
   const trail = data ? findTrail(data, slug) : undefined
 
   if (!data) {
@@ -202,7 +205,7 @@ function TrailDetail() {
                       {(place.cuisine || place.dietary) && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {place.cuisine && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F3EBDD] px-2.5 py-0.5 text-xs font-semibold text-[#222D52]">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#EAF1FB] px-2.5 py-0.5 text-xs font-semibold text-[#222D52]">
                               <Icon name="restaurant" size={13} />
                               {t(cuisineKey(place.cuisine))}
                             </span>

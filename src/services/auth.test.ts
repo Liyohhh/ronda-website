@@ -18,7 +18,7 @@ describe('auth', () => {
     expect(await signUp(' Aina ', ' aina@example.test ', 'a-long-password', 'ms')).toBeNull()
     expect(calls[0]).toEqual({ op: 'signUp', args: [{
       email: 'aina@example.test', password: 'a-long-password',
-      options: { data: { full_name: 'Aina', lang: 'ms', terms_accepted_at: expect.any(String) }, emailRedirectTo: `${window.location.origin}/login?confirmed=1&next=%2Fdashboard`, captchaToken: undefined },
+      options: { data: { full_name: 'Aina', lang: 'ms', terms_accepted_at: expect.any(String) }, emailRedirectTo: `${window.location.origin}/login?confirmed=1&next=%2Faccount`, captchaToken: undefined },
     }] })
   })
 

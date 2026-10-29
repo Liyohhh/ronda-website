@@ -57,7 +57,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
               }}
               aria-expanded={active === m.key}
               className={`h-9 px-3 font-medium transition-colors flex items-center gap-1 ${
-                active === m.key ? 'text-gold-deep' : 'text-[#222D52] hover:text-gold-deep'
+                active === m.key ? 'text-[#2559B8]' : 'text-[#222D52] hover:text-[#2559B8]'
               }`}
             >
               {t(m.key)}
@@ -95,15 +95,15 @@ function ServiceNav({ className = '' }: { className?: string }) {
             </div>
           ))}
 
-          <div className={`rounded-3xl bg-[#222D52] text-white p-6 flex flex-col justify-between ${menu.columns.length === 1 ? 'md:col-span-2' : ''}`}>
+          <div className={`rounded-3xl bg-gradient-to-br from-[#E9F0F8] to-[#F2F6FB] text-[#222D52] p-6 flex flex-col justify-between ${menu.columns.length === 1 ? 'md:col-span-2' : ''}`}>
             <div>
               <h3 className="font-semibold text-lg mb-2">{t(menu.promo.title)}</h3>
-              <p className="text-sm text-white/70">{t(menu.promo.text)}</p>
+              <p className="text-sm text-[#434C5C]">{t(menu.promo.text)}</p>
             </div>
             <Link
               to={menu.promo.to}
               onClick={close}
-              className="mt-6 self-start bg-white text-[#222D52] px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-100"
+              className="mt-6 self-start bg-[#222D52] text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#18203D]"
             >
               {t(menu.promo.cta)}
             </Link>

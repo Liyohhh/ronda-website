@@ -117,9 +117,9 @@ export function WordFill({ text, className = '' }: { text: string; className?: s
 // The label above a section title: small gold capitals with a thin gold line before it (and after it when centred)
 // tone: light (deep gold text), dark (champagne on navy) or onTeal (white text, champagne lines, on the teal band)
 export function Eyebrow({ children, tone = 'light', center = false }: { children: ReactNode; tone?: 'light' | 'dark' | 'onTeal'; center?: boolean }) {
-  const line = <span aria-hidden="true" className={`h-px w-7 ${tone === 'light' ? 'bg-gold-deep/60' : 'bg-gold-light/80'}`} />
+  const line = <span aria-hidden="true" className={`h-px w-7 ${tone === 'light' ? 'bg-[#2F6BD8]/60' : 'bg-[#A9C8FF]/80'}`} />
   return (
-    <span className={`inline-flex items-center gap-3 text-[12.5px] font-bold uppercase tracking-[0.26em] ${tone === 'dark' ? 'text-gold-light' : tone === 'onTeal' ? 'text-white' : 'text-gold-deep'}`}>
+    <span className={`inline-flex items-center gap-3 text-[12.5px] font-bold uppercase tracking-[0.26em] ${tone === 'dark' ? 'text-[#A9C8FF]' : tone === 'onTeal' ? 'text-white' : 'text-[#2559B8]'}`}>
       {line}
       {children}
       {center && line}

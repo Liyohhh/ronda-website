@@ -26,6 +26,8 @@ import Icon from '../components/Icon'
 import { useLocate } from '../hooks/useLocate'
 import HeroVideos from '../components/HeroVideos'
 import { Accent } from '../components/Motion'
+import { readPayment, readResident, savePayment, saveResident } from '../data/tripPrefs'
+import { track } from '../services/analytics'
 
 // the hero videos play on wider screens only (phones keep the photo and their data), never with reduced motion
 const wantsHeroVideo = () =>
@@ -201,39 +203,19 @@ function Home() {
     setEndStop(startStop)
   }
 
-  // Fares for Malaysians or tourists; remembered on this device
-  const [resident, setResident] = useState<Resident>(() => {
-    try {
-      return localStorage.getItem('ronda.resident') === 'non_citizen' ? 'non_citizen' : 'citizen'
-    } catch {
-      return 'citizen'
-    }
-  })
+  // Fares for Malaysians or tourists; remembered on this device (data/tripPrefs.ts, also set on the account page)
+  const [resident, setResident] = useState<Resident>(readResident)
   const changeResident = (r: Resident) => {
     setResident(r)
-    try {
-      localStorage.setItem('ronda.resident', r)
-    } catch {
-      // storage blocked: the choice lasts for this visit only
-    }
+    saveResident(r)
     handleSearch({ res: r })
   }
 
   // Cashless (default) or cash / token fares; remembered on this device
-  const [payment, setPayment] = useState<Payment>(() => {
-    try {
-      return localStorage.getItem('ronda.payment') === 'cash' ? 'cash' : 'cashless'
-    } catch {
-      return 'cashless'
-    }
-  })
+  const [payment, setPayment] = useState<Payment>(readPayment)
   const changePayment = (p: Payment) => {
     setPayment(p)
-    try {
-      localStorage.setItem('ronda.payment', p)
-    } catch {
-      // storage blocked: the choice lasts for this visit only
-    }
+    savePayment(p)
     handleSearch({ pay: p })
   }
 
@@ -319,6 +301,7 @@ function Home() {
     }
     setOptions(found)
     setMoreOptions(data?.more_options ?? [])
+    void track('plan_trip', { from: fromStop.name, to: toStop.name, results: found.length })
     const meta = data?.meta
     if (meta?.next_day?.first_departure) setNotice({ kind: 'tomorrow', time: meta.next_day.first_departure })
     else if (meta?.service_resumes) setNotice({ kind: 'resumes', time: meta.service_resumes })
@@ -373,7 +356,7 @@ function Home() {
     <button
       onClick={() => handleSearch()}
       disabled={loading}
-      className="w-14 h-14 rounded-full bg-gold hover:bg-gold-hover active:scale-95 transition text-[#222D52] flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(210_182_138/0.4)] disabled:opacity-60"
+      className="w-14 h-14 rounded-full bg-[#222D52] hover:bg-[#18203D] active:scale-95 transition text-white flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(47_107_216/0.4)] disabled:opacity-60"
       aria-label={t('searchAria')}
     >
       {loading ? (

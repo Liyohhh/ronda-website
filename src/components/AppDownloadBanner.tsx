@@ -25,7 +25,7 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
     </>
   )
   const cls =
-    'h-14 w-48 px-5 inline-flex items-center gap-3 rounded-full bg-white text-[#222D52]'
+    'h-14 w-48 px-5 inline-flex items-center gap-3 rounded-full bg-white text-[#222D52] ring-1 ring-[#DCE3EC] shadow-[0_6px_16px_-10px_rgb(34_45_82/0.35)]'
   return (
     <div className="flex items-center gap-3">
       {href ? (
@@ -37,7 +37,7 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
           {body}
         </span>
       )}
-      {!href && <span className="text-[11px] font-semibold text-gold-light uppercase tracking-wider">{soon}</span>}
+      {!href && <span className="text-[11px] font-semibold text-[#2559B8] uppercase tracking-wider">{soon}</span>}
     </div>
   )
 }
@@ -48,13 +48,13 @@ function PhoneMockup() {
   const { t } = useLanguage()
   return (
     <div className="w-[220px] rounded-[2.4rem] bg-[#0b0d16] p-2.5 shadow-[0_40px_80px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10" aria-hidden="true">
-      <div className="relative rounded-[2rem] overflow-hidden bg-[#FAF8F5] h-[470px]">
+      <div className="relative rounded-[2rem] overflow-hidden bg-[#F8FAFD] h-[470px]">
         <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-[#0b0d16]" />
         <div className="bg-[#222D52] px-4 pt-10 pb-4">
           <BrandLogo tone="light" size="sm" />
           <div className="mt-3 rounded-xl bg-white px-3 py-2 space-y-1.5">
             <div className="flex items-center gap-2 text-[10px] text-gray-600"><span className="w-2 h-2 rounded-full border-2 border-[#222D52]" />KL Sentral</div>
-            <div className="flex items-center gap-2 text-[10px] text-gray-600"><span className="w-2 h-2 rounded-full bg-gold" />KLCC</div>
+            <div className="flex items-center gap-2 text-[10px] text-gray-600"><span className="w-2 h-2 rounded-full bg-[#222D52]" />KLCC</div>
           </div>
         </div>
         <div className="p-3 space-y-2">
@@ -62,7 +62,7 @@ function PhoneMockup() {
             { lines: ['lrt-kelana-jaya'], time: '07:52 – 08:04', dur: t('durMin').replace('{m}', '12'), best: true },
             { lines: ['monorail', 'lrt-kelana-jaya'], time: '07:55 – 08:15', dur: t('durMin').replace('{m}', '20'), best: false },
           ].map((r) => (
-            <div key={r.time} className={`rounded-xl bg-white p-2.5 border ${r.best ? 'border-gold' : 'border-gray-200'}`}>
+            <div key={r.time} className={`rounded-xl bg-white p-2.5 border ${r.best ? 'border-[#2F6BD8]' : 'border-gray-200'}`}>
               <div className="flex items-baseline justify-between">
                 <span className="text-sm font-bold text-[#222D52]">{r.dur}</span>
                 <span className="text-[9px] text-gray-500">{r.time}</span>
@@ -96,18 +96,18 @@ function PhoneMockup() {
 function AppDownloadBanner() {
   const { t } = useLanguage()
   return (
-    <section id="download" aria-labelledby="download-title" className="scroll-mt-24 relative mt-12 md:mt-20 bg-[#222D52] text-white">
+    <section id="download" aria-labelledby="download-title" className="scroll-mt-24 relative mt-12 md:mt-20 bg-gradient-to-br from-[#E9F0F8] via-[#F3F6FA] to-[#F2F6FB] text-[#222D52]">
       {/* the glow stays inside the band; the phone may rise above it */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -end-32 top-1/2 -translate-y-1/2 h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgb(210_182_138/0.25),transparent)]" />
+        <div className="absolute -end-32 top-1/2 -translate-y-1/2 h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgb(47_107_216/0.12),transparent)]" />
       </div>
       <div className="wrap relative grid items-center gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <div className="py-10 md:py-12 text-center md:text-start">
-          <Eyebrow tone="dark" center>{t('getApp')}</Eyebrow>
+          <Eyebrow center>{t('getApp')}</Eyebrow>
           <h2 id="download-title" className="mt-4 [text-wrap:balance] font-display text-[28px] md:text-[38px] leading-[1.1] font-semibold tracking-[-0.01em]">
-            <Accent text={t('appBannerTitle')} dark />
+            <Accent text={t('appBannerTitle')} />
           </h2>
-          <p className="mt-3 max-w-md mx-auto md:mx-0 text-[15px] text-white/80">{t('appBannerText')}</p>
+          <p className="mt-3 max-w-md mx-auto md:mx-0 text-[15px] text-[#434C5C]">{t('appBannerText')}</p>
           <div className="mt-6 flex flex-col sm:flex-row flex-wrap justify-center md:justify-start gap-3">
             <StoreBadge href={PLAY_URL} iconPath={PLAY_PATH} small="GET IT ON" big="Google Play" soon={t('soon')} />
             <StoreBadge href={APPSTORE_URL} iconPath={APPLE_PATH} small="Download on the" big="App Store" soon={t('soon')} />
@@ -123,7 +123,7 @@ function AppDownloadBanner() {
             <span className="block font-display text-xl font-semibold leading-none">6,500+</span>
             <span className="mt-1 block text-[11px] text-gray-600">{t('why_stops')}</span>
           </div>
-          <div className="float-y absolute top-52 end-[calc(50%-230px)] hidden lg:flex items-center gap-2 rounded-2xl bg-gold px-3.5 py-2.5 text-[#222D52] shadow-xl [animation-delay:-2.5s]">
+          <div className="float-y absolute top-52 end-[calc(50%-230px)] hidden lg:flex items-center gap-2 rounded-2xl bg-[#222D52] px-3.5 py-2.5 text-white shadow-xl [animation-delay:-2.5s]">
             <LineBadge line="mrt-kajang" size={20} decorative />
             <span className="text-sm font-semibold">{t('durMin').replace('{m}', '12')}</span>
           </div>

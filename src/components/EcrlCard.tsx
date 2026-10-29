@@ -12,7 +12,7 @@ function EcrlCard() {
     <section aria-labelledby="about-ecrl" className="mt-6 rounded-[32px] border border-gray-200 bg-gray-50 p-6 md:p-8">
       <div className="flex flex-wrap items-center gap-3">
         <h3 id="about-ecrl" className="text-xl md:text-2xl font-bold text-[#222D52]">{t('ecrlTitle')}</h3>
-        <span className="inline-block rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[#222D52]">
+        <span className="inline-block rounded-full bg-[#222D52] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">
           {t('soon')}
         </span>
       </div>
@@ -28,7 +28,7 @@ function EcrlCard() {
             <span aria-hidden="true" className="mt-2 h-1 w-6 flex-shrink-0 rounded-full border-t-4 border-dashed border-gray-400" />
             {t('ecrlPhase2')}
           </li>
-          <li className="rounded-2xl bg-gold-soft px-4 py-3 text-[#222D52]">
+          <li className="rounded-2xl bg-[#EAF1FB] px-4 py-3 text-[#222D52]">
             <p className="font-medium">{t('ecrlFares')}</p>
             <p className="mt-1.5 text-sm">{t('ecrlFareNote')}</p>
             <p className="mt-1.5 text-sm">{t('ecrlConcession')}</p>
@@ -50,7 +50,7 @@ function EcrlCard() {
                 )}
                 <span
                   aria-hidden="true"
-                  className={`absolute start-0 top-1.5 h-3 w-3 rounded-full border-2 bg-white ${s.phase === 1 ? 'border-[#222D52]' : 'border-gray-400'} ${line ? 'ring-2 ring-gold' : ''}`}
+                  className={`absolute start-0 top-1.5 h-3 w-3 rounded-full border-2 bg-white ${s.phase === 1 ? 'border-[#222D52]' : 'border-gray-400'} ${line ? 'ring-2 ring-[#2F6BD8]' : ''}`}
                 />
                 <span className="text-[15px] font-medium text-gray-900">{s.name}</span>
                 {s.fareRm !== undefined && <span className="ms-2 text-xs font-semibold text-[#222D52]">RM {s.fareRm}</span>}

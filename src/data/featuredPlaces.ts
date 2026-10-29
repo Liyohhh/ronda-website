@@ -1,5 +1,6 @@
 import type { PlaceKind } from '../services/places'
 import type { TrailPhoto } from './trailPhotos'
+import { fold, matchScore } from './smartMatch'
 
 // UDA Holdings buildings near KL's trains, put first wherever RONDA lists places: first among the RONDA picks and the
 // places in view on the RONDA 300 map (with a star), and first in the place search of the trip planner and RONDA 300.
@@ -64,32 +65,8 @@ export const FEATURED_PLACES: FeaturedPlace[] = [
 
 export const FEATURED_OSM = new Set(FEATURED_PLACES.map((p) => p.osm))
 
-// letters and digits only, lower case: "Lala-port" and "lalaport" are the same search
-const fold = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim()
-
-// at most one letter wrong, missing or extra (for words of 5 letters or more): "lalapot", "pertma"
-function nearWord(a: string, b: string) {
-  if (Math.abs(a.length - b.length) > 1) return false
-  let i = 0, j = 0, edits = 0
-  while (i < a.length && j < b.length) {
-    if (a[i] === b[j]) { i++; j++; continue }
-    if (++edits > 1) return false
-    if (a.length > b.length) i++
-    else if (b.length > a.length) j++
-    else { i++; j++ }
-  }
-  return edits + (a.length - i) + (b.length - j) <= 1
-}
-
-// the featured places a search matches: the start of a name or one of its words, or a near miss on a whole word
+// the featured places a search matches (typo-tolerant, data/smartMatch.ts)
 export function matchFeatured(query: string): FeaturedPlace[] {
-  const q = fold(query)
-  if (q.length < 3) return []
-  const words = q.split(' ')
-  return FEATURED_PLACES.filter((p) => [p.name, ...p.aliases].some((n) => {
-    const f = fold(n)
-    if (f.startsWith(q) || f.split(' ').some((w) => w.startsWith(q)) || f.replace(/ /g, '').startsWith(q.replace(/ /g, ''))) return true
-    const nw = f.split(' ')
-    return words.every((w) => w.length >= 5 ? nw.some((x) => nearWord(w, x) || (x.length > w.length && nearWord(w, x.slice(0, w.length)))) : nw.some((x) => x.startsWith(w)))
-  }))
+  if (fold(query).length < 3) return []
+  return FEATURED_PLACES.filter((p) => matchScore(query, [p.name, ...p.aliases]) > 0)
 }

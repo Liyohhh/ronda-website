@@ -1,11 +1,12 @@
-import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import RequireAuth from './components/RequireAuth'
 import ScrollToTop from './components/ScrollToTop'
 import { SERVICES_ENABLED } from './data/serviceOptions'
 import { LanguageProvider } from './i18n/LanguageProvider'
 import { useLanguage } from './hooks/useLanguage'
+import { trackOpen } from './services/analytics'
 
 // Every page but Home loads when first visited, so the home page doesn't download the map engine and the
 // dashboards (one 1.9 MB script before, 4 Oct 2026)
@@ -14,7 +15,6 @@ const Register = lazy(() => import('./pages/Register'))
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('./pages/ResetPassword'))
 const Account = lazy(() => import('./pages/Account'))
-const UserDashboard = lazy(() => import('./pages/UserDashboard'))
 const PartnerDashboard = lazy(() => import('./pages/PartnerDashboard'))
 const Admin = lazy(() => import('./pages/Admin'))
 const Help = lazy(() => import('./pages/Help'))
@@ -35,6 +35,8 @@ function PageLoading() {
 }
 
 function App() {
+  // counts this browser as active today (anonymous, once a day; services/analytics.ts)
+  useEffect(() => { trackOpen() }, [])
   return (
     <LanguageProvider>
       <BrowserRouter>
@@ -47,7 +49,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/account" element={<RequireAuth><Account /></RequireAuth>} />
-          <Route path="/dashboard" element={<RequireAuth><UserDashboard /></RequireAuth>} />
+          {/* the old "My RONDA" page was removed (owner, 29 Oct 2026): links to it open the account page */}
+          <Route path="/dashboard" element={<Navigate to="/account" replace />} />
           <Route path="/partner-dashboard" element={<RequireAuth role="merchant"><PartnerDashboard /></RequireAuth>} />
           <Route path="/admin" element={<RequireAuth role="admin"><Admin /></RequireAuth>} />
           <Route path="/help" element={<Help />} />

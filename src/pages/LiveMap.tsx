@@ -376,7 +376,7 @@ function LiveMap() {
     if (!m) return
     pinMarker.current?.remove()
     const pin = document.createElement('div')
-    pin.className = 'w-5 h-5 rounded-full bg-gold border-[3px] border-[#222D52] shadow-lg'
+    pin.className = 'w-5 h-5 rounded-full bg-[#222D52] border-[3px] border-[#222D52] shadow-lg'
     pin.setAttribute('aria-label', p.name)
     pinMarker.current = new maplibregl.Marker({ element: pin }).setLngLat([p.lon, p.lat])
       .setPopup(new maplibregl.Popup({ offset: 14 }).setText(p.name)).addTo(m)
@@ -445,7 +445,7 @@ function LiveMap() {
 
           {/* controls: a velvet panel over the map */}
           <section className="absolute z-[500] top-3 start-3 end-3 md:top-5 md:start-5 md:end-auto md:w-[360px] rounded-[24px] bg-[#222D52]/95 backdrop-blur-xl text-white shadow-2xl ring-1 ring-white/10 p-5">
-            <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-gold-light">
+            <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[#A9C8FF]">
               <span className="relative flex h-2 w-2" aria-hidden="true">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-light opacity-60 motion-reduce:hidden" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-light" />
@@ -473,7 +473,7 @@ function LiveMap() {
                 autoComplete="off"
                 placeholder={t('liveFilterPh')}
                 aria-label={t('liveFilterPh')}
-                className="flex-1 min-w-0 rounded-full bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-gold"
+                className="flex-1 min-w-0 rounded-full bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#2F6BD8]"
               />
               {listOpen && (
                 <div className="absolute inset-x-0 top-full z-20 text-start">
@@ -485,7 +485,7 @@ function LiveMap() {
                 onClick={locate}
                 disabled={loc.status === 'locating'}
                 aria-label={t('liveNearMe')}
-                className="inline-flex items-center gap-1.5 rounded-full bg-gold px-4 py-2.5 text-sm font-bold text-[#222D52] hover:bg-gold-hover whitespace-nowrap disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#222D52] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#18203D] whitespace-nowrap disabled:opacity-60"
               >
                 <Icon name="myLocation" size={16} />
                 <span className="hidden sm:inline">{t('liveNearMe')}</span>
@@ -497,11 +497,11 @@ function LiveMap() {
               </p>
             )}
             <label className="mt-3 flex items-center gap-2 text-sm text-white/85">
-              <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#D2B68A]" />
+              <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#8AB4F8]" />
               {t('liveShowOffTrip')}
             </label>
             <label className="mt-2 flex items-center gap-2 text-sm text-white/85">
-              <input type="checkbox" checked={showParking} onChange={(e) => setShowParking(e.target.checked)} className="accent-[#D2B68A]" />
+              <input type="checkbox" checked={showParking} onChange={(e) => setShowParking(e.target.checked)} className="accent-[#8AB4F8]" />
               <span className="inline-flex h-4 w-4 items-center justify-center rounded-[3px] text-[10px] font-bold text-white" style={{ backgroundColor: PARK }} aria-hidden="true">P</span>
               {t('parkLayer')}
             </label>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../services/supabase'
 import { matchFeatured } from '../data/featuredPlaces'
+import { track } from '../services/analytics'
 
 // Autocomplete data for the Start / End boxes: transit stops (search_stops RPC), our own OpenStreetMap places
 // (search_pois RPC: hotels, sights, malls) and any other place
@@ -35,6 +36,7 @@ const CACHE_MAX = 200
 const stopCache = new Map<string, StopResult[]>()
 const placeCache = new Map<string, PlaceResult[]>()
 const routeCache = new Map<string, StopResult[]>()
+const NO_PLACES: PlaceResult[] = []
 
 function remember<T>(cache: Map<string, T>, key: string, value: T) {
   if (cache.size >= CACHE_MAX) cache.delete(cache.keys().next().value!)
@@ -110,6 +112,8 @@ export function useSmartSearch(query: string) {
         return true
       })
       remember(placeCache, key, merged)
+      // what people look for, and whether we had anything (results 0 = found nothing) for the admin dashboard
+      void track('search', { query: key, results: merged.length + (stopCache.get(key)?.length ?? 0) })
       if (!cancelled) setPlaceRes(merged)
     }, PLACE_DELAY)
     return () => {
@@ -118,7 +122,7 @@ export function useSmartSearch(query: string) {
     }
   }, [key])
 
-  const found = key.length < 3 ? [] : (placeCache.get(key) ?? placeRes)
+  const found = key.length < 3 ? NO_PLACES : (placeCache.get(key) ?? placeRes)
   const places = useMemo(() => {
     const featured: PlaceResult[] = matchFeatured(key).map((f) => ({ name: f.name, detail: f.detail, lat: f.lat, lon: f.lon, kind: f.kind === 'shopping' ? 'mall' : 'place', osm: f.osm }))
     // the same building under another OpenStreetMap id (a shop node inside the mall) goes too: within about 80 m, same name

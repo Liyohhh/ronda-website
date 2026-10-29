@@ -2,6 +2,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import { useCarParks } from '../hooks/useCarParks'
 import { carParkName, carParksAt, hasFare, parkAndRide, parkingStationKey, rm, type CarPark } from '../services/parking'
 import type { Leg } from './JourneyPanel'
+import { readParking } from '../data/tripPrefs'
 
 // The blue "P" of Malaysian parking signs
 export function ParkingSign({ size = 18 }: { size?: number }) {
@@ -53,7 +54,7 @@ export function TripParking({ legs }: { legs: Leg[] }) {
   const ride = legs.find((l) => l.mode === 'transit')
   const board = ride?.stops?.[0]
   const key = ride && RAIL_FEEDS.has(ride.feed_id ?? '') ? parkingStationKey(ride.feed_id, board?.stop_id) : undefined
-  if (!key || !board || !all || all === 'error') return null
+  if (!key || !board || !all || all === 'error' || !readParking()) return null // switched off in Trip settings
   const list = carParksAt(all, key)
   if (!list.length) return null
   const pr = parkAndRide(list)

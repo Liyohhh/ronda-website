@@ -15,7 +15,9 @@ import LiveApproach from './LiveApproach'
 import RouteChip from './RouteChip'
 import { TripParking } from './ParkingInfo'
 import { useServiceAlerts } from '../hooks/useServiceAlerts'
+import { track, trackOnce } from '../services/analytics'
 import { alertBody, alertTitle, type ServiceAlert } from '../services/serviceAlerts'
+import { readSort } from '../data/tripPrefs'
 
 export type Place = { name: string; lat: number; lon: number; code?: string | null } // code: bus stop code ("KL1483")
 
@@ -243,6 +245,8 @@ const EFFECT_LABEL: Record<ServiceAlert['effect'], TranslationKey> = {
 // The alert itself, on the ride it affects: what kind of change, the operator's words, when, and their notice
 function AlertCard({ alert }: { alert: ServiceAlert }) {
   const { t, lang } = useLanguage()
+  // how many people an alert reached on their trip (admin dashboard), once per alert per visit
+  useEffect(() => { trackOnce(`alert:${alert.id}`, 'alert_seen', { alert_id: alert.id, title: alert.title_en }) }, [alert.id, alert.title_en])
   const when = alert.published_at ? new Date(alert.published_at).toLocaleDateString(lang, { day: 'numeric', month: 'short', timeZone: 'Asia/Kuala_Lumpur' }) : null
   return (
     <div className="mt-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950" role="note">
@@ -314,9 +318,9 @@ function Highlight({ tags }: { tags?: Tag[] }) {
     : has('least_walking')
       ? ['hlEasiest', 'bg-emerald-600 text-white']
       : has('fewest_changes')
-        ? ['tagFewestChanges', 'bg-[#F3EBDD] text-[#222D52]']
+        ? ['tagFewestChanges', 'bg-[#EAF1FB] text-[#222D52]']
         : has('cheapest')
-          ? ['tagCheapest', 'bg-[#F3EBDD] text-[#222D52]']
+          ? ['tagCheapest', 'bg-[#EAF1FB] text-[#222D52]']
           : null
   if (!pick) return null
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${pick[1]}`}>{t(pick[0])}</span>
@@ -539,7 +543,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   const { t, lang } = useLanguage()
   const alertsByLine = useServiceAlerts(open)
   // least walking first by default (owner, 15 Oct 2026); the other orders are one tap away
-  const [sort, setSort] = useState<SortKey>('walking')
+  const [sort, setSort] = useState<SortKey>(readSort) // the order picked in Trip settings (least walking unless changed)
   const [detail, setDetail] = useState<TripOption | null>(null)
   const [showMore, setShowMore] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -595,7 +599,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
     return (
       <li key={`${o.departure}-${o.arrival}-${o.hops.join()}-${i}`}>
         <button
-          onClick={() => setDetail(o)}
+          onClick={() => { setDetail(o); void track('trip_open', { from, to }) }}
           className="w-full text-start bg-white rounded-2xl border border-gray-200 p-4 hover:border-[#222D52]/50 hover:shadow-md transition"
         >
           <div className="flex items-baseline justify-between gap-3">

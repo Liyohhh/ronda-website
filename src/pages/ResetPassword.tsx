@@ -30,7 +30,7 @@ function ResetPassword() {
     setBusy(false)
     if (error) return setError(authErrorKey(error))
     setDone(true)
-    setTimeout(() => navigate('/dashboard', { replace: true }), 1500)
+    setTimeout(() => navigate('/account', { replace: true }), 1500)
   }
 
   return (

@@ -1,45 +1,28 @@
 import { Link } from 'react-router-dom'
 import Icon from './Icon'
-import PromoMap from './PromoMap'
+import PromoArt from './PromoArt'
 import { Accent, Eyebrow, Reveal } from './Motion'
-import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
+import { PROMOTIONS, type Promotion } from '../data/promotions'
 import { useLanguage } from '../hooks/useLanguage'
 
-// Home page: promotions (ads), compact: one wide banner (photo beside the words, the three ad places and the button),
-// then three small cards in a row (photo on top). Every banner carries one quiet "Ad" tag in the same corner.
-// Data in src/data/promotions.ts.
+// Home page: promotions (ads), one row: a wide navy card with the number of stops and stations, then a light blue
+// card and the one highlighted blue card; each has its words and button on the left and a flat drawing (PromoArt). Every card carries one
+// quiet "Ad" tag in the same corner. On phones they stack. Data in src/data/promotions.ts.
 
 // the whole card is the link (stretched over it: the card is the nearest positioned box)
-const STRETCH = 'after:absolute after:inset-0 after:z-[1] after:rounded-[28px] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-4 focus-visible:after:outline-offset-2 focus-visible:after:outline-[#222D52]'
+const STRETCH = 'after:absolute after:inset-0 after:z-[2] after:rounded-[24px] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-4 focus-visible:after:outline-offset-2 focus-visible:after:outline-[#222D52]'
 
-function AdTag({ text }: { text: string }) {
-  return (
-    <span className="inline-block rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-gray-700 shadow-sm">
-      {text}
-    </span>
-  )
+const TONE: Record<Promotion['tone'], { card: string; eyebrow: string; title: string; btn: string; ad: string }> = {
+  navy: { card: 'bg-gradient-to-br from-[#222D52] to-[#33417A]', eyebrow: 'text-[#8AB4F8]', title: 'text-white', btn: 'bg-white text-[#222D52] group-hover:bg-[#EAF1FB]', ad: 'bg-white/90 text-[#222D52]' },
+  sky: { card: 'bg-[#DCEAFB]', eyebrow: 'text-[#2559B8]', title: 'text-[#222D52]', btn: 'bg-[#222D52] text-white group-hover:bg-[#18203D]', ad: 'bg-white/90 text-[#222D52]' },
+  blue: { card: 'bg-[#2F6BD8]', eyebrow: 'text-[#DCE9FF]', title: 'text-white', btn: 'bg-white text-[#2559B8] group-hover:bg-[#EAF1FB]', ad: 'bg-white/90 text-[#222D52]' },
 }
 
 function PromotionSection() {
   const { t } = useLanguage()
-  const f = PROMO_FEATURE
-
-  const photo = (className: string) => (
-    <div className={`relative overflow-hidden rounded-[20px] bg-[#222D52] ${className}`}>
-      <img src={f.photo.src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
-      <span className="absolute top-3 start-3"><AdTag text={t('promoAdLabel')} /></span>
-    </div>
-  )
-  // the smaller cards: a small drawn map instead of a photo
-  const map = (p: (typeof PROMOTIONS)[number]) => (
-    <div className="relative h-40 overflow-hidden rounded-[20px] ring-1 ring-inset ring-[#E4DED3]">
-      <PromoMap kind={p.map} className="absolute inset-0 h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
-      <span className="absolute top-3 start-3"><AdTag text={t('promoAdLabel')} /></span>
-    </div>
-  )
 
   return (
-    <section aria-labelledby="promo-title" className="mt-24 md:mt-32 bg-cream py-20 md:py-28">
+    <section aria-labelledby="promo-title" className="mt-24 md:mt-32 bg-white py-20 md:py-28">
       <div className="wrap">
         <Reveal className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-5">
           <div>
@@ -47,7 +30,7 @@ function PromotionSection() {
             <p className="mt-5 max-w-3xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#222D52]"><Accent text={t('promoSubtitle')} /></p>
           </div>
           <Link
-            to={f.to}
+            to="/help/general#business"
             className="inline-flex self-start sm:self-auto flex-shrink-0 items-center gap-1.5 h-11 px-5 rounded-full border border-gray-200 bg-white text-sm font-semibold text-[#222D52] hover:bg-[#222D52] hover:text-white hover:border-[#222D52] transition-colors whitespace-nowrap"
           >
             {t('promoAdvertiseLink')}
@@ -55,49 +38,30 @@ function PromotionSection() {
           </Link>
         </Reveal>
 
-        <ul className="grid gap-3 sm:grid-cols-3">
-          {/* the wide banner: photo beside the words */}
-          <li data-promo={f.id} className="group relative sm:col-span-3 grid md:grid-cols-[1fr_1.15fr] gap-2 p-2 rounded-[28px] bg-white ring-1 ring-inset ring-[#DCD4C8]">
-            {photo('min-h-[200px] md:min-h-[260px]')}
-            <div className="flex flex-col justify-center gap-5 p-4 md:p-6">
-              <div>
-                <h3 className="text-xl md:text-2xl font-semibold tracking-[-0.01em] text-[#222D52]">
-                  <Link to={f.to} className={STRETCH}>{t(f.title)}</Link>
-                </h3>
-                <p className="mt-2 text-gray-600">{t(f.text)}</p>
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {f.tickets.map((k) => (
-                    <li key={k} className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-[13px] font-medium text-[#222D52]">{t(k)}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                <span aria-hidden="true" className="inline-flex items-center gap-1.5 h-11 px-5 rounded-full bg-gold text-sm font-bold text-[#222D52] group-hover:bg-gold-hover transition-colors">
-                  {t(f.cta)}
-                  <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
-                </span>
-                <span className="text-sm text-gray-600">{t(f.note)}</span>
-              </div>
-            </div>
-          </li>
-
-          {/* the smaller cards: photo on top, words below */}
-          {PROMOTIONS.map((p) => (
-            <li key={p.id} data-promo={p.id} className="group relative flex flex-col gap-2 p-2 rounded-[28px] bg-white ring-1 ring-inset ring-[#DCD4C8]">
-              {map(p)}
-              <div className="flex flex-1 items-start justify-between gap-3 p-3">
-                <div>
-                  <h3 className="font-semibold leading-snug text-[#222D52]">
+        <ul className="grid gap-4 lg:grid-cols-[1.5fr_1fr_1fr]">
+          {PROMOTIONS.map((p, i) => {
+            const tone = TONE[p.tone]
+            const wide = i === 0
+            return (
+              <Reveal as="li" key={p.id} delay={i * 0.08} data-promo={p.id} className={`lift group relative flex min-h-[230px] overflow-hidden rounded-[24px] p-6 sm:p-7 ${tone.card} ${wide ? 'items-center' : 'flex-col justify-end'}`}>
+                <span className={`absolute top-3.5 start-4 z-[1] rounded-full px-2.5 py-0.5 text-[11px] font-semibold shadow-sm ${tone.ad}`}>{t('promoAdLabel')}</span>
+                <PromoArt kind={p.art} className={`pointer-events-none absolute transition-transform duration-700 ease-out group-hover:scale-[1.04] ${wide ? 'bottom-2 end-2 w-[48%] max-w-[270px]' : 'end-1 top-3 w-[62%] max-w-[210px]'}`} />
+                <div className={`relative ${wide ? 'w-[56%] pt-4' : 'pt-28'}`}>
+                  <p className={`text-[13px] font-bold ${tone.eyebrow}`}>{t(p.eyebrow)}</p>
+                  <h3 className={`mt-1 font-black leading-tight ${wide ? 'text-[26px] md:text-[28px]' : 'text-[21px]'} ${tone.title}`}>
                     <Link to={p.to} className={STRETCH}>{t(p.title)}</Link>
                   </h3>
-                  <p className="mt-1 text-sm text-gray-600">{t(p.text)}</p>
+                  {p.stat && (
+                    <p className="mt-2 text-white/85 text-[14px]"><span className="font-black text-[30px] leading-none text-[#8AB4F8] tabular-nums">6,500+</span> {t('promoStatLine')}</p>
+                  )}
+                  <span aria-hidden="true" className={`mt-4 inline-flex h-10 items-center gap-1.5 rounded-xl px-4 text-[14px] font-extrabold transition-colors ${tone.btn}`}>
+                    {t(p.cta)}
+                    <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+                  </span>
                 </div>
-                <span aria-hidden="true" className="mt-0.5 w-8 h-8 flex-shrink-0 rounded-full bg-[#222D52] text-white flex items-center justify-center transition-colors group-hover:bg-gold group-hover:text-[#222D52]">
-                  <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
-                </span>
-              </div>
-            </li>
-          ))}
+              </Reveal>
+            )
+          })}
         </ul>
       </div>
     </section>

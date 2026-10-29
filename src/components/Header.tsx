@@ -39,6 +39,11 @@ function Header() {
     user?.email?.split('@')[0] ??
     ''
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined
+  const initials = (displayName || user?.email || '?').split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('')
+  const role = user?.app_metadata?.role as string | undefined // set by the server only
+  const hoverClose = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // the menu opens on hover where there is a mouse, on a tap everywhere
+  const canHover = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
   const handleSignOut = async () => {
     setMenuOpen(false)
@@ -76,11 +81,16 @@ function Header() {
             // session not read yet: keep the space, so Login / Sign Up don't flash for a signed-in person
             <span className="w-24 sm:w-44 h-9" aria-hidden="true" />
           ) : user ? (
-            <div className="relative ms-1" ref={menuRef}>
+            <div
+              className="relative ms-1"
+              ref={menuRef}
+              onMouseEnter={() => { if (hoverClose.current) clearTimeout(hoverClose.current); if (canHover()) setMenuOpen(true) }}
+              onMouseLeave={() => { if (canHover()) hoverClose.current = setTimeout(() => setMenuOpen(false), 180) }}
+            >
               <button
-                onClick={() => setMenuOpen((o) => !o)}
+                onClick={() => setMenuOpen((o) => (canHover() ? true : !o))} // with a mouse it is already open from the hover
                 aria-expanded={menuOpen}
-                aria-label={displayName || t('myDashboard')}
+                aria-label={displayName || t('accountLink')}
                 className={PILL}
               >
                 {avatarUrl ? (
@@ -94,27 +104,48 @@ function Header() {
                 <ChevronIcon />
               </button>
               {menuOpen && (
-                <div className="absolute end-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden p-1">
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2.5 rounded-xl hover:bg-gray-100"
-                  >
-                    {t('myDashboard')}
-                  </Link>
-                  <Link
-                    to="/account"
-                    onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2.5 rounded-xl hover:bg-gray-100"
-                  >
-                    {t('accountLink')}
-                  </Link>
-                  <button
-                    onClick={handleSignOut}
-                    className="w-full text-start px-4 py-2.5 rounded-xl hover:bg-gray-100"
-                  >
-                    {t('signOut')}
-                  </button>
+                // the account menu: who is signed in (to the account page), the account's parts, the admin or partner
+                // page for those roles, help, sign out
+                <div className="absolute end-0 top-full z-50 w-[300px] pt-2">
+                  <div className="overflow-hidden rounded-2xl border border-[#E3E9F1] bg-white shadow-[0_18px_40px_-16px_rgb(34_45_82/0.35)]">
+                    <Link to="/account" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 bg-gradient-to-br from-[#EAF1FB] to-white px-4 py-4 hover:from-[#E2EBF7]">
+                      {avatarUrl
+                        ? <img src={avatarUrl} alt="" className="h-11 w-11 shrink-0 rounded-full object-cover" />
+                        : <span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#222D52] font-display text-[17px] text-[#8AB4F8]">{initials}</span>}
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[15px] font-bold text-[#222D52]">{displayName}</span>
+                        <span className="block truncate text-xs text-[#5B6576]">{user.email}</span>
+                      </span>
+                      <Icon name="chevronRight" size={18} className="text-[#5B6576] rtl:rotate-180" />
+                    </Link>
+                    <nav aria-label={t('accountLink')} className="p-1.5 text-[14px]">
+                      {([
+                        ['personOutline', 'accountProfile', '/account'],
+                        ['tune', 'acctTrips', '/account#trips'],
+                        ['language', 'acctPrefs', '/account#preferences'],
+                        ['lockOutline', 'accountSecurity', '/account#security'],
+                      ] as const).map(([icon, label, to]) => (
+                        <Link key={to} to={to} onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#222D52] hover:bg-[#F2F6FB]">
+                          <Icon name={icon} size={19} className="text-[#5B6576]" />{t(label)}
+                        </Link>
+                      ))}
+                      {(role === 'admin' || role === 'merchant') && (
+                        <>
+                          <div className="mx-3 my-1.5 border-t border-[#E6EBF2]" />
+                          <Link to={role === 'admin' ? '/admin' : '/partner-dashboard'} onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-2.5 font-semibold text-[#222D52] hover:bg-[#F2F6FB]">
+                            <Icon name="spaceDashboardOutline" size={19} className="text-[#2559B8]" />{t(role === 'admin' ? 'menuAdmin' : 'menuPartner')}
+                          </Link>
+                        </>
+                      )}
+                      <div className="mx-3 my-1.5 border-t border-[#E6EBF2]" />
+                      <Link to="/help" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#222D52] hover:bg-[#F2F6FB]">
+                        <Icon name="helpOutline" size={19} className="text-[#5B6576]" />{t('help')}
+                      </Link>
+                      <button type="button" onClick={handleSignOut} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-[#222D52] hover:bg-[#F2F6FB]">
+                        <Icon name="logout" size={19} className="text-[#5B6576] rtl:rotate-180" />{t('signOut')}
+                      </button>
+                    </nav>
+                  </div>
                 </div>
               )}
             </div>
@@ -126,7 +157,7 @@ function Header() {
               </Link>
               <Link
                 to="/register"
-                className="ms-1 h-9 px-4 sm:px-5 inline-flex items-center rounded-full bg-gold text-[#222D52] font-bold whitespace-nowrap shadow-[0_4px_12px_rgb(210_182_138/0.35)] hover:bg-gold-hover active:scale-95 transition"
+                className="ms-1 h-9 px-4 sm:px-5 inline-flex items-center rounded-full bg-[#222D52] text-white font-bold whitespace-nowrap shadow-[0_6px_16px_-6px_rgb(34_45_82/0.45)] hover:bg-[#18203D] active:scale-95 transition"
               >
                 {t('signUp')}
               </Link>

@@ -100,7 +100,7 @@ function Login() {
             type="button"
             onClick={resend}
             disabled={busy || !email.trim()}
-            className="mt-3 w-full h-11 rounded-full border border-gold text-navy font-semibold hover:bg-gold-soft disabled:opacity-60 transition-colors"
+            className="mt-3 w-full h-11 rounded-full border border-[#2F6BD8] text-[#222D52] font-semibold hover:bg-[#EAF1FB] disabled:opacity-60 transition-colors"
           >
             {t('authResendConfirm')}
           </button>

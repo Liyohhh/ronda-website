@@ -8,7 +8,6 @@ import PhotoCredit from '../components/PhotoCredit'
 import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
 import { FEATURED_PLACES } from '../data/featuredPlaces'
-import { PROMO_FEATURE } from '../data/promotions'
 import { AUTH_VIDEO } from '../data/authVideo'
 import { HERO_VIDEOS } from '../data/heroVideos'
 import EcrlCard from '../components/EcrlCard'
@@ -233,11 +232,6 @@ function About() {
             {FEATURED_PLACES.flatMap((f) => (f.photo ? [{ ...f, photo: f.photo }] : [])).map((f) => (
               <li key={`featured-${f.id}`}>
                 {f.name}: <PhotoCredit photo={f.photo} />
-              </li>
-            ))}
-            {[PROMO_FEATURE].map((p) => (
-              <li key={`promo-${p.id}`}>
-                {p.photo.alt}: <PhotoCredit photo={p.photo} />
               </li>
             ))}
             <li>

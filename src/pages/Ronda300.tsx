@@ -58,7 +58,7 @@ function Ronda300() {
       >
           <label htmlFor="r300-input" className="block text-sm font-semibold text-white/80">{t('r3_searchLabel')}</label>
           <div className="relative mt-2 max-w-xl">
-            <div className="flex items-center gap-2 rounded-full bg-white px-5 py-3.5 shadow-lg text-gray-900 focus-within:ring-2 focus-within:ring-gold">
+            <div className="flex items-center gap-2 rounded-full bg-white px-5 py-3.5 shadow-lg text-gray-900 focus-within:ring-2 focus-within:ring-[#2F6BD8]">
               <Icon name="search" size={20} className="text-gray-500" />
               <input
                 id="r300-input"
@@ -93,45 +93,45 @@ function Ronda300() {
 
       {/* for businesses: a short band with a sample of how a partner shop shows in the list above */}
       {/* for businesses: why riders will find them, and what their listing looks like to a rider */}
-      <section aria-labelledby="r3-merchant" className="mt-12 bg-[#222D52] text-white md:mt-20">
+      <section aria-labelledby="r3-merchant" className="mt-12 bg-gradient-to-br from-[#E9F0F8] via-[#F3F6FA] to-[#F2F6FB] text-[#222D52] md:mt-20">
         <div className="wrap grid gap-10 py-12 md:grid-cols-[minmax(0,1fr)_360px] md:items-center md:gap-14 md:py-14">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#D2B68A]">{t('navMerchantTitle')}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#2559B8]">{t('navMerchantTitle')}</p>
             <h2 id="r3-merchant" className="mt-2.5 max-w-xl font-display text-[28px] leading-[1.15] md:text-[34px]">{t('r3_mHead')}</h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-white/80">{t('r3_mSub')}</p>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-[#434C5C]">{t('r3_mSub')}</p>
             <ul className="mt-7 grid gap-5 sm:grid-cols-3">
               {([['locationOnOutline', 'r3_mT1', 'r3_mP1'], ['routeOutline', 'r3_mT2', 'r3_mP2'], ['storefront', 'r3_mT3', 'r3_mP3']] as const).map(([icon, title, text]) => (
-                <li key={title} className="border-t border-white/15 pt-3.5">
-                  <Icon name={icon} size={20} className="text-[#D2B68A]" />
+                <li key={title} className="border-t border-[#D9E1EB] pt-3.5">
+                  <Icon name={icon} size={20} className="text-[#2559B8]" />
                   <p className="mt-2 text-[14.5px] font-semibold">{t(title)}</p>
-                  <p className="mt-1 text-[13px] leading-relaxed text-white/70">{t(text)}</p>
+                  <p className="mt-1 text-[13px] leading-relaxed text-[#5B6576]">{t(text)}</p>
                 </li>
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <Link to="/help/general#business" className="inline-flex h-11 items-center gap-2 rounded-full bg-[#D2B68A] px-5 text-sm font-semibold text-[#222D52] hover:bg-[#E2CCA6] transition-colors">
+              <Link to="/help/general#business" className="inline-flex h-11 items-center gap-2 rounded-full bg-[#8AB4F8] px-5 text-sm font-semibold text-[#222D52] hover:bg-[#3B4A7C] transition-colors">
                 {t('navMerchantCta')}
                 <Icon name="chevronRight" size={18} className="rtl:rotate-180" />
               </Link>
-              <p className="text-sm text-white/70">
-                {t('r3_mAsk')} <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-white underline decoration-[#D2B68A] underline-offset-4 hover:text-[#D2B68A]">{SUPPORT_EMAIL}</a>
+              <p className="text-sm text-[#5B6576]">
+                {t('r3_mAsk')} <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-[#222D52] underline decoration-[#8AB4F8] underline-offset-4 hover:text-[#2559B8]">{SUPPORT_EMAIL}</a>
               </p>
             </div>
           </div>
 
           {/* a sample listing (not a real place) as a rider sees it in the RONDA 300 list */}
-          <div aria-hidden="true" className="overflow-hidden rounded-2xl bg-[#FBFAF7] text-[#222D52] shadow-[0_30px_60px_-30px_rgb(0_0_0/0.6)]">
+          <div aria-hidden="true" className="overflow-hidden rounded-2xl bg-[#F8FAFD] text-[#222D52] shadow-[0_24px_50px_-28px_rgb(34_45_82/0.45)]">
             <PromoMap kind="offers" className="block h-36 w-full" />
             <div className="p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#6F5F3C]">{t('r3_mSees')} · LRT Pasar Seni</p>
-              <div className="mt-3 flex items-center gap-3 border-s-2 border-s-[#D2B68A] bg-white py-3.5 ps-3 pe-3 shadow-[0_1px_0_#ECE7DD]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#2559B8]">{t('r3_mSees')} · LRT Pasar Seni</p>
+              <div className="mt-3 flex items-center gap-3 border-s-2 border-s-[#8AB4F8] bg-white py-3.5 ps-3 pe-3 shadow-[0_1px_0_#E3E9F1]">
                 <span className="min-w-0 flex-1">
                   <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold uppercase tracking-[0.09em] text-[#99691A]"><Icon name="star" size={12} />{t('r3_mPartner')}</span>
                   <span className="block font-display text-[17px] leading-snug">{t('r3_mYours')}</span>
                   <span className="mt-0.5 flex items-center gap-1.5 text-xs text-[#4D7330]"><span className="h-1.5 w-1.5 rounded-full bg-[#4D7330]" />{t('r3_mHours')}</span>
-                  <span className="block text-xs text-[#6B675E]">{t('r3_walkFrom').replace('{station}', 'LRT Pasar Seni').replace('{min}', '2')}</span>
+                  <span className="block text-xs text-[#5B6576]">{t('r3_walkFrom').replace('{station}', 'LRT Pasar Seni').replace('{min}', '2')}</span>
                 </span>
-                <span className="text-[17px] font-semibold tabular-nums">2<small className="ms-0.5 text-[11px] font-normal text-[#6B675E]">min</small></span>
+                <span className="text-[17px] font-semibold tabular-nums">2<small className="ms-0.5 text-[11px] font-normal text-[#5B6576]">min</small></span>
               </div>
               <span className="mt-3 flex h-10 items-center justify-center gap-2 rounded-full bg-[#222D52] text-sm font-semibold text-white">
                 {t('r3_go')}

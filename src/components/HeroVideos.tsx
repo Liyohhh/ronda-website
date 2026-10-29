@@ -58,9 +58,9 @@ function HeroVideos() {
             onClick={() => setIndex(i)}
             aria-label={`${t('goToSlide').replace('{n}', String(i + 1))}: ${h.alt}`}
             aria-current={i === index}
-            className="group h-6 flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+            className="group h-6 flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6BD8]"
           >
-            <span className={`block h-1 rounded-full transition-all duration-500 ${i === index ? 'w-10 bg-gold' : 'w-5 bg-white/45 group-hover:bg-white'}`} />
+            <span className={`block h-1 rounded-full transition-all duration-500 ${i === index ? 'w-10 bg-[#222D52]' : 'w-5 bg-white/45 group-hover:bg-white'}`} />
           </button>
         ))}
       </div>

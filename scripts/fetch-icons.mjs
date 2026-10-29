@@ -30,6 +30,9 @@ const NAMES = [
   'storefront-rounded', 'favorite-rounded',
   // services
   'directions-car-rounded', 'airport-shuttle-rounded', 'event-rounded', 'flight-land-rounded', 'badge-rounded',
+  // account menu and settings
+  'lock-outline-rounded', 'logout-rounded', 'space-dashboard-outline-rounded', 'tune-rounded', 'mail-outline-rounded',
+  'public-rounded', 'photo-camera-outline-rounded', 'devices-rounded', 'delete-outline-rounded', 'settings-outline-rounded',
 ]
 
 const res = await fetch(`https://api.iconify.design/material-symbols.json?icons=${NAMES.join(',')}`)

@@ -6,7 +6,7 @@ import type { Lang, TranslationKey } from '../i18n/translations'
 // the link comes back to /login, which then goes on to the dashboard.
 
 // Where links in Supabase's emails send people back to (each must be in Auth -> URL Configuration -> Redirect URLs)
-export const confirmUrl = () => `${window.location.origin}/login?confirmed=1&next=${encodeURIComponent('/dashboard')}`
+export const confirmUrl = () => `${window.location.origin}/login?confirmed=1&next=${encodeURIComponent('/account')}`
 export const resetUrl = () => `${window.location.origin}/reset-password`
 
 // Cloudflare Turnstile token, when a CAPTCHA site key is set (VITE_CAPTCHA_SITE_KEY; Supabase Auth -> Attack
@@ -14,12 +14,13 @@ export const resetUrl = () => `${window.location.origin}/reset-password`
 type Captcha = string | undefined
 
 // lang: the site language at sign-up; Supabase's emails to this person use it (docs/email-templates)
-export async function signUp(name: string, email: string, password: string, lang: Lang, captchaToken?: Captcha) {
+export async function signUp(name: string, email: string, password: string, lang: Lang, captchaToken?: Captcha, country?: string) {
   const { error } = await supabase.auth.signUp({
     email: email.trim(),
     password,
     // when the person agreed to the terms and privacy notice (PDPA consent record)
-    options: { data: { full_name: name.trim(), lang, terms_accepted_at: new Date().toISOString() }, emailRedirectTo: confirmUrl(), captchaToken },
+    // country: ISO code from "Where are you from?", counted on the admin dashboard
+    options: { data: { full_name: name.trim(), lang, ...(country ? { country } : {}), terms_accepted_at: new Date().toISOString() }, emailRedirectTo: confirmUrl(), captchaToken },
   })
   // an email that already has an account gets the same "check your inbox" answer (Supabase sends nothing new),
   // so the form can't be used to find out who is registered

@@ -45,7 +45,7 @@ function Footer() {
         </div>
         {columns.map((c) => (
           <nav key={c.title} aria-label={c.title}>
-            <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-gold-deep mb-5">{c.title}</h2>
+            <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-[#2559B8] mb-5">{c.title}</h2>
             <ul className="space-y-3.5 text-[15px] text-gray-700">
               {c.links.map((l) => (
                 <li key={l.to}>

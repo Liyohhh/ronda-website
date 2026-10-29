@@ -106,7 +106,7 @@ function WhyRonda() {
       </h2>
 
       <div className="mt-12">
-      <figure className="rounded-[32px] bg-[#E8E4E0] px-2 py-8 sm:px-10 flex flex-col justify-center">
+      <figure className="rounded-[32px] bg-[#E9EFF7] px-2 py-8 sm:px-10 flex flex-col justify-center">
         <svg viewBox="0 0 1120 430" role="img" aria-labelledby="why-svg-title" className={`why-map w-full h-auto${play ? ' is-playing' : ''}`}>
           <title id="why-svg-title">{t('why_svg')}</title>
           <defs>
@@ -131,8 +131,8 @@ function WhyRonda() {
             const r = 4.2
             return (
               <g key={c.name} className="why-city" style={{ animationDelay: `${1.3 + i * 0.12}s` }}>
-                <circle className="why-pulse" cx={x} cy={y} r={r} fill="none" stroke="#D2B68A" strokeWidth="1.5" style={{ animationDelay: `${2 + i * 0.35}s` }} />
-                <circle cx={x} cy={y} r={r} fill="#D2B68A" />
+                <circle className="why-pulse" cx={x} cy={y} r={r} fill="none" stroke="#8AB4F8" strokeWidth="1.5" style={{ animationDelay: `${2 + i * 0.35}s` }} />
+                <circle cx={x} cy={y} r={r} fill="#8AB4F8" />
                 <text className={c.big ? 'why-label-big' : 'why-label-small'} x={x + (c.left ? -(r + 6) : r + 6)} y={y} textAnchor={c.left ? 'end' : 'start'} dominantBaseline="central"
                   fontSize={c.big ? 16 : 13} fontWeight={c.big ? 700 : 600} fill="#222D52" paintOrder="stroke" stroke="#F6F3ED" strokeWidth="4" strokeLinejoin="round">
                   {c.name}
@@ -147,7 +147,7 @@ function WhyRonda() {
           </text>
         </svg>
         <p className="mt-1 flex items-center justify-center gap-2 text-xs text-gray-500">
-          <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-[#D2B68A]" />
+          <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-[#8AB4F8]" />
           {t('why_legend')}
         </p>
       </figure>

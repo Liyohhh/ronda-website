@@ -19,6 +19,9 @@ test('sign up from the header: check-your-inbox screen, then send the email agai
   await expect(page.getByRole('heading', { name: 'Create your account' })).toBeVisible()
   await page.getByLabel('Full name').fill('Aina Test')
   await page.getByLabel('Email address').fill('aina@example.test')
+  // where they are from: Malaysia first in the list, kept as its ISO code for the admin dashboard
+  await expect(page.getByLabel('Where are you from?').locator('option').nth(1)).toHaveText('Malaysia')
+  await page.getByLabel('Where are you from?').selectOption('SG')
   await page.getByLabel('Password', { exact: true }).fill('abcdefgh')
   await expect(page.getByRole('listitem').filter({ hasText: 'Upper and lower case letters' })).toContainText('(still needed)')
   await page.getByLabel('Password', { exact: true }).fill(STRONG)
@@ -33,7 +36,7 @@ test('sign up from the header: check-your-inbox screen, then send the email agai
   await expect(page.getByRole('heading', { name: 'Check your inbox' })).toBeVisible()
   await expect(page.getByRole('status')).toContainText('aina@example.test')
   const signup = backend.calls.find((c) => c.path === '/auth/v1/signup')?.body as Record<string, unknown>
-  expect(signup).toMatchObject({ email: 'aina@example.test', password: STRONG, data: { full_name: 'Aina Test', lang: 'en' } })
+  expect(signup).toMatchObject({ email: 'aina@example.test', password: STRONG, data: { full_name: 'Aina Test', lang: 'en', country: 'SG' } })
   expect((signup.data as Record<string, string>).terms_accepted_at).toMatch(/^\d{4}-\d\d-\d\dT/)
   await page.getByRole('button', { name: 'Send confirmation email again' }).click()
   await expect(page.getByText('A new confirmation email is on its way.')).toBeVisible()
@@ -49,6 +52,7 @@ test('sign up: Supabase errors come back in plain words', async ({ page, backend
   await page.goto('/register')
   await page.getByLabel('Full name').fill('Aina Test')
   await page.getByLabel('Email address').fill('aina@example.test')
+  await page.getByLabel('Where are you from?').selectOption('MY')
   // passes the rules here, but Supabase still says no (for example a password found in a data leak)
   await page.getByLabel('Password', { exact: true }).fill(STRONG)
   await page.getByLabel('Confirm password').fill(STRONG)
@@ -105,18 +109,18 @@ test('sign in: wrong password, and an unconfirmed email can get a new link', asy
   expect(backend.calls.find((c) => c.path === '/auth/v1/resend')?.body).toMatchObject({ type: 'signup', email: 'tester@example.test' })
 })
 
-test('confirmation link: signs the person in and opens the dashboard', async ({ page, backend }) => {
+test('confirmation link: signs the person in and opens the account page', async ({ page, backend }) => {
   void backend
   const s = testSession()
   // how Supabase sends the person back after the link in the email (implicit flow: tokens in the #hash)
   const hash = new URLSearchParams({ access_token: s.access_token, refresh_token: s.refresh_token, expires_in: '3600', expires_at: String(s.expires_at), token_type: 'bearer', type: 'signup' })
-  await page.goto(`/login?confirmed=1&next=%2Fdashboard#${hash}`)
-  await expect(page).toHaveURL(/\/dashboard$/)
+  await page.goto(`/login?confirmed=1&next=%2Faccount#${hash}`)
+  await expect(page).toHaveURL(/\/account$/)
   await expect(page.getByRole('banner').getByRole('button', { name: 'Test Rider' })).toBeVisible()
 })
 
 test('confirmation link that expired: says so and offers a new one', async ({ page, backend }) => {
-  await page.goto('/login?confirmed=1&next=%2Fdashboard#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired')
+  await page.goto('/login?confirmed=1&next=%2Faccount#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired')
   await expect(page.getByRole('alert')).toContainText('This email link has expired or was already used')
   const again = page.getByRole('button', { name: 'Send confirmation email again' })
   await expect(again).toBeDisabled() // needs the email first

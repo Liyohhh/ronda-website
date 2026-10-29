@@ -147,6 +147,93 @@
 - The sliding row of kinds shows a tiny arrow over a soft fade on the side that has more (right at first, left once
   slid; none when everything fits); pressing it slides the row. Works right to left in Arabic. Checked with headless
   Edge. Playwright RONDA 300 4 / 4; site (axe) on /ronda-300 4 / 4; unit 248 / 248.
+- Account page redesigned (owner picked design B of three): a side menu with the user's initials, name and email and
+  four sections (Profile, Sign-in and security, Preferences, Delete account), one panel open at a time, each with its
+  own address (/account#security). Profile: name, sign-in email (read only) and "User since". Security: change
+  password, sign out on all devices. Preferences: language (new here). On phones the menu is a row above the panel.
+  New text in 4 languages; says "user", not "rider" (owner). Playwright account, auth and access 48 / 48 (new: the
+  menu opens each section, Malay from Preferences, axe clean). Checked with headless Edge at 1440 px and 375 px.
+- Account page: new Trip settings section (owner request): which routes come first (least walking by default,
+  fastest, fewest transfers, cheapest), fares for Malaysians or tourists, cashless or cash, and parking at the start
+  station on or off. Kept on this device and used by the trip planner at once (same fare keys the planner already
+  had; new src/data/tripPrefs.ts). Step-free routes and choosing Park & Ride trips are not offered by the planner
+  yet, so they are not in the settings (TODO when plan-trip supports them). Unit 251 / 251 (new: trip settings);
+  Playwright account 18 / 18 (new: settings kept, axe clean), journey and home pass. Checked at 1440 px and 375 px.
+- "My dashboard" removed (owner: useless): the page, its header menu link and its texts are gone; /dashboard and
+  links in sign-up / reset emails now open the account page.
+- Account page: the password rules show only once a new password is being typed (owner request).
+- Profile picture (owner request): add, change or remove it on the account page. The photo is cut to a centred
+  256 px square WebP in the browser (up to 10 MB in), uploaded to a new public "avatars" bucket at
+  <user id>/avatar.webp (users can only write their own folder), and shown beside the menu and in the header.
+  Deleting the account removes the picture too (delete-account Edge Function). Pictures allowed by the site's
+  content security policy. Database: migration 20261029100000_avatars_bucket.sql written, NOT applied yet (needs
+  the owner's approval); delete-account change not deployed yet; its Deno test updated but not run here (no Deno).
+  Unit 253 / 253 (new: picture square and path); Playwright account and CSP 38 / 38 (new: upload, link, remove;
+  rules only while typing).
+- Admin dashboard (owner: the dashboard is for admins only): on /admin, above the quick links. Users: total
+  accounts and new accounts per day (30 days), week (12) or month (12) as bars; people using the app each day (30
+  days); where users are from; the 10 most searched words and the 10 busiest stations (last 30 days). Numbers come
+  from one admin-only database function, admin_dashboard() (sign-ups from Supabase Auth, the rest from the mobile
+  app's analytics events; the website records nothing new). Checked read-only on production: 4 accounts, 16
+  distinct searches, busiest LRT Titiwangsa (26).
+- Sign-up asks "Where are you from?" (required; Malaysia first, then the countries most visitors come from, then
+  A-Z in the reader's language), kept as an ISO code in the account; the privacy answer in Help says so (4 languages).
+- Security found while doing this: any signed-in user could read every analytics event (device ids, user ids, search
+  text). The same migration closes it; admins still read through their own policy. Also: is_admin() in the database
+  treats the email admin@gmail.com as admin; the new dashboard does not use it (it checks the admin role / admins
+  table), but the old rule should be removed (owner to decide).
+- Database: migration 20261029110000_admin_dashboard.sql written, NOT applied yet (needs the owner's approval).
+  Unit 253 / 253; Playwright full run 234 / 236 before the last fixes (select contrast, label), then site, auth and
+  access 88 / 88 (new: dashboard numbers and Weekly, country on sign-up).
+- Admin dashboard rebuilt to the owner's chosen design (mix of the references; same format for the app): active users
+  first (today with the same day last week, this week, this month, share who come on a given day, accounts), active
+  users per day / week / month (signed in and guests), coming back (weekly groups, 1 / 2 / 4 weeks), busy hours,
+  most planned trips, countries, busiest stations with line colours, searches (most searched / found nothing), live
+  sharing, website or app, language, from search to trip, RONDA 300 places and trails, service alert reach. Greeting
+  and a pill menu jumping to Users, Trips, Places and the service alerts editor. All text in 4 languages.
+- Website now records anonymous usage events like the app (services/analytics.ts): app opened (once a day), search
+  (with how many results), trip planned, trip opened, place opened / Go tapped, trail opened, alert seen. Random device
+  id only, no names or positions; nothing sent when the browser asks not to be tracked. Help privacy answer updated
+  (4 languages). Event list for the app team: docs/ANALYTICS_EVENTS.md in the database repo.
+- Database: migration 20261029110000_admin_dashboard.sql rewritten (new admin_dashboard(), insert rules for events:
+  known kinds only, 2 KB max, own account only; closes the read-all hole). Tested read-only on production with a
+  temporary copy: 5 devices active this month, stickiness 27%, busiest LRT Titiwangsa. NOT applied yet: the apply was
+  blocked by the session's safety check; needs the owner to allow it or run it. Same for the avatars migration and the
+  delete-account deploy.
+- Unit 258 / 258 (new: event recording, opt-out). Playwright full run 235 / 236: the one failure is the RONDA 300 map
+  timing under parallel load (known; passes on its own).
+- Trails page search bar (owner request): typo-tolerant (one letter off is fine), looks at the trail name and
+  description in the reader's language, its stops and their stations; best matches first; kept in the address
+  (?q=); "No trails match" with a clear button. Shared matcher data/smartMatch.ts (featured places use it too).
+- Header account menu redesigned (owner's reference, only what RONDA has): a card with picture, name and email
+  (to the account page), then Profile, Trip settings, Preferences, Sign-in and security with line icons, Admin
+  dashboard (admins) or Partner page (merchants), Help, Sign out. Opens on hover with a mouse, on tap on phones.
+- Account page redesigned the same way: a side card (picture, name, email, user since) and a menu with an icon per
+  part; the parts as cards of tiles, one setting per tile with its value and action: picture, name, country (now
+  editable), route order, fares, payment, parking, language, email, password, sign out everywhere; Delete account
+  as a line under the cards that opens a confirm box. New icons added to the Material set (scripts/fetch-icons.mjs).
+  Unit tests pass; Playwright account, auth and access 50 / 50, trails 12 / 12. Checked at 1440 px and 390 px.
+- Promotions redone (owner picked layout C with the wording of A): one wide navy card (RONDA 300: "Put your shop
+  near the station", 6,500+ stops and stations, List your business) and two coloured cards (hotels and
+  attractions; offers for riders), each with a flat drawing (components/PromoArt.tsx) and an Ad tag. The old photo
+  banner and its credit are gone. 4 languages.
+- Lighter colour scheme (owner, after the reference): the big navy blocks are now light sky to cream with navy
+  words: inner page tops (pages with a photo keep the dark fade), the lines band, the get-the-app band, the RONDA 300
+  partner pitch, the menu promo card and the feature tiles. Gold stays the button colour; navy only for words and
+  small things. The home hero video and the trip / line panels keep navy.
+- Motion kept gentle: sections fade up as they come into view (already there), cards lift a little on hover
+  (promotion and feature cards; trail cards already did), photos zoom slowly on hover, the home hero words come in
+  one after the other. All off for people who ask for reduced motion. The planner box does not animate (it would
+  read as faded to screen readers and contrast checks while it moves).
+- Unit 261 / 261. Playwright full run: all pass except the known RONDA 300 map timing under parallel load; home and
+  site (axe) 72 / 72 after the last fixes.
+- Colours studied from the owner's reference (29 Oct) and cream removed: white page, pale blue-grey surfaces
+  (#F2F6FB), navy #222D52 for words and main buttons, one blue accent (#2F6BD8 fill, #2559B8 for text, for
+  contrast). Promotions are navy, light sky and blue cards. Playwright full run 238 / 238.
+- "Everything you need" redesigned (owner picked A of four): four cards on one pale strip; one card is lifted,
+  filled blue, with a round photo in its corner and "Learn more" (RONDA 300 first, then whichever card the mouse or
+  keyboard is on). Cards stack on phones. New intro line in 4 languages. Unit 261 / 261; Playwright home, access and
+  site (axe) 84 / 84. Checked at 1280 px (also on hover) and 390 px.
 - Home page: the three small promotion cards now show small isometric city scenes in place of photos (owner picked
   this style from three): a train on its viaduct in the line's colour (LRT Kelana Jaya, MRT Kajang, Monorail),
   buildings, park, river and a gold pin; a station with its 300 m ring, twin towers and hotels, the walk to a row of

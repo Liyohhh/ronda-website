@@ -66,3 +66,17 @@ test('a trail opened from Home goes back to Home', async ({ page, backend }) => 
   await page.getByRole('link', { name: 'Back to home' }).click()
   await expect(page).toHaveURL(/\/#explore$/)
 })
+
+test('trails search: finds a trail by name with a typo, keeps it in the address, says when nothing matches', async ({ page, backend }) => {
+  void backend
+  await page.goto('/trails')
+  const search = page.getByRole('searchbox', { name: 'Search trails' })
+  await search.fill('night markt')
+  await expect(page).toHaveURL(/q=night\+markt/)
+  await expect(page.getByRole('status')).toContainText('trails found')
+  await expect(page.getByRole('link', { name: /Hawker & Night Market Trail/ }).first()).toBeVisible()
+  await search.fill('zzqx')
+  await expect(page.getByText('No trails match "zzqx".')).toBeVisible()
+  await page.getByRole('button', { name: 'Clear the search' }).click()
+  await expect(search).toHaveValue('')
+})

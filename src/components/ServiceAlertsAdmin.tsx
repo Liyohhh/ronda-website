@@ -140,7 +140,7 @@ function ServiceAlertsAdmin() {
               {RAIL.map((l) => {
                 const on = editing.draft.line_ids.includes(l.id)
                 return (
-                  <label key={l.id} className={`inline-flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-sm focus-within:ring-2 focus-within:ring-gold ${on ? 'border-[#222D52] bg-[#222D52]/5' : 'border-gray-300'}`}>
+                  <label key={l.id} className={`inline-flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-sm focus-within:ring-2 focus-within:ring-[#2F6BD8] ${on ? 'border-[#222D52] bg-[#222D52]/5' : 'border-gray-300'}`}>
                     <input
                       type="checkbox"
                       checked={on}
@@ -211,7 +211,7 @@ function ServiceAlertsAdmin() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <button type="submit" disabled={busy} className="h-10 rounded-full bg-gold px-5 text-sm font-bold text-[#222D52] hover:bg-gold-hover disabled:opacity-50">{t('adminAlertSave')}</button>
+            <button type="submit" disabled={busy} className="h-10 rounded-full bg-[#222D52] px-5 text-sm font-bold text-white hover:bg-[#18203D] disabled:opacity-50">{t('adminAlertSave')}</button>
             <button type="button" onClick={() => { setEditing(null); setProblem('') }} className="h-10 rounded-full border border-gray-300 px-5 text-sm font-semibold text-gray-700">{t('adminAlertCancel')}</button>
           </div>
         </form>

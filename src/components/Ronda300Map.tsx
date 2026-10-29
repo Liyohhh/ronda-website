@@ -355,12 +355,12 @@ function Ronda300Map({
     name.className = 'block pe-5 font-display text-[16px] font-normal leading-snug text-[#222D52]'
     name.textContent = pinCard.name
     const text = document.createElement('p')
-    text.className = 'mt-1 text-[12.5px] leading-relaxed text-[#4A4740]'
+    text.className = 'mt-1 text-[12.5px] leading-relaxed text-[#434C5C]'
     text.textContent = pinCard.text
     const row = document.createElement('div')
     row.className = 'mt-2 flex items-center justify-between gap-3'
     const walk = document.createElement('span')
-    walk.className = 'text-[11.5px] text-[#6B675E]'
+    walk.className = 'text-[11.5px] text-[#5B6576]'
     walk.textContent = pinCard.walk
     const go = document.createElement('a')
     go.href = pinCard.href

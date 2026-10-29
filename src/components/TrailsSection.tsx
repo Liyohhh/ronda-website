@@ -94,7 +94,7 @@ function TrailsSection() {
       <div className="mt-8 flex flex-wrap justify-center gap-3 px-4">
         <Link
           to={category === 'all' ? '/trails' : `/trails?category=${category}`}
-          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-gold text-[15px] font-bold text-[#222D52] shadow-[0_6px_16px_rgb(210_182_138/0.35)] hover:bg-gold-hover active:scale-95 transition whitespace-nowrap"
+          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-[#222D52] text-[15px] font-bold text-white shadow-[0_6px_16px_rgb(47_107_216/0.35)] hover:bg-[#18203D] active:scale-95 transition whitespace-nowrap"
         >
           {t('seeAllTrails')}
           <Icon name="chevronRight" size={16} className="rtl:rotate-180" />

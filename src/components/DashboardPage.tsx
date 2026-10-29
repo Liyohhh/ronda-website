@@ -7,8 +7,8 @@ import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import type { IconName } from '../data/icons'
 
-// The signed-in pages (rider, partner, admin): a title, what is ready now as working links, and what is coming;
-// a page can add its own tools below the tiles
+// The partner page: a title, what is ready now as working links, and what is coming; a page can add its own tools
+// below the tiles
 export type DashTile = { label: TranslationKey; text: TranslationKey; icon: IconName; to?: string }
 
 function DashboardPage({ title, intro, tiles, children }: { title: TranslationKey; intro: TranslationKey; tiles: DashTile[]; children?: ReactNode }) {

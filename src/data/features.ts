@@ -17,6 +17,6 @@ export const FEATURES: Feature[] = [
   { key: 'feat_airport', icon: 'flight', accent: 'luggage', color: '#6D28D9', to: '/?to=ERL%20KLIA%20T1&toName=KLIA%20Terminal%201' },
   { key: 'feat_languages', icon: 'translate', accent: 'chat', color: '#0E7490' },
   { key: 'feat_ronda300', icon: 'myLocation', accent: 'storefront', color: '#C2410C', to: RONDA300_MAP },
-  { key: 'feat_saved', icon: 'bookmark', accent: 'favorite', color: '#BE185D', to: '/dashboard' },
+  { key: 'feat_saved', icon: 'bookmark', accent: 'favorite', color: '#BE185D', to: '/account' },
   { key: 'feat_alerts', icon: 'notifications', accent: 'scheduleOutline', color: '#B91C1C', to: '/about#about-features', soon: true },
 ]

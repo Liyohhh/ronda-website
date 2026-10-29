@@ -87,7 +87,10 @@ async function mockBackend(page: Page): Promise<Backend> {
     const req = route.request()
     if (req.method() === 'OPTIONS') return route.fulfill({ status: 200, headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*' } })
     const url = new URL(req.url())
-    const body = req.postDataJSON?.() ?? null
+    // JSON bodies are kept for the tests to check; file uploads (form data) are not JSON
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let body: any = null
+    try { body = req.postDataJSON?.() ?? null } catch { body = null }
     be.calls.push({ path: url.pathname, body })
     switch (url.pathname) {
       case '/rest/v1/rpc/search_stops': {
@@ -112,6 +115,22 @@ async function mockBackend(page: Page): Promise<Backend> {
         ])
       case '/rest/v1/rpc/places_near': // OpenStreetMap places around a station (RONDA 300 page)
         return json(route, PLACES_NEAR)
+      case '/rest/v1/rpc/admin_dashboard': { // admin dashboard numbers (the database refuses non-admins; the page asks only on /admin)
+        const series = (count: number, unit: number) => Array.from({ length: count }, (_, i) => ({ d: new Date(Date.UTC(2026, 9, 1) + i * unit * 86400000).toISOString(), n: 40 + i, s: 10 + (i % 4) }))
+        return json(route, { active_today: 69, active_week: 240, active_month: 820, active_today_prev: 60, active_week_prev: 220, active_month_prev: 700, signed_in_today: 18,
+          stickiness: 0.13, active_daily: series(30, 1), active_weekly: series(12, 7), active_monthly: series(12, 30),
+          cohorts: [{ w: '2026-10-05', n: 300, w1: 41, w2: 27, w4: null }, { w: '2026-10-12', n: 320, w1: 44, w2: null, w4: null }],
+          busy_hours: [{ dow: 1, h: 8, n: 30 }, { dow: 1, h: 18, n: 28 }, { dow: 6, h: 12, n: 12 }],
+          top_trips: [{ from: 'LRT Gombak', to: 'KL Sentral', n: 21 }], hot_stations: [{ s: 'LRT Titiwangsa', n: 26 }, { s: 'LRT Gombak', n: 14 }],
+          top_searches: [{ q: 'klcc', n: 12 }, { q: 'pavilion', n: 8 }], no_result_searches: [{ q: 'ikea cheras', n: 4 }],
+          live_shares: 9, live_shares_prev: 6, live_share_minutes: 20, platforms: [{ p: 'android', n: 50 }, { p: 'web', n: 19 }], languages: [{ l: 'en', n: 40 }, { l: 'ms', n: 29 }],
+          funnel: { search: 156, plan: 120, open: 80, share: 9 }, places: [{ id: 'chinatown1974', name: 'Chinatown 1974', views: 30, go: 7 }], trails: [{ slug: 'heritage', views: 12 }],
+          alert_reach: [{ id: 'a1', title: 'LRT Kelana Jaya: trains turn back at Ampang Park', n: 52, first: '2026-10-28T08:00:00' }],
+          accounts: 42, accounts_new_week: 5, countries: [{ c: 'MY', n: 30 }, { c: 'SG', n: 7 }, { c: null, n: 5 }] })
+      }
+      // anonymous usage events (services/analytics.ts): accepted, nothing back
+      case '/rest/v1/analytics_events':
+        return route.fulfill({ status: 201, headers: { 'access-control-allow-origin': '*' }, body: '' })
       case '/rest/v1/rpc/bus_routes':
         return json(route, BUS_ROUTES)
       case '/rest/v1/rpc/line_stations':
@@ -167,6 +186,10 @@ async function mockBackend(page: Page): Promise<Backend> {
       { id: 'klccPark', lat: 3.1553, lon: 101.7146 },
       { id: 'petrosains', lat: 3.1579, lon: 101.7119 },
     ])
+    // profile pictures: upload / replace / remove in the avatars bucket, and the public picture itself (1 px PNG)
+    if (url.pathname.startsWith('/storage/v1/object/public/avatars/')) return route.fulfill({ status: 200, contentType: 'image/png', headers: { 'access-control-allow-origin': '*' },
+      body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64') })
+    if (url.pathname.startsWith('/storage/v1/object/avatars')) return json(route, req.method() === 'DELETE' ? [] : { Key: url.pathname.replace('/storage/v1/object/', '') })
     // operator service alerts in force (none unless a test sets them)
     if (url.pathname === '/rest/v1/service_alerts') return json(route, be.alerts)
     // plain table reads (bus route list etc.): empty

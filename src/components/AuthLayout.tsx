@@ -23,7 +23,7 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
   const { t } = useLanguage()
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <header className="flex items-center justify-between h-16 px-4 sm:px-6 border-b border-gold/30">
+      <header className="flex items-center justify-between h-16 px-4 sm:px-6 border-b border-[#DCE5F0]">
         <Link to="/" className="flex items-center" aria-label="RONDA home">
           <BrandLogo size="sm" />
         </Link>
@@ -58,16 +58,16 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
         {/* Form */}
         <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-10 bg-white">
           <div className="w-full max-w-sm">
-            <span className="block h-px w-12 bg-gold mb-4" aria-hidden="true" />
+            <span className="block h-px w-12 bg-[#222D52] mb-4" aria-hidden="true" />
             <h2 className="font-display text-[30px] leading-tight font-semibold text-navy mb-6">{title}</h2>
             {children}
 
             {social && (
               <>
                 <div className="flex items-center gap-3 my-6" aria-hidden="true">
-                  <div className="flex-1 h-px bg-gold/40" />
-                  <span className="text-gold-deep text-xs uppercase tracking-[0.2em]">{t('orLabel')}</span>
-                  <div className="flex-1 h-px bg-gold/40" />
+                  <div className="flex-1 h-px bg-[#222D52]/40" />
+                  <span className="text-[#2559B8] text-xs uppercase tracking-[0.2em]">{t('orLabel')}</span>
+                  <div className="flex-1 h-px bg-[#222D52]/40" />
                 </div>
                 <SocialLogin />
               </>
@@ -91,7 +91,7 @@ export function AuthField({
       <span className="block text-sm font-medium text-gray-700 mb-1">{label}</span>
       <input
         {...input}
-        className="w-full h-11 border border-gray-300 rounded-xl px-3 bg-white text-gray-900 placeholder:text-gray-400 outline-none focus:border-gold focus:ring-2 focus:ring-gold/35 transition"
+        className="w-full h-11 border border-gray-300 rounded-xl px-3 bg-white text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2F6BD8] focus:ring-2 focus:ring-[#2F6BD8]/30 transition"
       />
     </label>
   )
@@ -110,7 +110,7 @@ export function PasswordField({ label, ...input }: { label: string } & React.Inp
           type={shown ? 'text' : 'password'}
           autoCapitalize="off"
           spellCheck={false}
-          className="w-full h-11 border border-gray-300 rounded-xl ps-3 pe-11 bg-white text-gray-900 outline-none focus:border-gold focus:ring-2 focus:ring-gold/35 transition"
+          className="w-full h-11 border border-gray-300 rounded-xl ps-3 pe-11 bg-white text-gray-900 outline-none focus:border-[#2F6BD8] focus:ring-2 focus:ring-[#2F6BD8]/30 transition"
         />
         <button
           type="button"
@@ -118,7 +118,7 @@ export function PasswordField({ label, ...input }: { label: string } & React.Inp
           aria-pressed={shown}
           aria-label={t(shown ? 'pwHide' : 'pwShow')}
           aria-controls={input.id}
-          className="absolute inset-y-0 end-0 w-11 flex items-center justify-center rounded-e-xl text-gray-500 hover:text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+          className="absolute inset-y-0 end-0 w-11 flex items-center justify-center rounded-e-xl text-gray-500 hover:text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6BD8]"
         >
           <Icon name={shown ? 'visibilityOffOutline' : 'visibilityOutline'} />
         </button>
@@ -131,7 +131,7 @@ export function PasswordField({ label, ...input }: { label: string } & React.Inp
 export function PasswordChecklist({ id, rules }: { id: string; rules: PasswordRule[] }) {
   const { t } = useLanguage()
   const met = rules.filter((r) => r.ok).length
-  const bar = met <= 2 ? 'bg-red-500' : met < rules.length ? 'bg-gold' : 'bg-green-600'
+  const bar = met <= 2 ? 'bg-red-500' : met < rules.length ? 'bg-[#222D52]' : 'bg-green-600'
   return (
     <div id={id} className="-mt-1 mb-3">
       <div className="h-1 rounded-full bg-gray-200 overflow-hidden" aria-hidden="true">
@@ -156,7 +156,7 @@ export function SubmitButton({ busy, children }: { busy: boolean; children: Reac
     <button
       type="submit"
       disabled={busy}
-      className="w-full h-11 mt-2 bg-navy text-white rounded-full font-semibold tracking-wide hover:bg-navy-deep disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+      className="w-full h-11 mt-2 bg-navy text-white rounded-full font-semibold tracking-wide hover:bg-navy-deep disabled:opacity-60 transition-colors inline-flex items-center justify-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2F6BD8]"
     >
       {busy && <span className="w-4 h-4 border-2 border-white/30 border-t-gold rounded-full animate-spin" />}
       {busy ? t('pleaseWait') : children}
@@ -166,7 +166,7 @@ export function SubmitButton({ busy, children }: { busy: boolean; children: Reac
 
 // Messages above / instead of a form: role="alert" for problems, role="status" for good news and notes
 export function AuthNote({ kind, children }: { kind: 'error' | 'ok' | 'info'; children: ReactNode }) {
-  const look = { error: 'text-red-700 bg-red-50', ok: 'text-green-800 bg-green-50', info: 'text-gold-deep bg-gold-soft' }[kind]
+  const look = { error: 'text-red-700 bg-red-50', ok: 'text-green-800 bg-green-50', info: 'text-[#2559B8] bg-[#EAF1FB]' }[kind]
   return (
     <p role={kind === 'error' ? 'alert' : 'status'} className={`${look} text-sm rounded-xl px-3 py-2 mb-4`}>
       {children}
@@ -175,6 +175,6 @@ export function AuthNote({ kind, children }: { kind: 'error' | 'ok' | 'info'; ch
 }
 
 // Link look inside the auth card
-export const AUTH_LINK = 'text-navy font-semibold underline decoration-gold decoration-2 underline-offset-4 hover:decoration-navy'
+export const AUTH_LINK = 'text-navy font-semibold underline decoration-[#2F6BD8] decoration-2 underline-offset-4 hover:decoration-navy'
 
 export default AuthLayout

@@ -10,22 +10,22 @@ const MRT = LINES_BY_ID['mrt-kajang'].color
 const KTM = LINES_BY_ID['ktm-port-klang'].color
 
 function FeatureArt({ kind, dark = false }: { kind: ArtKind; dark?: boolean }) {
-  const ink = dark ? '#E2CBA4' : '#222D52'
-  const bg = dark ? '#222D52' : '#EEE5D9'
-  const gold = dark ? '#FFFFFF' : '#D2B68A'
+  const ink = dark ? '#A9C8FF' : '#222D52'
+  const bg = dark ? '#222D52' : '#EAF1F9'
+  const gold = dark ? '#FFFFFF' : '#8AB4F8'
   // RONDA 300 reads best with real icons: the station in the middle, places around it, the 300 m walk on the ring
   if (kind === 'ronda300') {
     const chip = 'absolute flex h-[17%] w-[17%] items-center justify-center rounded-full bg-white shadow-[0_8px_20px_-8px_rgb(34_45_82/0.35)]'
     return (
       <div aria-hidden="true" className="relative h-full w-full transition-transform duration-500 group-hover:scale-[1.04]">
-        <div className={`absolute inset-[12%] rounded-full border-[2.5px] border-dashed ${dark ? 'border-gold-light/60 bg-white/5' : 'border-[#222D52]/35 bg-[#222D52]/[0.05]'}`} />
-        <div className={`absolute left-1/2 top-1/2 flex h-[24%] w-[24%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full ${dark ? 'bg-gold text-[#222D52]' : 'bg-[#222D52] text-white'}`}>
+        <div className={`absolute inset-[12%] rounded-full border-[2.5px] border-dashed ${dark ? 'border-[#2F6BD8]-light/60 bg-white/5' : 'border-[#222D52]/35 bg-[#222D52]/[0.05]'}`} />
+        <div className={`absolute left-1/2 top-1/2 flex h-[24%] w-[24%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full ${dark ? 'bg-[#222D52] text-white' : 'bg-[#222D52] text-white'}`}>
           <Icon name="train" size={34} />
         </div>
         <span className={`${chip} start-[10%] top-[22%] text-[#E8590C]`}><Icon name="restaurant" size={22} /></span>
         <span className={`${chip} end-[8%] top-[34%] text-[#C2255C]`}><Icon name="shoppingBagOutline" size={22} /></span>
         <span className={`${chip} start-[20%] bottom-[10%] text-[#2B8A3E]`}><Icon name="parkOutline" size={22} /></span>
-        <span className="absolute bottom-[6%] end-[14%] inline-flex items-center gap-1 rounded-full bg-gold px-3 py-1.5 text-sm font-bold text-[#222D52] shadow-[0_8px_20px_-8px_rgb(34_45_82/0.35)]">
+        <span className="absolute bottom-[6%] end-[14%] inline-flex items-center gap-1 rounded-full bg-[#222D52] px-3 py-1.5 text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgb(34_45_82/0.35)]">
           <Icon name="directionsWalk" size={16} />
           <span dir="ltr">300 m</span>
         </span>
