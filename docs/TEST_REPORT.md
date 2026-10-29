@@ -238,6 +238,20 @@
   last_name and full_name (both, for the header, emails and the app). Older accounts show their full name as the first
   name until edited. Unit 262 / 262; Playwright account, auth, access and site 110 / 110 (one register check passed
   on re-run).
+- Feature strip and Park & Ride made to match the new cards: strip icons all blue on pale circles (fill blue on
+  hover) in place of one colour each; Park & Ride card in the same sans heading, grey text and corner size.
+  FeatureGrid 3 / 3, Playwright home and site 14 / 14.
+- Park & Ride redone (owner picked C of three): one blue banner like the lit card, a white P sign, title, one
+  line, three short facts (on the live map, P next to stations on every line, fares where published) and two
+  buttons; darker circles and chips keep white text at 4.5:1. 4 languages. "klia2" written "KLIA 2" in all
+  wording (links and search words unchanged). Playwright home and site 72 / 72 (one scroll check passed on re-run).
+- "Every line. One plan." band redone smaller (owner picked E of six): heading and one line, the numbers on an open
+  row (first in blue), then one pale panel with the two drifting rows of line badges (fading at the ends) and the live
+  map bar at its foot. About 680 px tall at 1280 px. Playwright home and site 72 / 72.
+- Promotions redone (owner picked C of three, from new references): three arched cards with the owner's photos in
+  the round top and an icon on the photo's edge; RONDA 300 in the middle, filled blue, taller, with 6,500+ stops and
+  stations; heading centred with "Advertise with us" under it; every card still one link with an Ad tag. Flat
+  drawings (PromoArt) removed. Unit 262 / 262; Playwright home and site 72 / 72 (two timing checks passed on re-run).
 - Home page: the three small promotion cards now show small isometric city scenes in place of photos (owner picked
   this style from three): a train on its viaduct in the line's colour (LRT Kelana Jaya, MRT Kajang, Monorail),
   buildings, park, river and a gold pin; a station with its 300 m ring, twin towers and hotels, the walk to a row of

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import Icon from './Icon'
-import { ParkingSign } from './ParkingInfo'
 import { Accent, Eyebrow, Reveal } from './Motion'
 import { FEATURES, OPEN_LANGUAGE_MENU, type Feature } from '../data/features'
 
@@ -74,14 +73,14 @@ function FeatureGrid() {
             {small.map((f) => {
               const label = (
                 <>
-                  <span aria-hidden="true" className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#F2F6FB]" style={{ color: f.color }}><Icon name={f.icon} size={18} /></span>
+                  <span aria-hidden="true" className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#F2F6FB] text-[#2F6BD8] transition-colors group-hover:bg-[#2F6BD8] group-hover:text-white"><Icon name={f.icon} size={20} /></span>
                   <span className="min-w-0">
-                    <span className="block font-medium leading-snug">{t(f.key)}</span>
+                    <span className="block font-semibold leading-snug">{t(f.key)}</span>
                     {f.soon && <span className="mt-1 inline-block rounded-full bg-[#222D52] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">{t('soon')}</span>}
                   </span>
                 </>
               )
-              const cls = 'flex h-full w-full items-center gap-3 py-5 pe-3 text-start transition-colors hover:text-[#2559B8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6BD8]'
+              const cls = 'group flex h-full w-full items-center gap-3 py-5 pe-3 text-start transition-colors hover:text-[#2559B8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6BD8]'
               return (
                 <li key={f.key}>
                   {f.to
@@ -93,19 +92,25 @@ function FeatureGrid() {
           </ul>
         </div>
 
-        {/* Park & Ride: drive to the station, then ride. Car parks are on the live map and on each line's stations */}
-        <Reveal className="mt-10 flex flex-col gap-6 rounded-[28px] bg-[#F2F6FB] p-6 md:flex-row md:items-center md:p-8">
-          <ParkingSign size={64} />
-          <div className="min-w-0 flex-1">
-            <h3 className="font-display text-[24px] md:text-[28px] font-semibold leading-tight text-[#222D52]">{t('parkShowTitle')}</h3>
-            <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-gray-600">{t('parkShowText')}</p>
+        {/* Park & Ride: one blue banner like the lit card above: a white P sign, the words with three short facts, two
+            buttons. Car parks are on the live map and next to each line's stations */}
+        <Reveal className="relative mt-10 flex flex-col gap-6 overflow-hidden rounded-[28px] bg-[#2F6BD8] p-7 text-white md:flex-row md:items-center md:gap-10 md:px-12 md:py-11">
+          <span aria-hidden="true" className="pointer-events-none absolute -end-16 -top-24 h-[340px] w-[340px] rounded-full bg-[#2862CF]" />
+          <span aria-hidden="true" className="pointer-events-none absolute -bottom-28 end-40 hidden h-[220px] w-[220px] rounded-full bg-[#2862CF] md:block" />
+          <span aria-hidden="true" className="relative grid h-[72px] w-[72px] shrink-0 place-items-center rounded-[16px] bg-white text-[44px] font-black leading-none text-[#1E5AA8] ring-8 ring-white/20 md:h-[92px] md:w-[92px] md:text-[56px] md:rounded-[18px]">P</span>
+          <div className="relative min-w-0 flex-1">
+            <h3 className="text-[24px] font-black leading-tight md:text-[30px]">{t('parkShowTitle')}</h3>
+            <p className="mt-2 max-w-xl text-[15px] leading-relaxed">{t('parkBannerText')}</p>
+            <ul className="mt-4 flex flex-wrap gap-2 text-[13px] font-bold">
+              {(['parkChipMap', 'parkChipLines', 'parkChipFares'] as const).map((k) => <li key={k} className="rounded-full bg-[#2559B8] px-3 py-1.5">{t(k)}</li>)}
+            </ul>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row md:flex-col lg:flex-row">
-            <Link to="/live?parking=1" className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-[#222D52] px-5 text-sm font-semibold text-white hover:bg-[#18203D] transition-colors">
+          <div className="relative flex flex-col gap-2 sm:flex-row md:flex-col">
+            <Link to="/live?parking=1" className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-white px-5 text-sm font-extrabold text-[#222D52] transition-colors hover:bg-[#EAF1FB] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
               <Icon name="map" size={18} />
               {t('parkShowMap')}
             </Link>
-            <Link to="/?tab=lines" className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border-[1.5px] border-[#222D52] px-5 text-sm font-semibold text-[#222D52] hover:bg-[#222D52] hover:text-white transition-colors">
+            <Link to="/?tab=lines" className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border-[1.5px] border-white px-5 text-sm font-extrabold text-white transition-colors hover:bg-white hover:text-[#222D52] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
               <Icon name="train" size={18} />
               {t('parkShowLines')}
             </Link>
