@@ -53,7 +53,7 @@ export const LINES: Line[] = [
 
   // ECRL (Malaysia Rail Link): opens 12 Dec 2026; no GTFS feed yet, so its stations and fares come from src/data/ecrl.ts.
   // Colour: TODO take it from MRL's line branding when published (blue of the train livery until then).
-  { id: 'ecrl', name: 'ECRL East Coast Rail Link', short: 'ECRL', mode: 'ECRL', color: '#1B3F8F', textColor: '#FFFFFF', colorSource: 'unverified', gtfs: { feedId: '', routeIds: [] } },
+  { id: 'ecrl', name: 'ECRL East Coast Rail Link', short: 'ECRL', mode: 'ECRL', color: '#0065DE', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: '', routeIds: [] } },
 ]
 
 // lines with a GTFS feed in the database (the ECRL has none yet)
@@ -184,8 +184,9 @@ export function matchLines(query: string, extra: Line[] = []): Line[] {
 }
 
 // Buses aren't in LINES (hundreds of routes). Their badge uses the route's own GTFS colour when the
-// operator publishes one (Rapid KL stage buses do), otherwise RONDA navy (MRT feeder buses, bus stops).
-export const BUS_FALLBACK_COLOR = '#222D52'
+// operator publishes one (Rapid KL stage buses do), otherwise RONDA's lighter blue (MRT feeder buses, bus stops,
+// the "Bus routes" tile); white on it is 5:1.
+export const BUS_FALLBACK_COLOR = '#2F6BD8'
 
 export function busLine(color?: string | null, name = 'Bus'): Line {
   const c = color ? (color.startsWith('#') ? color : `#${color}`) : BUS_FALLBACK_COLOR
@@ -257,8 +258,10 @@ export function lineBadgeSvg(line: Line, opts: { title?: boolean } = {}): string
   return (
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="${escapeXml(line.name)}">` +
     title +
-    `<rect width="48" height="48" rx="6" fill="${line.color}"/>` +
-    badgeGlyph(line) +
+    (line.id === 'ecrl'
+      // ECRL: just its official mark (public/lines/ecrl-mark.png, from the owner, 29 Oct 2026), no box or border
+      ? `<image href="/lines/ecrl-mark.png" x="1" y="1" width="46" height="46"/>`
+      : `<rect width="48" height="48" rx="6" fill="${line.color}"/>` + badgeGlyph(line)) +
     `</svg>`
   )
 }

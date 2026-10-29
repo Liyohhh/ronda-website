@@ -190,6 +190,10 @@ body {
 .marquee-left { animation: marquee-left 45s linear infinite; }
 .marquee-right { animation: marquee-right 40s linear infinite; }
 .marquee-up { animation: marquee-up 30s linear infinite; }
+/* line panel: the station list fades in when another line is picked */
+@keyframes line-fade { from { opacity: 0; transform: translateY(6px); } }
+.line-fade { animation: line-fade 0.3s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .line-fade { animation: none; } }
 /* the line rows fade out at both ends of their panel */
 .marquee-fade { -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
 .marquee:hover .marquee-track,

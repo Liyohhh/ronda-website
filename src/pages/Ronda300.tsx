@@ -1,7 +1,8 @@
 import { useState, type KeyboardEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
-import PageHero from '../components/PageHero'
+import BackButton from '../components/BackButton'
+import { Accent, Eyebrow } from '../components/Motion'
 import Ronda300Explorer from '../components/Ronda300Explorer'
 import type { FlyTarget } from '../components/Ronda300Map'
 import SuggestionList from '../components/SuggestionList'
@@ -50,41 +51,68 @@ function Ronda300() {
 
   return (
     <SiteLayout>
-      <PageHero
-        back={{ to: '/', label: t('backToHome') }}
-        eyebrow={t('r3_tag')}
-        title="RONDA 300"
-        intro={t('r3_intro')}
-      >
-          <label htmlFor="r300-input" className="block text-sm font-semibold text-white/80">{t('r3_searchLabel')}</label>
-          <div className="relative mt-2 max-w-xl">
-            <div className="flex items-center gap-2 rounded-full bg-white px-5 py-3.5 shadow-lg text-gray-900 focus-within:ring-2 focus-within:ring-[#2F6BD8]">
-              <Icon name="search" size={20} className="text-gray-500" />
-              <input
-                id="r300-input"
-                type="text"
-                value={query}
-                onChange={(e) => { setQuery(e.target.value); setOpen(true); setHi(-1) }}
-                onFocus={() => setOpen(true)}
-                onBlur={() => setOpen(false)}
-                onKeyDown={onKey}
-                role="combobox"
-                aria-expanded={listOpen}
-                aria-controls={LIST_ID}
-                aria-autocomplete="list"
-                aria-activedescendant={listOpen && hi >= 0 ? `${LIST_ID}-${hi}` : undefined}
-                autoComplete="off"
-                placeholder={t('r3_searchPh')}
-                className="w-full text-base outline-none"
-              />
-            </div>
-            {listOpen && (
-              <div className="absolute z-20 mt-2 w-full">
-                <SuggestionList id={LIST_ID} items={items} query={query} loading={loading} highlighted={hi} onHover={setHi} onPick={pick} />
-              </div>
-            )}
+      {/* header: a wide photo with the title on a navy fade, and a white search card over its bottom edge with the
+          numbers (places, 300 m, minutes on foot). The card does not clip, so the station suggestions open below it */}
+      <section className="px-3 sm:px-4 pt-1">
+        <div className="relative overflow-hidden rounded-[32px] bg-[#222D52] text-white">
+          <img src="/places/centralMarket.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#18203D]/90 via-[#18203D]/65 to-[#18203D]/20" />
+          <div className="wrap relative pt-10 pb-28 md:pt-14 md:pb-36">
+            <div className="mb-8"><BackButton to="/" label={t('backToHome')} onDark /></div>
+            <Eyebrow tone="dark">{t('r3_tag')}</Eyebrow>
+            <h1 className="mt-5 font-display text-[42px] md:text-[72px] leading-[1.02] font-semibold tracking-[-0.01em]"><Accent text="RONDA 300" dark /></h1>
+            <p className="mt-4 max-w-xl text-lg">{t('r3_intro')}</p>
           </div>
-      </PageHero>
+        </div>
+        <div className="wrap relative z-20 -mt-20 md:-mt-24">
+          <div className="rounded-[24px] bg-white p-4 shadow-[0_24px_50px_-24px_rgb(34_45_82/0.45)] md:p-5">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
+              <div className="min-w-0 flex-1">
+                <label htmlFor="r300-input" className="block text-sm font-bold text-[#222D52]">{t('r3_searchLabel')}</label>
+                <div className="relative mt-2">
+                  <div className="flex items-center gap-2 rounded-full border border-[#D3DCE7] bg-white py-1.5 pe-1.5 ps-5 text-gray-900 focus-within:border-[#2F6BD8] focus-within:ring-2 focus-within:ring-[#2F6BD8]/30">
+                    <Icon name="search" size={20} className="text-[#5B6576]" />
+                    <input
+                      id="r300-input"
+                      type="text"
+                      value={query}
+                      onChange={(e) => { setQuery(e.target.value); setOpen(true); setHi(-1) }}
+                      onFocus={() => setOpen(true)}
+                      onBlur={() => setOpen(false)}
+                      onKeyDown={onKey}
+                      role="combobox"
+                      aria-expanded={listOpen}
+                      aria-controls={LIST_ID}
+                      aria-autocomplete="list"
+                      aria-activedescendant={listOpen && hi >= 0 ? `${LIST_ID}-${hi}` : undefined}
+                      autoComplete="off"
+                      placeholder={t('r3_searchPh')}
+                      className="min-w-0 flex-1 bg-transparent text-base outline-none"
+                    />
+                    <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => (items.length ? pick(items[Math.max(hi, 0)].pick) : setOpen(true))} className="h-11 flex-shrink-0 rounded-full bg-[#222D52] px-6 text-sm font-extrabold text-white transition-colors hover:bg-[#18203D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2F6BD8]">
+                      {t('r3_searchBtn')}
+                    </button>
+                  </div>
+                  {listOpen && (
+                    <div className="absolute z-20 mt-2 w-full">
+                      <SuggestionList id={LIST_ID} items={items} query={query} loading={loading} highlighted={hi} onHover={setHi} onPick={pick} />
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* the numbers: places near stations (from the database, 15 Oct 2026, rounded down), the ring, the walk */}
+              <ul className="grid grid-cols-3 border-[#E3E9F1] text-center lg:border-s lg:ps-4">
+                {([['18,000+', t('r3_statPlaces'), false], ['300 m', t('r3_statFrom'), false], ['5 min', t('r3_statWalk'), true]] as const).map(([n, label, blue]) => (
+                  <li key={label} className="px-1.5 md:px-4 [&:not(:first-child)]:border-s [&:not(:first-child)]:border-[#E3E9F1] lg:[&:not(:first-child)]:border-0">
+                    <span className={`block font-display text-[20px] sm:text-[24px] md:text-[30px] font-semibold leading-none ${blue ? 'text-[#2559B8]' : 'text-[#222D52]'}`}>{n}</span>
+                    <span className="mt-1 block text-xs text-[#5B6576]">{label}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* the map and its panel run the full width of the screen */}
       <div id="r3-panel" className="mt-8 scroll-mt-16">

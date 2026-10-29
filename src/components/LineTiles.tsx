@@ -83,7 +83,9 @@ export function LineGrid({ buses, onPick, onBus }: { buses: Line[]; onPick: (l: 
           </div>
         </section>
       ))}
-      <section className="mt-3" aria-label={t('busRoutesTile')}>
+      {/* buses get their own heading, apart from the rail groups above */}
+      <section className="mt-3" aria-label={t('linesGroupBus')}>
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">{t('linesGroupBus')}</h3>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
           <BusTile open={busOpen} onClick={onBus ?? (() => setBusOpen((o) => !o))} />
         </div>

@@ -4,6 +4,7 @@ import { useTrails } from '../hooks/useTrails'
 import { countryName } from '../data/countries'
 import type { Line } from '../data/lines'
 import { useRailStations } from '../hooks/useRailStations'
+import LineBadge from './LineBadge'
 import { trailNameKey } from '../data/trails'
 import { LANGUAGES, type Lang, type TranslationKey } from '../i18n/translations'
 import { change, loadAdminStats, type AdminStats as Stats, type Point } from '../services/adminStats'
@@ -235,7 +236,7 @@ function AdminStats() {
 
       <div className="grid gap-5 lg:grid-cols-[1fr_1fr_0.8fr]">
         <Card title={t('adm_stationsT')}>
-          {stats.hot_stations.length ? <Ranked lang={lang} rows={stats.hot_stations.slice(0, 6).map((s) => ({ key: s.s, n: s.n, k: <span className="inline-flex items-center gap-1.5">{linesOf(s.s).map((l) => <i key={l.id} className="h-2.5 w-2.5 rounded-[2px]" style={{ background: l.color }} />)}{s.s}</span> }))} /> : <None t={t} />}
+          {stats.hot_stations.length ? <Ranked lang={lang} rows={stats.hot_stations.slice(0, 6).map((s) => ({ key: s.s, n: s.n, k: <span className="inline-flex items-center gap-1">{linesOf(s.s).map((l) => <LineBadge key={l.id} line={l} size={22} />)}{s.s}</span> }))} /> : <None t={t} />}
         </Card>
 
         <Card title={t('adm_searchesT')} aside={<Tabs label={t('adm_searchesT')} value={searchTab} onChange={setSearchTab} options={[['top', t('adm_mostSearched')], ['none', t('adm_foundNothing')]]} />}>

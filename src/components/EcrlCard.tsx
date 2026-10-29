@@ -11,6 +11,8 @@ function EcrlCard() {
   return (
     <section aria-labelledby="about-ecrl" className="mt-6 rounded-[32px] border border-gray-200 bg-gray-50 p-6 md:p-8">
       <div className="flex flex-wrap items-center gap-3">
+        {/* the official ECRL logo (owner, 29 Oct 2026); the heading says what it is */}
+        <img src="/lines/ecrl-logo.png" alt="" width={36} height={49} className="h-12 w-auto" />
         <h3 id="about-ecrl" className="text-xl md:text-2xl font-bold text-[#222D52]">{t('ecrlTitle')}</h3>
         <span className="inline-block rounded-full bg-[#222D52] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">
           {t('soon')}

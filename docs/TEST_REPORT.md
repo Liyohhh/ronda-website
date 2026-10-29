@@ -252,6 +252,23 @@
   the round top and an icon on the photo's edge; RONDA 300 in the middle, filled blue, taller, with 6,500+ stops and
   stations; heading centred with "Advertise with us" under it; every card still one link with an Ad tag. Flat
   drawings (PromoArt) removed. Unit 262 / 262; Playwright home and site 72 / 72 (two timing checks passed on re-run).
+- Admin dashboard, busiest stations: each station shows its lines' official badges (one per line at interchanges)
+  in place of small colour squares. Unit 262 / 262; Playwright access 7 / 7.
+- ECRL: the official logo (from the owner) is its line badge (logo only, no box) and sits beside the ECRL heading
+  on About; ECRL colour set to the logo's blue #0065DE. Line list: buses under their own "Bus" heading (4
+  languages), apart from ECRL; plain bus badges now the lighter blue #2F6BD8 (white on it 5:1). Unit 262 / 262;
+  Playwright journey, home and site 102 / 102.
+- RONDA 300 header redone (owner picked C of three): a wide photo (Central Market, owner's photo) with the title
+  on a navy fade and a white search card over its bottom edge: "Find a station" (the label is now readable; it was
+  white on light), a Search button, and the numbers 18,000+ places, 300 m, 5 min on foot. 4 languages.
+- Line panel redone (owner picked B of three): header in the line's own colour (navy where white words would not
+  read, e.g. MRT Putrajaya, ETS), the line's logo on a white tile, the line tabs on white under it; the ECRL has a
+  Transit / Express switch and its stations as cards (Express shows "Transit only" where it does not stop).
+  Unit 262 / 262; Playwright RONDA 300, journey and site 94 / 94 (one axe check passed on re-run).
+- Line panel header now in every line's own colour, yellow, lime and light blue too (navy words on those, white on
+  the rest, each at 4.5:1); the colour blends over 0.3 s when another line is picked and the station list fades in
+  (both off for reduced motion). ECRL station cards joined by the line (dashed for phase 2). Unit 262 / 262; Playwright
+  journey 30 / 30 (10 timed out under a heavy parallel run, all passed on 2 workers), live and site pass.
 - Home page: the three small promotion cards now show small isometric city scenes in place of photos (owner picked
   this style from three): a train on its viaduct in the line's colour (LRT Kelana Jaya, MRT Kajang, Monorail),
   buildings, park, river and a gold pin; a station with its 300 m ring, twin towers and hotels, the walk to a row of
