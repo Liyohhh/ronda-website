@@ -9,21 +9,21 @@ vi.mock('./supabase', () => ({
   supabase: { auth: { signUp: op('signUp'), signInWithPassword: op('signIn'), resend: op('resend'), resetPasswordForEmail: op('reset'), signOut: op('signOut') } },
 }))
 
-const { authErrorKey, linkError, resendConfirmation, sendResetLink, signIn, signOut, signUp } = await import('./auth')
+const { authErrorKey, linkError, readName, resendConfirmation, sendResetLink, signIn, signOut, signUp } = await import('./auth')
 
 describe('auth', () => {
   beforeEach(() => { calls.length = 0; result = { data: {}, error: null } })
 
   it('signs up with the name and a confirmation link back to the site', async () => {
-    expect(await signUp(' Aina ', ' aina@example.test ', 'a-long-password', 'ms')).toBeNull()
+    expect(await signUp({ first: ' Aina ', last: ' Rahman ' }, ' aina@example.test ', 'a-long-password', 'ms')).toBeNull()
     expect(calls[0]).toEqual({ op: 'signUp', args: [{
       email: 'aina@example.test', password: 'a-long-password',
-      options: { data: { full_name: 'Aina', lang: 'ms', terms_accepted_at: expect.any(String) }, emailRedirectTo: `${window.location.origin}/login?confirmed=1&next=%2Faccount`, captchaToken: undefined },
+      options: { data: { first_name: 'Aina', last_name: 'Rahman', full_name: 'Aina Rahman', lang: 'ms', terms_accepted_at: expect.any(String) }, emailRedirectTo: `${window.location.origin}/login?confirmed=1&next=%2Faccount`, captchaToken: undefined },
     }] })
   })
 
   it('passes the bot-check token on', async () => {
-    await signUp('A', 'a@example.test', 'pw', 'en', 'tok1')
+    await signUp({ first: 'A', last: 'B' }, 'a@example.test', 'pw', 'en', 'tok1')
     await signIn('a@example.test', 'pw', 'tok2')
     await resendConfirmation('a@example.test', 'tok3')
     await sendResetLink('a@example.test', 'tok4')
@@ -78,5 +78,11 @@ describe('auth', () => {
     expect(linkError('#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid')).toBe('expired')
     expect(linkError('#error=server_error&error_description=x')).toBe('failed')
     expect(linkError('', '?error=access_denied&error_code=otp_expired')).toBe('expired')
+  })
+
+  it('reads first and last name; an older account with only a full name shows it all as the first name', () => {
+    expect(readName({ first_name: 'Aina', last_name: 'Rahman', full_name: 'Aina Rahman' })).toEqual({ first: 'Aina', last: 'Rahman' })
+    expect(readName({ full_name: ' Siti Aisyah binti Ahmad ' })).toEqual({ first: 'Siti Aisyah binti Ahmad', last: '' })
+    expect(readName(undefined)).toEqual({ first: '', last: '' })
   })
 })

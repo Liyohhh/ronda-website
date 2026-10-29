@@ -16,7 +16,8 @@ function Register() {
   const countries = useMemo(() => countryOptions(lang), [lang])
   const { session, loading } = useAuth()
   const captcha = useAuthCaptcha()
-  const [name, setName] = useState('')
+  const [first, setFirst] = useState('')
+  const [last, setLast] = useState('')
   const [country, setCountry] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -38,7 +39,7 @@ function Register() {
     if (!captcha.ready) return setError('authCaptchaWait')
 
     setBusy(true)
-    const err = await signUp(name, email, password, lang, captcha.token, country || undefined)
+    const err = await signUp({ first, last }, email, password, lang, captcha.token, country || undefined)
     setBusy(false)
     captcha.reset()
     if (err) return setError(authErrorKey(err))
@@ -94,7 +95,10 @@ function Register() {
       ) : (
         <form onSubmit={handleSubmit}>
           {error && <AuthNote kind="error">{t(error)}</AuthNote>}
-          <AuthField label={t('fullName')} type="text" autoComplete="name" maxLength={80} value={name} onChange={(e) => setName(e.target.value)} required />
+          <div className="grid gap-x-3 sm:grid-cols-2">
+            <AuthField label={t('firstName')} type="text" autoComplete="given-name" maxLength={60} value={first} onChange={(e) => setFirst(e.target.value)} required />
+            <AuthField label={t('lastName')} type="text" autoComplete="family-name" maxLength={60} value={last} onChange={(e) => setLast(e.target.value)} required />
+          </div>
           <AuthField label={t('emailAddress')} type="email" autoComplete="email" maxLength={254} value={email} onChange={(e) => setEmail(e.target.value)} required />
           <div className="mb-3">
             <label htmlFor="reg-country" className="block text-sm font-medium text-gray-700 mb-1">{t('regCountry')}</label>

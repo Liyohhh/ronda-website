@@ -17,7 +17,8 @@ test('sign up from the header: check-your-inbox screen, then send the email agai
   await page.getByRole('banner').getByRole('link', { name: 'Sign Up' }).click()
   await expect(page).toHaveURL(/\/register$/)
   await expect(page.getByRole('heading', { name: 'Create your account' })).toBeVisible()
-  await page.getByLabel('Full name').fill('Aina Test')
+  await page.getByLabel('First name').fill('Aina')
+  await page.getByLabel('Last name').fill('Test')
   await page.getByLabel('Email address').fill('aina@example.test')
   // where they are from: Malaysia first in the list, kept as its ISO code for the admin dashboard
   await expect(page.getByLabel('Where are you from?').locator('option').nth(1)).toHaveText('Malaysia')
@@ -36,7 +37,7 @@ test('sign up from the header: check-your-inbox screen, then send the email agai
   await expect(page.getByRole('heading', { name: 'Check your inbox' })).toBeVisible()
   await expect(page.getByRole('status')).toContainText('aina@example.test')
   const signup = backend.calls.find((c) => c.path === '/auth/v1/signup')?.body as Record<string, unknown>
-  expect(signup).toMatchObject({ email: 'aina@example.test', password: STRONG, data: { full_name: 'Aina Test', lang: 'en', country: 'SG' } })
+  expect(signup).toMatchObject({ email: 'aina@example.test', password: STRONG, data: { first_name: 'Aina', last_name: 'Test', full_name: 'Aina Test', lang: 'en', country: 'SG' } })
   expect((signup.data as Record<string, string>).terms_accepted_at).toMatch(/^\d{4}-\d\d-\d\dT/)
   await page.getByRole('button', { name: 'Send confirmation email again' }).click()
   await expect(page.getByText('A new confirmation email is on its way.')).toBeVisible()
@@ -50,7 +51,8 @@ test('sign up from the header: check-your-inbox screen, then send the email agai
 test('sign up: Supabase errors come back in plain words', async ({ page, backend }) => {
   backend.signUp = () => ({ status: 422, json: { code: 422, error_code: 'weak_password', msg: 'Password should contain at least one character of each' } })
   await page.goto('/register')
-  await page.getByLabel('Full name').fill('Aina Test')
+  await page.getByLabel('First name').fill('Aina')
+  await page.getByLabel('Last name').fill('Test')
   await page.getByLabel('Email address').fill('aina@example.test')
   await page.getByLabel('Where are you from?').selectOption('MY')
   // passes the rules here, but Supabase still says no (for example a password found in a data leak)

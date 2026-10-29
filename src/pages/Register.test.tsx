@@ -16,7 +16,8 @@ const STRONG = 'Kereta-Api-77!'
 
 async function fill(pw: string, pw2: string, agree = true) {
   const u = userEvent.setup()
-  await u.type(screen.getByLabelText('Full name'), 'Aina')
+  await u.type(screen.getByLabelText('First name'), 'Aina')
+  await u.type(screen.getByLabelText('Last name'), 'Rahman')
   await u.type(screen.getByLabelText('Email address'), 'aina@example.test')
   await u.selectOptions(screen.getByLabelText('Where are you from?'), 'MY')
   await u.type(screen.getByLabelText('Password'), pw)
@@ -69,7 +70,7 @@ describe('Register', () => {
     renderWithLang(<Register />)
     const u = await fill(STRONG, STRONG)
     await u.click(screen.getByRole('button', { name: 'Create account' }))
-    expect(signUp).toHaveBeenCalledWith('Aina', 'aina@example.test', STRONG, 'en', undefined, 'MY')
+    expect(signUp).toHaveBeenCalledWith({ first: 'Aina', last: 'Rahman' }, 'aina@example.test', STRONG, 'en', undefined, 'MY')
     expect(screen.getByRole('heading', { name: 'Check your inbox' })).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent('aina@example.test')
     await u.click(screen.getByRole('button', { name: 'Send confirmation email again' }))
@@ -81,7 +82,8 @@ describe('Register', () => {
     signUp.mockResolvedValue({ code: 'weak_password', status: 422, message: 'Password should contain...' })
     renderWithLang(<Register />, { lang: 'ms' })
     const u = userEvent.setup()
-    await u.type(screen.getByLabelText(tr('ms', 'fullName')), 'Aina')
+    await u.type(screen.getByLabelText(tr('ms', 'firstName')), 'Aina')
+    await u.type(screen.getByLabelText(tr('ms', 'lastName')), 'Rahman')
     await u.type(screen.getByLabelText(tr('ms', 'emailAddress')), 'aina@example.test')
     await u.selectOptions(screen.getByLabelText(tr('ms', 'regCountry')), 'MY')
     await u.type(screen.getByLabelText(tr('ms', 'password')), STRONG)

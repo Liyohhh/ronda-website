@@ -84,12 +84,14 @@ test('account page: from the header menu, shows the email, saves the name and co
   await expect(page.getByText('tester@example.test').first()).toBeVisible() // in the side card and the security card
   await page.getByRole('region', { name: 'Profile' }).getByRole('button', { name: 'Edit' }).first().click()
   await page.getByLabel('Where are you from?').selectOption('MY')
-  const name = page.getByLabel('Full name')
-  await expect(name).toHaveValue('Test Rider')
-  await name.fill('New Name')
+  // an account from before the split: its full name shows as the first name
+  await expect(page.getByLabel('First name')).toHaveValue('Test Rider')
+  await expect(page.getByLabel('Last name')).toHaveValue('')
+  await page.getByLabel('First name').fill('New')
+  await page.getByLabel('Last name').fill('Name')
   await page.getByRole('button', { name: 'Save name' }).click()
   await expect(page.getByRole('status')).toHaveText('Saved.')
-  expect(backend.calls.find((c) => c.path === '/auth/v1/user')?.body).toMatchObject({ data: { full_name: 'New Name', country: 'MY' } })
+  expect(backend.calls.find((c) => c.path === '/auth/v1/user')?.body).toMatchObject({ data: { first_name: 'New', last_name: 'Name', full_name: 'New Name', country: 'MY' } })
   await noSeriousA11y(page)
 })
 

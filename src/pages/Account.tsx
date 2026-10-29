@@ -12,7 +12,7 @@ import { SUPPORT_EMAIL } from '../data/contact'
 import { countryName, countryOptions } from '../data/countries'
 import type { IconName } from '../data/icons'
 import { useSession } from '../hooks/useSession'
-import { authErrorKey } from '../services/auth'
+import { authErrorKey, nameData, readName, type PersonName } from '../services/auth'
 import { AVATAR_MAX_INPUT, removeAvatar, uploadAvatar } from '../services/avatar'
 import { TRIP_SORTS, readParking, readPayment, readResident, readSort, saveParking, savePayment, saveResident, saveSort, type TripSort } from '../data/tripPrefs'
 
@@ -76,7 +76,7 @@ function AccountForms({ user }: { user: User }) {
   const { hash } = useLocation()
   const open = hash.slice(1) || 'profile'
   const [editing, setEditing] = useState<'' | 'name' | 'password' | 'delete'>(() => (hash === '#delete' ? 'delete' : ''))
-  const [name, setName] = useState<string>(() => (user.user_metadata?.full_name as string | undefined) ?? '')
+  const [name, setName] = useState<PersonName>(() => readName(user.user_metadata))
   const [country, setCountry] = useState<string>(() => (user.user_metadata?.country as string | undefined) ?? '')
   const [nameMsg, setNameMsg] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null)
   const [pw, setPw] = useState('')
@@ -98,7 +98,7 @@ function AccountForms({ user }: { user: User }) {
   const saveProfile = async (e: FormEvent) => {
     e.preventDefault()
     setBusy('name')
-    const { error } = await supabase.auth.updateUser({ data: { full_name: name.trim(), ...(country ? { country } : {}) } })
+    const { error } = await supabase.auth.updateUser({ data: { ...nameData(name), ...(country ? { country } : {}) } })
     setBusy('')
     setNameMsg(error ? { kind: 'error', text: error.message } : { kind: 'ok', text: t('accountSaved') })
     if (!error) setEditing('')
@@ -170,9 +170,10 @@ function AccountForms({ user }: { user: User }) {
   // signed-in email/password accounts can change their password; Google / Apple / Facebook ones sign in there
   const hasPassword = (user.identities ?? []).some((i) => i.provider === 'email') || user.app_metadata?.provider === 'email'
   const provider = (user.app_metadata?.provider as string | undefined) ?? 'email'
-  const savedName = ((user.user_metadata?.full_name as string | undefined) ?? '').trim()
+  const savedName = readName(user.user_metadata)
+  const shownName = nameData(savedName).full_name
   const savedCountry = (user.user_metadata?.country as string | undefined) ?? ''
-  const initials = (savedName || user.email || '?').split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('')
+  const initials = (shownName || user.email || '?').split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('')
   const since = user.created_at ? new Date(user.created_at).toLocaleDateString(DATE_LOCALE[lang], { month: 'long', year: 'numeric' }) : ''
   const sortLabel: Record<TripSort, string> = { walking: t('sortLeastWalking'), fastest: t('sortFastest'), transfers: t('sortFewestTransfers'), priceLow: t('sortPriceLow') }
   const picture = (size: string, text: string, alt = '') => avatar
@@ -188,8 +189,8 @@ function AccountForms({ user }: { user: User }) {
               <div className="flex items-center gap-3">
                 {picture('h-14 w-14', 'text-xl')}
                 <div className="min-w-0">
-                  <p className="truncate font-bold text-[#222D52]">{savedName || user.email}</p>
-                  {savedName && <p className="truncate text-xs text-[#5B6576]">{user.email}</p>}
+                  <p className="truncate font-bold text-[#222D52]">{shownName || user.email}</p>
+                  {shownName && <p className="truncate text-xs text-[#5B6576]">{user.email}</p>}
                 </div>
               </div>
               {since && <p className="mt-3 rounded-lg bg-[#EAF1FB] px-3 py-1.5 text-xs font-semibold text-[#2559B8]">{t('acctSince').replace('{date}', since)}</p>}
@@ -236,7 +237,8 @@ function AccountForms({ user }: { user: User }) {
                 <Tile icon="personOutline" label={t('fullName')}>
                   <form onSubmit={saveProfile}>
                     <div className="grid gap-x-4 sm:grid-cols-2">
-                      <AuthField label={t('fullName')} type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
+                      <AuthField label={t('firstName')} type="text" autoComplete="given-name" value={name.first} onChange={(e) => setName({ ...name, first: e.target.value })} maxLength={60} required />
+                      <AuthField label={t('lastName')} type="text" autoComplete="family-name" value={name.last} onChange={(e) => setName({ ...name, last: e.target.value })} maxLength={60} />
                       <div className="mb-3">
                         <label htmlFor="acct-country" className="mb-1 block text-sm font-medium text-gray-700">{t('regCountry')}</label>
                         <select id="acct-country" value={country} onChange={(e) => setCountry(e.target.value)} className={`${select} h-11 w-full rounded-xl`}>
@@ -253,7 +255,8 @@ function AccountForms({ user }: { user: User }) {
                 </Tile>
               ) : (
                 <>
-                  <Tile icon="personOutline" label={t('fullName')} value={savedName || '–'} action={<button type="button" onClick={() => { setEditing('name'); setNameMsg(null) }} className={linkBtn}>{t('acctEdit')}</button>} />
+                  <Tile icon="personOutline" label={t('firstName')} value={savedName.first.trim() || '–'} action={<button type="button" onClick={() => { setEditing('name'); setNameMsg(null) }} className={linkBtn}>{t('acctEdit')}</button>} />
+                  <Tile icon="badge" label={t('lastName')} value={savedName.last.trim() || '–'} action={<button type="button" onClick={() => { setEditing('name'); setNameMsg(null) }} className={linkBtn}>{t('acctEdit')}</button>} />
                   <Tile icon="public" label={t('regCountry')} value={savedCountry ? countryName(savedCountry, lang) : '–'} action={<button type="button" onClick={() => { setEditing('name'); setNameMsg(null) }} className={linkBtn}>{t('acctEdit')}</button>} />
                 </>
               )}

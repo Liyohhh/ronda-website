@@ -13,14 +13,28 @@ export const resetUrl = () => `${window.location.origin}/reset-password`
 // Protection must then have CAPTCHA on, and asks for a token on every call below)
 type Captcha = string | undefined
 
+// A person's name: first and last kept apart (first_name, last_name) and full_name with both, for everything that
+// shows one name (header, emails, the app). Accounts made before the split have only full_name: it shows as the
+// first name until the person sets both (no guessing which word is the family name).
+export type PersonName = { first: string; last: string }
+export function nameData({ first, last }: PersonName) {
+  const f = first.trim(), l = last.trim()
+  return { first_name: f, last_name: l, full_name: [f, l].filter(Boolean).join(' ') }
+}
+export function readName(meta: Record<string, unknown> | undefined): PersonName {
+  const f = meta?.first_name, l = meta?.last_name
+  if (typeof f === 'string' || typeof l === 'string') return { first: typeof f === 'string' ? f : '', last: typeof l === 'string' ? l : '' }
+  return { first: typeof meta?.full_name === 'string' ? meta.full_name.trim() : '', last: '' }
+}
+
 // lang: the site language at sign-up; Supabase's emails to this person use it (docs/email-templates)
-export async function signUp(name: string, email: string, password: string, lang: Lang, captchaToken?: Captcha, country?: string) {
+export async function signUp(name: PersonName, email: string, password: string, lang: Lang, captchaToken?: Captcha, country?: string) {
   const { error } = await supabase.auth.signUp({
     email: email.trim(),
     password,
     // when the person agreed to the terms and privacy notice (PDPA consent record)
     // country: ISO code from "Where are you from?", counted on the admin dashboard
-    options: { data: { full_name: name.trim(), lang, ...(country ? { country } : {}), terms_accepted_at: new Date().toISOString() }, emailRedirectTo: confirmUrl(), captchaToken },
+    options: { data: { ...nameData(name), lang, ...(country ? { country } : {}), terms_accepted_at: new Date().toISOString() }, emailRedirectTo: confirmUrl(), captchaToken },
   })
   // an email that already has an account gets the same "check your inbox" answer (Supabase sends nothing new),
   // so the form can't be used to find out who is registered

@@ -234,6 +234,10 @@
   filled blue, with a round photo in its corner and "Learn more" (RONDA 300 first, then whichever card the mouse or
   keyboard is on). Cards stack on phones. New intro line in 4 languages. Unit 261 / 261; Playwright home, access and
   site (axe) 84 / 84. Checked at 1280 px (also on hover) and 390 px.
+- Name split (owner): sign-up and the account page ask for first name and last name; saved as first_name,
+  last_name and full_name (both, for the header, emails and the app). Older accounts show their full name as the first
+  name until edited. Unit 262 / 262; Playwright account, auth, access and site 110 / 110 (one register check passed
+  on re-run).
 - Home page: the three small promotion cards now show small isometric city scenes in place of photos (owner picked
   this style from three): a train on its viaduct in the line's colour (LRT Kelana Jaya, MRT Kajang, Monorail),
   buildings, park, river and a gold pin; a station with its 300 m ring, twin towers and hotels, the walk to a row of
