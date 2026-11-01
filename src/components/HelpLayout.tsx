@@ -15,7 +15,7 @@ export function HelpLayout({ children }: { children: ReactNode }) {
         <div className="border-b border-gray-200 bg-gray-50">
           <div className="wrap h-11 flex items-center justify-between text-sm">
             <Link to="/help" className="font-semibold text-[#222D52]">
-              RONDA {t('helpCentre')}
+              Ronda2Go {t('helpCentre')}
             </Link>
             <Link to="/help/policies" className="font-medium text-gray-600 hover:text-[#222D52]">
               {t('policies')}

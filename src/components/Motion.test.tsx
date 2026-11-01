@@ -32,8 +32,8 @@ describe('Motion', () => {
   })
 
   it('Eyebrow shows its label after a decorative dot', () => {
-    render(<Eyebrow>Why RONDA?</Eyebrow>)
-    const label = screen.getByText('Why RONDA?')
+    render(<Eyebrow>Why Ronda2Go?</Eyebrow>)
+    const label = screen.getByText('Why Ronda2Go?')
     expect(label).toBeVisible()
     expect(label.querySelector('span')).toHaveAttribute('aria-hidden', 'true')
   })

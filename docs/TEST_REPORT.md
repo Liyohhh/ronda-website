@@ -1,5 +1,19 @@
 # Test report
 
+## Run - 1 Nov 2026, night (product name Ronda2Go)
+
+- Product name on the site changed from RONDA to Ronda2Go (owner, 1 Nov): tab title and share preview
+  ("Ronda2Go · Let's Ronda", tagline kept), all 4 languages (sign-in, account, About, FAQ, Help answers, assistant,
+  "Why Ronda2Go?", Ronda2Go picks / trails / partner / merchant), footer "© 2026 Ronda2Go.", Help Centre header,
+  section labels and the logo's screen-reader name.
+- Kept as they are (owner): "RONDA 300", the logo artwork (header, footer, app mock-up still draw RONDA until new
+  art arrives), page addresses such as /ronda-300, and saved settings on each device.
+- Not done yet: account emails (wait for the domain change to be committed), database docs and the assistant's
+  instructions.
+- Unit tests 262 / 262, type check clean. Browser tests for sign-in, assistant and RONDA 300: 37 passed, 1 skipped.
+  Lint on src, e2e and scripts: 1 error in e2e/mocks.ts (not changed here, already there); the full `npm run lint`
+  also trips on extra local copies of the site in the project folder.
+
 ## Run - 1 Nov 2026, afternoon (round line badges)
 
 - Line badges are now circles instead of rounded squares (owner). Same drawings as before, shrunk to fit inside the

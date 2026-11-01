@@ -24,7 +24,7 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <header className="flex items-center justify-between h-16 px-4 sm:px-6 border-b border-[#DCE5F0]">
-        <Link to="/" className="flex items-center" aria-label="RONDA home">
+        <Link to="/" className="flex items-center" aria-label="Ronda2Go home">
           <BrandLogo size="sm" />
         </Link>
         <LanguageMenu variant="outline" />

@@ -62,7 +62,7 @@ function Footer() {
       <div className="wrap"><div className="border-t border-gray-200">
         <div className="py-6 flex flex-col md:flex-row gap-3 md:items-center justify-between text-xs text-gray-600">
           <span className="flex items-center gap-3">
-            © {year} RONDA. {t('footerRights')}
+            © {year} Ronda2Go. {t('footerRights')}
           </span>
           <span>
             <Link to="/credits" className="underline hover:text-[#222D52]">{t('footerCredits')}</Link>

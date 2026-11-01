@@ -17,12 +17,12 @@ describe('SiteLayout: chat switch', () => {
   it('flag off: no launcher, the widget is not loaded', { timeout: 20_000 }, async () => {
     const { SiteLayout, renderWithLang } = await layoutWith('off')
     renderWithLang(<SiteLayout><p>page</p></SiteLayout>)
-    expect(screen.queryByRole('button', { name: 'Open the RONDA assistant' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Open the Ronda2Go assistant' })).toBeNull()
   })
 
   it('flag on: the launcher is there', { timeout: 20_000 }, async () => {
     const { SiteLayout, renderWithLang } = await layoutWith('on')
     renderWithLang(<SiteLayout><p>page</p></SiteLayout>)
-    expect(await screen.findByRole('button', { name: 'Open the RONDA assistant' }, { timeout: 15_000 })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'Open the Ronda2Go assistant' }, { timeout: 15_000 })).toBeInTheDocument()
   })
 })

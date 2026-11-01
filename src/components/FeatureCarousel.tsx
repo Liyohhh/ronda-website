@@ -89,7 +89,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
             <span className="inline-block rounded-full bg-gray-100 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-600">{String(index + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}</span>
             <p className="mt-5 text-xl font-semibold italic leading-snug text-[#222D52]">“{t(k(cur.n, 'tag'))}”</p>
             <div className="mt-5 h-px w-12 bg-gray-300" />
-            <p className="mt-4 text-sm font-bold uppercase tracking-wide text-[#222D52]">— RONDA</p>
+            <p className="mt-4 text-sm font-bold uppercase tracking-wide text-[#222D52]">— Ronda2Go</p>
           </div>
         </div>
       </div>

@@ -32,7 +32,7 @@ function FeatureGrid() {
     <section aria-labelledby="features-title" className="relative">
       <div className="wrap pt-24 md:pt-32 pb-20 md:pb-28">
         <div className="text-center">
-          <Reveal><Eyebrow>RONDA</Eyebrow></Reveal>
+          <Reveal><Eyebrow>Ronda2Go</Eyebrow></Reveal>
           <h2 id="features-title" className="mx-auto mt-5 max-w-3xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#222D52]">
             <Accent text={t('featuresTitle')} />
           </h2>

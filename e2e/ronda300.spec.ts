@@ -11,7 +11,7 @@ test('RONDA 300: map with the places in view beside it, RONDA picks with photos,
   const panel = page.getByRole('region', { name: /places in this area/ })
   // the station in focus, its places within 5 min, and the hand-picked places nearby with photos
   await expect(panel.getByText('3 places within a 5 min walk')).toBeVisible({ timeout: 15_000 }) // the map loads, then flies
-  await expect(panel.getByRole('heading', { name: 'RONDA picks' })).toBeVisible()
+  await expect(panel.getByRole('heading', { name: 'Ronda2Go picks' })).toBeVisible()
   // a pick opens a short description on the map, with the way there
   await panel.getByRole('button', { name: /^Petrosains .*walk/ }).click()
   const card = page.locator('.r3-pincard')

@@ -94,7 +94,7 @@ function About() {
   return (
     <SiteLayout>
       {/* Intro */}
-      <PageHero eyebrow="RONDA" title={t('aboutTitle')} intro={t('aboutIntro')} center />
+      <PageHero eyebrow="Ronda2Go" title={t('aboutTitle')} intro={t('aboutIntro')} center />
 
       <div className="wrap">
         {/* Features */}

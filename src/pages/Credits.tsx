@@ -48,7 +48,7 @@ function Credits() {
   const { t } = useLanguage()
   return (
     <SiteLayout>
-      <PageHero eyebrow="RONDA" title={t('creditsTitle')} />
+      <PageHero eyebrow="Ronda2Go" title={t('creditsTitle')} />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
         <p className="mt-3 text-gray-600">{t('creditsIntro')}</p>
         {SECTIONS.map((s) => (

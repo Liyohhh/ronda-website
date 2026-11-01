@@ -21,7 +21,7 @@ vi.mock('./Captcha', () => ({ default: ({ onToken }: { onToken: (t: string) => v
 
 const { default: ChatWidget } = await import('./ChatWidget')
 
-const open = () => fireEvent.click(screen.getByRole('button', { name: 'Open the RONDA assistant' }))
+const open = () => fireEvent.click(screen.getByRole('button', { name: 'Open the Ronda2Go assistant' }))
 
 describe('ChatWidget', () => {
   beforeEach(() => {
@@ -34,13 +34,13 @@ describe('ChatWidget', () => {
   it('opens as a dialog with the input focused; Escape closes and returns focus to the launcher', () => {
     renderWithLang(<ChatWidget />)
     open()
-    const dialog = screen.getByRole('dialog', { name: /RONDA assistant/ })
+    const dialog = screen.getByRole('dialog', { name: /Ronda2Go assistant/ })
     expect(dialog).toBeInTheDocument()
     expect(screen.getByText('AI')).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: 'Type your question' })).toHaveFocus()
     fireEvent.keyDown(dialog, { key: 'Escape' })
     expect(screen.queryByRole('dialog')).toBeNull()
-    expect(screen.getByRole('button', { name: 'Open the RONDA assistant' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: 'Open the Ronda2Go assistant' })).toHaveFocus()
   })
 
   it('a starter question gets an answer with cards (estimate labelled, plan link)', async () => {
@@ -109,7 +109,7 @@ describe('ChatWidget', () => {
 
   it('Arabic labels', () => {
     renderWithLang(<ChatWidget />, { lang: 'ar' })
-    fireEvent.click(screen.getByRole('button', { name: 'افتح مساعد RONDA' }))
-    expect(screen.getByRole('dialog', { name: /مساعد RONDA/ })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'افتح مساعد Ronda2Go' }))
+    expect(screen.getByRole('dialog', { name: /مساعد Ronda2Go/ })).toBeInTheDocument()
   })
 })

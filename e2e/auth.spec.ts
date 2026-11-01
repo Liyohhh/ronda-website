@@ -134,7 +134,7 @@ test('confirmation link that expired: says so and offers a new one', async ({ pa
 
 test('sign-in page in Malay, Chinese and Arabic (right to left)', async ({ page, backend }) => {
   void backend
-  for (const [lang, title, dir] of [['ms', 'Log masuk ke RONDA', 'ltr'], ['zh', '登录 RONDA', 'ltr'], ['ar', 'تسجيل الدخول إلى RONDA', 'rtl']] as const) {
+  for (const [lang, title, dir] of [['ms', 'Log masuk ke Ronda2Go', 'ltr'], ['zh', '登录 Ronda2Go', 'ltr'], ['ar', 'تسجيل الدخول إلى Ronda2Go', 'rtl']] as const) {
     await page.addInitScript((l) => localStorage.setItem('ronda-lang', l), lang)
     await page.goto('/login')
     await expect(page.getByRole('heading', { name: title })).toBeVisible()

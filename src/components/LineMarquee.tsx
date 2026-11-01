@@ -31,7 +31,7 @@ function LineMarquee() {
     <section aria-label={t('lines')} className="bg-white py-14 md:py-20 text-[#222D52]">
       <div className="wrap">
         <Reveal className="flex flex-col items-center text-center">
-          <Eyebrow center>RONDA</Eyebrow>
+          <Eyebrow center>Ronda2Go</Eyebrow>
           <p className="mt-4 [text-wrap:balance] font-display text-[30px] md:text-[44px] leading-[1.1] font-semibold tracking-[-0.01em]">
             <Accent text={t('s1_tag')} />
           </p>
