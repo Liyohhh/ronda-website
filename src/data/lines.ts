@@ -261,7 +261,8 @@ export function lineBadgeSvg(line: Line, opts: { title?: boolean } = {}): string
     (line.id === 'ecrl'
       // ECRL: just its official mark (public/lines/ecrl-mark.png, from the owner, 29 Oct 2026), no box or border
       ? `<image href="/lines/ecrl-mark.png" x="1" y="1" width="46" height="46"/>`
-      : `<rect width="48" height="48" rx="6" fill="${line.color}"/>` + badgeGlyph(line)) +
+      // a circle in the line colour (owner, 1 Nov 2026), the same drawing shrunk to 78% so it stays inside the circle
+      : `<circle cx="24" cy="24" r="24" fill="${line.color}"/><g transform="translate(5.28 5.28) scale(0.78)">${badgeGlyph(line)}</g>`) +
     `</svg>`
   )
 }

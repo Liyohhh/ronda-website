@@ -1,5 +1,12 @@
 # Test report
 
+## Run - 1 Nov 2026, afternoon (round line badges)
+
+- Line badges are now circles instead of rounded squares (owner). Same drawings as before, shrunk to fit inside the
+  circle; the ECRL keeps its official mark. All 19 badges checked at 64 px and 22 px: nothing is cut off. Seen on
+  the home page line picker.
+- Unit tests 262 / 262, type check and lint clean.
+
 ## Run - 1 Nov 2026, afternoon (myBAS Melaka published)
 
 - myBAS Melaka published (owner's approval). Live planner checked: Melaka Sentral to MITC (M10B), Bukit Katil (M11)
