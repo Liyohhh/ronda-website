@@ -1,5 +1,13 @@
 # Test report
 
+## Run - 1 Nov 2026, afternoon (myBAS Melaka published)
+
+- myBAS Melaka published (owner's approval). Live planner checked: Melaka Sentral to MITC (M10B), Bukit Katil (M11)
+  and the airport area (M30). Melaka Sentral to UTeM on a Monday finds no bus, which matches the operator's timetable
+  (M10A only goes to UTeM Friday to Sunday). Stop search finds Melaka Sentral. Johor, Penang and Klang Valley trips
+  unchanged: smoke 48 / 48, regression 134 journeys.
+- Known gap: Melaka fares are not in the database yet ("Fare n/a").
+
 ## Run - 1 Nov 2026, later still (myBAS Johor published)
 
 - myBAS Johor published (owner's approval). Live planner checked: JB Sentral to Larkin Sentral (J13), Kota Tinggi
