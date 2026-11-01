@@ -1,5 +1,23 @@
 # Test report
 
+## Run - 1 Nov 2026, later still (myBAS Johor published)
+
+- myBAS Johor published (owner's approval). Live planner checked: JB Sentral to Larkin Sentral (J13), Kota Tinggi
+  (J10) and Mid Valley Southkey (J15); Plaza Angsana to Toppen with a change at JB Sentral (J33 then J10). Stop search
+  finds Larkin Sentral. Penang and Klang Valley trips unchanged: smoke 48 / 48, regression 134 journeys, 0 regressions.
+- Known gap: Johor fares are not in the database yet ("Fare n/a").
+
+## Run - 1 Nov 2026, later (Rapid Penang published)
+
+- Load test on a test-only copy of the trip planner that holds every city, hidden ones included (plan-trip-staging):
+  165 searches, 0 errors, p95 2.6 s; live map p95 0.9 s. The bigger timetable fits.
+- Rapid Penang published (owner's approval). Live planner checked: Komtar to Batu Ferringhi on bus 101, Komtar to
+  the airport area on 401E, Weld Quay to the Penang Hill area on 202. Stop search finds Komtar. Klang Valley trips
+  unchanged: production smoke tests 48 / 48, regression 134 journeys, 0 regressions.
+- Known gaps: Penang fares are not in the database yet, so trips show "Fare n/a". The ferry and the Penang Hill
+  funicular are not in the operator's feed, so Butterworth to Komtar goes round by bus (96 min).
+- Not checked on screen: the trip results page for a Penang trip (the planner boxes reset in the test browser).
+
 ## Run - 1 Nov 2026 (load test after the Supabase upgrade)
 
 - Supabase now on Pro + Large (checked: 160 database connections, 2 GB buffers, database 429 MB).
@@ -12,6 +30,7 @@
   timetable and fares. They now share one load (trip planner v26, deployed with the owner's approval; new unit test).
   Load test again: 165 searches, 0 errors, p95 2.12 s, every rail trip priced; live map 330 requests, 0 errors, p95
   1.52 s. Production smoke tests 48 / 48. Regression 134 journeys: 0 regressions, 2 improved. Database unit tests 252 / 252.
+- Leaked-password protection turned on by the owner in Supabase (Pro). docs/LAUNCH.md items ticked.
 - Route check: no bus route 1765B or T765B in the database (all feeds, hidden cities included) or in any public source found (Rapid KL feed, mrt.com.my, Transit app; MyRapid kiosk page now loads blank). Nearest match: T765
   (Stesen LRT Seksyen 7 ~ UITM, Rapid KL).
 
