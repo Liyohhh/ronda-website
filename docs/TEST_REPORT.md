@@ -1,5 +1,20 @@
 # Test report
 
+## Run - 1 Nov 2026 (load test after the Supabase upgrade)
+
+- Supabase now on Pro + Large (checked: 160 database connections, 2 GB buffers, database 429 MB).
+- Load test against production, 90 s, 8 users: trip planner 165 searches, p95 1.95 s, every rail trip priced;
+  live map 317 requests, p95 1.32 s, 0 errors.
+- Failed one budget: 8 trip searches (4.9%, budget 1%) got an error at the same second. Cause: one planner worker ran
+  out of memory (Edge Function limit), not the database. The bigger database does not fix this; the planner needs
+  to use less memory before the new cities are published (details in the database repo, docs/GROWTH_PATH.md).
+- Fixed the same day: when several searches reached a new planner worker at once, each loaded its own copy of the
+  timetable and fares. They now share one load (trip planner v26, deployed with the owner's approval; new unit test).
+  Load test again: 165 searches, 0 errors, p95 2.12 s, every rail trip priced; live map 330 requests, 0 errors, p95
+  1.52 s. Production smoke tests 48 / 48. Regression 134 journeys: 0 regressions, 2 improved. Database unit tests 252 / 252.
+- Route check: no bus route 1765B or T765B in the database (all feeds, hidden cities included) or in any public source found (Rapid KL feed, mrt.com.my, Transit app; MyRapid kiosk page now loads blank). Nearest match: T765
+  (Stesen LRT Seksyen 7 ~ UITM, Rapid KL).
+
 ## Run - 28 Oct 2026, evening (account emails)
 
 - New RONDA confirm-sign-up and reset-password emails (docs/email-templates/, built by scripts/email-templates.mjs).
