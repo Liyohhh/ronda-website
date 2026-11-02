@@ -1,5 +1,12 @@
 # Test report
 
+## Run - 3 Nov 2026 (home page RONDA 300 card photo)
+
+- Home page RONDA 300 card: the photo is bigger (144 to 224 px) and sits further into the top corner; the card titles
+  move down so the photo never covers them (all four cards grow by the same amount, the row stays even). Checked on
+  a laptop screen and a phone: title clear of the photo on both.
+- FeatureGrid unit tests 3 / 3.
+
 ## Run - 1 Nov 2026, night (product name Ronda2Go)
 
 - Product name on the site changed from RONDA to Ronda2Go (owner, 1 Nov): tab title and share preview
