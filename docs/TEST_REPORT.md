@@ -1,4 +1,71 @@
 # Test report
+
+## Run - 3 Nov 2026, latest (admin dashboard, second look, no repeats)
+
+- /admin redone again to the owner's second reference (white cards with a thin border, headline cards with a change
+  label and a footer line, one big chart with a picker, top lists with coloured bars). Side menu kept.
+- Every number now shows once. Taken out as repeats: the navy "Active today" block (active today, this week, this
+  month, accounts), the second active-users chart, the separate live sharing card, the separate website-or-app,
+  language and country cards (now tabs or part of another card), the ring and the tile grid, the second data warnings
+  list, and the "analytics events" total (only all the other counts added up). Trips planned and searches are on the
+  headline card only; the steps card now starts after a trip is planned (opened, shared live, as a share of trips).
+- Layout: four headline cards (active users last 30 days with change on the 30 days before; active today with change
+  on the same day last week and signed in / guests; trips planned from N searches; user accounts with new this week),
+  Trends chart (active users per day / week / month, trips planned per day, searches per day), Top lists (stations,
+  countries, languages), busy hours, after a trip is planned (with website or app), most planned trips, searches,
+  coming back (with how many come back on a given day), RONDA 300 and trails, service alert reach, then data and
+  systems in one card (live vehicles, feeds, last import, alerts in force, AI chats, ad enquiries, feeds table, live
+  sources, data warnings).
+- Database migration trimmed to the fields the page uses: daily_events (searches and trips planned per day) and ops.
+  Dropped before applying: events_30d, accounts_daily, ai_daily. Applied to the live database 3 Nov 2026 (owner
+  approved; live version 20261103073214 admin_dashboard_overview). Checked on the live database: as an admin it
+  returns all 29 earlier fields unchanged plus daily_events (30 days) and ops (8 feeds published, 3 open warnings,
+  1 alert in force); a signed-in user without the admin role gets "admins only"; guests cannot call it.
+- Unit tests 276 / 276 (AdminView: each headline number once, chart and top list switches, older database, after a
+  trip is planned, data and systems, all 4 languages). End to end: e2e/access.spec.ts 12 / 12 (admin checks updated
+  to the new layout). Type check clean; lint only the old e2e/mocks.ts error. Screenshots desktop and phone, English
+  and Arabic, with the real numbers of 3 Nov; phone page stays 412 px wide.
+
+## Run - 3 Nov 2026, later (admin dashboard, first dashboard look; replaced by the run above)
+
+- /admin redone in a dashboard style (owner's reference picture, admin page only): side menu on wide screens
+  (Overview, Users, Trips, Places, Data, Service alerts; quick links to Live map, Trails, Data sources; the signed-in
+  admin with Profile and Sign out), pill menu on phones. Top: a soft blue band with the headline numbers on glass
+  cards (active today with change on the same day last week, user accounts, trips planned, searches, analytics
+  events). Then three chart cards: who is on today (ring: signed in and guests), trips planned per day (bars, last 14
+  days, busiest day in blue), active users (smooth line, last 30 days, with the 30 days before). Then "Data and
+  systems" (live vehicles, feeds, last GTFS import, alerts in force, AI chats, ad enquiries, live sharing) and "Data
+  warnings" (latest 3, "View all data"). Every card jumps to its detail below; detail cards keep their content with a
+  soft shadow. Real numbers only; same admin guard.
+- Fixed: on phones a wide table (busy hours) made the whole admin page wider than the screen; cards now keep to the
+  screen width (checked: page 412 px wide on a 412 px phone).
+- Unit tests 274 / 274, type check clean, lint only the old e2e/mocks.ts error. Screenshots desktop and phone,
+  English and Arabic, with the real numbers of 3 Nov. The database update (below) is still waiting for approval.
+
+
+## Run - 3 Nov 2026, later (admin dashboard overview, first version)
+
+- /admin: new "At a glance" block at the top with one tile per key number: active today (with this month), user
+  accounts (+ new this week), trips planned, searches, analytics events, live location sharing, AI chats (with cost),
+  live vehicles now (with last update), feeds published (of all feeds), last GTFS import (feed and time), alerts in
+  force, data warnings (open warnings, failed imports, live sources down), new ad enquiries. 30-day lines where the
+  database has daily numbers (active users, sign-ups, trips, searches, events, AI chats). A tile jumps to its section;
+  live vehicles and data warnings get a red edge when not updating / not zero. New section "Data" below (feeds with
+  published or not and last import, live vehicle sources, open data warnings) and a "Data" pill in the menu. Every
+  earlier section stays as it was. All 4 languages; Arabic right to left. Still admin-only (same /admin guard; the
+  database function refuses non-admins).
+- Database: migration 20261103120000_admin_dashboard_overview.sql (DB repo) only adds fields to admin_dashboard()
+  (now daily_events and ops, after the trim above); every earlier field unchanged, so the app keeps working. New
+  parts dry-run read-only on the live database: all fine. Applied 3 Nov (see the run above).
+- Real numbers 3 Nov (live database): 62 active today, 4 user accounts, 168 trips planned, 171 searches, 849 events,
+  9 live shares, 0 AI chats, 8 of 20 feeds published, last import KTM done 3 Nov 01:30, 1 alert in force, 3 open data
+  warnings. Live vehicles: 0 now; last live update 1 Nov 22:44 (live updates have stopped since then: to check).
+- Not tracked yet (left out): cities published (feeds have no city field), app crashes and server errors (not in the
+  database), AI chat by day before the assistant goes live (table empty).
+- Unit tests: new AdminOverview tests (numbers, jumps, older database without the new fields, warnings, all 4
+  languages). Type check clean. Lint: only the old error in e2e/mocks.ts. Screenshots (desktop, phone, Arabic phone)
+  made with the real numbers above.
+
 ## Run - 3 Nov 2026, later ("Advertise with us" page)
 
 - New page /advertise: a two-step enquiry form (about you: name, company, email, phone optional, type of business;

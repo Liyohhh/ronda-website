@@ -35,6 +35,27 @@ export type AdminStats = {
   accounts: number
   accounts_new_week: number
   countries: { c: string | null; n: number }[]
+  // added 3 Nov 2026 (missing before that database update, so optional): searches and trips planned per day,
+  // data and systems
+  daily_events?: { d: string; search: number; plan: number }[]
+  ops?: Ops
+}
+
+export type Ops = {
+  feeds_total: number
+  feeds_published: number
+  feeds: { id: string; name: string; status: string; published: boolean; last: string | null }[]
+  last_import: { feed_id: string; status: string; at: string | null; error: string | null } | null
+  imports_failed: number
+  live_vehicles: number // vehicles updated in the last 10 minutes
+  live_fetched_at: string | null
+  live_sources: { source: string; ok: boolean; vehicles: number | null; at: string }[]
+  alerts_in_force: number
+  data_alerts_open: number
+  data_alerts: { kind: string; feed_id: string | null; message: string; first: string }[]
+  ai_chats_30d: number
+  ai_cost_30d: number
+  ad_enquiries_new: number
 }
 
 export async function loadAdminStats(): Promise<AdminStats> {
