@@ -26,6 +26,7 @@ const Services = lazy(() => import('./pages/Services'))
 const LiveMap = lazy(() => import('./pages/LiveMap'))
 const Ronda300 = lazy(() => import('./pages/Ronda300'))
 const Credits = lazy(() => import('./pages/Credits'))
+const Advertise = lazy(() => import('./pages/Advertise'))
 const Hub = lazy(() => import('./pages/Hub'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
@@ -61,6 +62,7 @@ function App() {
           {SERVICES_ENABLED && <Route path="/services" element={<Services />} />}
           <Route path="/live" element={<LiveMap />} />
           <Route path="/credits" element={<Credits />} />
+          <Route path="/advertise" element={<Advertise />} />
           <Route path="/ronda-300" element={<Ronda300 />} />
           <Route path="/hub/:slug" element={<Hub />} />
           <Route path="*" element={<NotFound />} />

@@ -1,4 +1,29 @@
 # Test report
+## Run - 3 Nov 2026, later ("Advertise with us" page)
+
+- New page /advertise: a two-step enquiry form (about you: name, company, email, phone optional, type of business;
+  your idea: ad place, message, consent with a link to the privacy policy). Type of business (shop or café near a
+  station, hotel or attraction, brand or agency, event) is a plain list in the form, for the team; the picker cards
+  and the "Suits you" line were taken out (owner, 3 Nov). Linked from the footer (Support) and the home page "Advertise with us"
+  button (was the Help answer). All 4 languages; Arabic reads right to left. No audience figures (TODO when confirmed).
+- Form and picture in one card: the form on the light side, a navy side drawn like a transit map (owner's pick C,
+  3 Nov; replaces the photo with a fade): the Ronda2Go mark and name, the LRT Kelana Jaya Line through KL Sentral
+  and Pasar Seni and the MRT Kajang Line crossing at Pasar Seni (real stops and interchange, operator colours from
+  src/data/lines.ts, with the site's own line badges instead of a drawn train; not to scale). No ad on the drawing:
+  a photo marker, ad card and map label were tried and taken out (owner: the ad part looked out of place). The lines
+  fade in at the top so they never run over the tagline, and the green line fades out at the bottom.
+- Checked in the browser on localhost, laptop and phone sizes: empty fields stop step 1 with a note and a message
+  under each field; Next opens step 2; Back keeps what was typed; a failed send
+  shows "could not be sent" and keeps what was typed.
+- Database: table ad_enquiries added on the live database (owner approved, 3 Nov). Anyone can send; only admins can
+  read, change or delete. Checked: a visitor (not signed in) cannot read enquiries (refused) and cannot send one
+  marked as already handled (refused).
+- End to end on localhost against the live database: test enquiry sent (saved, answer 201), thank-you message shown,
+  row checked in the table (kind of business, ad place, language, consent all right), then the test row deleted
+  (table empty again).
+- Unit tests 274 / 274 (new: 5 for the page, 3 for the form checks), type check clean. Lint: only the old error in
+  e2e/mocks.ts. Screenshots: reports/advertise/ (desktop, phone, phone step 2, Arabic, sent).
+- Not done: admin screen to read enquiries (for now in Supabase only), email alert to the team on a new enquiry.
 
 ## Run - 3 Nov 2026 (home page RONDA 300 card photo)
 

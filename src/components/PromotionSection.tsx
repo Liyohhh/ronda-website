@@ -23,7 +23,7 @@ function PromotionSection() {
           <h2 id="promo-title"><Eyebrow center>{t('promoTitle')}</Eyebrow></h2>
           <p className="mt-5 max-w-3xl [text-wrap:balance] font-display text-[34px] md:text-[50px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#222D52]"><Accent text={t('promoSubtitle')} /></p>
           <Link
-            to="/help/general#business"
+            to="/advertise"
             className="mt-6 inline-flex items-center gap-1.5 h-11 px-5 rounded-full border border-[#D3DCE7] bg-white text-sm font-semibold text-[#222D52] hover:bg-[#222D52] hover:text-white hover:border-[#222D52] transition-colors whitespace-nowrap"
           >
             {t('promoAdvertiseLink')}
