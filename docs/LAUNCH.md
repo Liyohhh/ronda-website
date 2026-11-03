@@ -3,33 +3,52 @@
 ## Owner (blocking)
 
 - [x] Domain bought: **ronda2u.com** at Exabytes (domain only, no hosting package), paid to 27 Oct 2029, auto-renew on.
+- [x] Main domain changed to **ronda2go.com** (owner, 1 Nov 2026): bought at Exabytes 31 Oct 2026 for 3 years
+      (RM200.10, renews at RM278.40 every 3 years, next due 31 Oct 2029). ronda2u.com stays as a redirect and mail alias.
 - [x] Cloudflare account created (free) and the nameservers pointed to it at Exabytes (27 Oct 2026:
-      carla.ns.cloudflare.com, chase.ns.cloudflare.com). All DNS records now live in Cloudflare.
-- [x] Email @ronda2u.com on Google Workspace Business Starter (27 Oct 2026). Cloudflare DNS has MX (smtp.google.com),
-      SPF and DKIM (checked 27 Oct 2026).
-- [ ] Add DMARC in Cloudflare: TXT `_dmarc` = `v=DMARC1; p=none; rua=mailto:admin@ronda2u.com`.
-- [ ] When the site is live on ronda2u.com: Supabase secret `ALLOWED_ORIGINS=https://ronda2u.com,https://www.ronda2u.com`
-      (ai-chat, delete-account), Supabase Auth Site URL and redirect URLs to https://ronda2u.com, and the Amazon SES
-      sender on ronda2u.com (add `include:amazonses.com` to the same SPF record, plus SES's DKIM records).
+      carla.ns.cloudflare.com, chase.ns.cloudflare.com). ronda2go.com added to the same RONDA account on 1 Nov 2026,
+      same nameservers. All DNS records now live in Cloudflare.
+- [x] Exabytes: Registrar Lock on for ronda2go.com (owner, 4 Nov 2026).
+- [x] Email on Google Workspace Business Starter (27 Oct 2026). ronda2go.com is the primary domain since 1 Nov 2026;
+      groups admin@, support@ and feedback@ renamed to @ronda2go.com with the old @ronda2u.com addresses kept as
+      aliases. Cloudflare DNS for ronda2go.com has MX (smtp.google.com), SPF, DKIM (authenticating) and DMARC
+      (`v=DMARC1; p=none; rua=mailto:admin@ronda2go.com`), all checked 1 Nov 2026.
+- [ ] Redirect ronda2u.com and www.ronda2u.com to https://ronda2go.com (Cloudflare redirect rule) once the site is live.
+- [ ] When the site is live on ronda2go.com: Supabase secret `ALLOWED_ORIGINS=https://ronda2go.com,https://www.ronda2go.com`
+      (ai-chat, delete-account), Supabase Auth Site URL and redirect URLs to https://ronda2go.com, and the Amazon SES
+      sender on ronda2go.com (add `include:amazonses.com` to the same SPF record, plus SES's DKIM records).
+- [ ] Change the login email of Cloudflare, AWS and Supabase from admin@ronda2u.com to admin@ronda2go.com
+      (the old address still receives mail as an alias, so nothing is urgent).
 - [ ] Supabase production setup (full scale from launch, owner decision 7 Oct 2026), about RM1,418 a month:
       Billing -> **Pro**; Project -> Settings -> Compute and Disk -> **Large** (2 dedicated vCPU, 8 GB; under 2 min
       downtime, do it 8 Oct); Add-ons -> **PITR 7 days**; Database -> Read Replicas -> **1 replica** (Singapore);
       Billing -> Spend cap **off** (PITR is not covered by it anyway). Re-run the load test afterwards.
 - [x] Supabase -> Authentication -> turn on leaked password protection (owner, 1 Nov 2026).
 - [ ] Supabase -> Project Settings -> Vault: secret `discord_webhook_url` (alerts to Discord).
-- [x] Official addresses (28 Oct 2026, in `src/data/contact.ts`): support@ronda2u.com (help for riders and partners,
-      shown in Help and Account) and feedback@ronda2u.com (rider feedback, shown in Help). admin@ronda2u.com is for
+- [x] Official addresses (28 Oct 2026, moved to ronda2go.com 1 Nov 2026, in `src/data/contact.ts`): support@ronda2go.com
+      (help for riders and partners, shown in Help and Account) and feedback@ronda2go.com (rider feedback, shown in Help). admin@ronda2go.com is for
       RONDA's own accounts (Cloudflare, AWS, Supabase, app stores, codes and bills) and is never shown on the site.
 
 ## Ready for 50,000 users (agreed 28 Oct 2026)
 
 - [x] Supabase: Pro + Large compute (switched by the owner, checked 1 Nov 2026: 160 connections) (about RM551 a month with SST); the owner pays and switches later and says
       so first, so no import is running at the time. admin@ronda2u.com is an Owner of the Supabase organisation.
-- [ ] AWS account (made 28 Oct 2026, login admin@ronda2u.com, company Movinexa): boss to approve the switch from the
-      Free plan to the Paid plan (Billing -> Upgrade plan; the US$100 credit stays) and add his phone as a second MFA
-      device. Needed before asking SES for production access. The Free plan also locks the account to Sydney
-      (ap-southeast-2): after upgrading, use Settings -> "Activate advanced features" to open Singapore, then set up
-      SES there (ronda2u.com identity, DKIM + MAIL FROM records in Cloudflare, SMTP into Supabase).
+- [x] AWS account (made 28 Oct 2026, company Movinexa): Paid plan (31 Oct 2026) and advanced features (boss approved,
+      3 Nov 2026; organisation Ronda-Team, root email admin@ronda2go.com). SES in Singapore in the **Ronda-Team
+      Management Account** (the project account "Minimum Delightful Product" blocks SES through a service control
+      policy): ronda2go.com verified with Easy DKIM 2048 and MAIL FROM mail.ronda2go.com (records in Cloudflare,
+      checked 3 Nov 2026); SMTP user `ses-smtp-supabase`; Supabase custom SMTP on (sender no-reply@ronda2go.com,
+      Ronda2Go) and the Ronda2Go email templates pasted.
+- [ ] SES production access: requested 3 Nov 2026, waiting for AWS (until then SES only sends to @ronda2go.com).
+- [x] Boss's phone added as a second MFA device on the AWS Builder ID login (owner, 4 Nov 2026).
+- [ ] AWS root user of the Ronda-Team Management Account (admin@ronda2go.com): no password or MFA set yet; the
+      boss wants one shared password for all accounts (4 Nov 2026). Root of the two member accounts: not present
+      (checked 4 Nov 2026). Open point for the security check: root MFA, 2-step sign-in on every service, and
+      Google Workspace 2-step verification enforced (admin@ can reset the other accounts).
+- [x] CloudWatch alarms on SES (Singapore, Management Account), SNS topic `ses-alerts` to admin@ronda2go.com:
+      "SES bounce rate 2%" (Reputation.BounceRate >= 0.02) and "SES complaint rate 0.1%" (Reputation.ComplaintRate
+      >= 0.001), made 3 Nov 2026. Suppression list on for bounces and complaints.
+- [x] SNS email subscription confirmed in the admin@ronda2go.com inbox (3 Nov 2026).
 - [x] After the switch to Pro (done by the owner, 1 Nov 2026): Supabase -> Authentication -> Sign In / Providers -> Email -> "Prevent use of leaked
       passwords" on, then Save (Pro only; on Free the switch shows on but does nothing). Owner asked to be reminded.
 - [x] After the switch (1 Nov 2026, p95 plan-trip 2.1 s, live 1.5 s, 0 errors): run `npm run test:load` in the database repo on Large and record p95 per endpoint
@@ -91,3 +110,15 @@ Branch `feature/home-nav-help-ai` (not merged): new home order (trails, promotio
 picker A/B, 5 slides with credited KL photos, Hub / Explore / RONDA 300 / Services / About menu, `/ronda-300`, real
 Help articles, 404 page, dashboards, the assistant (off). Tests: 181 unit, 158 end-to-end (links and buttons in
 all 4 languages, axe on every page), 220 Edge Function checks.
+
+## Before launch: security check (owner asked, 4 Nov 2026)
+
+Run once everything else on this list is done, before the site goes public:
+
+- [ ] Supabase: security and performance advisors clean (RLS on every table, function search paths), Auth settings
+      (leaked password protection, CAPTCHA, rate limits, redirect URLs only ronda2go.com), legacy API keys off.
+- [ ] CORS of public functions locked to ronda2go.com; no secrets in either repo or in the built site.
+- [ ] Cloudflare: HTTPS only, security headers and CSP on the site, WAF basics.
+- [ ] Accounts: MFA on AWS root (admin@ronda2go.com) with the boss's phone added; check members on Supabase,
+      Cloudflare, Google Workspace and AWS (only the people who need access).
+- [ ] `npm audit` in both repos, and a code security review of the website and database functions.

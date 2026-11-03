@@ -1,5 +1,29 @@
 # Test report
 
+## Run - 4 Nov 2026 (account emails through Amazon SES, new design)
+
+- Supabase now sends account emails through Amazon SES (Singapore) from no-reply@ronda2go.com. Real test: the
+  sign-up confirmation reached support@ronda2go.com. A sign-up with an address that has no mailbox bounced as
+  expected and SES recorded it (suppression list on, bounce and complaint alarms set).
+- New email design in the site's blue look (owner picked option A of 3): pale blue page, white card, logo, blue line,
+  blue button, light-blue security note. Rebuilt for both emails in English, Malay, Chinese and Arabic (right to left);
+  previews checked on screen for all four.
+- Not done yet: SES production access (AWS asked for more details, reply sent); until then only @ronda2go.com
+  addresses get mail. The logo picture still says RONDA (no Ronda2Go logo file yet).
+
+## Run - 1 Nov 2026, evening (main domain ronda2go.com)
+
+- Owner moved the main domain to ronda2go.com: on Cloudflare (same nameservers as ronda2u.com), verified in Google
+  Workspace and made the primary domain; admin@, support@ and feedback@ renamed with @ronda2u.com kept as aliases.
+  Checked from public DNS: MX smtp.google.com, SPF, DKIM (google._domainkey) and DMARC (p=none, reports to
+  admin@ronda2go.com) all answer.
+- Site addresses now support@ronda2go.com and feedback@ronda2go.com (Help, Account, RONDA 300). Account email
+  templates rebuilt with the new support address (2 emails x 4 languages).
+- Unit tests 262 / 262. Browser tests for account, sign-in, site and RONDA 300: 102 passed. The RONDA 300 map test
+  failed once on both screen sizes when run with the other files and passed on a rerun alone (timing, not the change).
+- Not done yet: the site is not hosted on ronda2go.com, so Supabase Site URL, CORS and the ronda2u.com redirect wait
+  for hosting (docs/LAUNCH.md).
+
 ## Run - 3 Nov 2026, latest (admin dashboard, second look, no repeats)
 
 - /admin redone again to the owner's second reference (white cards with a thin border, headline cards with a change
