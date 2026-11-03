@@ -121,4 +121,8 @@ Run once everything else on this list is done, before the site goes public:
 - [ ] Cloudflare: HTTPS only, security headers and CSP on the site, WAF basics.
 - [ ] Accounts: MFA on AWS root (admin@ronda2go.com) with the boss's phone added; check members on Supabase,
       Cloudflare, Google Workspace and AWS (only the people who need access).
-- [ ] `npm audit` in both repos, and a code security review of the website and database functions.
+- [x] Outside code security review (4 Nov 2026). Fixed: admin check by role only, test planner switched off,
+      vite update, HSTS / COOP / CORP headers.
+- [ ] Before the public launch, from that review: rate-limited writes for statistics and ad enquiries (statistics
+      needs the app change first), trusted client IP in the rate limits, avatar upload rules, account deletion also
+      clears statistics, enquiries and all photo files, Supabase "Secure password change" on.

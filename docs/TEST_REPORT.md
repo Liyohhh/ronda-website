@@ -1,5 +1,24 @@
 # Test report
 
+## Run - 4 Nov 2026 (security fixes before going online)
+
+- Outside security review (read-only, both repositories) checked against the live project. Fixed today:
+  - Admin check: `is_admin()` also accepted any account with the email admin@gmail.com (an address the team does
+    not own; such an account existed). Now only the admin role counts, as in the other admin rules. Checked in the
+    database: that account is no longer admin, the team's admin accounts still are.
+  - Test planner `plan-trip-staging` was open to anyone and showed the 12 unpublished networks. Now switched off
+    (answers 401, checked); the repository version needs a secret token, for the next load test.
+  - Build tools: vite 8.3.0 to 8.3.5 and `npm audit fix`. `npm audit --omit=dev --audit-level=high`: 0 issues
+    (12 moderate ones left in development tools only).
+  - Site headers: HTTPS only (HSTS), COOP and CORP added; the CAPTCHA host is now allowed whenever a CAPTCHA key is
+    set, not only with the assistant.
+- Already safe (checked live): admins table locked, old stops table not readable, leaked-password protection on,
+  assistant and account deletion functions not deployed yet.
+- Unit tests 276 / 276. Not checked: the full build and browser tests, because another chat's unfinished change
+  (trip panel) does not build yet; to re-run once that is finished.
+- Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
+  profile photo rules, complete account deletion, smaller hardening items.
+
 ## Run - 4 Nov 2026 (account emails through Amazon SES, new design)
 
 - Supabase now sends account emails through Amazon SES (Singapore) from no-reply@ronda2go.com. Real test: the

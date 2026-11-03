@@ -1,12 +1,15 @@
 # Cloudflare Pages response headers (https://developers.cloudflare.com/pages/configuration/headers/)
 # The Content-Security-Policy is added to the built copy by scripts/postbuild.mjs (scripts/csp.mjs), from the
-# same env as the build: Supabase project, map file host, CAPTCHA when the assistant is on.
+# same env as the build: Supabase project, map file host, CAPTCHA when a site key is set or the assistant is on.
 
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
 
 # built files carry a content hash in their name: cache them for a year
 /assets/*

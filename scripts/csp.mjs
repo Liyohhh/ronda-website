@@ -8,8 +8,8 @@ export function buildCsp(env) {
   const supabase = origin(env.VITE_SUPABASE_URL)
   const map = origin(env.VITE_MAP_PMTILES_URL)
   const assets = origin(env.VITE_MAP_ASSETS_URL) ?? 'https://protomaps.github.io'
-  const chat = env.VITE_AI_CHAT === 'on'
-  const turnstile = chat ? 'https://challenges.cloudflare.com' : null
+  // Turnstile CAPTCHA: on the sign-in forms when a site key is set, and in the assistant
+  const turnstile = env.VITE_CAPTCHA_SITE_KEY || env.VITE_AI_CHAT === 'on' ? 'https://challenges.cloudflare.com' : null
   // no map file (local only): plain OpenStreetMap tiles
   const osmTiles = map ? null : 'https://tile.openstreetmap.org'
   const list = (...xs) => xs.filter(Boolean).join(' ')
