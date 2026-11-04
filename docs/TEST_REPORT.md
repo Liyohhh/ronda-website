@@ -99,6 +99,12 @@
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
 
+## Run - 4 Nov 2026 (Escape Rooms trail cover)
+
+- Escape Rooms trail cover is now the owner's photo (tarot cards in an escape room), public/trails/escape-rooms.jpg,
+  instead of the mall building. Demo photo, no credit, replaced after launch. Checked on screen: the trail card and
+  the trail page banner (face kept in view).
+
 ## Run - 4 Nov 2026 (platform sign photos for every direction: shot list, no credits)
 
 - Owner: use any photo for now, no credit on the site, list every source in one document; all photos are replaced
