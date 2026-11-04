@@ -1091,6 +1091,22 @@
    "walkMeters": 320
   },
   {
+   "id": "rotiByDTandoor",
+   "name": "ROTI By d'Tandoor",
+   "address": "82 Jalan Damai, off Jalan Ampang, 55000 Kuala Lumpur",
+   "cuisine": "indian",
+   "station": {
+    "name": "LRT Damai",
+    "feedId": "rapid-rail-kl",
+    "search": "LRT Damai",
+    "stopId": "KJ8",
+    "lineIds": [
+     "lrt-kelana-jaya"
+    ]
+   },
+   "walkMeters": 384
+  },
+  {
    "id": "salomaLink",
    "name": "Saloma Link bridge",
    "station": {
@@ -2628,6 +2644,9 @@
     },
     {
      "placeId": "dcDarrenChin"
+    },
+    {
+     "placeId": "rotiByDTandoor"
     }
    ],
    "category": "food"
