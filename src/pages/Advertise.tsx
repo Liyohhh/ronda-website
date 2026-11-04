@@ -174,7 +174,7 @@ function Advertise() {
     const ok = await sendAdEnquiry(form, lang)
     setState(ok ? 'sent' : 'failed')
     // the note sits above the fields: bring it into view
-    requestAnimationFrame(() => document.getElementById('ad-form-title')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    requestAnimationFrame(() => document.getElementById('ad-form-title')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' }))
   }
 
   const hasErrors = Object.values(errors).some(Boolean)

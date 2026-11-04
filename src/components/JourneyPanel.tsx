@@ -14,7 +14,7 @@ import BusStopName from './BusStopName'
 import LiveApproach from './LiveApproach'
 import RouteChip from './RouteChip'
 import StationPhoto from './StationPhoto'
-import { ridePhoto } from '../data/stationPhotos'
+import { ridePhoto } from '../data/ridePhoto'
 import { TripParking } from './ParkingInfo'
 import { useServiceAlerts } from '../hooks/useServiceAlerts'
 import { track, trackOnce } from '../services/analytics'
@@ -422,7 +422,7 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
   const color = legLine(leg).color
   const bus = isBus(leg)
   const alerts = useLineAlerts(leg)
-  const photo = ridePhoto(leg.feed_id, leg.from.stop_id)
+  const photo = ridePhoto(leg.feed_id, leg.from.stop_id, bus ? null : leg.headsign)
   return (
     <>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">

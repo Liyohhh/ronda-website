@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "lines:export": "node scripts/export-line-badges.ts",
+    "photo-sources": "node scripts/photo-sources.ts",
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",

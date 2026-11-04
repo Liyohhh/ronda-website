@@ -19,6 +19,26 @@
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
 
+## Run - 4 Nov 2026 (platform sign photos for every direction: shot list, no credits)
+
+- Owner: use any photo for now, no credit on the site, list every source in one document; all photos are replaced
+  with our own after launch. Credits for station photos removed from the large view and the About page. Every source
+  is in docs/PHOTO_SOURCES.md, written by `npm run photo-sources` from the photo lists.
+- New: a platform sign photo for one direction at a station (src/data/platformPhotos.ts), shown instead of the station
+  photo when the ride goes that way, because the two platforms have different signs. Taman Suntex towards Kwasa
+  Damansara moved there; the other direction shows the station photo.
+- Wikimedia Commons search for platform signs at all 281 stations, each match checked by eye. Added: 13 platform
+  sign photos for one direction (16 Sierra, Serdang Jaya, Cyberjaya Utara, Cyberjaya City Centre, Glenmarie 2,
+  Seksyen 7, Bandar Baru Klang both ways, Pasar Klang both ways, Titiwangsa Monorail, Kwasa Damansara for Kajang and
+  Putrajaya) and 9 station sign photos (Damai, Alam Sutera, Awan Besar, Stadium Shah Alam, UiTM Shah Alam, Jalan
+  Meru, Klang Jaya, Bandar Baru Klang, Sungai Besi MRT), each cropped to the sign. KTM Komuter photos on Commons
+  show no readable sign, so those stations wait for the team's photos. Checked on screen: Seksyen 7 to Klang Jaya.
+- 15 platform numbers read off those signs added to the live database (approved); live check: Seksyen 7 shows
+  "Towards Johan Setia | Platform 2" with its sign.
+- Shot list for the team: docs/PLATFORM_SHOT_LIST.xlsx, every rail station and direction from the timetable (549 rows,
+  281 stations: Rapid KL rail and BRT, KLIA Ekspres and Transit, KTM Komuter), with how to take the photo, the file
+  name to use, the platform number seen on the sign, status (have platform sign / station photo only / needed).
+
 ## Run - 4 Nov 2026 (photos in trip steps: station signs; KLIA Transit badge; admin alerts card)
 
 - Trip steps: a photo on the right of each rail ride shows the sign of the station where you board (platform sign,

@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TrailPhoto } from '../data/trailPhotos'
-import PhotoCredit from './PhotoCredit'
 import Icon from './Icon'
 
 // A real photo of the platform you board at, under the ride's times in the trip steps, the way map apps show a place by
-// picture. Tap it to see it large. The thumbnail has no credit line (owner, 4 Nov 2026); CC BY-SA still needs one, so
-// the author and licence are shown in the large view and listed on the About page.
+// picture. Tap it to see it large. No credit on the site (owner, 4 Nov 2026): demo photos, every source is listed in
+// docs/PHOTO_SOURCES.md and all are replaced after launch.
 function StationPhoto({ photo, station }: { photo: TrailPhoto; station: string }) {
   const { t } = useLanguage()
   const [big, setBig] = useState(false)
@@ -29,7 +28,6 @@ function StationPhoto({ photo, station }: { photo: TrailPhoto; station: string }
             <img src={photo.src} alt={alt} className="max-h-[80vh] w-auto rounded-2xl object-contain" />
             <figcaption className="mt-2 flex items-center justify-between gap-3 text-sm text-white/90">
               <span className="min-w-0 truncate">{alt}</span>
-              {!photo.owner && <PhotoCredit photo={photo} className="flex-shrink-0 text-xs text-white/70" />}
             </figcaption>
             <button
               type="button"
