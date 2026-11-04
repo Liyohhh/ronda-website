@@ -12,6 +12,7 @@ import { SUPPORT_EMAIL } from '../data/contact'
 import { buildItems, type Pick } from '../data/suggestions'
 import { useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
+import { liftOnPhone } from '../services/liftOnPhone'
 
 const LIST_ID = 'r300-list'
 // where the map opens: KLCC to Bukit Bintang, close enough in for the places to show
@@ -53,15 +54,16 @@ function Ronda300() {
     <SiteLayout>
       {/* header: a wide photo with the title on a navy fade, and a white search card over its bottom edge with the
           numbers (places, 300 m, minutes on foot). The card does not clip, so the station suggestions open below it */}
-      <section className="px-3 sm:px-4 pt-1">
-        <div className="relative overflow-hidden rounded-[32px] bg-[#222D52] text-white">
+      {/* phone: wider, shorter and smaller type, like the other page banners (owner, 4 Nov 2026) */}
+      <section className="px-2 sm:px-4 pt-1">
+        <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] bg-[#222D52] text-white">
           <img src="/places/centralMarket.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
           <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#18203D]/90 via-[#18203D]/65 to-[#18203D]/20" />
-          <div className="wrap relative pt-10 pb-28 md:pt-14 md:pb-36">
-            <div className="mb-8"><BackButton to="/" label={t('backToHome')} onDark /></div>
+          <div className="wrap relative pt-7 pb-24 sm:pt-10 sm:pb-28 md:pt-14 md:pb-36">
+            <div className="mb-5 sm:mb-8"><BackButton to="/" label={t('backToHome')} onDark /></div>
             <Eyebrow tone="dark">{t('r3_tag')}</Eyebrow>
-            <h1 className="mt-5 font-display text-[42px] md:text-[72px] leading-[1.02] font-semibold tracking-[-0.01em]"><Accent text="RONDA 300" dark /></h1>
-            <p className="mt-4 max-w-xl text-lg">{t('r3_intro')}</p>
+            <h1 className="mt-3 sm:mt-5 font-display text-[34px] sm:text-[42px] md:text-[72px] leading-[1.02] font-semibold tracking-[-0.01em]"><Accent text="RONDA 300" dark /></h1>
+            <p className="mt-3 sm:mt-4 max-w-xl text-base sm:text-lg">{t('r3_intro')}</p>
           </div>
         </div>
         <div className="wrap relative z-20 -mt-20 md:-mt-24">
@@ -77,7 +79,7 @@ function Ronda300() {
                       type="text"
                       value={query}
                       onChange={(e) => { setQuery(e.target.value); setOpen(true); setHi(-1) }}
-                      onFocus={() => setOpen(true)}
+                      onFocus={(e) => { setOpen(true); liftOnPhone(e.currentTarget) }}
                       onBlur={() => setOpen(false)}
                       onKeyDown={onKey}
                       role="combobox"

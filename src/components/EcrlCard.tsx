@@ -41,7 +41,7 @@ function EcrlCard() {
         <ol className="sm:columns-2 gap-8">
           {ECRL_STATIONS.map((s, i) => {
             const last = i === ECRL_STATIONS.length - 1
-            const line = s.link ? LINES_BY_ID[s.link] : undefined
+            const lines = (s.links ?? []).map((id) => LINES_BY_ID[id])
             return (
               <li key={s.name} className="relative break-inside-avoid ps-7 pb-3">
                 {!last && (
@@ -52,16 +52,16 @@ function EcrlCard() {
                 )}
                 <span
                   aria-hidden="true"
-                  className={`absolute start-0 top-1.5 h-3 w-3 rounded-full border-2 bg-white ${s.phase === 1 ? 'border-[#222D52]' : 'border-gray-400'} ${line ? 'ring-2 ring-[#2F6BD8]' : ''}`}
+                  className={`absolute start-0 top-1.5 h-3 w-3 rounded-full border-2 bg-white ${s.phase === 1 ? 'border-[#222D52]' : 'border-gray-400'} ${lines.length ? 'ring-2 ring-[#2F6BD8]' : ''}`}
                 />
                 <span className="text-[15px] font-medium text-gray-900">{s.name}</span>
                 {s.fareRm !== undefined && <span className="ms-2 text-xs font-semibold text-[#222D52]">RM {s.fareRm}</span>}
-                {line && (
-                  <span className="mt-1 flex items-center gap-1.5 text-xs text-gray-600">
+                {lines.map((line) => (
+                  <span key={line.id} className="mt-1 flex items-center gap-1.5 text-xs text-gray-600">
                     <LineBadge line={line} size={16} decorative />
                     {t('ecrlChange')} {line.name}
                   </span>
-                )}
+                ))}
               </li>
             )
           })}

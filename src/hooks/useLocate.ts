@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // One-off "where am I": asks the browser for the position when locate() is called (never on page load, so the
 // permission prompt only appears after the rider asks for it). Every failure has a reason the UI can explain.
@@ -33,5 +33,17 @@ export function useLocate(onFound?: (lat: number, lon: number) => void) {
       { enableHighAccuracy: true, timeout: TIMEOUT_MS, maximumAge: 60_000 },
     )
   }, [onFound])
+
+  // Blocked: a site cannot show the browser's question again, but if the rider turns location back on in the
+  // browser's settings while the page is open, try again by itself (owner, 4 Nov 2026)
+  const denied = state.status === 'error' && state.reason === 'denied'
+  useEffect(() => {
+    if (!denied || typeof navigator === 'undefined' || !navigator.permissions?.query) return
+    let status: PermissionStatus | null = null
+    const onChange = () => { if (status?.state === 'granted') locate() }
+    navigator.permissions.query({ name: 'geolocation' }).then((s) => { status = s; s.addEventListener('change', onChange) }).catch(() => {})
+    return () => status?.removeEventListener('change', onChange)
+  }, [denied, locate])
+
   return { state, locate }
 }

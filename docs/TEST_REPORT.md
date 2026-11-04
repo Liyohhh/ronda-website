@@ -1,5 +1,24 @@
 # Test report
 
+## Run - 4 Nov 2026, night (ECRL names and interchanges from MRL's sign at Gombak)
+
+- Why: the owner sent a photo of MRL's platform sign at Terminal Bersepadu Gombak. Checked against ecrl.com.my
+  (4 Nov 2026), the Transport Minister (20 Oct 2026) and NST (Apr 2025).
+- Station order: same 20 stations in the same order as the sign. No change.
+- Names fixed: "ITT Gombak" is now "Terminal Bersepadu Gombak", "Kota SAS" is now "KotaSAS" (both as on
+  ecrl.com.my and the sign), "Serendah Baru" is now "Bandar Serendah" (sign, MOF). Phase text fixed in EN, BM, 中文 and
+  عربي.
+- Interchanges: added Temerloh (KTM Intercity, the East Coast line at Mentakab) and Bandar Serendah (KTM Port Klang
+  Line); Gombak (LRT Kelana Jaya Line) and Jalan Kastam (KTM Port Klang Line) as before. A station can now show more
+  than one line to change to.
+- Fares and opening date: no change. Note: ecrl.com.my still says "January 2027" on its home page; the Minister said
+  12 Dec 2026 on 20 Oct 2026, so we keep 12 Dec.
+- ECRL badge: no change. We already use MRL's official logo (owner, 29 Oct 2026); the dark train icon on the sign is
+  a wayfinding icon, not the line logo.
+- Database: migration 20261104210000_ecrl_kotasas_name.sql (2 Explore Pahang trail places, "ECRL Kota SAS" to
+  "ECRL KotaSAS"). Applied to production 4 Nov with the owner's go; both rows checked.
+- Tests: unit tests 294 / 294 (new test: station order as on the sign); About page ECRL card checked in the browser.
+
 ## Run - 4 Nov 2026, evening (site online at ronda2go.com, not announced)
 
 - Hosting: Cloudflare Pages project `ronda2go` builds from `main` (PR Liyohhh/ronda-website#2 merged, both GitHub
@@ -118,6 +137,27 @@
   (trip panel) does not build yet; to re-run once that is finished.
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
+
+## Run - 4 Nov 2026 (phone, round 2: owner's list from a real phone)
+
+- Trip results sheet: the same height while it searches and after (it used to grow when results came in); a handle
+  at the top drags it down to close it.
+- Lines list: one line per row with its full name ("LRT Sri Petaling Line" instead of "Sri Peta...").
+- Language menu: opened off the left edge of the screen; now opens to the right of the globe on phones.
+- Trail cards: the station, stop count and title overlapped with large text; the text now sits in the flow and
+  the card grows instead.
+- Page banners (About, Trails, RONDA 300 and others): wider, shorter, smaller type on phones.
+- Home offers row: a slanted swipe moved the cards up and cut off their tops; the row now only slides sideways.
+- Live map: the card is smaller on phones (no "Live" label, smaller title and text, switches side by side).
+- Home banner: the line and the three quick links in one straight row; on phones a tall, sharp photo of the
+  Petronas Towers at dusk (Wikimedia Commons, CC BY 2.0, credited on About) replaces the wide strip that was stretched
+  and looked blurred.
+- Search boxes (Home, RONDA 300, hub): on a phone they scroll up under the header when tapped, so the choices show
+  above the keyboard.
+- Location: when it is blocked, the nearest-station line offers "Try again" and the steps to turn it back on
+  (Android Chrome, iPhone Safari), and tries again by itself once location is allowed in the browser.
+- Checked at 412 px (Pixel 7): all of the above on screen. Browser tests 244 passed (6 skipped, phone and desktop);
+  unit tests 294 / 294.
 
 ## Run - 4 Nov 2026 (full phone test: every page and component, fixes)
 
