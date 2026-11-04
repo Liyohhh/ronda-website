@@ -31,14 +31,15 @@ function PromotionSection() {
           </Link>
         </Reveal>
 
-        <ul className="mx-auto mt-12 grid max-w-sm gap-6 md:max-w-none md:grid-cols-3 md:items-end">
+        {/* phone: one row that slides sideways (like the trails row), so three tall cards do not stack */}
+        <ul className="-mx-4 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:mx-auto md:mt-12 md:grid md:grid-cols-3 md:items-end md:gap-6 md:overflow-visible md:px-0 md:pb-0">
           {PROMOTIONS.map((p, i) => {
             const lit = !!p.lit
             return (
               <Reveal as="li" key={p.id} delay={i * 0.08} data-promo={p.id}
-                className={`lift group relative flex flex-col overflow-hidden rounded-t-[170px] rounded-b-[28px] text-center ${lit ? 'bg-[#2F6BD8] pb-8 text-white shadow-[0_30px_50px_-30px_rgb(47_107_216/0.8)]' : 'bg-[#F2F6FB] pb-7 text-[#222D52]'}`}>
+                className={`lift group relative flex w-[78%] shrink-0 snap-center flex-col overflow-hidden rounded-t-[170px] rounded-b-[28px] text-center md:w-auto ${lit ? 'bg-[#2F6BD8] pb-8 text-white shadow-[0_30px_50px_-30px_rgb(47_107_216/0.8)]' : 'bg-[#F2F6FB] pb-7 text-[#222D52]'}`}>
                 <span className="absolute start-1/2 top-4 z-[1] -translate-x-1/2 rtl:translate-x-1/2 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-[#222D52] shadow-sm">{t('promoAdLabel')}</span>
-                <div className={`overflow-hidden ${lit ? 'h-[240px] md:h-[280px]' : 'h-[200px] md:h-[230px]'}`}>
+                <div className={`overflow-hidden ${lit ? 'h-[190px] md:h-[280px]' : 'h-[170px] md:h-[230px]'}`}>
                   <img src={p.photo} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
                 </div>
                 <span aria-hidden="true" className={`relative mx-auto -mt-6 grid h-12 w-12 place-items-center rounded-full bg-white text-[#2F6BD8] ring-4 ${lit ? 'ring-[#2F6BD8]' : 'ring-[#F2F6FB]'}`}><Icon name={p.icon} size={22} /></span>

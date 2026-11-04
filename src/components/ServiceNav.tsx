@@ -14,6 +14,8 @@ function ServiceNav({ className = '' }: { className?: string }) {
   // Keeps the last panel's content rendered while it fades out
   const [shown, setShown] = useState<Key>('navTravel')
   const closeTimer = useRef<number | undefined>(undefined)
+  // a tap gives focus and then a click: the focus has just opened the menu, so that click must not close it
+  const openedAt = useRef(0)
   const navigate = useNavigate()
 
   const open = (key: Key) => {
@@ -43,7 +45,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
             <button
               type="button"
               onMouseEnter={() => open(m.key)}
-              onFocus={() => open(m.key)}
+              onFocus={() => { openedAt.current = Date.now(); open(m.key) }}
               onClick={() => {
                 // RONDA 300: a click goes to its section on Home (hover / focus still opens the panel)
                 if (m.key === 'navRonda300') {
@@ -52,7 +54,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
                   navigate('/#explore')
                   return
                 }
-                if (active === m.key) setActive(null)
+                if (active === m.key && Date.now() - openedAt.current > 400) setActive(null)
                 else open(m.key)
               }}
               aria-expanded={active === m.key}
@@ -70,11 +72,11 @@ function ServiceNav({ className = '' }: { className?: string }) {
       {/* Hover panel */}
       <div
         onMouseEnter={() => active && open(active)}
-        className={`absolute inset-x-4 top-full mt-1 bg-white border border-gray-100 rounded-[32px] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.18)] transition-all duration-200 ease-out ${
+        className={`absolute inset-x-4 top-full mt-1 max-h-[calc(100dvh-8rem)] overflow-y-auto overscroll-contain bg-white border border-gray-100 rounded-[24px] md:rounded-[32px] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.18)] transition-all duration-200 ease-out ${
           isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'
         }`}
       >
-        <div className={`max-w-6xl mx-auto px-6 py-7 grid grid-cols-1 gap-8 ${menu.columns.length >= 3 ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
+        <div className={`max-w-6xl mx-auto px-5 py-5 md:px-6 md:py-7 grid grid-cols-1 gap-6 md:gap-8 ${menu.columns.length >= 3 ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
           {menu.columns.map((col) => (
             <div key={col.title}>
               <h3 className="text-sm font-semibold text-[#222D52] mb-3">{t(col.title)}</h3>

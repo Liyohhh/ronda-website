@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { HelpLayout, CategoryIcon } from '../components/HelpLayout'
+import BackButton from '../components/BackButton'
 import { HELP_ARTICLES, articleA, articleQ, findCategory } from '../data/helpCategories'
 import { RONDA300_MAP } from '../data/ronda300Link'
 import { FEEDBACK_EMAIL, SUPPORT_EMAIL } from '../data/contact'
@@ -38,9 +39,8 @@ function HelpCategory() {
   return (
     <HelpLayout>
       <main className="wrap py-10">
-        <Link to="/help" className="text-sm text-[#222D52] hover:underline">
-          ← {t('backToHelp')}
-        </Link>
+        {/* the same pill back button as the other pages */}
+        <BackButton to="/help" label={t('backToHelp')} />
 
         <div className="flex items-center gap-4 mt-6 mb-8">
           <CategoryIcon icon={cat.icon} />

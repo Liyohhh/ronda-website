@@ -451,7 +451,7 @@ function LiveMap() {
           )}
 
           {/* controls: a velvet panel over the map */}
-          <section className="absolute z-[500] top-3 start-3 end-3 md:top-5 md:start-5 md:end-auto md:w-[360px] rounded-[24px] bg-[#222D52]/95 backdrop-blur-xl text-white shadow-2xl ring-1 ring-white/10 p-5">
+          <section className="absolute z-[500] top-3 start-3 end-3 md:top-5 md:start-5 md:end-auto md:w-[360px] rounded-[24px] bg-[#222D52]/95 backdrop-blur-xl text-white shadow-2xl ring-1 ring-white/10 p-4 md:p-5">
             <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[#A9C8FF]">
               <span className="relative flex h-2 w-2" aria-hidden="true">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-light opacity-60 motion-reduce:hidden" />
@@ -459,13 +459,13 @@ function LiveMap() {
               </span>
               Live
             </p>
-            <h1 className="mt-2 font-display text-[30px] leading-tight font-semibold"><Accent text={t('liveMapTitle')} dark /></h1>
+            <h1 className="mt-1 md:mt-2 font-display text-[24px] md:text-[30px] leading-tight font-semibold"><Accent text={t('liveMapTitle')} dark /></h1>
             <p className="mt-1 text-sm text-white/80" aria-live="polite">
               {error && !buses.length ? t('liveError') : fetchedAt ? t('liveBusesCount').replace('{n}', String(shown.length)) : t('liveLoading')}
               {fetchedAt && shownTrains.length > 0 && <span> · {t('liveTrainsCount').replace('{n}', String(shownTrains.length))}</span>}
               {lastFetch && <span className="text-white/75"> · {t('liveUpdated').replace('{time}', new Date(lastFetch).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' }))}</span>}
             </p>
-            <div className="relative mt-4 flex gap-2">
+            <div className="relative mt-3 md:mt-4 flex gap-2">
               <input
                 value={filter}
                 onChange={(e) => { setFilter(e.target.value); setSearchOpen(true); setHi(-1) }}
@@ -503,15 +503,18 @@ function LiveMap() {
                 {locMessage}
               </p>
             )}
-            <label className="mt-3 flex items-center gap-2 text-sm text-white/85">
+            {/* phone: the two switches side by side, so the card covers less of the map */}
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 md:block">
+            <label className="flex items-center gap-2 text-sm text-white/85">
               <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#8AB4F8]" />
               {t('liveShowOffTrip')}
             </label>
-            <label className="mt-2 flex items-center gap-2 text-sm text-white/85">
+            <label className="flex items-center gap-2 text-sm text-white/85 md:mt-2">
               <input type="checkbox" checked={showParking} onChange={(e) => setShowParking(e.target.checked)} className="accent-[#8AB4F8]" />
               <span className="inline-flex h-4 w-4 items-center justify-center rounded-[3px] text-[10px] font-bold text-white" style={{ backgroundColor: PARK }} aria-hidden="true">P</span>
               {t('parkLayer')}
             </label>
+            </div>
             {showParking && parkingFailed && <p className="mt-1 text-sm text-amber-200" role="status">{t('parkLoadError')}</p>}
             <ul className="mt-4 hidden md:flex flex-wrap gap-x-3 gap-y-1.5 border-t border-white/10 pt-3 text-xs text-white/80">
               {STATUS.filter((s) => showOff || s.key !== 'off_trip').map((s) => (
@@ -523,7 +526,8 @@ function LiveMap() {
               <li className="inline-flex items-center gap-1">♿ {t('liveWheelchair')}</li>
             </ul>
             {zoom < STOPS_ZOOM && <p className="mt-2 hidden md:block text-xs text-white/75">{t('liveZoomStops')}</p>}
-            <p className="mt-2 text-[11px] leading-snug text-white/70">{t('liveSources')}</p>
+            {/* the sources are on the data sources page too; on a phone this line would cover more of the map */}
+            <p className="mt-2 hidden md:block text-[11px] leading-snug text-white/70">{t('liveSources')}</p>
           </section>
         </div>
       </main>

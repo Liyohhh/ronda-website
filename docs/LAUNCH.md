@@ -13,7 +13,10 @@
       groups admin@, support@ and feedback@ renamed to @ronda2go.com with the old @ronda2u.com addresses kept as
       aliases. Cloudflare DNS for ronda2go.com has MX (smtp.google.com), SPF, DKIM (authenticating) and DMARC
       (`v=DMARC1; p=none; rua=mailto:admin@ronda2go.com`), all checked 1 Nov 2026.
-- [ ] Redirect ronda2u.com and www.ronda2u.com to https://ronda2go.com (Cloudflare redirect rule) once the site is live.
+- [x] ronda2u.com and www.ronda2u.com redirect (301) to https://ronda2go.com (Cloudflare redirect rule, 4 Nov 2026).
+- [x] Site online, not announced (4 Nov 2026): Cloudflare Pages project `ronda2go` from `main`, custom domains
+      ronda2go.com and www.ronda2go.com; map file on R2 at https://map.ronda2go.com/malaysia.pmtiles.
+- [ ] Cloudflare Pages: switch off Web Analytics (its script is blocked by the CSP) or allow it in scripts/csp.mjs.
 - [ ] When the site is live on ronda2go.com: Supabase secret `ALLOWED_ORIGINS=https://ronda2go.com,https://www.ronda2go.com`
       (ai-chat, delete-account), Supabase Auth Site URL and redirect URLs to https://ronda2go.com, and the Amazon SES
       sender on ronda2go.com (add `include:amazonses.com` to the same SPF record, plus SES's DKIM records).

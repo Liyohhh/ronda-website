@@ -1,5 +1,25 @@
 # Test report
 
+## Run - 4 Nov 2026, evening (site online at ronda2go.com, not announced)
+
+- Hosting: Cloudflare Pages project `ronda2go` builds from `main` (PR Liyohhh/ronda-website#2 merged, both GitHub
+  checks green). https://ronda2go.com and https://www.ronda2go.com answer with the site and the security headers
+  (HSTS, CSP, COOP, CORP); http goes to https; ronda2u.com and www.ronda2u.com redirect (301) to ronda2go.com with
+  the path and query kept.
+- Map file on Cloudflare R2: https://map.ronda2go.com/malaysia.pmtiles (421 MB), partial downloads (206) and CORS for
+  ronda2go.com checked.
+- Checked on the live site: home page loads with no errors; trip KL Sentral to KLCC planned (23 min, RM 2.10, LRT);
+  live map shows the basemap from our map file, 640 buses and 26 KTMB trains.
+- Before the merge: unit tests 293 / 293 with coverage limits, browser tests 244 passed and 6 skipped in the same
+  browser as GitHub; the 3 tests that failed on GitHub were fixed (RONDA 300 map follows the search before it has
+  fully loaded; the About trail list no longer widens the page past a phone screen; the live map test taps the train).
+- Known: Cloudflare Web Analytics is switched on for the Pages project and its script is blocked by our CSP (harmless
+  console error); switch it off in Pages settings or allow it.
+- Sign-up and password reset on the live site (owner, real inbox support@ronda2go.com): confirmation email from
+  no-reply@ronda2go.com in the new design, the link opens ronda2go.com signed in; reset email and new password work.
+- Not checked yet: all four languages on a phone; email to non-@ronda2go.com addresses (waits for SES production
+  access).
+
 ## Run - 4 Nov 2026 (smart search: typos, short forms, places first, recent)
 
 - Why: searches people really typed found nothing or the wrong place (analytics): "mrrt mluri" 0 results, "mlri" a
@@ -98,6 +118,31 @@
   (trip panel) does not build yet; to re-run once that is finished.
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
+
+## Run - 4 Nov 2026 (full phone test: every page and component, fixes)
+
+- Checked on a phone screen (iPhone 13 size, 390 px): 16 pages screen by screen, every menu, the language switch
+  and Arabic right to left, trip search to results and steps, Lines panel, nearest train and bus, trails filter and
+  typo search, trail stops, RONDA 300 station search and filters, hub hotel search, live map search and switches,
+  help search and answers, advertise, login and sign-up forms, back to top. No page scrolls sideways; no errors in
+  the browser console.
+- Fixed: the header menus (Hub, About) did not open on a phone: a tap opened the menu and closed it at once. The
+  menu panel now fits the screen and scrolls if long.
+- Fixed: on the 404 page the Trails and Help Centre buttons were white on a light background (could not be seen).
+- Too big on a phone, made smaller: Home feature cards (no empty space under the icon), Home offers (one row that
+  slides sideways instead of three tall cards), the footer (link groups two to a row), trip results top (fare and
+  payment switches on one line), live map card (switches side by side), trail stop photos (wider, less tall),
+  About photo credits (folded behind "View all"). Help answers now use the same back button as other pages.
+  Home is 17% shorter, About 28% shorter.
+- Not changed, for the owner: sign-in pages still show the old RONDA word logo (rename in progress); trail and help
+  pages use a plain title font while other pages use the serif one.
+- Browser tests: phone 120 passed (5 skipped), desktop 124 passed (1 skipped); unit tests 293 / 293.
+
+## Run - 4 Nov 2026 (Escape Rooms trail cover)
+
+- Escape Rooms trail cover is now the owner's photo (tarot cards in an escape room), public/trails/escape-rooms.jpg,
+  instead of the mall building. Demo photo, no credit, replaced after launch. Checked on screen: the trail card and
+  the trail page banner (face kept in view).
 
 ## Run - 4 Nov 2026 (platform sign photos for every direction: shot list, no credits)
 

@@ -178,7 +178,7 @@ function TrailDetail() {
 
                   <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-2xl p-3 flex flex-col sm:flex-row-reverse gap-4">
                     {/* details on the left, photo on the right (category cover when the place has no free photo); photo on top on a phone */}
-                    <div className="relative flex-shrink-0 w-full aspect-[4/3] sm:aspect-auto sm:w-56 md:w-64 sm:min-h-44 rounded-xl overflow-hidden">
+                    <div className="relative flex-shrink-0 w-full aspect-[16/9] sm:aspect-auto sm:w-56 md:w-64 sm:min-h-44 rounded-xl overflow-hidden">
                       {PLACE_PHOTOS[place.id] ? (
                         <>
                           <img src={PLACE_PHOTOS[place.id].src} alt={place.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" style={PLACE_PHOTOS[place.id].focus ? { objectPosition: PLACE_PHOTOS[place.id].focus } : undefined} />
