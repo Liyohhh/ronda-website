@@ -401,3 +401,21 @@ input::-ms-reveal,
 input::-ms-clear {
   display: none;
 }
+
+/* dropdowns: one chevron drawn by us, the same on every browser, inset from the edge and centred on the box (the
+   browser's own arrow sat tight against the border, at a different spot per browser); right-to-left pages put it
+   on the left. Unlayered on purpose, so it wins over the px-3 utility on each select. */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%235B6576' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem 1rem;
+  padding-inline-end: 2.5rem;
+}
+[dir='rtl'] select {
+  background-position: left 0.75rem center;
+}
+select::-ms-expand {
+  display: none;
+}

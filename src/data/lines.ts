@@ -239,9 +239,9 @@ function badgeGlyph(line: Line): string {
       return `<g transform="translate(4.8 0.6) scale(0.8)">${trainFront(c, w, true)}</g>` + textEl(24, 44.6, 8.6, w, line.mode)
     case 'ERL':
       if (line.id === 'erl-klia-transit') {
-        return `<g transform="translate(15.6 1.8) scale(0.35)">${trainFront(c, w, false)}</g>` +
-          `<path fill="${w}" d="M19.6 13.6H28.4V14.5H19.6Z"/>` +
-          textEl(24, 30.6, 11.6, w, 'KLIA', 900) + textEl(24, 40, 8.4, w, 'transit')
+        // bigger train, smaller words (owner, 1 Nov 2026), centred with a margin from the edge (owner, 4 Nov 2026)
+        return `<g transform="translate(7.2 2.2) scale(0.7)">${trainFront(c, w, false)}</g>` +
+          textEl(24, 36.4, 9.4, w, 'KLIA', 900) + textEl(24, 43.6, 6.8, w, 'transit')
       }
       return `<path fill="${w}" d="${ERL_SIDE}"/><path fill="${c}" d="M9 12.4H14V15.8H9ZM16 12.4H21V15.8H16ZM34 12.6L38 16H35Z"/>` +
         `<path fill="${w}" d="M6 21.6H41V22.5H6Z"/>` +
@@ -253,7 +253,7 @@ function badgeGlyph(line: Line): string {
       return `<path transform="translate(10 10) scale(0.0546875)" fill="${w}" d="${FA_BUS}"/>`
   }
 }
-export function lineBadgeSvg(line: Line, opts: { title?: boolean } = {}): string {
+export function lineBadgeSvg(line: Line, opts: { title?: boolean; round?: boolean } = {}): string {
   const title = opts.title === false ? '' : `<title>${escapeXml(line.name)}</title>`
   return (
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="${escapeXml(line.name)}">` +
@@ -261,8 +261,10 @@ export function lineBadgeSvg(line: Line, opts: { title?: boolean } = {}): string
     (line.id === 'ecrl'
       // ECRL: just its official mark (public/lines/ecrl-mark.png, from the owner, 29 Oct 2026), no box or border
       ? `<image href="/lines/ecrl-mark.png" x="1" y="1" width="46" height="46"/>`
-      // a circle in the line colour (owner, 1 Nov 2026), the same drawing shrunk to 78% so it stays inside the circle
-      : `<circle cx="24" cy="24" r="24" fill="${line.color}"/><g transform="translate(5.28 5.28) scale(0.78)">${badgeGlyph(line)}</g>`) +
+      : opts.round
+        // round (line panel, owner 1 Nov 2026): a circle in the line colour, the same drawing shrunk to 78% to fit inside
+        ? `<circle cx="24" cy="24" r="24" fill="${line.color}"/><g transform="translate(5.28 5.28) scale(0.78)">${badgeGlyph(line)}</g>`
+        : `<rect width="48" height="48" rx="6" fill="${line.color}"/>` + badgeGlyph(line)) +
     `</svg>`
   )
 }

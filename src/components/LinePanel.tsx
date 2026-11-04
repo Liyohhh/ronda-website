@@ -26,7 +26,7 @@ const inkOn = (l: Line) => (1.05 / (lum(l.color) + 0.05) >= 4.5 ? '#FFFFFF' : '#
 // Right-side panel (bottom sheet on phones) with a line's stations in running order (public.line_stations).
 // Same look as the journey panel; the strip under the header switches between lines.
 function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () => void; onPlan: (s: Station) => void; onPick: (l: Line) => void }) {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [result, setResult] = useState<{ id: string; stations: Station[]; error: boolean } | null>(null)
   const strip = useRef<HTMLDivElement>(null)
 
@@ -58,6 +58,39 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
     strip.current?.querySelector('[aria-pressed="true"]')?.scrollIntoView({ block: 'nearest', inline: 'center' })
   }, [line])
 
+  // small arrows at the strip's ends show it slides (owner, 1 Nov 2026); an arrow with nowhere to go is hidden
+  const [edge, setEdge] = useState({ start: true, end: true })
+  const onStripScroll = () => {
+    const el = strip.current
+    if (!el) return
+    const pos = Math.abs(el.scrollLeft) // negative in RTL
+    setEdge({ start: pos < 4, end: pos + el.clientWidth >= el.scrollWidth - 4 })
+  }
+  useEffect(() => {
+    onStripScroll()
+    window.addEventListener('resize', onStripScroll)
+    return () => window.removeEventListener('resize', onStripScroll)
+  }, [])
+  const slide = (dir: 1 | -1) => {
+    const el = strip.current
+    if (el) el.scrollBy({ left: dir * (lang === 'ar' ? -1 : 1) * el.clientWidth * 0.6, behavior: 'smooth' })
+  }
+  const stripArrow = (dir: 1 | -1) => (
+    <button
+      type="button"
+      onClick={() => slide(dir)}
+      disabled={dir === 1 ? edge.end : edge.start}
+      aria-label={dir === 1 ? t('scrollNext') : t('scrollPrev')}
+      className={`absolute inset-y-0 z-10 flex w-9 items-center text-[#222D52] transition-opacity disabled:opacity-0 disabled:pointer-events-none ${
+        dir === 1 ? 'end-0 justify-end pe-1 bg-gradient-to-l rtl:bg-gradient-to-r' : 'start-0 justify-start ps-1 bg-gradient-to-r rtl:bg-gradient-to-l'
+      } from-white via-white/90 to-transparent`}
+    >
+      <span className="grid h-6 w-6 place-items-center rounded-full bg-white shadow-[0_1px_4px_rgb(34_45_82/0.25)]">
+        <Icon name={dir === 1 ? 'chevronRight' : 'chevronLeft'} size={14} className="rtl:rotate-180" />
+      </span>
+    </button>
+  )
+
   const current = result?.id === line.id ? result : null
   const bus = line.mode === 'BUS'
   // car parks at a station (public.station_parking): the P button opens them under the station
@@ -84,7 +117,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
       >
         {/* Header in the line's own colour (navy words on light ones), blending from one line to the next: a soft
             circle, the line's logo on a white tile, its name and count; the ECRL also switches Transit / Express fares */}
-        <div className="relative overflow-hidden transition-[background-color,color] duration-300 ease-out motion-reduce:transition-none" style={{ backgroundColor: line.color, color: ink }}>
+        <div className="relative shrink-0 overflow-hidden transition-[background-color,color] duration-300 ease-out motion-reduce:transition-none" style={{ backgroundColor: line.color, color: ink }}>
           <span aria-hidden="true" className={`pointer-events-none absolute -end-12 -top-16 h-48 w-48 rounded-full transition-colors duration-300 ${dark ? 'bg-white/25' : 'bg-black/10'}`} />
           <div className="relative px-5 pt-5 pb-5 md:pt-6">
             <div className="flex items-center justify-between mb-4">
@@ -94,7 +127,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
               </button>
             </div>
             <div className="flex items-center gap-3.5">
-              <span className="grid h-14 w-14 flex-shrink-0 place-items-center rounded-2xl bg-white"><LineBadge line={line} size={40} decorative /></span>
+              <span className="grid h-14 w-14 flex-shrink-0 place-items-center rounded-full bg-white"><LineBadge line={line} size={40} decorative round /></span>
               <div className="min-w-0">
                 <h2 className="text-xl font-black leading-tight truncate">{line.name}</h2>
                 <p className="mt-0.5 text-sm">
@@ -123,7 +156,10 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
         </div>
 
         {/* every rail line as a tab on white (the picked one underlined in its colour); a bus route opens on its own */}
-        <div ref={strip} hidden={bus} className="flex gap-1 overflow-x-auto [scrollbar-width:none] px-3 border-b border-[#E3E9F1] bg-white" role="group" aria-label={t('lines')}>
+        <div hidden={bus} className="relative shrink-0 border-b border-[#E3E9F1] bg-white">
+        {stripArrow(-1)}
+        {stripArrow(1)}
+        <div ref={strip} onScroll={onStripScroll} className="flex gap-1 overflow-x-auto [scrollbar-width:none] px-3" role="group" aria-label={t('lines')}>
           {LINES.map((l) => {
             const active = l.id === line.id
             return (
@@ -137,11 +173,12 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
                 }`}
                 style={active ? { borderColor: l.color } : undefined}
               >
-                <LineBadge line={l} size={22} decorative />
+                <LineBadge line={l} size={22} decorative round />
                 {shortName(l)}
               </button>
             )
           })}
+        </div>
         </div>
 
         {/* the stations fade in when the line changes */}
@@ -167,7 +204,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
                     />
                     <span className="relative z-10 w-[22px] flex justify-center flex-shrink-0" aria-hidden="true">
                       {end ? (
-                        <LineBadge line={line} size={22} decorative />
+                        <LineBadge line={line} size={22} decorative round />
                       ) : (
                         <span className="w-3.5 h-3.5 rounded-full bg-white border-[3px]" style={{ borderColor: line.color }} />
                       )}
@@ -221,7 +258,7 @@ function Connections({ c }: { c: ReturnType<typeof connectionsAt> }) {
   const { t } = useLanguage()
   if (!c.change.length && !c.walk.length) return null
   const names = (ls: Line[]) => ls.map((l) => l.name).join(', ')
-  const badges = (ls: Line[]) => ls.map((l) => <LineBadge key={l.id} line={l} size={18} decorative />)
+  const badges = (ls: Line[]) => ls.map((l) => <LineBadge key={l.id} line={l} size={18} decorative round />)
   return (
     <span className="inline-flex flex-wrap items-center gap-1" role="note" aria-label={[
       c.change.length ? `${t('lineChangeHere')}: ${names(c.change)}` : '',
@@ -273,7 +310,7 @@ function EcrlStations({ line, express }: { line: Line; express: boolean }) {
                   {change && (
                     <span className="inline-flex items-center gap-1 text-xs text-gray-600" title={`${t('ecrlChange')} ${change.name}`}>
                       <span className="px-0.5 text-sm font-bold leading-none text-gray-500" aria-hidden="true">⇌</span>
-                      <LineBadge line={change} size={18} decorative />
+                      <LineBadge line={change} size={18} decorative round />
                       <span className="sr-only">{t('ecrlChange')} {change.name}</span>
                     </span>
                   )}

@@ -100,14 +100,14 @@ function ServiceAlertsAdmin() {
   }
 
   return (
-    <section aria-labelledby="admin-alerts" className="mt-12">
+    <section aria-labelledby="admin-alerts">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 id="admin-alerts" className="text-2xl font-semibold text-[#222D52]">{t('adminAlertsTitle')}</h2>
-          <p className="mt-1 max-w-2xl text-sm text-gray-600">{t('adminAlertsIntro')}</p>
+          <h2 id="admin-alerts" className="text-[16px] font-extrabold text-[#222D52]">{t('adminAlertsTitle')}</h2>
+          <p className="mt-0.5 max-w-2xl text-[13px] text-[#5B6576]">{t('adminAlertsIntro')}</p>
         </div>
         {!editing && (
-          <button type="button" onClick={() => { setProblem(''); setEditing({ draft: empty() }) }} className="h-10 rounded-full bg-[#222D52] px-5 text-sm font-semibold text-white hover:bg-[#18203D]">
+          <button type="button" onClick={() => { setProblem(''); setEditing({ draft: empty() }) }} className="h-9 rounded-full bg-[#222D52] px-4 text-[13px] font-semibold text-white hover:bg-[#18203D]">
             {t('adminAlertNew')}
           </button>
         )}

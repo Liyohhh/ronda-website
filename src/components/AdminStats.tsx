@@ -425,7 +425,6 @@ export function AdminView({ stats, t, lang, linesOf = () => [], trailName = (s) 
           </div>
         </Card>
       )}
-      <p className="text-[12px] text-[#5B6576]">{t('adm_soonNote')}</p>
     </div>
   )
 }

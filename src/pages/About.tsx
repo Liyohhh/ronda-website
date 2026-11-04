@@ -7,6 +7,7 @@ import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
 import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
+import { SIGN_PHOTOS } from '../data/stationPhotos'
 import { FEATURED_PLACES } from '../data/featuredPlaces'
 import { AUTH_VIDEO } from '../data/authVideo'
 import { HERO_VIDEOS } from '../data/heroVideos'
@@ -232,6 +233,12 @@ function About() {
             {FEATURED_PLACES.flatMap((f) => (f.photo ? [{ ...f, photo: f.photo }] : [])).map((f) => (
               <li key={`featured-${f.id}`}>
                 {f.name}: <PhotoCredit photo={f.photo} />
+              </li>
+            ))}
+            {/* platform photos in the trip steps (no credit on the thumbnail itself); CC0 photos need none */}
+            {[...new Map([...Object.values(SIGN_PHOTOS)].filter((ph) => ph.license !== 'CC0' && !ph.owner).map((ph) => [ph.page, ph])).values()].map((ph) => (
+              <li key={ph.page}>
+                {decodeURIComponent(ph.page.split('File:')[1] ?? '').replace(/\.(jpe?g|png)$/i, '').replace(/_/g, ' ')}: <PhotoCredit photo={ph} />
               </li>
             ))}
             <li>

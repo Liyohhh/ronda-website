@@ -13,13 +13,15 @@ import Icon from './Icon'
 import BusStopName from './BusStopName'
 import LiveApproach from './LiveApproach'
 import RouteChip from './RouteChip'
+import StationPhoto from './StationPhoto'
+import { ridePhoto } from '../data/stationPhotos'
 import { TripParking } from './ParkingInfo'
 import { useServiceAlerts } from '../hooks/useServiceAlerts'
 import { track, trackOnce } from '../services/analytics'
 import { alertBody, alertTitle, type ServiceAlert } from '../services/serviceAlerts'
 import { readSort } from '../data/tripPrefs'
 
-export type Place = { name: string; lat: number; lon: number; code?: string | null } // code: bus stop code ("KL1483")
+export type Place = { name: string; lat: number; lon: number; code?: string | null; stop_id?: string } // code: bus stop code ("KL1483"); stop_id: GTFS stop
 
 export type Fare = { amount: number; currency?: string; exact: boolean; basis?: 'od' | 'flat' | 'zone' | 'zone_min' | 'joined'; joined_rides?: number }
 // One ride's fare; amount null = no fare for this payment (Rapid KL buses are cashless only), `note` says why
@@ -374,9 +376,16 @@ function WalkStep({ leg, next, placeName }: { leg: Leg; next?: Leg; placeName: (
     return (
       <>
         <div className="font-medium text-gray-900">{t('changeTo').replace('{line}', legLabel(next))}</div>
-        <div className="text-sm text-gray-500">
-          {t('walkDur').replace('{dur}', formatDuration(leg.duration_min, t))}
-                  </div>
+        {/* a small note when the change means walking, or leaving the station and tapping in again */}
+        <div className="mt-1 flex flex-wrap gap-1.5 text-xs font-medium">
+          <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-gray-700">
+            <WalkIcon size={13} />
+            {t('walkDur').replace('{dur}', formatDuration(leg.duration_min, t))}{leg.distance_m ? ` · ${formatDistance(leg.distance_m)}` : ''}
+          </span>
+          {leg.transfer?.paid_area === false && (
+            <span className="rounded-full bg-amber-50 px-2 py-0.5 text-amber-900">{t('chgExitTapIn')}</span>
+          )}
+        </div>
       </>
     )
   }
@@ -413,6 +422,7 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
   const color = legLine(leg).color
   const bus = isBus(leg)
   const alerts = useLineAlerts(leg)
+  const photo = ridePhoto(leg.feed_id, leg.from.stop_id)
   return (
     <>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
@@ -451,10 +461,12 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
           {leg.headsign && <span className="min-w-0 truncate text-base text-gray-900">{leg.headsign}</span>}
         </div>
       )}
-      {boardAt && <div className="text-sm text-gray-700">{boardAt}</div>}
+      {/* rail: the platform goes on the "Towards" line below ("Towards Kwasa Damansara | Platform 2") */}
+      {boardAt && (bus || !leg.headsign) && <div className="text-sm text-gray-700">{boardAt}</div>}
       {leg.headsign && !bus && (
         <div className="text-sm text-gray-500">
           {t('towards')} {leg.headsign}
+          {boardAt && <> | <span className="font-semibold text-gray-700">{boardAt}</span></>}
         </div>
       )}
 
@@ -493,6 +505,10 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
       {live && bus && leg.feed_id && leg.route_id && leg.stops?.[0]?.stop_id && leg.stops[1]?.stop_id && (
         <LiveApproach feedId={leg.feed_id} routeId={leg.route_id} stopId={leg.stops[0].stop_id} nextStopId={leg.stops[1].stop_id} />
       )}
+
+      {/* a photo of the station's sign where you board (where we have one), across the step under the times so the
+          text keeps the full width */}
+      {photo && <StationPhoto photo={photo} station={placeName(leg.from)} />}
 
       {/* stops passed */}
       {n > 0 && (

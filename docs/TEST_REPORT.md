@@ -19,6 +19,42 @@
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
 
+## Run - 4 Nov 2026 (photos in trip steps: station signs; KLIA Transit badge; admin alerts card)
+
+- Trip steps: a photo on the right of each rail ride shows the sign of the station where you board (platform sign,
+  name board or entrance sign), so a user can tell they are in the right place. It sits under the ride's times,
+  across the step (first tried on the right, but the station name, fare and times were squeezed; owner). Tap to
+  see it large. Train photos
+  were dropped (owner: they do not show where you are).
+- 129 platforms have a photo: 11 checked by hand (e.g. Masjid Jamek "Ampang & Sri Petaling Line", KL Sentral, Pasar
+  Seni, Plaza Rakyat, Kwasa Damansara, Sungai Besi, Kajang KTM), the rest Wikimedia Commons photos whose file names
+  that station. 33 automatic matches were removed because they showed another place (for example a Hong Kong street
+  sign for Cochrane, a Tampin sign for Titiwangsa, a UPM shop for MRT UPM); those stations show no photo for now.
+  Demo set, to be replaced with our own photos (owner). CC0, CC BY or CC BY-SA; no credit on the thumbnail (owner),
+  credit in the large view and on the About page.
+- MRT Taman Suntex: the platform sign ("27, Platform 2, Kwasa Damansara") from the owner's edited platform photo,
+  zoomed in on the sign and turned to face the camera, replaces the entrance photo. Source and licence of that photo not known
+  yet, so no credit is shown; must be replaced with our own photo or cleared before launch. Checked on screen: Taman
+  Suntex to Cyberjaya Utara (phone).
+- Platform number on the "Towards" line of a rail ride: "Towards Kwasa Damansara | Platform 2" (owner). It comes from
+  the planner's existing platform data (station_platforms), so it shows only where we have a confirmed number. First
+  row added to the live database (approved): Taman Suntex, towards Kwasa Damansara, Platform 2, from the station sign.
+- A change shows a small note: the walk ("2 min walk · 90 m"), and "Exit the station and tap in again" when the
+  change is outside the paid area. Wording in all 4 languages. The results list is unchanged.
+- KLIA Transit badge: the train sat against the border; now centred with space around it.
+- Admin service alerts: removed the note marked with "*" under the dashboard and made the alerts card match the
+  other admin cards (heading, text and button size). Not checked on screen (needs an admin sign-in).
+- Checked on the real planner (9 am, 4 Nov): KL Sentral to Sultan Ismail (desktop), UPM to Cochrane (phone).
+- Unit tests 276 / 276; journey, security-header and site end-to-end 106 / 106; type check and lint clean.
+
+## Run - 4 Nov 2026 (dropdown arrows)
+
+- Every dropdown (sign-up country, account settings, advertise form, admin) now draws the same small arrow, set
+  in from the edge and centred on the box, instead of each browser's own arrow pressed against the border. On
+  Arabic (right-to-left) pages the arrow sits on the left. Checked on screen on the advertise form, in English and
+  right-to-left.
+- Unit tests 276 / 276.
+
 ## Run - 4 Nov 2026 (account emails through Amazon SES, new design)
 
 - Supabase now sends account emails through Amazon SES (Singapore) from no-reply@ronda2go.com. Real test: the
@@ -29,19 +65,6 @@
   previews checked on screen for all four.
 - Not done yet: SES production access (AWS asked for more details, reply sent); until then only @ronda2go.com
   addresses get mail. The logo picture still says RONDA (no Ronda2Go logo file yet).
-
-## Run - 1 Nov 2026, evening (main domain ronda2go.com)
-
-- Owner moved the main domain to ronda2go.com: on Cloudflare (same nameservers as ronda2u.com), verified in Google
-  Workspace and made the primary domain; admin@, support@ and feedback@ renamed with @ronda2u.com kept as aliases.
-  Checked from public DNS: MX smtp.google.com, SPF, DKIM (google._domainkey) and DMARC (p=none, reports to
-  admin@ronda2go.com) all answer.
-- Site addresses now support@ronda2go.com and feedback@ronda2go.com (Help, Account, RONDA 300). Account email
-  templates rebuilt with the new support address (2 emails x 4 languages).
-- Unit tests 262 / 262. Browser tests for account, sign-in, site and RONDA 300: 102 passed. The RONDA 300 map test
-  failed once on both screen sizes when run with the other files and passed on a rerun alone (timing, not the change).
-- Not done yet: the site is not hosted on ronda2go.com, so Supabase Site URL, CORS and the ronda2u.com redirect wait
-  for hosting (docs/LAUNCH.md).
 
 ## Run - 3 Nov 2026, latest (admin dashboard, second look, no repeats)
 
@@ -156,12 +179,51 @@
   Lint on src, e2e and scripts: 1 error in e2e/mocks.ts (not changed here, already there); the full `npm run lint`
   also trips on extra local copies of the site in the project folder.
 
+## Run - 1 Nov 2026, evening (Johor fares, line panel badges, KLIA Transit badge)
+
+- Johor bus fares added from the operator's own timetable file (data.gov.my): 84,371 stop-to-stop fares, adult and
+  child, cash and card (same amounts), RM0.90 to RM6.20. They update with the weekly import. Checked on the live
+  planner: JB Sentral to Larkin Sentral RM1.80 (J13), to Kota Tinggi RM5.00 (J10; child RM2.50), Plaza Angsana to
+  Toppen RM4.20 over two buses; both single fares match the operator's file. Senior fares are not shown because
+  Malaysians aged 60+ ride free with the concession card. Melaka's file has no fares; Penang's fare table is found
+  but not added yet.
+- Line badges: round only in the line panel (header logo in a white circle, line tabs and station list); everywhere
+  else the badges are rounded squares again, as before (owner).
+- KLIA Transit badge: bigger train, smaller words.
+- Line panel: small left / right arrows at the ends of the line tabs show the row slides; tapping one slides it,
+  and an arrow hides at the end of the row. On phones the panel header (logo, name, station count) no longer gets
+  squashed by a long station list.
+- Planner memory after the Johor fares: the first load test with them had 3.0% errors (memory limit on new
+  workers, budget 1%). Johor fares are now stored once for cash and card (84,371 rows to 42,939, fare data
+  16 MB to 11.9 MB). Re-run: errors 1.3% (2 of about 160 trips, both on new workers), p95 5.4 s (budget 6 s),
+  rail trips all priced, live board 0% errors. Still just over budget.
+- Fix: the planner now loads station-to-station fares only for the networks a trip can use (a KL trip no longer
+  loads Johor's fares, a Johor trip no longer loads KL rail's). Load test after it: errors 0.0%, p95 3.0 s
+  (was 5.4 s), 165 rail trips all priced, live board 0% errors, p95 0.8 s. Live check: JB Sentral to Larkin
+  RM1.80 (J13), KL LRT trip RM2.10.
+- Database tidy-up: raw Johor fare files cleared once used (about 120 MB), alert security rules made faster,
+  6 missing indexes added.
+- Smoke 48 / 48. Regression 134 journeys: 0 worse, 2 better. Planner unit tests 172 / 172. Website unit tests 262 / 262, type check and lint clean.
+
 ## Run - 1 Nov 2026, afternoon (round line badges)
 
 - Line badges are now circles instead of rounded squares (owner). Same drawings as before, shrunk to fit inside the
   circle; the ECRL keeps its official mark. All 19 badges checked at 64 px and 22 px: nothing is cut off. Seen on
   the home page line picker.
 - Unit tests 262 / 262, type check and lint clean.
+
+## Run - 1 Nov 2026, evening (main domain ronda2go.com)
+
+- Owner moved the main domain to ronda2go.com: on Cloudflare (same nameservers as ronda2u.com), verified in Google
+  Workspace and made the primary domain; admin@, support@ and feedback@ renamed with @ronda2u.com kept as aliases.
+  Checked from public DNS: MX smtp.google.com, SPF, DKIM (google._domainkey) and DMARC (p=none, reports to
+  admin@ronda2go.com) all answer.
+- Site addresses now support@ronda2go.com and feedback@ronda2go.com (Help, Account, RONDA 300). Account email
+  templates rebuilt with the new support address (2 emails x 4 languages).
+- Unit tests 262 / 262. Browser tests for account, sign-in, site and RONDA 300: 102 passed. The RONDA 300 map test
+  failed once on both screen sizes when run with the other files and passed on a rerun alone (timing, not the change).
+- Not done yet: the site is not hosted on ronda2go.com, so Supabase Site URL, CORS and the ronda2u.com redirect wait
+  for hosting (docs/LAUNCH.md).
 
 ## Run - 1 Nov 2026, afternoon (myBAS Melaka published)
 
