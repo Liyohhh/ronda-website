@@ -15,8 +15,10 @@
   fully loaded; the About trail list no longer widens the page past a phone screen; the live map test taps the train).
 - Known: Cloudflare Web Analytics is switched on for the Pages project and its script is blocked by our CSP (harmless
   console error); switch it off in Pages settings or allow it.
-- Not checked yet: sign-up and password reset emails from the live site (Supabase Site URL and redirect URLs set by
-  the owner), all four languages on a phone.
+- Sign-up and password reset on the live site (owner, real inbox support@ronda2go.com): confirmation email from
+  no-reply@ronda2go.com in the new design, the link opens ronda2go.com signed in; reset email and new password work.
+- Not checked yet: all four languages on a phone; email to non-@ronda2go.com addresses (waits for SES production
+  access).
 
 ## Run - 4 Nov 2026 (smart search: typos, short forms, places first, recent)
 
