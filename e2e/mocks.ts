@@ -89,7 +89,7 @@ async function mockBackend(page: Page): Promise<Backend> {
     const url = new URL(req.url())
     // JSON bodies are kept for the tests to check; file uploads (form data) are not JSON
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let body: any = null
+    let body: any
     try { body = req.postDataJSON?.() ?? null } catch { body = null }
     be.calls.push({ path: url.pathname, body })
     switch (url.pathname) {
