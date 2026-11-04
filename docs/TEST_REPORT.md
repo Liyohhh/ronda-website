@@ -1,5 +1,23 @@
 # Test report
 
+## Run - 4 Nov 2026, evening (site online at ronda2go.com, not announced)
+
+- Hosting: Cloudflare Pages project `ronda2go` builds from `main` (PR Liyohhh/ronda-website#2 merged, both GitHub
+  checks green). https://ronda2go.com and https://www.ronda2go.com answer with the site and the security headers
+  (HSTS, CSP, COOP, CORP); http goes to https; ronda2u.com and www.ronda2u.com redirect (301) to ronda2go.com with
+  the path and query kept.
+- Map file on Cloudflare R2: https://map.ronda2go.com/malaysia.pmtiles (421 MB), partial downloads (206) and CORS for
+  ronda2go.com checked.
+- Checked on the live site: home page loads with no errors; trip KL Sentral to KLCC planned (23 min, RM 2.10, LRT);
+  live map shows the basemap from our map file, 640 buses and 26 KTMB trains.
+- Before the merge: unit tests 293 / 293 with coverage limits, browser tests 244 passed and 6 skipped in the same
+  browser as GitHub; the 3 tests that failed on GitHub were fixed (RONDA 300 map follows the search before it has
+  fully loaded; the About trail list no longer widens the page past a phone screen; the live map test taps the train).
+- Known: Cloudflare Web Analytics is switched on for the Pages project and its script is blocked by our CSP (harmless
+  console error); switch it off in Pages settings or allow it.
+- Not checked yet: sign-up and password reset emails from the live site (Supabase Site URL and redirect URLs set by
+  the owner), all four languages on a phone.
+
 ## Run - 4 Nov 2026 (smart search: typos, short forms, places first, recent)
 
 - Why: searches people really typed found nothing or the wrong place (analytics): "mrrt mluri" 0 results, "mlri" a
