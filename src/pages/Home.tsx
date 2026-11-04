@@ -28,6 +28,7 @@ import HeroVideos from '../components/HeroVideos'
 import { Accent } from '../components/Motion'
 import { readPayment, readResident, savePayment, saveResident } from '../data/tripPrefs'
 import { track } from '../services/analytics'
+import { liftOnPhone } from '../services/liftOnPhone'
 
 // the hero videos play on wider screens only (phones keep the photo and their data), never with reduced motion
 const wantsHeroVideo = () =>
@@ -382,6 +383,9 @@ function Home() {
         <div className="hero-card relative mx-3 sm:mx-4 overflow-hidden rounded-[32px] bg-[#222D52] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.25)] min-h-[480px] md:min-h-[600px] lg:h-[76vh] lg:max-h-[760px] flex flex-col justify-end">
           <div className="absolute inset-0 hero-settle" aria-hidden="true">
             <picture>
+              {/* phone: a tall, sharp photo of the towers at dusk (the wide strip was stretched and looked blurred) */}
+              <source media="(max-width: 767px)" srcSet="/Image/banner-kl-phone.webp" type="image/webp" />
+              <source media="(max-width: 767px)" srcSet="/Image/banner-kl-phone.jpg" type="image/jpeg" />
               <source srcSet="/Image/banner-kl.webp" type="image/webp" />
               <img
                 src="/Image/banner-kl.jpg"
@@ -403,12 +407,13 @@ function Home() {
               </h1>
             </div>
 
-            <div className="rise-in lg:max-w-[440px] lg:self-end flex flex-col lg:items-end gap-5" style={{ '--rise-delay': '0.3s' } as CSSProperties}>
-              <p className="text-base md:text-lg font-medium leading-snug text-white/90 lg:text-end [text-wrap:balance]">{t('bannerSubtitle')}</p>
-              <ul className="flex flex-wrap lg:flex-nowrap lg:justify-end gap-2">
+            <div className="rise-in lg:max-w-[440px] lg:self-end flex flex-col lg:items-end gap-3 sm:gap-5" style={{ '--rise-delay': '0.3s' } as CSSProperties}>
+              {/* phone: a smaller line and the three quick links in one straight row (owner, 4 Nov 2026) */}
+              <p className="text-sm sm:text-base md:text-lg font-medium leading-snug text-white/90 lg:text-end [text-wrap:balance]">{t('bannerSubtitle')}</p>
+              <ul className="flex flex-nowrap lg:justify-end gap-1.5 sm:gap-2">
                 {([['directions', '/#plan', 'route'], ['lines', '/?tab=lines', 'train'], ['trails', '/trails', 'hiking']] as const).map(([key, to, icon]) => (
                   <li key={key}>
-                    <Link to={to} className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full bg-white/10 border border-white/25 backdrop-blur-xl text-sm font-medium text-white whitespace-nowrap hover:bg-white hover:text-[#222D52] transition-colors">
+                    <Link to={to} className="inline-flex items-center gap-1.5 h-9 px-3 sm:h-10 sm:px-4 rounded-full bg-white/10 border border-white/25 backdrop-blur-xl text-[13px] sm:text-sm font-medium text-white whitespace-nowrap hover:bg-white hover:text-[#222D52] transition-colors">
                       <Icon name={icon} size={16} />
                       {t(key)}
                     </Link>
@@ -473,7 +478,7 @@ function Home() {
                               setStartStop(null)
                               setActiveField('start') // typing again after a pick reopens the suggestions
                             }}
-                            onFocus={() => setActiveField('start')}
+                            onFocus={(e) => { setActiveField('start'); liftOnPhone(e.currentTarget) }}
                             onBlur={() => setTimeout(() => setActiveField((f) => (f === 'start' ? null : f)), 150)}
                             onKeyDown={onFieldKey}
                             role="combobox"
@@ -521,7 +526,7 @@ function Home() {
                               setEndStop(null)
                               setActiveField('end')
                             }}
-                            onFocus={() => setActiveField('end')}
+                            onFocus={(e) => { setActiveField('end'); liftOnPhone(e.currentTarget) }}
                             onBlur={() => setTimeout(() => setActiveField((f) => (f === 'end' ? null : f)), 150)}
                             onKeyDown={onFieldKey}
                             role="combobox"
@@ -551,7 +556,7 @@ function Home() {
                             setLineListOpen(true)
                             setLineHi(-1)
                           }}
-                          onFocus={() => setLineListOpen(true)}
+                          onFocus={(e) => { setLineListOpen(true); liftOnPhone(e.currentTarget) }}
                           onClick={() => setLineListOpen(true)}
                           onKeyDown={onLineKey}
                           role="combobox"

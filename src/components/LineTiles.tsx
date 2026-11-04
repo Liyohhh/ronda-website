@@ -17,7 +17,7 @@ export function LineTile({ line, onPick, className = '' }: { line: Line; onPick:
   return (
     <button type="button" onClick={() => onPick(line)} className={`${tileClass} ${className}`} aria-label={line.name} title={line.name}>
       <LineBadge line={line} size={28} decorative />
-      <span className="truncate">{line.short ?? line.name}</span>
+      <span className="truncate"><span className="sm:hidden">{line.name}</span><span className="hidden sm:inline">{line.short ?? line.name}</span></span>
     </button>
   )
 }
@@ -78,7 +78,8 @@ export function LineGrid({ buses, onPick, onBus }: { buses: Line[]; onPick: (l: 
       {LINE_GROUPS.map((g) => (
         <section key={g.key} className="mt-3 first:mt-0" aria-label={t(g.key)}>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">{t(g.key)}</h3>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+          {/* phone: one line per row with its full name, easier to read than two short ones (owner, 4 Nov 2026) */}
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:grid-cols-4">
             {g.ids.map((id) => <LineTile key={id} line={LINES_BY_ID[id]} onPick={onPick} />)}
           </div>
         </section>
@@ -86,7 +87,7 @@ export function LineGrid({ buses, onPick, onBus }: { buses: Line[]; onPick: (l: 
       {/* buses get their own heading, apart from the rail groups above */}
       <section className="mt-3" aria-label={t('linesGroupBus')}>
         <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">{t('linesGroupBus')}</h3>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:grid-cols-4">
           <BusTile open={busOpen} onClick={onBus ?? (() => setBusOpen((o) => !o))} />
         </div>
         {busOpen && <BusRouteSearch buses={buses} onPick={onPick} />}

@@ -108,7 +108,8 @@ function LanguageMenu({ variant = 'pill', compact = false }: Props) {
           aria-label="Language"
           aria-activedescendant={`${listId}-${LANGUAGES[focus].code}`}
           onKeyDown={onListKey}
-          className="absolute end-0 mt-2 w-48 py-1.5 bg-white border border-gray-200 rounded-xl shadow-lg outline-none z-50 origin-top animate-[menu-in_120ms_ease-out]"
+          // phone: the globe sits near the left, so the menu opens to the right of it (it ran off the screen)
+          className={`absolute ${compact ? 'start-0 sm:start-auto sm:end-0' : 'end-0'} mt-2 w-48 py-1.5 bg-white border border-gray-200 rounded-xl shadow-lg outline-none z-50 origin-top animate-[menu-in_120ms_ease-out]`}
         >
           {LANGUAGES.map((l, i) => {
             const selected = l.code === lang

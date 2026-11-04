@@ -138,6 +138,27 @@
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
 
+## Run - 4 Nov 2026 (phone, round 2: owner's list from a real phone)
+
+- Trip results sheet: the same height while it searches and after (it used to grow when results came in); a handle
+  at the top drags it down to close it.
+- Lines list: one line per row with its full name ("LRT Sri Petaling Line" instead of "Sri Peta...").
+- Language menu: opened off the left edge of the screen; now opens to the right of the globe on phones.
+- Trail cards: the station, stop count and title overlapped with large text; the text now sits in the flow and
+  the card grows instead.
+- Page banners (About, Trails, RONDA 300 and others): wider, shorter, smaller type on phones.
+- Home offers row: a slanted swipe moved the cards up and cut off their tops; the row now only slides sideways.
+- Live map: the card is smaller on phones (no "Live" label, smaller title and text, switches side by side).
+- Home banner: the line and the three quick links in one straight row; on phones a tall, sharp photo of the
+  Petronas Towers at dusk (Wikimedia Commons, CC BY 2.0, credited on About) replaces the wide strip that was stretched
+  and looked blurred.
+- Search boxes (Home, RONDA 300, hub): on a phone they scroll up under the header when tapped, so the choices show
+  above the keyboard.
+- Location: when it is blocked, the nearest-station line offers "Try again" and the steps to turn it back on
+  (Android Chrome, iPhone Safari), and tries again by itself once location is allowed in the browser.
+- Checked at 412 px (Pixel 7): all of the above on screen. Browser tests 244 passed (6 skipped, phone and desktop);
+  unit tests 294 / 294.
+
 ## Run - 4 Nov 2026 (full phone test: every page and component, fixes)
 
 - Checked on a phone screen (iPhone 13 size, 390 px): 16 pages screen by screen, every menu, the language switch

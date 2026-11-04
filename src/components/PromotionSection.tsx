@@ -31,8 +31,9 @@ function PromotionSection() {
           </Link>
         </Reveal>
 
-        {/* phone: one row that slides sideways (like the trails row), so three tall cards do not stack */}
-        <ul className="-mx-4 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:mx-auto md:mt-12 md:grid md:grid-cols-3 md:items-end md:gap-6 md:overflow-visible md:px-0 md:pb-0">
+        {/* phone: one row that slides sideways (like the trails row), so three tall cards do not stack; it only
+            scrolls sideways (a slanted swipe moved the cards up and cut their tops off) */}
+        <ul className="-mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-4 pt-2 pb-6 [scrollbar-width:none] md:mx-auto md:mt-12 md:grid md:grid-cols-3 md:items-end md:gap-6 md:overflow-visible md:px-0 md:pb-0">
           {PROMOTIONS.map((p, i) => {
             const lit = !!p.lit
             return (

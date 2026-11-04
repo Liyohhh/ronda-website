@@ -245,6 +245,10 @@ function About() {
               {t('videoLabel')}, sunset over Kuala Lumpur:{' '}
               <a href={AUTH_VIDEO.page} target="_blank" rel="noopener noreferrer" className="hover:underline">{AUTH_VIDEO.author}</a> · Pexels
             </li>
+            <li>
+              Home banner on phones, Petronas Towers at dusk:{' '}
+              <PhotoCredit photo={{ src: '', author: 'James Kerwin from Tbilisi', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0', page: 'https://commons.wikimedia.org/wiki/File:The_Twins_SE_Asia_2019_(49171985716)_(4to3-1).jpg' }} />
+            </li>
             {HERO_VIDEOS.map((v) => (
               <li key={v.src}>
                 {t('videoLabel')}, {v.alt}:{' '}

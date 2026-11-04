@@ -9,6 +9,7 @@ import Icon from '../components/Icon'
 import { useLanguage } from '../hooks/useLanguage'
 import { formatDuration } from '../i18n/duration'
 import { loadHub, planFromHub, type Hub as HubT, type HubDestination } from '../services/hubs'
+import { liftOnPhone } from '../services/liftOnPhone'
 
 // /hub/:slug: "from here to anywhere" for an arrival hub. Times and fares come from the trip planner, run every
 // night in the database for the next day at 10:00; the button opens the planner with the trip filled in.
@@ -104,7 +105,7 @@ function GoAnywhere({ hub }: { hub: HubT }) {
             type="text"
             value={q}
             onChange={(e) => { setQ(e.target.value); setOpen(true); setHi(-1) }}
-            onFocus={() => setOpen(true)}
+            onFocus={(e) => { setOpen(true); liftOnPhone(e.currentTarget) }}
             onBlur={() => setOpen(false)}
             onKeyDown={onKey}
             role="combobox"

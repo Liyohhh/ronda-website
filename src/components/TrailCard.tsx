@@ -16,12 +16,14 @@ function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Re
     <Link
       to={`/trails/${trail.slug}`}
       state={{ from: here.pathname + here.search }}
-      className={`group relative block aspect-[4/3] rounded-[32px] overflow-hidden bg-[#222D52] shadow-[0_16px_40px_-16px_rgb(34_45_82/0.35)] hover:shadow-[0_28px_56px_-16px_rgb(34_45_82/0.45)] hover:-translate-y-1 transition duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222D52] ${className}`}
+      className={`group relative flex flex-col aspect-[4/3] rounded-[32px] overflow-hidden bg-[#222D52] shadow-[0_16px_40px_-16px_rgb(34_45_82/0.35)] hover:shadow-[0_28px_56px_-16px_rgb(34_45_82/0.45)] hover:-translate-y-1 transition duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222D52] ${className}`}
     >
       <TrailCover trail={trail} className="absolute inset-0 group-hover:scale-[1.06] transition-transform duration-700 ease-out" />
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
 
-      <div className="absolute inset-x-0 top-0 p-5 flex flex-wrap-reverse items-start justify-between gap-2">
+      {/* top and bottom text sit in the flow (not pinned over each other), so with large text the card grows
+          instead of the labels overlapping (owner, 4 Nov 2026) */}
+      <div className="relative p-5 pb-2 flex flex-wrap-reverse items-start justify-between gap-2">
         {station ? (
           <span className="inline-flex items-center gap-1.5 min-w-0 bg-black/50 border border-white/15 backdrop-blur-xl text-white text-[11px] font-semibold uppercase tracking-wide ps-1 pe-2.5 py-1 rounded-full">
             {station.lineIds[0] && <LineBadge line={station.lineIds[0]} size={18} decorative />}
@@ -38,7 +40,7 @@ function TrailCard({ trail, places, className = '' }: { trail: Trail; places: Re
         </span>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-white">
+      <div className="relative mt-auto p-5 pt-2 md:p-6 md:pt-2 text-white">
         <p className="text-xs font-semibold uppercase tracking-wider text-white/90 [text-shadow:0_1px_3px_rgb(0_0_0/0.7)]">
           {t('stopsCount').replace('{n}', String(trail.stops.length))}
         </p>

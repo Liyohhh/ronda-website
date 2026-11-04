@@ -1,4 +1,4 @@
-import { createContext, Fragment, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, Fragment, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import LineBadge from './LineBadge'
@@ -564,6 +564,22 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   const [showMore, setShowMore] = useState(false)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(() => departAt ?? malaysiaNow())
+  // phone: drag the sheet down by its handle to close it (it follows the finger, springs back if not far enough)
+  const [dragY, setDragY] = useState(0)
+  const dragStart = useRef<number | null>(null)
+  const onDragStart = (e: React.PointerEvent) => {
+    dragStart.current = e.clientY
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+  const onDragMove = (e: React.PointerEvent) => {
+    if (dragStart.current !== null) setDragY(Math.max(0, e.clientY - dragStart.current))
+  }
+  const onDragEnd = () => {
+    if (dragStart.current === null) return
+    dragStart.current = null
+    if (dragY > 120) onClose()
+    setDragY(0)
+  }
   const openEditor = () => {
     setDraft(departAt ?? malaysiaNow())
     setEditing(true)
@@ -664,12 +680,26 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
       {/* Side panel on desktop, bottom sheet on mobile */}
       <div
         className={`absolute bg-gray-50 shadow-2xl flex flex-col transition-all duration-300 ease-out
-          inset-x-0 bottom-0 max-h-[90vh] rounded-t-3xl overflow-hidden starting:translate-y-full
-          md:inset-x-auto md:inset-y-0 md:end-0 md:w-[460px] md:max-h-none md:rounded-none
-          md:starting:translate-y-0 md:starting:translate-x-full rtl:md:starting:-translate-x-full`}
+          inset-x-0 bottom-0 h-[90dvh] rounded-t-3xl overflow-hidden starting:translate-y-full
+          md:inset-x-auto md:inset-y-0 md:end-0 md:w-[460px] md:h-auto md:rounded-none
+          md:starting:translate-y-0 md:starting:translate-x-full rtl:md:starting:-translate-x-full
+          ${dragY ? 'duration-0' : ''}`}
+        // the same height while it searches and after, so it does not jump (owner, 4 Nov 2026)
+        style={dragY ? { transform: `translateY(${dragY}px)` } : undefined}
       >
+        {/* phone: a handle to drag the sheet down and close it */}
+        <div
+          onPointerDown={onDragStart}
+          onPointerMove={onDragMove}
+          onPointerUp={onDragEnd}
+          onPointerCancel={onDragEnd}
+          className="md:hidden absolute inset-x-0 top-0 z-10 flex h-6 cursor-grab touch-none justify-center pt-2"
+          aria-hidden="true"
+        >
+          <span className="h-1.5 w-12 rounded-full bg-white/40" />
+        </div>
         {/* From / to */}
-        <div className="bg-[#222D52] text-white px-5 pt-4 pb-4 md:pt-6 md:pb-5">
+        <div className="bg-[#222D52] text-white px-5 pt-7 pb-4 md:pt-6 md:pb-5">
           <div className="flex items-center justify-between mb-3 md:mb-4">
             {detail ? (
               <button onClick={() => setDetail(null)} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/85 hover:text-white">

@@ -74,7 +74,22 @@ function NearbyTransit({ onPick }: { onPick: (p: Pick) => void }) {
       ) : failed ? (
         <span className="text-gray-600">{t('nearError')}</span>
       ) : state.status === 'error' ? (
-        <span className="text-gray-600">{t(state.reason === 'denied' ? 'nearDenied' : 'nearUnavailable')}</span>
+        // blocked or not found: say why, offer to try again, and (blocked) how to turn location back on
+        <span className="flex flex-col gap-1.5 text-gray-600">
+          <span>{t(state.reason === 'denied' ? 'nearDenied' : 'nearUnavailable')}</span>
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <button type="button" onClick={locate} className="font-semibold text-[#222D52] hover:underline">{t('locTryAgain')}</button>
+            {state.reason === 'denied' && (
+              <details className="text-sm">
+                <summary className="cursor-pointer font-semibold text-[#222D52]">{t('locHowTitle')}</summary>
+                <ul className="mt-1 space-y-1 text-gray-600">
+                  <li>{t('locHowAndroid')}</li>
+                  <li>{t('locHowIphone')}</li>
+                </ul>
+              </details>
+            )}
+          </span>
+        </span>
       ) : state.status === 'locating' || state.status === 'found' ? (
         <span className="text-gray-500">{t('nearLocating')}</span>
       ) : (
