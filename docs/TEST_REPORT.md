@@ -54,6 +54,32 @@
   max_rows) still work.
 - Website not deployed yet: it needs the owner's go (the database and geocode are ready for it).
 
+## Run - 4 Nov 2026 (Paintball and Karting trails live)
+
+- Database: migration 20261015180000_trails_activities_more.sql applied to production (owner approved). It had never
+  been applied. Trail order changed first from 23 / 24 to 27 / 28 (after Laser Tag), because the Explore trails moved
+  the later trails down by 3 and 23 / 24 are now Arcades and Active Play.
+- Live site now has Paintball (Puncak Jalil, Sri Awana) and Karting (Evolt), all three by bus.
+- Production trails_data() checked against the e2e trails fixture: all 28 trails and 153 places match.
+- Playwright trails + activities 19 / 20 in the full run. The one failure (desktop: Home "See all trails" keeps the
+  category) passed 3 / 3 when run alone: timing under load, not the data.
+
+## Run - 4 Nov 2026 (app picture in the "Get the app" band)
+
+- The phone in the "Get the app" band above the footer now shows a real screenshot of the app's home screen
+  (owner's screenshot: Petronas Towers header, "Where to?" search, nearest stop, Browse lines) instead of the drawn
+  trip screen. Cleaned for the site: the phone's own status bar (carrier, clock, battery) blurred out and the strip
+  under the tab bar evened out; saved as public/app/home-screen.webp (440 x 953, 48 KB, loads lazily). The two
+  floating cards stay. Same on every page (it is part of the footer); hidden on phones as before.
+- Checked in a production build at 1280 and 1024 px wide: picture sharp, phone top rises above the band, cut at the
+  band's bottom edge. Unit tests pass; lint clean for the changed file.
+- Floating cards (owner): "6,500+ stations and stops" moved left so it no longer touches the phone. The "12 min"
+  card replaced (owner, after a Live map version) with a trails card: "25+ trails" with the walking icon and "150
+  places to go by train and bus" under it on wide screens. Numbers from the live database 4 Nov: 26 trails, 150
+  trail places ("25+" so it stays true as trails are added). New text in all 4 languages. Checked at 1024, 1280 and 1440 px: nothing cut
+  off, cards clear of the phone's edge.
+
+
 ## Run - 4 Nov 2026 (security fixes before going online)
 
 - Outside security review (read-only, both repositories) checked against the live project. Fixed today:

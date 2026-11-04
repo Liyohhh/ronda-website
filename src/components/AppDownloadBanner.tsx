@@ -1,8 +1,6 @@
 import { useLanguage } from '../hooks/useLanguage'
 import { Accent, Eyebrow } from './Motion'
-import BrandLogo from './BrandLogo'
-import LineBadge from './LineBadge'
-import WalkIcon from './WalkIcon'
+import Icon from './Icon'
 
 const PLAY_URL = import.meta.env.VITE_PLAY_STORE_URL as string | undefined
 const APPSTORE_URL = import.meta.env.VITE_APP_STORE_URL as string | undefined
@@ -42,48 +40,14 @@ function StoreBadge({ href, iconPath, small, big, soon }: { href?: string; iconP
   )
 }
 
-// Phone mock-up with a simplified RONDA screen (an illustration, not live data): a planned trip with two options.
+// Phone mock-up showing the app's home screen (a real screenshot of the app, phone status bar blurred out).
 // Two small cards float beside it (gently moving; still for reduced motion).
 function PhoneMockup() {
-  const { t } = useLanguage()
   return (
-    <div className="w-[220px] rounded-[2.4rem] bg-[#0b0d16] p-2.5 shadow-[0_40px_80px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10" aria-hidden="true">
-      <div className="relative rounded-[2rem] overflow-hidden bg-[#F8FAFD] h-[470px]">
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-[#0b0d16]" />
-        <div className="bg-[#222D52] px-4 pt-10 pb-4">
-          <BrandLogo tone="light" size="sm" />
-          <div className="mt-3 rounded-xl bg-white px-3 py-2 space-y-1.5">
-            <div className="flex items-center gap-2 text-[10px] text-gray-600"><span className="w-2 h-2 rounded-full border-2 border-[#222D52]" />KL Sentral</div>
-            <div className="flex items-center gap-2 text-[10px] text-gray-600"><span className="w-2 h-2 rounded-full bg-[#222D52]" />KLCC</div>
-          </div>
-        </div>
-        <div className="p-3 space-y-2">
-          {[
-            { lines: ['lrt-kelana-jaya'], time: '07:52 – 08:04', dur: t('durMin').replace('{m}', '12'), best: true },
-            { lines: ['monorail', 'lrt-kelana-jaya'], time: '07:55 – 08:15', dur: t('durMin').replace('{m}', '20'), best: false },
-          ].map((r) => (
-            <div key={r.time} className={`rounded-xl bg-white p-2.5 border ${r.best ? 'border-[#2F6BD8]' : 'border-gray-200'}`}>
-              <div className="flex items-baseline justify-between">
-                <span className="text-sm font-bold text-[#222D52]">{r.dur}</span>
-                <span className="text-[9px] text-gray-500">{r.time}</span>
-              </div>
-              <div className="mt-1.5 flex items-center gap-1">
-                <WalkIcon size={12} className="text-gray-500" />
-                {r.lines.map((l) => (
-                  <LineBadge key={l} line={l} size={18} decorative />
-                ))}
-              </div>
-            </div>
-          ))}
-          <div className="rounded-xl bg-white border border-gray-200 p-2.5">
-            <div className="h-2 w-24 rounded bg-gray-200" />
-            <div className="mt-2 h-2 w-16 rounded bg-gray-100" />
-          </div>
-          <div className="rounded-xl bg-white border border-gray-200 p-2.5">
-            <div className="h-2 w-20 rounded bg-gray-200" />
-            <div className="mt-2 h-2 w-28 rounded bg-gray-100" />
-          </div>
-        </div>
+    <div className="w-[230px] rounded-[2.4rem] bg-[#0b0d16] p-2.5 shadow-[0_40px_80px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10" aria-hidden="true">
+      <div className="relative overflow-hidden rounded-[2rem] bg-[#EFF1F5]">
+        <img src="/app/home-screen.webp" alt="" width={440} height={953} loading="lazy" decoding="async" className="block h-auto w-full" />
+        <div className="absolute top-2 left-1/2 h-5 w-20 -translate-x-1/2 rounded-full bg-[#0b0d16]" />
       </div>
     </div>
   )
@@ -116,16 +80,19 @@ function AppDownloadBanner() {
 
         {/* the phone: rises above the band, cut off at the band's bottom edge */}
         <div className="relative hidden md:flex justify-center self-end -mt-16" aria-hidden="true">
-          <div className="h-[380px] overflow-hidden">
+          <div className="h-[400px] overflow-hidden">
             <PhoneMockup />
           </div>
-          <div className="float-y absolute hidden lg:block top-16 start-[calc(50%-230px)] rounded-2xl bg-white px-3.5 py-2.5 text-[#222D52] shadow-xl">
+          <div className="float-y absolute hidden lg:block top-24 start-[calc(50%-275px)] rounded-2xl bg-white px-3.5 py-2.5 text-[#222D52] shadow-xl">
             <span className="block font-display text-xl font-semibold leading-none">6,500+</span>
             <span className="mt-1 block text-[11px] text-gray-600">{t('why_stops')}</span>
           </div>
-          <div className="float-y absolute top-52 end-[calc(50%-230px)] hidden lg:flex items-center gap-2 rounded-2xl bg-[#222D52] px-3.5 py-2.5 text-white shadow-xl [animation-delay:-2.5s]">
-            <LineBadge line="mrt-kajang" size={20} decorative />
-            <span className="text-sm font-semibold">{t('durMin').replace('{m}', '12')}</span>
+          <div className="float-y absolute top-56 end-[calc(50%-175px)] xl:end-[calc(50%-290px)] hidden lg:flex items-center gap-2.5 rounded-2xl bg-[#222D52] px-3.5 py-2.5 text-white shadow-xl [animation-delay:-2.5s]">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/15"><Icon name="hiking" size={18} /></span>
+            <span className="leading-tight">
+              <span className="block text-sm font-semibold">{t('app_trailsCard')}</span>
+              <span className="hidden text-[11px] text-white/70 xl:block">{t('app_trailsCardSub')}</span>
+            </span>
           </div>
         </div>
       </div>
