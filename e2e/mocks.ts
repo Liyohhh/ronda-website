@@ -5,7 +5,20 @@ import { test as base, expect, type Page, type Route } from '@playwright/test'
 // timetable data); live buses are made up. Every request to the fake Supabase host must be handled here:
 // anything else is recorded in `unexpected` and fails the test.
 const fixture = (name: string) => JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8'))
-export const SEARCH = { klcc: fixture('search_klcc.json'), pasarSeni: fixture('search_pasar_seni.json') }
+const stopRow = (stop_id: string, stop_name: string, category: string, feed_id: string, stop_lat: number, stop_lon: number, route_ids: string[], stop_code: string | null = null) =>
+  ({ stop_id, stop_name, category, search: stop_name.toLowerCase(), similarity_score: 1, feed_id, stop_lat, stop_lon, route_ids, stop_code })
+export const SEARCH = {
+  klcc: fixture('search_klcc.json'),
+  pasarSeni: fixture('search_pasar_seni.json'),
+  // MRT Maluri and its two bus stops of the same name across the road (shown once)
+  maluri: [
+    stopRow('KG22', 'MRT Maluri', 'MRT Kajang Line', 'rapid-rail-kl', 3.1236, 101.7276, ['KGL']),
+    stopRow('1001', 'MRT Maluri Pintu B', 'BUS T352 · T400', 'rapid-bus-kl', 3.1239, 101.7281, ['T352'], 'KL2001'),
+    stopRow('1002', 'MRT Maluri Pintu B', 'BUS T352 · T400', 'rapid-bus-kl', 3.1241, 101.7283, ['T400'], 'KL2002'),
+  ],
+  // only looks like the mall: the mall itself (search_pois) must come first
+  pavilionBusStop: [stopRow('1003', 'Pavilion Bukit Jalil', 'BUS T580', 'rapid-bus-kl', 3.0470, 101.6790, ['T580'], 'KL3001')],
+}
 export const PLAN = fixture('plan_klcc_pasar_seni.json')
 export const TRAILS = fixture('trails.json')
 // three mapped places within 300 m (shape of public.places_near)
@@ -95,8 +108,13 @@ async function mockBackend(page: Page): Promise<Backend> {
     switch (url.pathname) {
       case '/rest/v1/rpc/search_stops': {
         const q = String(body?.query ?? '').toLowerCase()
+        // the database fixes typos itself: "mrrt mluri" finds MRT Maluri (search_fix below says so)
+        if (q.includes('mluri') || q.includes('maluri')) return json(route, SEARCH.maluri)
+        if (q.includes('pavilion')) return json(route, SEARCH.pavilionBusStop)
         return json(route, q.includes('kj10') || q.includes('klcc') ? SEARCH.klcc : q.includes('pasar') ? SEARCH.pasarSeni : [])
       }
+      case '/rest/v1/rpc/search_fix': // the search as the database understood it, null when unchanged
+        return json(route, ({ 'mrrt mluri': 'mrt maluri', 'pavilion kl': 'pavilion kuala lumpur' } as Record<string, string>)[String(body?.query ?? '').toLowerCase()] ?? null)
       case '/rest/v1/rpc/trails_data':
         return json(route, TRAILS)
       case '/rest/v1/rpc/trail_route': // no walking route in the tests: the trail map stays hidden (no map tiles needed)
@@ -139,6 +157,7 @@ async function mockBackend(page: Page): Promise<Backend> {
         return json(route, [])
       case '/rest/v1/rpc/search_pois': { // our own OpenStreetMap places (hotels ...)
         const q = String(body?.query ?? '').toLowerCase()
+        if (q.includes('pavilion')) return json(route, [{ name: 'Pavilion Kuala Lumpur', detail: 'Mall', lat: 3.1489, lon: 101.7133, kind: 'mall', osm: 'way/2' }])
         return json(route, q.includes('hyatt') ? [{ name: 'Grand Hyatt', detail: 'Hotel', lat: 3.1536, lon: 101.7121, kind: 'building', osm: 'way/1' }] : [])
       }
       case '/functions/v1/geocode':

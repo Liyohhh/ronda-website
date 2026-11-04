@@ -31,8 +31,8 @@ function Ronda300() {
   const [hi, setHi] = useState(-1)
 
   // stations only: places of the map search are not stations
-  const { stops, loading } = useSmartSearch(query)
-  const items = query.trim() ? buildItems(stops, []) : []
+  const { stops, fixed, loading } = useSmartSearch(query)
+  const items = query.trim() ? buildItems(stops, [], [], query, fixed) : []
   const listOpen = open && items.length > 0
 
   const pick = (p: Pick) => {

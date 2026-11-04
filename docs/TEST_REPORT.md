@@ -1,5 +1,59 @@
 # Test report
 
+## Run - 4 Nov 2026 (smart search: typos, short forms, places first, recent)
+
+- Why: searches people really typed found nothing or the wrong place (analytics): "mrrt mluri" 0 results, "mlri" a
+  clinic, "mrt sunetx" Sungai Besi, "bkt bintang" KTM Sri Bintang, "kl tower" a bus stop, "pavilion kl" the Pavilion
+  Bukit Jalil bus stop before the mall. Every bus stop was listed before every place.
+- Database (migration 20261104150000_smart_search_words.sql, applied to production 4 Nov with the owner's go): a list
+  of known words (29,972 from station, stop and place names) fixes each unknown word (one letter wrong, missing,
+  extra or two swapped; vowels left out); short forms and landmark names in 4 languages (bkt, jln, tmn, bt, sg, kg,
+  KL Tower, Twin Towers, 双峰塔, برج كوالالمبور ...) in a table that can grow without code. The search as typed is
+  always searched too. Places near the map come first.
+- Website: one list ranked best match first (a place before a bus stop that only looks alike; a train station stays
+  first on a tie), up to 10 stations and 8 places, places from 2 letters, the same bus stop across the road shown
+  once, "Showing results for ..." when the search was fixed, typed words bold even with a typo, recent picks when
+  the box is empty (this browser only). Typing again after a pick reopens the list (it stayed closed before).
+- Place search (geocode function version 4, deployed 4 Nov with the owner's go): results near the map or the chosen
+  Start first, the position rounded to about 10 km. Checked live: "masjid jamek" gives Petaling Jaya and KL with no
+  position, George Town near Penang.
+
+| # | Test | Typed | Expected top result | Before | After | Result |
+|---|---|---|---|---|---|---|
+| 1 | Typo in train type and name | mrrt mluri | MRT Maluri | nothing | MRT Maluri | Pass |
+| 2 | Vowels left out | mlri | LRT / MRT Maluri | Klinik Bersatu Taman Nagasari | LRT Maluri | Pass |
+| 3 | Two letters swapped | mrt sunetx | MRT Taman Suntex | MRT Sungai Besi | MRT Taman Suntex | Pass |
+| 4 | Short form | bkt bintang | MRT Bukit Bintang | KTM Sri Bintang | MRT Bukit Bintang | Pass |
+| 5 | Short form | tmn tun | MRT Taman Tun Dr Ismail | Sra Tmn Tun Perak (1 result) | MRT Taman Tun Dr Ismail | Pass |
+| 6 | Short form | bt caves | KTM Batu Caves | Bt Caves Industrial Park | KTM Batu Caves | Pass |
+| 7 | Landmark name | kl tower | Menara KL | Hp Tower | Menara KL | Pass |
+| 8 | Landmark name | twin towers | LRT KLCC | nothing | LRT KLCC | Pass |
+| 9 | Landmark, Chinese | 双峰塔 | LRT KLCC | nothing | LRT KLCC | Pass |
+| 10 | Landmark, Arabic | برج كوالالمبور | Menara KL | nothing | Menara KL | Pass |
+| 11 | Place before look-alike bus stop | pavilion kl | Pavilion Kuala Lumpur | Pavilion Bukit Jalil bus stop | Pavilion Kuala Lumpur | Pass |
+| 12 | Half typed with typo | mrrt mlu | MRT Maluri | nothing | MRT Maluri | Pass |
+| 13 | Typo | kl sentarl / pasr seni / titwangsa | KL Sentral / Pasar Seni / Titiwangsa | right | right | Pass |
+| 14 | Correct names unchanged | klcc, kl sentral, pasar seni, kajang, batu caves | same as before | right | right, no "fixed" line | Pass |
+| 15 | Codes unchanged | kj10, t352 | LRT KLCC / route T352 stops | right | right | Pass |
+| 16 | Nonsense | zzqxqzzqxq | empty list | empty | empty | Pass |
+| 17 | Short word with no close match | mlt | anything sensible | 1 bus stop | LRT Taman Melati | Pass (guess) |
+
+- Rows 1-17: run on the live data inside a transaction that was rolled back (nothing saved), 4 Nov. About 130 ms for
+  stations, places and the fix together per search.
+- Still weak (not changed): "pavillion" (double l) finds a restaurant before Pavilion KL in our own places (the
+  geocoder's results come after); "um" finds the Universiti Malaya places but no station first.
+- Unit tests: 50 files, 292 pass, 16 of them new (ranking, merged bus stops, recent picks). 2 unhandled errors from
+  the Advertise page test (`scrollIntoView` missing in the test browser), not from search; that test file passes.
+- Geocode function unit tests: 9 / 9 (position bias, places from the geocoder).
+- Playwright: new e2e/search.spec.ts (typo with "Showing results for", mall before bus stop, recent picks) 6 / 6.
+  Full run 244 passed, 6 skipped, 0 failed (desktop + phone). In an earlier run with more workers, RONDA 300 map and
+  "opening another page from Home" failed once each; both passed 16 / 16 with one worker (timing under load).
+- Typecheck clean; lint clean for the changed files.
+- Production smoke after applying (search.smoke.mjs + live_geocode.smoke.mjs): 28 / 28 pass, 13 of them new typo,
+  short form, landmark and place checks. Security advisor: nothing new. Existing callers of search_pois (query,
+  max_rows) still work.
+- Website not deployed yet: it needs the owner's go (the database and geocode are ready for it).
+
 ## Run - 4 Nov 2026 (security fixes before going online)
 
 - Outside security review (read-only, both repositories) checked against the live project. Fixed today:

@@ -19,7 +19,7 @@ import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type 
 import { outOfReachMessage } from '../data/outOfReach'
 import SuggestionList from '../components/SuggestionList'
 import NearbyTransit from '../components/NearbyTransit'
-import { buildItems, type Pick } from '../data/suggestions'
+import { buildItems, recentItems, rememberRecent, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
@@ -152,8 +152,11 @@ function Home() {
 
   // Smart search: stops + places for whichever box is focused
   const query = activeField === 'start' ? start : activeField === 'end' ? end : ''
-  const { stops, places, routeStops, loading: searching } = useSmartSearch(query)
-  const items = query.trim() ? buildItems(stops, places, routeStops) : []
+  // places near the chosen Start come first when typing the End (and the other way round)
+  const other = activeField === 'end' ? startStop : activeField === 'start' ? endStop : null
+  const { stops, places, routeStops, fixed, loading: searching } = useSmartSearch(query, other)
+  // empty box: the last places picked (this browser only)
+  const items = query.trim() ? buildItems(stops, places, routeStops, query, fixed) : activeField ? recentItems() : []
   const listOpen = activeField !== null && items.length > 0
   const highlighted = highlight.query === normaliseQuery(query) ? highlight.index : -1
 
@@ -316,6 +319,7 @@ function Home() {
   }
 
   const pickSuggestion = (pick: Pick) => {
+    rememberRecent(pick)
     if (activeField === 'start') {
       setStart(pick.name)
       setStartStop(pick)
@@ -467,6 +471,7 @@ function Home() {
                             onChange={(e) => {
                               setStart(e.target.value)
                               setStartStop(null)
+                              setActiveField('start') // typing again after a pick reopens the suggestions
                             }}
                             onFocus={() => setActiveField('start')}
                             onBlur={() => setTimeout(() => setActiveField((f) => (f === 'start' ? null : f)), 150)}
@@ -514,6 +519,7 @@ function Home() {
                             onChange={(e) => {
                               setEnd(e.target.value)
                               setEndStop(null)
+                              setActiveField('end')
                             }}
                             onFocus={() => setActiveField('end')}
                             onBlur={() => setTimeout(() => setActiveField((f) => (f === 'end' ? null : f)), 150)}
@@ -574,6 +580,7 @@ function Home() {
                     highlighted={highlighted}
                     onHover={(index) => setHighlight({ query: normaliseQuery(query), index })}
                     onPick={pickSuggestion}
+                    fixed={fixed}
                   />
                 )}
 

@@ -15,7 +15,7 @@ import SuggestionList from '../components/SuggestionList'
 import { useLanguage } from '../hooks/useLanguage'
 import { usePoll } from '../hooks/usePoll'
 import { useLocate } from '../hooks/useLocate'
-import { useSmartSearch } from '../hooks/useSmartSearch'
+import { useSmartSearch, type Near } from '../hooks/useSmartSearch'
 import { buildItems, type Pick } from '../data/suggestions'
 import { supabase } from '../services/supabase'
 import { mapConfig, mapStyle } from '../services/mapStyle'
@@ -364,8 +364,15 @@ function LiveMap() {
   // station / place search in the same box: pick one and the map flies there, with a gold pin on it
   const [searchOpen, setSearchOpen] = useState(false)
   const [hi, setHi] = useState(-1)
-  const { stops, places, routeStops, loading: searching } = useSmartSearch(filter)
-  const items = filter.trim().length >= 2 ? buildItems(stops, places, routeStops) : []
+  // places near the middle of the map first (taken when the box is opened)
+  const [near, setNear] = useState<Near>(null)
+  const openSearch = () => {
+    const c = map.current?.getCenter()
+    if (c) setNear({ lat: c.lat, lon: c.lng })
+    setSearchOpen(true)
+  }
+  const { stops, places, routeStops, fixed, loading: searching } = useSmartSearch(filter, near)
+  const items = filter.trim().length >= 2 ? buildItems(stops, places, routeStops, filter, fixed) : []
   const listOpen = searchOpen && items.length > 0
   const pinMarker = useRef<maplibregl.Marker | null>(null)
   const goTo = (p: Pick) => {
@@ -462,7 +469,7 @@ function LiveMap() {
               <input
                 value={filter}
                 onChange={(e) => { setFilter(e.target.value); setSearchOpen(true); setHi(-1) }}
-                onFocus={() => setSearchOpen(true)}
+                onFocus={openSearch}
                 onBlur={() => setSearchOpen(false)}
                 onKeyDown={onSearchKey}
                 role="combobox"
@@ -477,7 +484,7 @@ function LiveMap() {
               />
               {listOpen && (
                 <div className="absolute inset-x-0 top-full z-20 text-start">
-                  <SuggestionList compact id="live-search-list" items={items} query={filter} loading={searching} highlighted={hi} onHover={setHi} onPick={goTo} />
+                  <SuggestionList compact id="live-search-list" items={items} query={filter} loading={searching} highlighted={hi} onHover={setHi} onPick={goTo} fixed={fixed} />
                 </div>
               )}
               <button

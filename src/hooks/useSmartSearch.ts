@@ -7,6 +7,8 @@ import { track } from '../services/analytics'
 // (search_pois RPC: hotels, sights, malls) and any other place
 // (geocode Edge Function, OpenStreetMap), with the featured places (data/featuredPlaces.ts) first. Debounced, cached per query for the session, and the
 // previous results stay on screen while new ones load so the list doesn't flicker.
+// The database writes out short forms and fixes typos ("mrrt mluri" -> "mrt maluri"); search_fix returns that
+// fixed search for "Showing results for ...". near (the map or the user's position) puts nearer places first.
 
 export type StopResult = {
   stop_id: string
@@ -36,6 +38,7 @@ const CACHE_MAX = 200
 const stopCache = new Map<string, StopResult[]>()
 const placeCache = new Map<string, PlaceResult[]>()
 const routeCache = new Map<string, StopResult[]>()
+const fixCache = new Map<string, string | null>()
 const NO_PLACES: PlaceResult[] = []
 
 function remember<T>(cache: Map<string, T>, key: string, value: T) {
@@ -45,10 +48,16 @@ function remember<T>(cache: Map<string, T>, key: string, value: T) {
 
 export const normaliseQuery = (q: string) => q.trim().toLowerCase().replace(/\s+/g, ' ')
 
-export function useSmartSearch(query: string) {
+export type Near = { lat: number; lon: number } | null
+
+export function useSmartSearch(query: string, near: Near = null) {
   const key = normaliseQuery(query)
+  // places are cached per query and area (about 10 km), so a search near Penang isn't served KL's places
+  const nearKey = near ? `${near.lat.toFixed(1)},${near.lon.toFixed(1)}` : ''
+  const placeKey = nearKey ? `${key}@${nearKey}` : key
   const [stopRes, setStopRes] = useState<StopResult[]>([])
   const [placeRes, setPlaceRes] = useState<PlaceResult[]>([])
+  const [fixRes, setFixRes] = useState<string | null>(null)
   const [routeRes, setRouteRes] = useState<StopResult[]>([])
   const isCode = looksLikeRouteCode(key)
 
@@ -89,14 +98,38 @@ export function useSmartSearch(query: string) {
     }
   }, [key])
 
+  // the search as the database understood it, when that differs from what was typed
   useEffect(() => {
-    if (key.length < 3 || placeCache.has(key)) return
+    if (key.length < 3 || fixCache.has(key)) return
     let cancelled = false
     const timer = setTimeout(async () => {
-      // our own OpenStreetMap places first (hotels, sights, malls: search_pois), then the geocoder's
+      const { data, error } = await supabase.rpc('search_fix', { query: key })
+      if (error) {
+        console.error('Search fix error:', error)
+        return
+      }
+      const fixed = typeof data === 'string' && data ? data : null
+      remember(fixCache, key, fixed)
+      if (!cancelled) setFixRes(fixed)
+    }, STOP_DELAY)
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [key])
+
+  useEffect(() => {
+    if (key.length < 2 || placeCache.has(placeKey)) return
+    let cancelled = false
+    const [lat, lon] = nearKey ? nearKey.split(',').map(Number) : [null, null]
+    const timer = setTimeout(async () => {
+      // our own OpenStreetMap places first (hotels, sights, malls: search_pois), then the geocoder's. The geocoder
+      // from 3 letters (a shared outside service); 2 letters are often short forms the database writes out ("um")
       const [own, geo] = await Promise.all([
-        supabase.rpc('search_pois', { query: key, max_rows: 5 }),
-        supabase.functions.invoke('geocode', { body: { q: key } }),
+        supabase.rpc('search_pois', { query: key, max_rows: 6, p_lat: lat, p_lon: lon }),
+        key.length >= 3
+          ? supabase.functions.invoke('geocode', { body: lat === null ? { q: key } : { q: key, lat, lon } })
+          : Promise.resolve({ data: { results: [] as PlaceResult[] }, error: null }),
       ])
       if (own.error) console.error('Own place search error:', own.error)
       if (geo.error || geo.data?.error) console.error('Place search error:', geo.error || geo.data?.error)
@@ -111,7 +144,7 @@ export function useSmartSearch(query: string) {
         seen.add(k); seen.add(p.name.toLowerCase())
         return true
       })
-      remember(placeCache, key, merged)
+      remember(placeCache, placeKey, merged)
       // what people look for, and whether we had anything (results 0 = found nothing) for the admin dashboard
       void track('search', { query: key, results: merged.length + (stopCache.get(key)?.length ?? 0) })
       if (!cancelled) setPlaceRes(merged)
@@ -120,9 +153,9 @@ export function useSmartSearch(query: string) {
       cancelled = true
       clearTimeout(timer)
     }
-  }, [key])
+  }, [key, placeKey, nearKey])
 
-  const found = key.length < 3 ? NO_PLACES : (placeCache.get(key) ?? placeRes)
+  const found = key.length < 2 ? NO_PLACES : (placeCache.get(placeKey) ?? placeRes)
   const places = useMemo(() => {
     const featured: PlaceResult[] = matchFeatured(key).map((f) => ({ name: f.name, detail: f.detail, lat: f.lat, lon: f.lon, kind: f.kind === 'shopping' ? 'mall' : 'place', osm: f.osm }))
     // the same building under another OpenStreetMap id (a shop node inside the mall) goes too: within about 80 m, same name
@@ -134,6 +167,7 @@ export function useSmartSearch(query: string) {
     stops: key.length < 2 ? [] : (stopCache.get(key) ?? stopRes),
     places,
     routeStops: !isCode ? [] : (routeCache.get(key) ?? routeRes),
-    loading: (key.length >= 2 && !stopCache.has(key)) || (key.length >= 3 && !placeCache.has(key)) || (isCode && !routeCache.has(key)),
+    fixed: key.length < 3 ? null : fixCache.has(key) ? (fixCache.get(key) ?? null) : fixRes,
+    loading: (key.length >= 2 && !stopCache.has(key)) || (key.length >= 2 && !placeCache.has(placeKey)) || (isCode && !routeCache.has(key)),
   }
 }
