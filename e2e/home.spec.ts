@@ -1,8 +1,8 @@
 import { expect, test } from './mocks'
 
-// Home page order under the search card: RONDA 300 trails -> Promotions -> Why RONDA -> "Everything you need"
-// (Services and the feature slides are off the page for now)
-const ORDER = ['trails-title', 'promo-title', 'why-title', 'features-title']
+// Home page order under the search card: RONDA 300 trails (always first) -> Promotions -> "Everything you need" ->
+// Why RONDA (Services and the feature slides are off the page for now)
+const ORDER = ['trails-title', 'promo-title', 'features-title', 'why-title']
 
 test('home sections come in the agreed order', async ({ page, backend }) => {
   void backend
@@ -17,7 +17,7 @@ test('every promotion is labelled as an ad', async ({ page, backend }) => {
   void backend
   await page.goto('/')
   const cards = page.locator('section[aria-labelledby="promo-title"] [data-promo]')
-  await expect(cards).toHaveCount(4) // wide banner + 3 cards
+  await expect(cards).toHaveCount(3) // a wide card + 2 smaller ones
   for (const card of await cards.all()) await expect(card.getByText('Ad', { exact: true })).toBeVisible()
 })
 
@@ -39,3 +39,14 @@ for (const width of [375, 768, 1440]) {
     expect(doc).toBeLessThanOrEqual(width)
   })
 }
+
+test('opening another page from Home starts at its top', async ({ page, backend }) => {
+  void backend
+  await page.goto('/')
+  const card = page.getByTestId('feature-tiles').locator('a[href="/ronda-300"]')
+  await card.evaluate((el) => el.scrollIntoView({ block: 'center' }))
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(500)
+  await card.click()
+  await expect(page).toHaveURL(/\/ronda-300$/)
+  await expect.poll(() => page.evaluate(() => scrollY)).toBe(0)
+})

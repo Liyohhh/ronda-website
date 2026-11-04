@@ -7,9 +7,10 @@ import CategoryPills, { type CategoryFilter } from './CategoryPills'
 import Icon from './Icon'
 import { isCategoryShown } from '../data/trails'
 import { Accent, Eyebrow, Reveal } from './Motion'
+import { RONDA300_MAP } from '../data/ronda300Link'
 
-// Home page "RONDA 300" trails: category pills, a swipeable row of trail cards and "See all trails", which opens
-// /trails with the same category picked
+// Home page "RONDA 300" trails: category pills, a swipeable row of trail cards, "See all trails", which opens
+// /trails with the same category picked, and "Nearby places", which opens the RONDA 300 map page
 function TrailsSection() {
   const { t, lang } = useLanguage()
   const [category, setCategory] = useState<CategoryFilter>('all')
@@ -89,13 +90,21 @@ function TrailsSection() {
         </div>
       )}
 
-      <div className="mt-8 flex justify-center px-4">
+      {/* the trails, or what is near the stations (the RONDA 300 page) */}
+      <div className="mt-8 flex flex-wrap justify-center gap-3 px-4">
         <Link
           to={category === 'all' ? '/trails' : `/trails?category=${category}`}
-          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-gold text-[15px] font-bold text-[#222D52] shadow-[0_6px_16px_rgb(210_182_138/0.35)] hover:bg-gold-hover active:scale-95 transition whitespace-nowrap"
+          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-[#222D52] text-[15px] font-bold text-white shadow-[0_6px_16px_rgb(47_107_216/0.35)] hover:bg-[#18203D] active:scale-95 transition whitespace-nowrap"
         >
           {t('seeAllTrails')}
           <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+        </Link>
+        <Link
+          to={RONDA300_MAP}
+          className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border-[1.5px] border-[#222D52] text-[15px] font-bold text-[#222D52] hover:bg-[#222D52] hover:text-white active:scale-95 transition whitespace-nowrap"
+        >
+          <Icon name="myLocation" size={18} />
+          {t('r3_nearbyCta')}
         </Link>
       </div>
     </section>

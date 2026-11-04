@@ -35,6 +35,28 @@ test.describe('plan a journey', () => {
     expect(call?.body).toMatchObject({ from: { lat: klcc.stop_lat, lon: klcc.stop_lon } })
   })
 
+  test('a service alert marks the line in the routes and explains itself in the steps', async ({ page, backend }) => {
+    backend.alerts = [{
+      id: 'e2e-1', source: 'myrapid', source_url: 'https://myrapid.com.my/notice', effect: 'modified',
+      title_en: 'Kelana Jaya Line: fewer trains', title_ms: null, title_zh: null, title_ar: null,
+      body_en: 'Trains run less often today; expect longer waits.', body_ms: null, body_zh: null, body_ar: null,
+      line_ids: ['lrt-kelana-jaya'], station_names: [], starts_at: '2026-01-01T00:00:00Z', ends_at: null,
+      status: 'published', published_at: '2026-10-23T09:00:00Z', updated_at: '2026-10-23T09:00:00Z',
+    }]
+    await page.goto('/')
+    await pickPlace(page, 'Start', 'kj10', /KLCC/)
+    await pickPlace(page, 'End', 'pasar', /LRT Pasar Seni/)
+    await page.getByRole('button', { name: 'Search' }).click()
+    const panel = page.getByRole('dialog', { name: 'Your journey' })
+    const marked = panel.getByRole('listitem').filter({ has: page.getByTestId('alert-badge') }).first()
+    await expect(marked).toBeVisible()
+    await marked.getByRole('button').first().click()
+    const note = panel.getByRole('note')
+    await expect(note.first()).toContainText('Modified service')
+    await expect(note.first()).toContainText('Kelana Jaya Line: fewer trains')
+    await expect(note.first().getByRole('link', { name: "Read the operator's notice" })).toHaveAttribute('href', 'https://myrapid.com.my/notice')
+  })
+
   test('journey panel has no serious accessibility violations', async ({ page, backend }) => {
     void backend
     await page.goto('/')

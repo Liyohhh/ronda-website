@@ -5,8 +5,7 @@ import BrandLogo from './BrandLogo'
 
 // Footer like the Ainaa site's: the navy app band first, then a white footer with the logo and tagline, link
 // columns under gold labels, and a thin bar with the copyright, sources and "Back to top".
-// flush: no gap above (Home ends in a section that runs straight into the app band).
-function Footer({ flush = false }: { flush?: boolean }) {
+function Footer() {
   const { t } = useLanguage()
   const year = new Date().getFullYear()
 
@@ -32,12 +31,13 @@ function Footer({ flush = false }: { flush?: boolean }) {
         { to: '/about', label: t('about') },
         { to: '/help', label: t('helpCentre') },
         { to: '/help/policies', label: t('policies') },
+        { to: '/advertise', label: t('promoAdvertiseLink') },
       ],
     },
   ]
 
   return (
-    <footer className={`bg-white text-[#222D52] overflow-hidden ${flush ? '' : 'mt-24'}`}>
+    <footer className="bg-white text-[#222D52] overflow-x-clip">
       <AppDownloadBanner />
       <div className="wrap pt-16 md:pt-20 pb-14 grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
@@ -46,7 +46,7 @@ function Footer({ flush = false }: { flush?: boolean }) {
         </div>
         {columns.map((c) => (
           <nav key={c.title} aria-label={c.title}>
-            <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-gold-deep mb-5">{c.title}</h2>
+            <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-[#2559B8] mb-5">{c.title}</h2>
             <ul className="space-y-3.5 text-[15px] text-gray-700">
               {c.links.map((l) => (
                 <li key={l.to}>
@@ -63,7 +63,7 @@ function Footer({ flush = false }: { flush?: boolean }) {
       <div className="wrap"><div className="border-t border-gray-200">
         <div className="py-6 flex flex-col md:flex-row gap-3 md:items-center justify-between text-xs text-gray-600">
           <span className="flex items-center gap-3">
-            © {year} RONDA. {t('footerRights')}
+            © {year} Ronda2Go. {t('footerRights')}
           </span>
           <span>
             <Link to="/credits" className="underline hover:text-[#222D52]">{t('footerCredits')}</Link>

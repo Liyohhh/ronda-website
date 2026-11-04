@@ -1,105 +1,122 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import Icon from './Icon'
 import { Accent, Eyebrow, Reveal } from './Motion'
 import { FEATURES, OPEN_LANGUAGE_MENU, type Feature } from '../data/features'
-import { LINES_BY_ID } from '../data/lines'
 
-// "Everything you need for the journey", arranged the way transit apps present themselves (Transit, Citymapper,
-// Omio, Bolt): one spotlight for what is live right now, then the features grouped by what a rider wants to do,
-// each with a single plain line on what it does. Only what RONDA does today; planned things say "Coming soon".
+// "Everything you need for the journey": four cards on one pale strip. One card is lifted and filled blue, with a
+// round photo in its corner and "Learn more" (RONDA 300 at first; whichever card the reader points at or tabs to
+// after that); the whole card is the link. On phones the cards stack. The smaller features follow in a ruled
+// strip, then a Park & Ride card (car parks on the live map and on each line's stations). Only what RONDA does
+// today; planned things say "Coming soon". Photos: public/ (credited on the About page).
 
-const GROUPS: { title: TranslationKey; keys: Feature['key'][] }[] = [
-  { title: 'featGroupPlan', keys: ['feat_directions', 'feat_places', 'feat_fares', 'feat_lines'] },
-  { title: 'featGroupExplore', keys: ['feat_trails', 'feat_ronda300', 'feat_airport'] },
-  { title: 'featGroupYou', keys: ['feat_saved', 'feat_languages', 'feat_alerts'] },
+const CARDS: { key: Feature['key']; label: TranslationKey; line: TranslationKey; photo: string }[] = [
+  { key: 'feat_directions', label: 'directions', line: 'featCardDirections', photo: '/Image/banner-kl.webp' },
+  { key: 'feat_ronda300', label: 's2_title', line: 'featCardR300', photo: '/places/centralMarket.jpg' },
+  { key: 'feat_lines', label: 'lines', line: 'featCardLines', photo: '/places/masjidJamek.jpg' },
+  { key: 'feat_trails', label: 'trails', line: 'featCardTrails', photo: '/places/riverOfLife.jpg' },
 ]
-const desc = (k: Feature['key']) => `featD_${k.slice(5)}` as TranslationKey
-
-// the spotlight's drawing: three lines in their official colours with vehicles gliding along them
-const ROUTES: [string, string][] = [
-  ['lrt-kelana-jaya', 'M20 150 C 120 150, 160 70, 260 70 S 400 110, 500 40'],
-  ['mrt-kajang', 'M20 40 C 140 40, 200 130, 320 130 S 440 150, 500 150'],
-  ['ktm-port-klang', 'M60 190 C 180 170, 300 30, 470 10'],
-]
+const FIRST_LIT = 1 // RONDA 300
 
 function FeatureGrid() {
   const { t } = useLanguage()
+  const [lit, setLit] = useState(FIRST_LIT)
   const byKey = Object.fromEntries(FEATURES.map((f) => [f.key, f])) as Record<Feature['key'], Feature>
 
-  const row = (f: Feature) => {
-    const body = (
-      <>
-        <span aria-hidden="true" className="mt-0.5 w-10 h-10 flex-shrink-0 rounded-xl bg-white border border-[#DCD4C8] flex items-center justify-center" style={{ color: f.color }}>
-          <Icon name={f.icon} size={20} />
-        </span>
-        <span className="min-w-0 flex-1 text-start">
-          <span className="flex flex-wrap items-center gap-2 font-semibold text-[#222D52]">
-            {t(f.key)}
-            {f.soon && <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#222D52]">{t('soon')}</span>}
-          </span>
-          <span className="mt-0.5 block text-sm leading-snug text-gray-600">{t(desc(f.key))}</span>
-        </span>
-        <Icon name="chevronRight" size={18} className="mt-2.5 flex-shrink-0 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-[#222D52] rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
-      </>
-    )
-    const cls = 'group flex w-full items-start gap-3.5 rounded-2xl p-3 transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold'
-    return f.to ? (
-      <Link to={f.to} className={cls}>{body}</Link>
-    ) : (
-      <button type="button" className={cls} aria-haspopup="listbox" onClick={() => window.dispatchEvent(new CustomEvent(OPEN_LANGUAGE_MENU))}>{body}</button>
-    )
-  }
+  const openLanguages = () => window.dispatchEvent(new CustomEvent(OPEN_LANGUAGE_MENU))
+  const small = [byKey.feat_places, byKey.feat_fares, byKey.feat_airport, byKey.feat_saved, byKey.feat_languages, byKey.feat_alerts]
 
   return (
     <section aria-labelledby="features-title" className="relative">
       <div className="wrap pt-24 md:pt-32 pb-20 md:pb-28">
-        <Reveal><Eyebrow>RONDA</Eyebrow></Reveal>
-        <h2 id="features-title" className="mt-5 max-w-2xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#222D52]">
-          <Accent text={t('featuresTitle')} />
-        </h2>
+        <div className="text-center">
+          <Reveal><Eyebrow>Ronda2Go</Eyebrow></Reveal>
+          <h2 id="features-title" className="mx-auto mt-5 max-w-3xl [text-wrap:balance] font-display text-[34px] md:text-[54px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#222D52]">
+            <Accent text={t('featuresTitle')} />
+          </h2>
+          <p className="mt-4 text-[16px] text-[#5B6576]">{t('featuresIntro')}</p>
+        </div>
 
-        {/* spotlight: the live map */}
-        <Reveal className="mt-10 relative overflow-hidden rounded-[28px] bg-[#222D52] text-white grid md:grid-cols-[1fr_1.1fr] items-center">
-          <div className="relative p-7 md:p-10">
-            <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-gold-light">
-              <span className="relative flex h-2 w-2" aria-hidden="true">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-light opacity-60 motion-reduce:hidden" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-light" />
-              </span>
-              {t('navLive')}
-            </p>
-            <h3 className="mt-3 font-display text-[30px] md:text-[38px] leading-tight font-semibold"><Accent text={t('liveMapTitle')} dark /></h3>
-            <p className="mt-3 max-w-md text-white/80">{t('liveMapDetail')}</p>
-            <Link to="/live" className="mt-6 inline-flex items-center gap-1.5 h-11 px-5 rounded-full bg-gold text-sm font-bold text-[#222D52] hover:bg-gold-hover transition-colors">
-              {t('featLiveCta')}
-              <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+        <div data-testid="feature-tiles">
+          {/* four cards on one pale strip; the lit one rises out of it */}
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-24 lg:grid-cols-4 lg:gap-0 lg:rounded-[28px] lg:bg-[#F2F6FB]" onMouseLeave={() => setLit(FIRST_LIT)}>
+            {CARDS.map((c, i) => {
+              const f = byKey[c.key]
+              const on = i === lit
+              return (
+                <Reveal as="li" key={c.key} delay={i * 0.06} className="flex" onMouseEnter={() => setLit(i)} onFocus={() => setLit(i)}>
+                  {/* the look changes on this inner box: Reveal's own class must stay as React set it */}
+                  <div className={`group relative flex min-h-[180px] w-full flex-col overflow-hidden rounded-[24px] p-7 transition-[margin,background-color,box-shadow] duration-300 ease-out sm:min-h-[240px] ${on ? 'bg-[#2F6BD8] text-white shadow-[0_28px_50px_-28px_rgb(47_107_216/0.75)] lg:-mt-12' : 'bg-[#F2F6FB] text-[#222D52]'}`}>
+                    <img src={c.photo} alt="" loading="lazy" decoding="async" className={`pointer-events-none absolute -end-10 -top-12 h-56 w-56 rounded-full object-cover transition-[opacity,transform] duration-500 ease-out ${on ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} />
+                    <span aria-hidden="true" className={`relative grid h-12 w-12 place-items-center rounded-full transition-colors duration-300 ${on ? 'bg-white/20 text-white ring-1 ring-white/40' : 'bg-white text-[#2F6BD8]'}`}><Icon name={f.icon} size={22} /></span>
+                    <h3 className="mt-auto pt-[100px] text-[21px] font-extrabold leading-tight">
+                      <Link to={f.to!} className="after:absolute after:inset-0 after:z-[1] after:rounded-[24px] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-4 focus-visible:after:outline-white">
+                        {t(c.label)}
+                        <span className="sr-only">. {t(c.line)}</span>
+                      </Link>
+                    </h3>
+                    <p aria-hidden="true" className={`mt-2 text-[15px] leading-relaxed ${on ? 'text-white' : 'text-[#5B6576]'}`}>{t(c.line)}</p>
+                    <span aria-hidden="true" className={`inline-flex items-center gap-1 overflow-hidden text-[13px] font-extrabold uppercase tracking-wide transition-[max-height,margin,opacity] duration-300 ${on ? 'mt-4 max-h-6 opacity-100' : 'mt-0 max-h-0 opacity-0'}`}>
+                      {t('featLearnMore')}
+                      <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
+                    </span>
+                  </div>
+                </Reveal>
+              )
+            })}
+          </ul>
+
+          {/* the smaller features, in a neat strip under the cards */}
+          <ul className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 border-y border-[#D3DCE7] text-[15px] text-[#222D52]">
+            {small.map((f) => {
+              const label = (
+                <>
+                  <span aria-hidden="true" className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#F2F6FB] text-[#2F6BD8] transition-colors group-hover:bg-[#2F6BD8] group-hover:text-white"><Icon name={f.icon} size={20} /></span>
+                  <span className="min-w-0">
+                    <span className="block font-semibold leading-snug">{t(f.key)}</span>
+                    {f.soon && <span className="mt-1 inline-block rounded-full bg-[#222D52] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">{t('soon')}</span>}
+                  </span>
+                </>
+              )
+              const cls = 'group flex h-full w-full items-center gap-3 py-5 pe-3 text-start transition-colors hover:text-[#2559B8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6BD8]'
+              return (
+                <li key={f.key}>
+                  {f.to
+                    ? <Link to={f.to} className={cls}>{label}</Link>
+                    : <button type="button" className={cls} aria-haspopup="listbox" onClick={openLanguages}>{label}</button>}
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+
+        {/* Park & Ride: one blue banner like the lit card above: a white P sign, the words with three short facts, two
+            buttons. Car parks are on the live map and next to each line's stations */}
+        <Reveal className="relative mt-10 flex flex-col gap-6 overflow-hidden rounded-[28px] bg-[#2F6BD8] p-7 text-white md:flex-row md:items-center md:gap-10 md:px-12 md:py-11">
+          <span aria-hidden="true" className="pointer-events-none absolute -end-16 -top-24 h-[340px] w-[340px] rounded-full bg-[#2862CF]" />
+          <span aria-hidden="true" className="pointer-events-none absolute -bottom-28 end-40 hidden h-[220px] w-[220px] rounded-full bg-[#2862CF] md:block" />
+          <span aria-hidden="true" className="relative grid h-[72px] w-[72px] shrink-0 place-items-center rounded-[16px] bg-white text-[44px] font-black leading-none text-[#1E5AA8] ring-8 ring-white/20 md:h-[92px] md:w-[92px] md:text-[56px] md:rounded-[18px]">P</span>
+          <div className="relative min-w-0 flex-1">
+            <h3 className="text-[24px] font-black leading-tight md:text-[30px]">{t('parkShowTitle')}</h3>
+            <p className="mt-2 max-w-xl text-[15px] leading-relaxed">{t('parkBannerText')}</p>
+            <ul className="mt-4 flex flex-wrap gap-2 text-[13px] font-bold">
+              {(['parkChipMap', 'parkChipLines', 'parkChipFares'] as const).map((k) => <li key={k} className="rounded-full bg-[#2559B8] px-3 py-1.5">{t(k)}</li>)}
+            </ul>
+          </div>
+          <div className="relative flex flex-col gap-2 sm:flex-row md:flex-col">
+            <Link to="/live?parking=1" className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-white px-5 text-sm font-extrabold text-[#222D52] transition-colors hover:bg-[#EAF1FB] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+              <Icon name="map" size={18} />
+              {t('parkShowMap')}
+            </Link>
+            <Link to="/?tab=lines" className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border-[1.5px] border-white px-5 text-sm font-extrabold text-white transition-colors hover:bg-white hover:text-[#222D52] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+              <Icon name="train" size={18} />
+              {t('parkShowLines')}
             </Link>
           </div>
-          <svg viewBox="0 0 520 200" className="block w-full h-auto p-4 md:p-6" aria-hidden="true" focusable="false">
-            <g fill="none" strokeWidth="6" strokeLinecap="round" opacity="0.9">
-              {ROUTES.map(([id, d]) => <path key={id} d={d} stroke={LINES_BY_ID[id].color} />)}
-            </g>
-            {ROUTES.map(([id, d], i) => (
-              <circle key={`v-${id}`} r="7" fill="#FFFFFF" stroke={LINES_BY_ID[id].color} strokeWidth="4">
-                <animateMotion dur={`${9 + i * 3}s`} repeatCount="indefinite" path={d} begin={`-${i * 2}s`} />
-              </circle>
-            ))}
-          </svg>
         </Reveal>
 
-        {/* the features, grouped */}
-        <div className="mt-3 grid gap-3 lg:grid-cols-3" data-testid="feature-tiles">
-          {GROUPS.map((g, gi) => (
-            <Reveal key={g.title} delay={gi * 0.08} className="rounded-[28px] border border-[#DCD4C8] bg-cream p-4 md:p-5">
-              <h3 className="px-3 pt-2 text-xs font-bold uppercase tracking-[0.22em] text-gold-deep">{t(g.title)}</h3>
-              <ul className="mt-3 space-y-1">
-                {g.keys.map((k) => <li key={k}>{row(byKey[k])}</li>)}
-              </ul>
-            </Reveal>
-          ))}
-        </div>
       </div>
     </section>
   )

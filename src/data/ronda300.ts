@@ -2,7 +2,7 @@
 // public.trails_data); merchant listings will be added to the same lookup later, station by station.
 
 import type { Lang } from '../i18n/translations'
-import { isCategoryShown, type Place, type Station, type TrailData } from './trails'
+import { inPlanner, isCategoryShown, type Place, type Station, type TrailData } from './trails'
 
 export type StationPlaces = { station: Station; places: Place[] }
 
@@ -12,7 +12,7 @@ export function stationsWithPlaces(data: TrailData, lang: Lang): StationPlaces[]
   const byStation = new Map<string, StationPlaces>()
   for (const id of visible) {
     const place = data.places[id]
-    if (!place?.station) continue
+    if (!place?.station || !inPlanner(place.station)) continue
     const k = place.station.search
     const entry = byStation.get(k) ?? { station: place.station, places: [] }
     entry.places.push(place)

@@ -4,7 +4,6 @@ import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import type { IconName } from '../data/icons'
 import Icon from './Icon'
-import PhotoCredit from './PhotoCredit'
 import { SLIDE_PHOTOS } from '../data/trailPhotos'
 import { SLIDES, type Slide } from '../data/slides'
 import { Reveal } from './Motion'
@@ -82,9 +81,6 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
               return (
                 <figure key={s.key} className={`absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none ${i === index ? 'opacity-100' : 'opacity-0'}`} aria-hidden={i !== index} inert={i !== index}>
                   <img src={photo.src} alt={photo.alt} loading={i === 0 ? 'eager' : 'lazy'} className="h-full w-full object-cover" />
-                  <figcaption className="absolute bottom-2 end-2 rounded-full bg-black/45 px-2 py-0.5 text-[10px] text-white/90 backdrop-blur-sm">
-                    <PhotoCredit photo={photo} />
-                  </figcaption>
                 </figure>
               )
             })}
@@ -93,7 +89,7 @@ function FeatureCarousel({ onPlan, onLines }: { onPlan: () => void; onLines: () 
             <span className="inline-block rounded-full bg-gray-100 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-600">{String(index + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}</span>
             <p className="mt-5 text-xl font-semibold italic leading-snug text-[#222D52]">“{t(k(cur.n, 'tag'))}”</p>
             <div className="mt-5 h-px w-12 bg-gray-300" />
-            <p className="mt-4 text-sm font-bold uppercase tracking-wide text-[#222D52]">— RONDA</p>
+            <p className="mt-4 text-sm font-bold uppercase tracking-wide text-[#222D52]">— Ronda2Go</p>
           </div>
         </div>
       </div>

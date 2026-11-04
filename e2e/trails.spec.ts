@@ -41,6 +41,23 @@ test('Home "See all trails" keeps the picked category; a trail opened there goes
   await expect(page).toHaveURL(/\/trails\?category=culture/)
 })
 
+test('Explore: the four state trails; ECRL stops say when the line opens and offer no trip planning', async ({ page, backend }) => {
+  void backend
+  await page.goto('/trails?category=explore')
+  for (const slug of ['explore-selangor', 'putrajaya', 'explore-pahang', 'explore-terengganu']) {
+    await expect(page.locator(`a[href="/trails/${slug}"]`)).toBeVisible()
+  }
+  await page.goto('/trails/explore-pahang')
+  await expect(page.getByRole('heading', { level: 1, name: 'Explore Pahang' })).toBeVisible()
+  await expect(page.getByText('ECRL station: the line opens 12 Dec 2026. Not in trip planning yet.')).toHaveCount(5)
+  await expect(page.getByRole('link', { name: 'Plan a trip here' })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: 'Plan a trip to the start' })).toHaveCount(0)
+  // a train trail keeps its plan buttons
+  await page.goto('/trails/explore-selangor')
+  await expect(page.getByRole('heading', { level: 1, name: 'Explore Selangor' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Plan a trip here' })).toHaveCount(8)
+})
+
 test('a trail opened from Home goes back to Home', async ({ page, backend }) => {
   void backend
   await page.goto('/')
@@ -48,4 +65,18 @@ test('a trail opened from Home goes back to Home', async ({ page, backend }) => 
   await expect(page).toHaveURL(/\/trails\/heritage$/)
   await page.getByRole('link', { name: 'Back to home' }).click()
   await expect(page).toHaveURL(/\/#explore$/)
+})
+
+test('trails search: finds a trail by name with a typo, keeps it in the address, says when nothing matches', async ({ page, backend }) => {
+  void backend
+  await page.goto('/trails')
+  const search = page.getByRole('searchbox', { name: 'Search trails' })
+  await search.fill('night markt')
+  await expect(page).toHaveURL(/q=night\+markt/)
+  await expect(page.getByRole('status')).toContainText('trails found')
+  await expect(page.getByRole('link', { name: /Hawker & Night Market Trail/ }).first()).toBeVisible()
+  await search.fill('zzqx')
+  await expect(page.getByText('No trails match "zzqx".')).toBeVisible()
+  await page.getByRole('button', { name: 'Clear the search' }).click()
+  await expect(search).toHaveValue('')
 })

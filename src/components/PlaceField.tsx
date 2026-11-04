@@ -1,7 +1,7 @@
 import { useState, type KeyboardEvent } from 'react'
 import SuggestionList from './SuggestionList'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
-import { buildItems, type Pick } from '../data/suggestions'
+import { buildItems, recentItems, rememberRecent, type Pick } from '../data/suggestions'
 import Icon from './Icon'
 
 // A From / To box in the results panel: shows the place, and on click becomes a search field with the
@@ -12,11 +12,12 @@ function PlaceField({ id, label, value, onPick }: Props) {
   const [editing, setEditing] = useState(false)
   const [text, setText] = useState('')
   const [hi, setHi] = useState<{ q: string; i: number }>({ q: '', i: -1 })
-  const { stops, places, routeStops, loading } = useSmartSearch(editing ? text : '')
-  const items = editing && text.trim() ? buildItems(stops, places, routeStops) : []
+  const { stops, places, routeStops, fixed, loading } = useSmartSearch(editing ? text : '')
+  const items = !editing ? [] : text.trim() ? buildItems(stops, places, routeStops, text, fixed) : recentItems()
   const highlighted = hi.q === normaliseQuery(text) ? hi.i : -1
 
   const pick = (p: Pick) => {
+    rememberRecent(p)
     setEditing(false)
     onPick(p)
   }
@@ -83,6 +84,7 @@ function PlaceField({ id, label, value, onPick }: Props) {
             highlighted={highlighted}
             onHover={(i) => setHi({ q: normaliseQuery(text), i })}
             onPick={pick}
+            fixed={fixed}
           />
         </div>
       )}

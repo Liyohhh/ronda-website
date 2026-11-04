@@ -25,7 +25,7 @@ function BrandLogo({ tone = 'dark', size = 'sm', wordmark = true, wordmarkClassN
   const [markH, wordH] = SIZES[size]
   const suffix = tone === 'light' ? '-light' : ''
   return (
-    <span dir="ltr" className={`inline-flex items-center gap-2 flex-shrink-0 ${className}`} role="img" aria-label="RONDA">
+    <span dir="ltr" className={`inline-flex items-center gap-2 flex-shrink-0 ${className}`} role="img" aria-label="Ronda2Go">
       <img src={`/brand/ronda-mark${suffix}.svg`} alt="" style={{ height: markH, width: Math.round(markH * MARK_RATIO) }} className="max-w-none flex-shrink-0" />
       {wordmark && (
         <img src={`/brand/ronda-wordmark${suffix}.svg`} alt="" style={{ height: wordH, width: Math.round(wordH * WORD_RATIO) }} className={`max-w-none flex-shrink-0 ${wordmarkClassName}`} />

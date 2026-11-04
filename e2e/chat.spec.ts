@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from './mocks'
 
-// RONDA assistant (floating chat). The e2e build has VITE_AI_CHAT=on and no CAPTCHA key; ai-chat is mocked.
+// Ronda2Go assistant (floating chat). The e2e build has VITE_AI_CHAT=on and no CAPTCHA key; ai-chat is mocked.
 async function signIn(page: Page) {
   const session = {
     access_token: 'e2e-access-token', refresh_token: 'e2e-refresh-token', token_type: 'bearer',
@@ -17,7 +17,7 @@ test('signed in: a starter question gets an answer and a card that opens the pla
   await signIn(page)
   await page.goto('/')
   await launcher(page).click()
-  const dialog = page.getByRole('dialog', { name: /RONDA assistant/ })
+  const dialog = page.getByRole('dialog', { name: /Ronda2Go assistant/ })
   await expect(dialog).toBeVisible()
   await expect(dialog.getByRole('textbox', { name: 'Type your question' })).toBeFocused()
   await dialog.getByRole('button', { name: 'Hotels near LRT KLCC' }).click()
@@ -80,7 +80,7 @@ test('Arabic: labels translated, launcher on the left (bottom end in RTL)', asyn
   const width = page.viewportSize()!.width
   expect(box.x + box.width / 2).toBeLessThan(width / 2)
   await launcher(page).click()
-  await expect(page.getByRole('dialog', { name: /مساعد RONDA/ })).toBeVisible()
+  await expect(page.getByRole('dialog', { name: /مساعد Ronda2Go/ })).toBeVisible()
 })
 
 test('the launcher hides while a side panel is open, so it never covers it', async ({ page, backend }) => {

@@ -8,8 +8,8 @@ export function buildCsp(env) {
   const supabase = origin(env.VITE_SUPABASE_URL)
   const map = origin(env.VITE_MAP_PMTILES_URL)
   const assets = origin(env.VITE_MAP_ASSETS_URL) ?? 'https://protomaps.github.io'
-  const chat = env.VITE_AI_CHAT === 'on'
-  const turnstile = chat ? 'https://challenges.cloudflare.com' : null
+  // Turnstile CAPTCHA: on the sign-in forms when a site key is set, and in the assistant
+  const turnstile = env.VITE_CAPTCHA_SITE_KEY || env.VITE_AI_CHAT === 'on' ? 'https://challenges.cloudflare.com' : null
   // no map file (local only): plain OpenStreetMap tiles
   const osmTiles = map ? null : 'https://tile.openstreetmap.org'
   const list = (...xs) => xs.filter(Boolean).join(' ')
@@ -18,7 +18,7 @@ export function buildCsp(env) {
     `script-src ${list("'self'", turnstile)}`,
     // React and MapLibre set style attributes
     `style-src 'self' 'unsafe-inline'`,
-    `img-src ${list("'self'", 'data:', 'blob:', 'https://upload.wikimedia.org', osmTiles)}`,
+    `img-src ${list("'self'", 'data:', 'blob:', supabase, 'https://upload.wikimedia.org', 'https://live.staticflickr.com', osmTiles)}`,
     `font-src 'self' data:`,
     `connect-src ${list("'self'", supabase, supabase && supabase.replace(/^https:/, 'wss:'), map, assets, osmTiles)}`,
     `worker-src 'self' blob:`,

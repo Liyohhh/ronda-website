@@ -117,9 +117,9 @@ export function WordFill({ text, className = '' }: { text: string; className?: s
 // The label above a section title: small gold capitals with a thin gold line before it (and after it when centred)
 // tone: light (deep gold text), dark (champagne on navy) or onTeal (white text, champagne lines, on the teal band)
 export function Eyebrow({ children, tone = 'light', center = false }: { children: ReactNode; tone?: 'light' | 'dark' | 'onTeal'; center?: boolean }) {
-  const line = <span aria-hidden="true" className={`h-px w-7 ${tone === 'light' ? 'bg-gold-deep/60' : 'bg-gold-light/80'}`} />
+  const line = <span aria-hidden="true" className={`h-px w-7 ${tone === 'light' ? 'bg-[#2F6BD8]/60' : 'bg-[#A9C8FF]/80'}`} />
   return (
-    <span className={`inline-flex items-center gap-3 text-[12.5px] font-bold uppercase tracking-[0.26em] ${tone === 'dark' ? 'text-gold-light' : tone === 'onTeal' ? 'text-white' : 'text-gold-deep'}`}>
+    <span className={`inline-flex items-center gap-3 text-[12.5px] font-bold uppercase tracking-[0.26em] ${tone === 'dark' ? 'text-[#A9C8FF]' : tone === 'onTeal' ? 'text-white' : 'text-[#2559B8]'}`}>
       {line}
       {children}
       {center && line}
@@ -134,10 +134,17 @@ export function Accent({ text, dark = false }: { text: string; dark?: boolean })
   let last = parts.length - 1
   while (last > 0 && !parts[last].trim()) last--
   if (last <= 0) return <>{text}</>
+  // a number on its own ("KLIA Terminal 1") is not a word: it takes the word before it along
+  let first = last
+  if (/^\d+$/.test(parts[last].trim())) {
+    let k = last - 1
+    while (k > 0 && !parts[k].trim()) k--
+    if (k > 0) first = k
+  }
   return (
     <>
-      {parts.slice(0, last).join('')}
-      <span className={`accent-word pe-[0.06em]${dark ? ' on-dark' : ''}`}>{parts[last]}</span>
+      {parts.slice(0, first).join('')}
+      <span className={`accent-word pe-[0.06em]${dark ? ' on-dark' : ''}`}>{parts.slice(first, last + 1).join('')}</span>
       {parts.slice(last + 1).join('')}
     </>
   )

@@ -23,6 +23,14 @@ describe('RONDA 300 lookup', () => {
     expect(placesAt(stationsWithPlaces(DATA, 'en'), 'MRT Conlay')).toBeNull()
   })
 
+  it('leaves out ECRL stations (no trip planning to them yet)', () => {
+    const ecrl: TrailData = {
+      trails: [{ slug: 'explore-pahang', key: 'explorePahang', category: 'explore', stops: [{ placeId: 'c' }] }],
+      places: { c: { id: 'c', name: 'Pantai Cherating', station: { name: 'ECRL Cherating', search: 'ECRL Cherating', lineIds: ['ecrl'], feedId: 'ecrl', stopId: 'Cherating' } } },
+    }
+    expect(stationsWithPlaces(ecrl, 'en')).toEqual([])
+  })
+
   it('nearest stations with places, closest first', () => {
     const all = stationsWithPlaces(DATA, 'ar')
     const coords = new Map([['rapid-rail-kl:KJ10', { lat: 3.158935, lon: 101.713287 }], ['rapid-rail-kl:PY22', { lat: 3.1514, lon: 101.7178 }]])

@@ -48,7 +48,7 @@ function Help() {
             aria-label={t('helpSearchPh')}
             className="flex-1 min-w-0 py-2.5 text-base outline-none bg-transparent"
           />
-          <button type="submit" className="w-11 h-11 rounded-full bg-gold text-[#222D52] flex items-center justify-center flex-shrink-0 hover:bg-gold-hover" aria-label={t('helpResults')}>
+          <button type="submit" className="w-11 h-11 rounded-full bg-[#222D52] text-white flex items-center justify-center flex-shrink-0 hover:bg-[#18203D]" aria-label={t('helpResults')}>
             <Icon name="search" size={22} />
           </button>
         </form>

@@ -8,14 +8,13 @@ const ChatWidget = lazy(() => import('./ChatWidget'))
 
 // Page frame for the public site: header, the page's own content, then the footer (which opens with the app
 // download call to action), whatever the page adds above it.
-// darkEnd: the page's own last block is the dark band (Home), so the footer joins it without a gap
-function SiteLayout({ children, subheader, darkEnd = false }: { children: ReactNode; subheader?: ReactNode; darkEnd?: boolean }) {
+function SiteLayout({ children, subheader }: { children: ReactNode; subheader?: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
       {subheader}
       <main className="flex-1">{children}</main>
-      <Footer flush={darkEnd} />
+      <Footer />
       {CHAT_ENABLED && (
         <Suspense fallback={null}>
           {/* room under the footer so the chat launcher never covers its last line */}

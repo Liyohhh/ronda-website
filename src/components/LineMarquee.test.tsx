@@ -19,4 +19,9 @@ describe('LineMarquee', () => {
     expect(screen.getByText(/A map shows you where things are/)).toBeInTheDocument()
     expect(screen.getByText('6,500+')).toBeInTheDocument()
   })
+
+  it('links to the live map', () => {
+    renderWithLang(<LineMarquee />)
+    expect(screen.getByRole('link', { name: /Open the live map/ })).toHaveAttribute('href', '/live')
+  })
 })

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { createContext, Fragment, useContext, useEffect, useMemo, useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import type { TranslationKey } from '../i18n/translations'
 import LineBadge from './LineBadge'
@@ -13,8 +13,15 @@ import Icon from './Icon'
 import BusStopName from './BusStopName'
 import LiveApproach from './LiveApproach'
 import RouteChip from './RouteChip'
+import StationPhoto from './StationPhoto'
+import { ridePhoto } from '../data/ridePhoto'
+import { TripParking } from './ParkingInfo'
+import { useServiceAlerts } from '../hooks/useServiceAlerts'
+import { track, trackOnce } from '../services/analytics'
+import { alertBody, alertTitle, type ServiceAlert } from '../services/serviceAlerts'
+import { readSort } from '../data/tripPrefs'
 
-export type Place = { name: string; lat: number; lon: number; code?: string | null } // code: bus stop code ("KL1483")
+export type Place = { name: string; lat: number; lon: number; code?: string | null; stop_id?: string } // code: bus stop code ("KL1483"); stop_id: GTFS stop
 
 export type Fare = { amount: number; currency?: string; exact: boolean; basis?: 'od' | 'flat' | 'zone' | 'zone_min' | 'joined'; joined_rides?: number }
 // One ride's fare; amount null = no fare for this payment (Rapid KL buses are cashless only), `note` says why
@@ -203,6 +210,66 @@ function FareText({ fare, t }: { fare?: Fare | null; t: (k: TranslationKey) => s
   )
 }
 
+// Operator service alerts in force, by line slug (filled by the panel; empty = none)
+const AlertsContext = createContext<Record<string, ServiceAlert[]>>({})
+const useLineAlerts = (leg: Leg) => {
+  const byLine = useContext(AlertsContext)
+  const line = leg.mode === 'transit' && leg.feed_id && leg.route_id ? lineForRoute(leg.feed_id, leg.route_id) : undefined
+  return line ? byLine[line.id] ?? [] : []
+}
+
+// A line badge with a small amber "!" in its corner when the line has a service alert (as Moovit marks them)
+function AlertBadge({ leg, size, className = '' }: { leg: Leg; size: number; className?: string }) {
+  const { t } = useLanguage()
+  const alerts = useLineAlerts(leg)
+  const dot = Math.max(12, Math.round(size * 0.45))
+  return (
+    <span className={`relative inline-flex flex-shrink-0 ${className}`}>
+      <LineBadge line={legLine(leg)} size={size} decorative />
+      {alerts.length > 0 && (
+        <span
+          className="absolute -top-1 -end-1 flex items-center justify-center rounded-full bg-amber-500 font-bold leading-none text-white ring-2 ring-white"
+          style={{ width: dot, height: dot, fontSize: Math.round(dot * 0.7) }}
+          data-testid="alert-badge"
+        >
+          <span aria-hidden="true">!</span>
+          <span className="sr-only">{t('alertBadge')}</span>
+        </span>
+      )}
+    </span>
+  )
+}
+
+const EFFECT_LABEL: Record<ServiceAlert['effect'], TranslationKey> = {
+  modified: 'alertModified', delay: 'alertDelay', closed: 'alertClosed', info: 'alertInfo',
+}
+
+// The alert itself, on the ride it affects: what kind of change, the operator's words, when, and their notice
+function AlertCard({ alert }: { alert: ServiceAlert }) {
+  const { t, lang } = useLanguage()
+  // how many people an alert reached on their trip (admin dashboard), once per alert per visit
+  useEffect(() => { trackOnce(`alert:${alert.id}`, 'alert_seen', { alert_id: alert.id, title: alert.title_en }) }, [alert.id, alert.title_en])
+  const when = alert.published_at ? new Date(alert.published_at).toLocaleDateString(lang, { day: 'numeric', month: 'short', timeZone: 'Asia/Kuala_Lumpur' }) : null
+  return (
+    <div className="mt-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950" role="note">
+      <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-amber-800">
+        <Icon name="infoOutline" size={16} />
+        {t(EFFECT_LABEL[alert.effect])}
+      </div>
+      <p className="mt-1 font-semibold">{alertTitle(alert, lang)}</p>
+      {alertBody(alert, lang) && <p className="mt-1 leading-relaxed text-amber-950/90">{alertBody(alert, lang)}</p>}
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-amber-900/80">
+        {when && <span>{t('alertPublished').replace('{date}', when)}</span>}
+        {alert.source_url && (
+          <a href={alert.source_url} target="_blank" rel="noopener noreferrer" className="font-semibold underline">
+            {t('alertSource')}
+          </a>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // "(badge) Kajang › (badge) 400"
 function RoutePreview({ option }: { option: TripOption }) {
   const { t } = useLanguage()
@@ -227,7 +294,7 @@ function RoutePreview({ option }: { option: TripOption }) {
             <RouteChip code={legShort(l)} icon />
           ) : (
             <span className="inline-flex items-center gap-1">
-              <LineBadge line={legLine(l)} size={22} decorative />
+              <AlertBadge leg={l} size={22} />
               <span className="text-sm font-medium text-gray-800">{legShort(l)}</span>
             </span>
           )}
@@ -253,9 +320,9 @@ function Highlight({ tags }: { tags?: Tag[] }) {
     : has('least_walking')
       ? ['hlEasiest', 'bg-emerald-600 text-white']
       : has('fewest_changes')
-        ? ['tagFewestChanges', 'bg-[#F3EBDD] text-[#222D52]']
+        ? ['tagFewestChanges', 'bg-[#EAF1FB] text-[#222D52]']
         : has('cheapest')
-          ? ['tagCheapest', 'bg-[#F3EBDD] text-[#222D52]']
+          ? ['tagCheapest', 'bg-[#EAF1FB] text-[#222D52]']
           : null
   if (!pick) return null
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${pick[1]}`}>{t(pick[0])}</span>
@@ -309,9 +376,16 @@ function WalkStep({ leg, next, placeName }: { leg: Leg; next?: Leg; placeName: (
     return (
       <>
         <div className="font-medium text-gray-900">{t('changeTo').replace('{line}', legLabel(next))}</div>
-        <div className="text-sm text-gray-500">
-          {t('walkDur').replace('{dur}', formatDuration(leg.duration_min, t))}
-                  </div>
+        {/* a small note when the change means walking, or leaving the station and tapping in again */}
+        <div className="mt-1 flex flex-wrap gap-1.5 text-xs font-medium">
+          <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-gray-700">
+            <WalkIcon size={13} />
+            {t('walkDur').replace('{dur}', formatDuration(leg.duration_min, t))}{leg.distance_m ? ` · ${formatDistance(leg.distance_m)}` : ''}
+          </span>
+          {leg.transfer?.paid_area === false && (
+            <span className="rounded-full bg-amber-50 px-2 py-0.5 text-amber-900">{t('chgExitTapIn')}</span>
+          )}
+        </div>
       </>
     )
   }
@@ -347,6 +421,8 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
   const n = leg.num_stops ?? 0
   const color = legLine(leg).color
   const bus = isBus(leg)
+  const alerts = useLineAlerts(leg)
+  const photo = ridePhoto(leg.feed_id, leg.from.stop_id, bus ? null : leg.headsign)
   return (
     <>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
@@ -385,12 +461,16 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
           {leg.headsign && <span className="min-w-0 truncate text-base text-gray-900">{leg.headsign}</span>}
         </div>
       )}
-      {boardAt && <div className="text-sm text-gray-700">{boardAt}</div>}
+      {/* rail: the platform goes on the "Towards" line below ("Towards Kwasa Damansara | Platform 2") */}
+      {boardAt && (bus || !leg.headsign) && <div className="text-sm text-gray-700">{boardAt}</div>}
       {leg.headsign && !bus && (
         <div className="text-sm text-gray-500">
           {t('towards')} {leg.headsign}
+          {boardAt && <> | <span className="font-semibold text-gray-700">{boardAt}</span></>}
         </div>
       )}
+
+      {alerts.map((a) => <AlertCard key={a.id} alert={a} />)}
 
       {/* departure: estimate + frequency, or the timetable */}
       <div className="mt-1 flex flex-wrap items-center gap-1.5 text-sm">
@@ -425,6 +505,10 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
       {live && bus && leg.feed_id && leg.route_id && leg.stops?.[0]?.stop_id && leg.stops[1]?.stop_id && (
         <LiveApproach feedId={leg.feed_id} routeId={leg.route_id} stopId={leg.stops[0].stop_id} nextStopId={leg.stops[1].stop_id} />
       )}
+
+      {/* a photo of the station's sign where you board (where we have one), across the step under the times so the
+          text keeps the full width */}
+      {photo && <StationPhoto photo={photo} station={placeName(leg.from)} />}
 
       {/* stops passed */}
       {n > 0 && (
@@ -473,8 +557,9 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
 
 function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [], notice, resident, onResidentChange, payment, onPaymentChange, departAt, onDepartChange, onPlacesChange, onClose }: Props) {
   const { t, lang } = useLanguage()
+  const alertsByLine = useServiceAlerts(open)
   // least walking first by default (owner, 15 Oct 2026); the other orders are one tap away
-  const [sort, setSort] = useState<SortKey>('walking')
+  const [sort, setSort] = useState<SortKey>(readSort) // the order picked in Trip settings (least walking unless changed)
   const [detail, setDetail] = useState<TripOption | null>(null)
   const [showMore, setShowMore] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -530,7 +615,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
     return (
       <li key={`${o.departure}-${o.arrival}-${o.hops.join()}-${i}`}>
         <button
-          onClick={() => setDetail(o)}
+          onClick={() => { setDetail(o); void track('trip_open', { from, to }) }}
           className="w-full text-start bg-white rounded-2xl border border-gray-200 p-4 hover:border-[#222D52]/50 hover:shadow-md transition"
         >
           <div className="flex items-baseline justify-between gap-3">
@@ -571,6 +656,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   }
 
   return (
+    <AlertsContext.Provider value={alertsByLine}>
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={t('yourJourney')}>
       {/* Backdrop */}
       <div onClick={onClose} className="absolute inset-0 bg-[#222D52]/30 backdrop-blur-[2px] transition-opacity duration-200 starting:opacity-0" />
@@ -768,6 +854,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                   <RoutePreview option={detail} />
                 </div>
               </div>
+              <TripParking legs={detail.legs} />
 
 
               <ol className="relative">
@@ -790,7 +877,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                       )}
 
                       {line ? (
-                        <LineBadge line={line} size={40} decorative className="relative z-10 flex-shrink-0" />
+                        <AlertBadge leg={leg} size={40} className="relative z-10" />
                       ) : (
                         <span className="relative z-10 w-10 h-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center flex-shrink-0">
                           <WalkIcon size={22} />
@@ -815,6 +902,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
         </div>
       </div>
     </div>
+    </AlertsContext.Provider>
   )
 }
 

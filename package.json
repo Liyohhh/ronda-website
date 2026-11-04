@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "lines:export": "node scripts/export-line-badges.ts",
+    "photo-sources": "node scripts/photo-sources.ts",
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -48,7 +49,7 @@
     "jsdom": "^30.1.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.69.0",
-    "vite": "^8.3.0",
+    "vite": "^8.3.5",
     "vitest": "^5.0.3"
   }
 }

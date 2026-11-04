@@ -7,7 +7,7 @@ import TrailCover from '../components/TrailCover'
 import PhotoCredit from '../components/PhotoCredit'
 import { SLIDE_PHOTOS, TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
-import { PROMO_FEATURE, PROMOTIONS } from '../data/promotions'
+import { FEATURED_PLACES } from '../data/featuredPlaces'
 import { AUTH_VIDEO } from '../data/authVideo'
 import { HERO_VIDEOS } from '../data/heroVideos'
 import EcrlCard from '../components/EcrlCard'
@@ -28,6 +28,7 @@ const FEATURES: { title: TranslationKey; text: TranslationKey; icon: IconName; s
   { title: 'feat_ronda300', text: 'aboutRonda300Text', icon: 'adjust' },
   { title: 'aboutAirportTitle', text: 'aboutAirportText', icon: 'flight' },
   { title: 'aboutMultiTitle', text: 'aboutMultiText', icon: 'translate' },
+  { title: 'parkShowTitle', text: 'aboutParkingText', icon: 'directionsCar' },
 ]
 
 const STEPS: { title: TranslationKey; text: TranslationKey; soon?: TranslationKey }[] = [
@@ -93,7 +94,7 @@ function About() {
   return (
     <SiteLayout>
       {/* Intro */}
-      <PageHero eyebrow="RONDA" title={t('aboutTitle')} intro={t('aboutIntro')} center />
+      <PageHero eyebrow="Ronda2Go" title={t('aboutTitle')} intro={t('aboutIntro')} center />
 
       <div className="wrap">
         {/* Features */}
@@ -101,11 +102,12 @@ function About() {
           <SectionTitle id="about-features">{t('aboutFeaturesTitle')}</SectionTitle>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f) => (
-              <li key={f.title} className="bg-white border border-gray-200 rounded-2xl p-5 flex gap-4">
+              <li key={f.title} className="min-w-0 bg-white border border-gray-200 rounded-2xl p-5 flex gap-4">
                 <span className="w-12 h-12 rounded-xl bg-[#222D52]/[0.07] text-[#222D52] flex items-center justify-center flex-shrink-0" aria-hidden="true">
                   <Icon name={f.icon} size={24} />
                 </span>
-                <div>
+                {/* min-w-0: a long word wraps instead of widening the card past a phone screen */}
+                <div className="min-w-0 [overflow-wrap:anywhere]">
                   <h3 className="font-semibold text-gray-900 flex flex-wrap items-center gap-2">
                     {t(f.title)} {f.soon && <SoonBadge />}
                   </h3>
@@ -178,7 +180,7 @@ function About() {
           <p className="mt-2 text-gray-600">{t('trailsIntro')}</p>
           <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {trails.map((trail, i) => (
-              <li key={trail.slug}>
+              <li key={trail.slug} className="min-w-0">
                 <Link
                   to={`/trails/${trail.slug}`}
                   className="flex gap-3 items-center bg-white border border-gray-200 rounded-2xl p-3 hover:border-[#222D52]/40 hover:shadow-sm transition"
@@ -218,19 +220,19 @@ function About() {
           <h2 id="about-credits" className="text-lg font-semibold text-[#222D52]">{t('photoCredits')}</h2>
           <p className="mt-1 text-sm text-gray-500">{t('photoCreditsIntro')}</p>
           <ul className="mt-3 grid gap-1 sm:grid-cols-2 text-xs text-gray-600">
-            {trails.filter((tr) => TRAIL_PHOTOS[tr.slug]).map((tr) => (
+            {trails.filter((tr) => TRAIL_PHOTOS[tr.slug] && !TRAIL_PHOTOS[tr.slug].owner).map((tr) => (
               <li key={tr.slug}>
                 {t(trailNameKey(tr))}: <PhotoCredit photo={TRAIL_PHOTOS[tr.slug]} />
               </li>
             ))}
-            {Object.entries(PLACE_PHOTOS).filter(([id]) => places[id]).map(([id, ph]) => (
+            {Object.entries(PLACE_PHOTOS).filter(([id, ph]) => places[id] && !ph.owner).map(([id, ph]) => (
               <li key={id}>
                 {places[id].name}: <PhotoCredit photo={ph} />
               </li>
             ))}
-            {[PROMO_FEATURE, ...PROMOTIONS].map((p) => (
-              <li key={`promo-${p.id}`}>
-                {p.photo.alt}: <PhotoCredit photo={p.photo} />
+            {FEATURED_PLACES.flatMap((f) => (f.photo ? [{ ...f, photo: f.photo }] : [])).map((f) => (
+              <li key={`featured-${f.id}`}>
+                {f.name}: <PhotoCredit photo={f.photo} />
               </li>
             ))}
             <li>

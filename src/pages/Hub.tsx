@@ -81,8 +81,8 @@ function GoAnywhere({ hub }: { hub: HubT }) {
   const [q, setQ] = useState('')
   const [open, setOpen] = useState(false)
   const [hi, setHi] = useState(-1)
-  const { stops, places, loading } = useSmartSearch(q)
-  const items = q.trim() ? buildItems(stops, places) : []
+  const { stops, places, fixed, loading } = useSmartSearch(q, hub)
+  const items = q.trim() ? buildItems(stops, places, [], q, fixed) : []
   const listOpen = open && items.length > 0
   const airport = hub.slug.startsWith('klia')
   const go = (p: Pick) => navigate(planFromHub(hub, { lat: p.lat, lon: p.lon, dest_name: p.name }))
@@ -119,7 +119,7 @@ function GoAnywhere({ hub }: { hub: HubT }) {
         </div>
         {listOpen && (
           <div className="absolute z-20 mt-2 w-full">
-            <SuggestionList id={LIST_ID} items={items} query={q} loading={loading} highlighted={hi} onHover={setHi} onPick={go} />
+            <SuggestionList id={LIST_ID} items={items} query={q} loading={loading} highlighted={hi} onHover={setHi} onPick={go} fixed={fixed} />
           </div>
         )}
       </div>

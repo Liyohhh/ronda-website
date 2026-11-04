@@ -19,13 +19,15 @@ import JourneyPanel, { type TripOption, type ServiceNotice, type Resident, type 
 import { outOfReachMessage } from '../data/outOfReach'
 import SuggestionList from '../components/SuggestionList'
 import NearbyTransit from '../components/NearbyTransit'
-import { buildItems, type Pick } from '../data/suggestions'
+import { buildItems, recentItems, rememberRecent, type Pick } from '../data/suggestions'
 import { normaliseQuery, useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
 import Icon from '../components/Icon'
 import { useLocate } from '../hooks/useLocate'
 import HeroVideos from '../components/HeroVideos'
 import { Accent } from '../components/Motion'
+import { readPayment, readResident, savePayment, saveResident } from '../data/tripPrefs'
+import { track } from '../services/analytics'
 
 // the hero videos play on wider screens only (phones keep the photo and their data), never with reduced motion
 const wantsHeroVideo = () =>
@@ -150,8 +152,11 @@ function Home() {
 
   // Smart search: stops + places for whichever box is focused
   const query = activeField === 'start' ? start : activeField === 'end' ? end : ''
-  const { stops, places, routeStops, loading: searching } = useSmartSearch(query)
-  const items = query.trim() ? buildItems(stops, places, routeStops) : []
+  // places near the chosen Start come first when typing the End (and the other way round)
+  const other = activeField === 'end' ? startStop : activeField === 'start' ? endStop : null
+  const { stops, places, routeStops, fixed, loading: searching } = useSmartSearch(query, other)
+  // empty box: the last places picked (this browser only)
+  const items = query.trim() ? buildItems(stops, places, routeStops, query, fixed) : activeField ? recentItems() : []
   const listOpen = activeField !== null && items.length > 0
   const highlighted = highlight.query === normaliseQuery(query) ? highlight.index : -1
 
@@ -201,39 +206,19 @@ function Home() {
     setEndStop(startStop)
   }
 
-  // Fares for Malaysians or tourists; remembered on this device
-  const [resident, setResident] = useState<Resident>(() => {
-    try {
-      return localStorage.getItem('ronda.resident') === 'non_citizen' ? 'non_citizen' : 'citizen'
-    } catch {
-      return 'citizen'
-    }
-  })
+  // Fares for Malaysians or tourists; remembered on this device (data/tripPrefs.ts, also set on the account page)
+  const [resident, setResident] = useState<Resident>(readResident)
   const changeResident = (r: Resident) => {
     setResident(r)
-    try {
-      localStorage.setItem('ronda.resident', r)
-    } catch {
-      // storage blocked: the choice lasts for this visit only
-    }
+    saveResident(r)
     handleSearch({ res: r })
   }
 
   // Cashless (default) or cash / token fares; remembered on this device
-  const [payment, setPayment] = useState<Payment>(() => {
-    try {
-      return localStorage.getItem('ronda.payment') === 'cash' ? 'cash' : 'cashless'
-    } catch {
-      return 'cashless'
-    }
-  })
+  const [payment, setPayment] = useState<Payment>(readPayment)
   const changePayment = (p: Payment) => {
     setPayment(p)
-    try {
-      localStorage.setItem('ronda.payment', p)
-    } catch {
-      // storage blocked: the choice lasts for this visit only
-    }
+    savePayment(p)
     handleSearch({ pay: p })
   }
 
@@ -319,6 +304,7 @@ function Home() {
     }
     setOptions(found)
     setMoreOptions(data?.more_options ?? [])
+    void track('plan_trip', { from: fromStop.name, to: toStop.name, results: found.length })
     const meta = data?.meta
     if (meta?.next_day?.first_departure) setNotice({ kind: 'tomorrow', time: meta.next_day.first_departure })
     else if (meta?.service_resumes) setNotice({ kind: 'resumes', time: meta.service_resumes })
@@ -333,6 +319,7 @@ function Home() {
   }
 
   const pickSuggestion = (pick: Pick) => {
+    rememberRecent(pick)
     if (activeField === 'start') {
       setStart(pick.name)
       setStartStop(pick)
@@ -373,7 +360,7 @@ function Home() {
     <button
       onClick={() => handleSearch()}
       disabled={loading}
-      className="w-14 h-14 rounded-full bg-gold hover:bg-gold-hover active:scale-95 transition text-[#222D52] flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(210_182_138/0.4)] disabled:opacity-60"
+      className="w-14 h-14 rounded-full bg-[#222D52] hover:bg-[#18203D] active:scale-95 transition text-white flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(47_107_216/0.4)] disabled:opacity-60"
       aria-label={t('searchAria')}
     >
       {loading ? (
@@ -385,10 +372,11 @@ function Home() {
   )
 
   return (
-    <SiteLayout darkEnd>
+    <SiteLayout>
       {/* Hero (Blaze layout): an inset card with rounded corners; the KL skyline photo starts slightly zoomed in and
           settles, and on wider screens the hero videos play over it one after another (HeroVideos, with its station
-          line as the slide control); the headline sits bottom-left over a dark fade.
+          line as the slide control); the headline sits small in the top-left corner so the buildings stay in view,
+          the line and quick links bottom-right over a dark fade.
           The search card overlaps the card's bottom edge. */}
       <section className="relative pt-1">
         <div className="hero-card relative mx-3 sm:mx-4 overflow-hidden rounded-[32px] bg-[#222D52] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.25)] min-h-[480px] md:min-h-[600px] lg:h-[76vh] lg:max-h-[760px] flex flex-col justify-end">
@@ -399,21 +387,23 @@ function Home() {
                 src="/Image/banner-kl.jpg"
                 alt=""
                 fetchPriority="high"
-                className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
+                className="absolute inset-0 w-full h-full object-cover object-[center_35%] brightness-110 saturate-110"
               />
             </picture>
           </div>
           {heroVideo && <HeroVideos />}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#18203D]/85 via-[#18203D]/30 to-[#18203D]/10" aria-hidden="true" />
+          {/* a light fade: just enough behind the headline (top) and the quick links (bottom), the city stays bright */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#18203D]/55 via-transparent to-[#18203D]/25" aria-hidden="true" />
 
-          <div className="relative px-6 sm:px-8 xl:px-16 pb-28 md:pb-32 pt-24 flex flex-col lg:flex-row lg:items-end justify-between gap-y-8 gap-x-10">
-            <div className="max-w-4xl text-start">
-              <h1 className="rise-in max-w-[820px] [text-wrap:balance] font-display text-[40px] sm:text-5xl md:text-[64px] lg:text-[84px] leading-[1.02] font-semibold tracking-[-0.02em] text-white drop-shadow-sm">
+          <div className="relative flex-1 px-6 sm:px-8 xl:px-16 pb-28 md:pb-32 pt-8 md:pt-10 flex flex-col justify-between gap-y-8">
+            {/* the headline sits small in the top-left corner, so the skyline stays in view */}
+            <div className="max-w-xl text-start">
+              <h1 className="rise-in [text-wrap:balance] font-display text-[30px] sm:text-[36px] md:text-[44px] lg:text-[52px] leading-[1.05] font-semibold tracking-[-0.02em] text-white [text-shadow:0_2px_16px_rgb(24_32_61/0.45)]">
                 <Accent text={t('bannerTitle')} dark />
               </h1>
             </div>
 
-            <div className="rise-in lg:max-w-[440px] lg:flex-shrink-0 flex flex-col lg:items-end gap-5" style={{ '--rise-delay': '0.3s' } as CSSProperties}>
+            <div className="rise-in lg:max-w-[440px] lg:self-end flex flex-col lg:items-end gap-5" style={{ '--rise-delay': '0.3s' } as CSSProperties}>
               <p className="text-base md:text-lg font-medium leading-snug text-white/90 lg:text-end [text-wrap:balance]">{t('bannerSubtitle')}</p>
               <ul className="flex flex-wrap lg:flex-nowrap lg:justify-end gap-2">
                 {([['directions', '/#plan', 'route'], ['lines', '/?tab=lines', 'train'], ['trails', '/trails', 'hiking']] as const).map(([key, to, icon]) => (
@@ -481,6 +471,7 @@ function Home() {
                             onChange={(e) => {
                               setStart(e.target.value)
                               setStartStop(null)
+                              setActiveField('start') // typing again after a pick reopens the suggestions
                             }}
                             onFocus={() => setActiveField('start')}
                             onBlur={() => setTimeout(() => setActiveField((f) => (f === 'start' ? null : f)), 150)}
@@ -528,6 +519,7 @@ function Home() {
                             onChange={(e) => {
                               setEnd(e.target.value)
                               setEndStop(null)
+                              setActiveField('end')
                             }}
                             onFocus={() => setActiveField('end')}
                             onBlur={() => setTimeout(() => setActiveField((f) => (f === 'end' ? null : f)), 150)}
@@ -588,6 +580,7 @@ function Home() {
                     highlighted={highlighted}
                     onHover={(index) => setHighlight({ query: normaliseQuery(query), index })}
                     onPick={pickSuggestion}
+                    fixed={fixed}
                   />
                 )}
 
@@ -633,17 +626,19 @@ function Home() {
         </div>
       </section>
 
-      {/* Below the search: RONDA 300 trails, promotions (ads), Why RONDA, services (chauffeur and transfers, hidden until
-          SERVICES_ENABLED), then the feature tiles in the dark band (footer follows in SiteLayout). The feature slides
+      {/* Below the search, in the order travel and banking sites use (Monzo, Wise, Trainline, Apple Maps): something to
+          explore first (RONDA 300 trails, always on top), promotions (ads) second (owner, 20 Oct 2026), then what RONDA
+          does ("Everything you need"), then the proof (the lines band with its numbers, Why RONDA), and the app band
+          and footer last (SiteLayout). Services (chauffeur and transfers) stay hidden until SERVICES_ENABLED. The feature slides
           (FeatureCarousel) are off the page for now (owner, 18 Oct 2026). */}
       <TrailsSection />
       <PromotionSection />
-      <LineMarquee />
-      <WhyRonda />
-      {SERVICES_ENABLED && <ServicesSection />}
       <FeatureBand>
         <FeatureGrid />
       </FeatureBand>
+      <LineMarquee />
+      <WhyRonda />
+      {SERVICES_ENABLED && <ServicesSection />}
 
       {/* Line stations in the right-side panel; "Plan a trip here" fills the End box */}
       {pickedLine && (

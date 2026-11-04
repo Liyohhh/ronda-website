@@ -21,9 +21,23 @@ describe('FeatureGrid', () => {
     renderWithLang(<FeatureGrid />)
     const grid = screen.getByTestId('feature-tiles')
     expect(within(grid).getAllByRole('link')).toHaveLength(9)
-    expect(within(grid).getByRole('link', { name: /Trails/ })).toHaveAttribute('href', '/trails')
-    expect(within(grid).getByRole('link', { name: /RONDA 300/ })).toHaveAttribute('href', '/ronda-300')
+    expect(within(grid).getByRole('link', { name: /^Trails\./ })).toHaveAttribute('href', '/trails')
+    expect(within(grid).getByRole('link', { name: /^RONDA 300\./ })).toHaveAttribute('href', '/ronda-300')
     expect(within(grid).getByRole('link', { name: /Last-train alerts/ })).toHaveTextContent('Coming soon')
+  })
+
+  it('the card pointed at or tabbed to is the lit one; leaving the row lights RONDA 300 again', () => {
+    renderWithLang(<FeatureGrid />)
+    const card = (name: RegExp) => screen.getByRole('link', { name }).closest('li')!
+    const lit = (name: RegExp) => card(name).firstElementChild!.className.includes('bg-[#2F6BD8]')
+    expect(lit(/^RONDA 300\./)).toBe(true)
+    fireEvent.mouseEnter(card(/^Trails\./))
+    expect(lit(/^Trails\./)).toBe(true)
+    expect(lit(/^RONDA 300\./)).toBe(false)
+    fireEvent.mouseLeave(card(/^Trails\./).parentElement!)
+    expect(lit(/^RONDA 300\./)).toBe(true)
+    fireEvent.focus(screen.getByRole('link', { name: /^Lines\./ }))
+    expect(lit(/^Lines\./)).toBe(true)
   })
 
   it('the languages tile asks the language menu to open', () => {

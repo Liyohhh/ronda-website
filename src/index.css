@@ -1,37 +1,37 @@
 @import "tailwindcss";
 
-/* Luxe & Elegant (18 Oct 2026, the owner's palette): velvet navy #222D52 for text, buttons and the dark bands, onyx
-   (onyx was tried for the band of numbers and dropped; that band is velvet with a champagne glow), champagne #D2B68A for the main buttons (velvet text, 6.9:1) and gold accents,
-   #E2CBA4 for champagne on dark, #6F5630 for gold text on light backgrounds (5.5:1 on silk), silk #EEE5D9 for
-   alternate sections and cards, marble #E8E4E0 and warm greys for borders and quiet fills, pearl white page.
-   Official line colours, open / closed and live bus colours keep their own meaning. Headings use a serif display
-   face (font-display). Token names (navy, gold, cream) are kept from earlier palettes. */
+/* Light blue, white and navy (29 Oct 2026, after the owner's reference): a white page split by white space; pale
+   blue-grey #F2F6FB for cards, tiles and chips; navy #222D52 for words and the main buttons (white words); one accent
+   blue #2F6BD8 for highlights (accent words, labels, focus rings, the one highlighted card), #8AB4F8 / #A9C8FF on navy;
+   cool greys for borders and quiet text. Official line colours, place kind colours, open / closed and live bus colours
+   keep their own meaning. Headings use a serif display face (font-display). Token names (navy, gold, cream) are kept
+   from earlier palettes: "gold" is now the accent blue, "cream" the pale blue-grey. */
 @theme {
-  --color-gray-50: #faf8f5;
-  --color-gray-100: #f1eeea;
-  --color-gray-200: #e8e4e0;
-  --color-gray-300: #d6d0c8;
-  --color-gray-400: #a39d95;
-  --color-gray-500: #6b655e;
-  --color-gray-600: #57524c;
-  --color-gray-700: #403c37;
-  --color-gray-800: #26231f;
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f4f8;
+  --color-gray-200: #e3e8ef;
+  --color-gray-300: #cdd5e0;
+  --color-gray-400: #98a2b1;
+  --color-gray-500: #5e6877;
+  --color-gray-600: #4b5565;
+  --color-gray-700: #384152;
+  --color-gray-800: #1f2937;
   --color-gray-900: #222D52;
   --color-navy: #222D52;
   --color-navy-deep: #18203D;
-  --color-gold: #D2B68A;
-  --color-gold-hover: #C2A374;
-  --color-gold-light: #E2CBA4;
-  --color-gold-deep: #6F5630;
-  --color-gold-soft: #F3EBDD;
-  --color-cream: #EEE5D9;
+  --color-gold: #2F6BD8;
+  --color-gold-hover: #2559B8;
+  --color-gold-light: #A9C8FF;
+  --color-gold-deep: #2559B8;
+  --color-gold-soft: #EAF1FB;
+  --color-cream: #F2F6FB;
   --color-navy-2: #2E3A66;
-  --color-band: #f1eeea;
-  --color-marble: #E8E4E0;
+  --color-band: #f2f6fb;
+  --color-marble: #E3E9F1;
   --color-onyx: #000000;
   --color-accent: #222D52;
   --color-accent-hover: #18203D;
-  --color-accent-light: #E2CBA4;
+  --color-accent-light: #A9C8FF;
   --color-accent-text: #222D52;
   --color-blue-batik: #222D52;
   --color-blue-batik-hover: #18203D;
@@ -50,8 +50,8 @@
 }
 .accent-word {
   font-style: italic;
-  color: #6F5630;
-  background-image: linear-gradient(135deg, #5E4826, #6F5630, #8C7046, #6F5630, #5E4826);
+  color: #2F6BD8;
+  background-image: linear-gradient(135deg, #1F4FA8, #2F6BD8, #5A8DE8, #2F6BD8, #1F4FA8);
   background-size: 250% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -60,8 +60,8 @@
 }
 /* on velvet or onyx: champagne */
 .accent-word.on-dark {
-  color: #E2CBA4;
-  background-image: linear-gradient(135deg, #D2B68A, #E2CBA4, #F1E3C8, #E2CBA4, #D2B68A);
+  color: #A9C8FF;
+  background-image: linear-gradient(135deg, #8AB4F8, #A9C8FF, #DCE9FF, #A9C8FF, #8AB4F8);
 }
 
 /* Gentle float for small cards over a photo */
@@ -70,6 +70,26 @@
   50% { transform: translateY(-8px); }
 }
 .float-y { animation: float-y 5s ease-in-out infinite; }
+
+/* RONDA 300 map: the callout over the place picked in the list */
+.r3-callout .maplibregl-popup-content { border-radius: 14px; padding: 8px 12px; box-shadow: 0 10px 24px -8px rgb(34 45 82 / 0.35); }
+.r3-callout .maplibregl-popup-tip { display: none; }
+.r3-pincard .maplibregl-popup-content { padding: 12px 14px; }
+.r3-pincard .maplibregl-popup-close-button { top: 6px; right: 8px; font-size: 18px; color: #5B6576; }
+/* its zoom buttons: one white pill with a soft shadow, as on Klook's map */
+.r3-map .maplibregl-ctrl-group { border-radius: 999px; overflow: hidden; box-shadow: 0 8px 20px -8px rgb(34 45 82 / 0.35); }
+.r3-map .maplibregl-ctrl-group button { width: 38px; height: 38px; }
+.r3-map .maplibregl-ctrl-top-right { margin: 6px; }
+.r3-bubble { display: flex; align-items: center; gap: 6px; background: #222D52; color: #fff; border-radius: 4px; padding: 3px 4px 3px 8px; font: 500 11.5px/1.3 inherit; white-space: nowrap; cursor: pointer; box-shadow: 0 2px 6px rgb(0 0 0 / 0.18); }
+.r3-bubble:hover, .r3-bubble:focus-visible { background: #2f3d6e; outline: none; }
+.r3-bubble-n { background: #8AB4F8; color: #222D52; border-radius: 3px; padding: 0 5px; font-variant-numeric: tabular-nums; }
+.r3-photo { width: 42px; height: 42px; border-radius: 50%; padding: 2px; background: #8AB4F8; box-shadow: 0 3px 10px rgb(0 0 0 / 0.25); cursor: pointer; transition: width .15s, height .15s; }
+.r3-photo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2.5px solid #fff; display: block; }
+.r3-photo.on, .r3-photo:hover, .r3-photo:focus-visible { width: 56px; height: 56px; background: #222D52; outline: none; z-index: 2; }
+/* the marker itself is absolutely placed by MapLibre, so the badge sits against it */
+.r3-star { position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; border-radius: 50%; background: #222D52; border: 1.5px solid #fff; display: grid; place-items: center; box-shadow: 0 1px 4px rgb(0 0 0 / 0.3); }
+.r3-star svg { width: 12px; height: 12px; fill: #8AB4F8; }
+
 
 /* One page grid for the home page, header and footer (Blaze layout): every block starts on the same left edge.
    Gutters 16 / 24 / 48 / 80 px, content at most 1280 px wide. */
@@ -170,6 +190,12 @@ body {
 .marquee-left { animation: marquee-left 45s linear infinite; }
 .marquee-right { animation: marquee-right 40s linear infinite; }
 .marquee-up { animation: marquee-up 30s linear infinite; }
+/* line panel: the station list fades in when another line is picked */
+@keyframes line-fade { from { opacity: 0; transform: translateY(6px); } }
+.line-fade { animation: line-fade 0.3s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .line-fade { animation: none; } }
+/* the line rows fade out at both ends of their panel */
+.marquee-fade { -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
 .marquee:hover .marquee-track,
 .marquee-v:hover .marquee-track { animation-play-state: paused; }
 
@@ -180,7 +206,21 @@ body {
   color: color-mix(in srgb, #222D52 calc(clamp(0, var(--p) * var(--n) - var(--i), 1) * 100%), #8A8A8A);
 }
 
+/* Cards lift a little with a soft shadow on hover (promotion and feature cards; trail cards do it themselves) */
+.lift {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 40px -22px rgb(34 45 82 / 0.4);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .lift,
+  .lift:hover {
+    transform: none;
+    transition: none;
+  }
   .js-reveal .reveal {
     opacity: 1;
     transform: none;
@@ -259,10 +299,18 @@ body {
   0% { opacity: 0.7; transform: scale(1); }
   100% { opacity: 0; transform: scale(3.2); }
 }
-/* on phones the drawing is too small for every city name: only Kuala Lumpur keeps its label */
+/* on phones the drawing is too small for every city name: only Kuala Lumpur keeps its label, drawn larger so it
+   stays readable (the drawing is scaled down about three times), as does the country name */
 @media (max-width: 639px) {
   .why-map .why-label-small {
     display: none;
+  }
+  .why-map .why-label-big {
+    font-size: 40px;
+    stroke-width: 8px;
+  }
+  .why-map .why-name {
+    font-size: 40px;
   }
 }
 /* riders who asked for less motion get the finished picture */
@@ -341,4 +389,33 @@ body {
   background: #fff;
   border-radius: 9999px;
   padding: 1px;
+}
+
+/* home promotion cards: the gold pin on the drawn city turns navy while the card is pointed at */
+.pm-pin, .pm-pin-dot { transition: fill .2s ease; }
+.group:hover .pm-pin, .group:focus-within .pm-pin { fill: #222D52; }
+.group:hover .pm-pin-dot, .group:focus-within .pm-pin-dot { fill: #8AB4F8; }
+
+/* password fields have their own show / hide button; hide Edge's built-in one so there aren't two */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+/* dropdowns: one chevron drawn by us, the same on every browser, inset from the edge and centred on the box (the
+   browser's own arrow sat tight against the border, at a different spot per browser); right-to-left pages put it
+   on the left. Unlayered on purpose, so it wins over the px-3 utility on each select. */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%235B6576' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem 1rem;
+  padding-inline-end: 2.5rem;
+}
+[dir='rtl'] select {
+  background-position: left 0.75rem center;
+}
+select::-ms-expand {
+  display: none;
 }

@@ -13,7 +13,7 @@
 
 import { FA_BUS } from './operatorIcons.ts'
 
-export type LineMode = 'MRT' | 'LRT' | 'MONORAIL' | 'BRT' | 'KTM' | 'ETS' | 'ERL' | 'BUS'
+export type LineMode = 'MRT' | 'LRT' | 'MONORAIL' | 'BRT' | 'KTM' | 'ETS' | 'ERL' | 'ECRL' | 'BUS'
 
 export type Line = {
   id: string // stable slug, also the SVG filename
@@ -50,15 +50,23 @@ export const LINES: Line[] = [
   { id: 'ktm-ipoh', name: 'KTM Ipoh Line', short: 'Ipoh', mode: 'KTM', color: '#1964B7', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['100_9000'] } },
   { id: 'ktm-ets', name: 'KTM ETS', short: 'ETS', mode: 'ETS', color: '#FFC72C', textColor: '#000000', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['ETS'] } },
   { id: 'ktm-intercity', name: 'KTM Intercity', short: 'Intercity', mode: 'KTM', color: '#6E6E6E', textColor: '#FFFFFF', colorSource: 'gtfs', gtfs: { feedId: 'ktmb', routeIds: ['ERT', 'SH', 'ST'] } },
+
+  // ECRL (Malaysia Rail Link): opens 12 Dec 2026; no GTFS feed yet, so its stations and fares come from src/data/ecrl.ts.
+  // Colour: TODO take it from MRL's line branding when published (blue of the train livery until then).
+  { id: 'ecrl', name: 'ECRL East Coast Rail Link', short: 'ECRL', mode: 'ECRL', color: '#0065DE', textColor: '#FFFFFF', colorSource: 'operator', gtfs: { feedId: '', routeIds: [] } },
 ]
+
+// lines with a GTFS feed in the database (the ECRL has none yet)
+export const hasFeed = (l: Line) => l.gtfs.feedId !== ''
 
 export const LINES_BY_ID: Record<string, Line> = Object.fromEntries(LINES.map((l) => [l.id, l]))
 
 // Rail lines grouped for the line picker (headings translated by `key`)
-export const LINE_GROUPS: { key: 'linesGroupRapid' | 'linesGroupKtm' | 'linesGroupAirport'; ids: string[] }[] = [
+export const LINE_GROUPS: { key: 'linesGroupRapid' | 'linesGroupKtm' | 'linesGroupAirport' | 'linesGroupEastCoast'; ids: string[] }[] = [
   { key: 'linesGroupRapid', ids: ['lrt-ampang', 'lrt-sri-petaling', 'lrt-kelana-jaya', 'lrt-shah-alam', 'mrt-kajang', 'mrt-putrajaya', 'monorail', 'brt-sunway'] },
   { key: 'linesGroupKtm', ids: ['ktm-port-klang', 'ktm-seremban', 'ktm-ets', 'ktm-intercity', 'ktm-padang-besar', 'ktm-ipoh', 'ktm-shuttle-selatan'] },
   { key: 'linesGroupAirport', ids: ['erl-klia-ekspres', 'erl-klia-transit'] },
+  { key: 'linesGroupEastCoast', ids: ['ecrl'] },
 ]
 
 // Find a line from a GTFS route (e.g. a plan-trip leg's feed + route)
@@ -176,8 +184,9 @@ export function matchLines(query: string, extra: Line[] = []): Line[] {
 }
 
 // Buses aren't in LINES (hundreds of routes). Their badge uses the route's own GTFS colour when the
-// operator publishes one (Rapid KL stage buses do), otherwise RONDA navy (MRT feeder buses, bus stops).
-export const BUS_FALLBACK_COLOR = '#222D52'
+// operator publishes one (Rapid KL stage buses do), otherwise RONDA's lighter blue (MRT feeder buses, bus stops,
+// the "Bus routes" tile); white on it is 5:1.
+export const BUS_FALLBACK_COLOR = '#2F6BD8'
 
 export function busLine(color?: string | null, name = 'Bus'): Line {
   const c = color ? (color.startsWith('#') ? color : `#${color}`) : BUS_FALLBACK_COLOR
@@ -230,24 +239,32 @@ function badgeGlyph(line: Line): string {
       return `<g transform="translate(4.8 0.6) scale(0.8)">${trainFront(c, w, true)}</g>` + textEl(24, 44.6, 8.6, w, line.mode)
     case 'ERL':
       if (line.id === 'erl-klia-transit') {
-        return `<g transform="translate(15.6 1.8) scale(0.35)">${trainFront(c, w, false)}</g>` +
-          `<path fill="${w}" d="M19.6 13.6H28.4V14.5H19.6Z"/>` +
-          textEl(24, 30.6, 11.6, w, 'KLIA', 900) + textEl(24, 40, 8.4, w, 'transit')
+        // bigger train, smaller words (owner, 1 Nov 2026), centred with a margin from the edge (owner, 4 Nov 2026)
+        return `<g transform="translate(7.2 2.2) scale(0.7)">${trainFront(c, w, false)}</g>` +
+          textEl(24, 36.4, 9.4, w, 'KLIA', 900) + textEl(24, 43.6, 6.8, w, 'transit')
       }
       return `<path fill="${w}" d="${ERL_SIDE}"/><path fill="${c}" d="M9 12.4H14V15.8H9ZM16 12.4H21V15.8H16ZM34 12.6L38 16H35Z"/>` +
         `<path fill="${w}" d="M6 21.6H41V22.5H6Z"/>` +
         textEl(24, 33.4, 11.6, w, 'KLIA', 900) + textEl(24, 42.4, 8.4, w, 'ekspres')
+    case 'ECRL':
+      // the train on rails with the line's name under it, like the KTM badges
+      return `<g transform="translate(4.8 0.6) scale(0.8)">${trainFront(c, w, true)}</g>` + textEl(24, 44.6, 7.6, w, 'ECRL')
     default:
       return `<path transform="translate(10 10) scale(0.0546875)" fill="${w}" d="${FA_BUS}"/>`
   }
 }
-export function lineBadgeSvg(line: Line, opts: { title?: boolean } = {}): string {
+export function lineBadgeSvg(line: Line, opts: { title?: boolean; round?: boolean } = {}): string {
   const title = opts.title === false ? '' : `<title>${escapeXml(line.name)}</title>`
   return (
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="${escapeXml(line.name)}">` +
     title +
-    `<rect width="48" height="48" rx="6" fill="${line.color}"/>` +
-    badgeGlyph(line) +
+    (line.id === 'ecrl'
+      // ECRL: just its official mark (public/lines/ecrl-mark.png, from the owner, 29 Oct 2026), no box or border
+      ? `<image href="/lines/ecrl-mark.png" x="1" y="1" width="46" height="46"/>`
+      : opts.round
+        // round (line panel, owner 1 Nov 2026): a circle in the line colour, the same drawing shrunk to 78% to fit inside
+        ? `<circle cx="24" cy="24" r="24" fill="${line.color}"/><g transform="translate(5.28 5.28) scale(0.78)">${badgeGlyph(line)}</g>`
+        : `<rect width="48" height="48" rx="6" fill="${line.color}"/>` + badgeGlyph(line)) +
     `</svg>`
   )
 }

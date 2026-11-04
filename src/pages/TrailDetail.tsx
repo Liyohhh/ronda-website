@@ -1,10 +1,10 @@
+import { useEffect } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
+import { trackOnce } from '../services/analytics'
 import TrailCover from '../components/TrailCover'
-import PhotoCredit from '../components/PhotoCredit'
 import { TRAIL_MAPS } from '../data/trailMaps'
 import { HoursStatus, HoursWeek } from '../components/PlaceHours'
-import { TRAIL_PHOTOS } from '../data/trailPhotos'
 import { PLACE_PHOTOS } from '../data/placePhotos'
 import { CATEGORY_STYLE } from '../data/trailStyles'
 import LineBadge from '../components/LineBadge'
@@ -18,6 +18,7 @@ import {
   cuisineKey,
   dietKey,
   findTrail,
+  inPlanner,
   placeBlurbKey,
   trailDescKey,
   trailNameKey,
@@ -43,6 +44,7 @@ function TrailDetail() {
   const { t } = useLanguage()
   const { slug } = useParams()
   const { data, error } = useTrails()
+  useEffect(() => { if (slug) trackOnce(`trail:${slug}`, 'trail_view', { slug }) }, [slug])
   const trail = data ? findTrail(data, slug) : undefined
 
   if (!data) {
@@ -107,11 +109,6 @@ function TrailDetail() {
             <p className="mt-1 text-white/85">{t(trailDescKey(trail))}</p>
           </div>
         </div>
-        {TRAIL_PHOTOS[trail.slug] && (
-          <p className="absolute top-4 end-5 rounded-full bg-black/35 px-2.5 py-0.5 text-[10px] text-white/80 backdrop-blur-sm">
-            {t('photoLabel')}: <PhotoCredit photo={TRAIL_PHOTOS[trail.slug]} />
-          </p>
-        )}
       </section>
 
       <div className={`${box} mx-auto px-4 sm:px-6 pt-8`}>
@@ -131,7 +128,7 @@ function TrailDetail() {
               {end && end.name !== start?.name && stationRow(t('trailEndLabel'), end)}
             </dl>
             <div className="mt-5 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-2 md:mt-auto">
-              {start && (
+              {start && inPlanner(start) && (
                 <Link
                   to={planHref(start)}
                   className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#222D52] text-white text-sm font-semibold hover:bg-[#18203D] transition-colors"
@@ -185,9 +182,6 @@ function TrailDetail() {
                       {PLACE_PHOTOS[place.id] ? (
                         <>
                           <img src={PLACE_PHOTOS[place.id].src} alt={place.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" style={PLACE_PHOTOS[place.id].focus ? { objectPosition: PLACE_PHOTOS[place.id].focus } : undefined} />
-                          <p className="absolute inset-x-0 bottom-0 px-2 py-1 text-[9px] leading-tight text-white/90 bg-gradient-to-t from-black/60 to-transparent truncate">
-                            {t('photoLabel')}: <PhotoCredit photo={PLACE_PHOTOS[place.id]} />
-                          </p>
                         </>
                       ) : (
                         <div
@@ -211,7 +205,7 @@ function TrailDetail() {
                       {(place.cuisine || place.dietary) && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {place.cuisine && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F3EBDD] px-2.5 py-0.5 text-xs font-semibold text-[#222D52]">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#EAF1FB] px-2.5 py-0.5 text-xs font-semibold text-[#222D52]">
                               <Icon name="restaurant" size={13} />
                               {t(cuisineKey(place.cuisine))}
                             </span>
@@ -255,6 +249,12 @@ function TrailDetail() {
                         ) : (
                           <li className="text-gray-500 italic">{t('stationTbc')}</li>
                         )}
+                        {place.station && !inPlanner(place.station) && (
+                          <li className="flex items-center gap-2">
+                            <span className="w-5 flex justify-center flex-shrink-0"><Icon name="scheduleOutline" size={18} className="text-gray-500" /></span>
+                            {t('trailEcrlNote')}
+                          </li>
+                        )}
                         {place.station && place.walkMeters != null && (
                           <li className="flex items-center gap-2">
                             <span className="w-5 flex justify-center flex-shrink-0"><Icon name="directionsWalk" size={18} className="text-gray-500" /></span>
@@ -271,7 +271,7 @@ function TrailDetail() {
 
                       {/* footer: plan button, and whether it's open right now */}
                       <div className="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                        {place.station ? (
+                        {place.station && inPlanner(place.station) ? (
                           <Link
                             to={planHref(place.station)}
                             className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#222D52] text-white text-sm font-semibold hover:bg-[#18203D] transition-colors"

@@ -1,0 +1,1 @@
+{{ $lang := or .Data.lang "en" }}{{ if eq $lang "ms" }}Sahkan akaun Ronda2Go anda{{ else if eq $lang "zh" }}确认您的 Ronda2Go 账户{{ else if eq $lang "ar" }}أكّد حسابك في Ronda2Go{{ else }}Confirm your Ronda2Go account{{ end }}

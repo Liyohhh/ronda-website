@@ -20,11 +20,11 @@ describe('HeroVideos', () => {
     expect(current()).toBe(0)
   })
 
-  it('picking a station shows that video and its credit; only the showing and next videos are loaded', () => {
+  it('picking a station shows that video, with no credit on it (credits are on the About page); only the showing and next videos are loaded', () => {
     const { container } = renderWithLang(<HeroVideos />)
     fireEvent.click(screen.getByRole('button', { name: /Go to slide 3/ }))
     expect(current()).toBe(2)
-    expect(screen.getByRole('link', { name: /Pexels/ })).toHaveAttribute('href', HERO_VIDEOS[2].page)
+    expect(screen.queryByRole('link', { name: /Pexels/ })).toBeNull()
     expect(container.querySelectorAll('video')).toHaveLength(2)
   })
 })
