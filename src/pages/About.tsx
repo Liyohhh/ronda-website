@@ -102,11 +102,12 @@ function About() {
           <SectionTitle id="about-features">{t('aboutFeaturesTitle')}</SectionTitle>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f) => (
-              <li key={f.title} className="bg-white border border-gray-200 rounded-2xl p-5 flex gap-4">
+              <li key={f.title} className="min-w-0 bg-white border border-gray-200 rounded-2xl p-5 flex gap-4">
                 <span className="w-12 h-12 rounded-xl bg-[#222D52]/[0.07] text-[#222D52] flex items-center justify-center flex-shrink-0" aria-hidden="true">
                   <Icon name={f.icon} size={24} />
                 </span>
-                <div>
+                {/* min-w-0: a long word wraps instead of widening the card past a phone screen */}
+                <div className="min-w-0 [overflow-wrap:anywhere]">
                   <h3 className="font-semibold text-gray-900 flex flex-wrap items-center gap-2">
                     {t(f.title)} {f.soon && <SoonBadge />}
                   </h3>
@@ -179,7 +180,7 @@ function About() {
           <p className="mt-2 text-gray-600">{t('trailsIntro')}</p>
           <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {trails.map((trail, i) => (
-              <li key={trail.slug}>
+              <li key={trail.slug} className="min-w-0">
                 <Link
                   to={`/trails/${trail.slug}`}
                   className="flex gap-3 items-center bg-white border border-gray-200 rounded-2xl p-3 hover:border-[#222D52]/40 hover:shadow-sm transition"

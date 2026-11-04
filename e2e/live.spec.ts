@@ -23,7 +23,9 @@ test.describe('live bus map', () => {
     await expect(page.getByText(`${LIVE.trains.length} KTMB trains`)).toBeVisible()
     const train = page.locator('.ronda-train')
     await expect(train).toHaveText('9999')
-    await train.click()
+    // on a phone the search card sits over the top of the map and can hide the marker (it depends on the fonts),
+    // so tap the marker itself rather than whatever is drawn on top of its spot
+    await train.dispatchEvent('click')
     const popup = page.locator('.maplibregl-popup-content')
     await expect(popup).toContainText('KTM ETS · Train 9999')
     await expect(popup).toContainText('to KTM/ETS JB Sentral')

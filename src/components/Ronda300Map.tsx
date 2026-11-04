@@ -134,6 +134,12 @@ function Ronda300Map({
     const hover = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10 })
     const EMPTY: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] }
 
+    // where the map is, for the list beside it: from the start, not only once the map has fully loaded, so the list
+    // and the search work on a slow device too
+    const report = () => viewRef.current({ bounds: map.getBounds(), zoom: map.getZoom() })
+    map.on('moveend', report)
+    report()
+
     map.on('load', async () => {
       try { await addImages(map) } catch { /* without the images the markers below simply do not draw */ }
       if (mapRef.current !== map) return
@@ -204,8 +210,6 @@ function Ronda300Map({
         })
         map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; hover.remove() })
       }
-      const report = () => viewRef.current({ bounds: map.getBounds(), zoom: map.getZoom() })
-      map.on('moveend', report)
       report()
       setLoaded(true)
     })
@@ -219,10 +223,10 @@ function Ronda300Map({
     }
   }, [lang])
 
-  // flying somewhere asked for (a station from the search)
+  // flying somewhere asked for (a station from the search); the map can move before it has fully loaded
   useEffect(() => {
-    if (loaded && fly.n) mapRef.current?.flyTo({ center: [fly.lon, fly.lat], zoom: fly.zoom, duration: 900 })
-  }, [loaded, fly])
+    if (fly.n) mapRef.current?.flyTo({ center: [fly.lon, fly.lat], zoom: fly.zoom, duration: 900 })
+  }, [fly])
 
   useEffect(() => {
     const src = mapRef.current?.getSource('stations') as maplibregl.GeoJSONSource | undefined
