@@ -119,6 +119,25 @@
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
 
+## Run - 4 Nov 2026 (full phone test: every page and component, fixes)
+
+- Checked on a phone screen (iPhone 13 size, 390 px): 16 pages screen by screen, every menu, the language switch
+  and Arabic right to left, trip search to results and steps, Lines panel, nearest train and bus, trails filter and
+  typo search, trail stops, RONDA 300 station search and filters, hub hotel search, live map search and switches,
+  help search and answers, advertise, login and sign-up forms, back to top. No page scrolls sideways; no errors in
+  the browser console.
+- Fixed: the header menus (Hub, About) did not open on a phone: a tap opened the menu and closed it at once. The
+  menu panel now fits the screen and scrolls if long.
+- Fixed: on the 404 page the Trails and Help Centre buttons were white on a light background (could not be seen).
+- Too big on a phone, made smaller: Home feature cards (no empty space under the icon), Home offers (one row that
+  slides sideways instead of three tall cards), the footer (link groups two to a row), trip results top (fare and
+  payment switches on one line), live map card (switches side by side), trail stop photos (wider, less tall),
+  About photo credits (folded behind "View all"). Help answers now use the same back button as other pages.
+  Home is 17% shorter, About 28% shorter.
+- Not changed, for the owner: sign-in pages still show the old RONDA word logo (rename in progress); trail and help
+  pages use a plain title font while other pages use the serif one.
+- Browser tests: phone 120 passed (5 skipped), desktop 124 passed (1 skipped); unit tests 293 / 293.
+
 ## Run - 4 Nov 2026 (Escape Rooms trail cover)
 
 - Escape Rooms trail cover is now the owner's photo (tarot cards in an escape room), public/trails/escape-rooms.jpg,

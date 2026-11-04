@@ -669,8 +669,8 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
           md:starting:translate-y-0 md:starting:translate-x-full rtl:md:starting:-translate-x-full`}
       >
         {/* From / to */}
-        <div className="bg-[#222D52] text-white px-5 pt-5 pb-5 md:pt-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-[#222D52] text-white px-5 pt-4 pb-4 md:pt-6 md:pb-5">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
             {detail ? (
               <button onClick={() => setDetail(null)} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/85 hover:text-white">
                 <Icon name="chevronLeft" size={18} className="rtl:rotate-180" />
@@ -726,9 +726,10 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
           )}
 
           {/* Fares: for Malaysians or tourists (some buses are free for Malaysians only), paid cashless or cash */}
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm sm:gap-x-4">
             <div className="flex items-center gap-2" role="group" aria-label={t('faresFor')}>
-              <span className="text-white/75">{t('faresFor')}</span>
+              {/* phone: the labels go (the group keeps them as its name) so both switches fit on one line */}
+              <span className="hidden sm:inline text-white/75">{t('faresFor')}</span>
               <div className="inline-flex rounded-full bg-white/10 p-0.5">
                 {(['citizen', 'non_citizen'] as const).map((r) => (
                   <button
@@ -746,7 +747,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
               </div>
             </div>
             <div className="flex items-center gap-2" role="group" aria-label={t('payWith')}>
-              <span className="text-white/75">{t('payWith')}</span>
+              <span className="hidden sm:inline text-white/75">{t('payWith')}</span>
               <div className="inline-flex rounded-full bg-white/10 p-0.5">
                 {(['cashless', 'cash'] as const).map((p) => (
                   <button

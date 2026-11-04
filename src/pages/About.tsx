@@ -219,6 +219,12 @@ function About() {
         <section aria-labelledby="about-credits" className="pt-14 pb-4 max-w-3xl">
           <h2 id="about-credits" className="text-lg font-semibold text-[#222D52]">{t('photoCredits')}</h2>
           <p className="mt-1 text-sm text-gray-500">{t('photoCreditsIntro')}</p>
+          {/* folded: the list is long (several screens on a phone) and few people need it */}
+          <details className="group mt-3">
+            <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-full border border-[#D3DCE7] px-4 py-2 text-sm font-semibold text-[#222D52] hover:bg-[#F2F6FB] [&::-webkit-details-marker]:hidden">
+              {t('viewAll')}
+              <Icon name="expandMore" size={16} className="transition-transform group-open:rotate-180" />
+            </summary>
           <ul className="mt-3 grid gap-1 sm:grid-cols-2 text-xs text-gray-600">
             {trails.filter((tr) => TRAIL_PHOTOS[tr.slug] && !TRAIL_PHOTOS[tr.slug].owner).map((tr) => (
               <li key={tr.slug}>
@@ -251,6 +257,7 @@ function About() {
               </li>
             ))}
           </ul>
+          </details>
         </section>
       </div>
     </SiteLayout>

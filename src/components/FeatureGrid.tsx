@@ -48,10 +48,10 @@ function FeatureGrid() {
               return (
                 <Reveal as="li" key={c.key} delay={i * 0.06} className="flex" onMouseEnter={() => setLit(i)} onFocus={() => setLit(i)}>
                   {/* the look changes on this inner box: Reveal's own class must stay as React set it */}
-                  <div className={`group relative flex min-h-[180px] w-full flex-col overflow-hidden rounded-[24px] p-7 transition-[margin,background-color,box-shadow] duration-300 ease-out sm:min-h-[240px] ${on ? 'bg-[#2F6BD8] text-white shadow-[0_28px_50px_-28px_rgb(47_107_216/0.75)] lg:-mt-12' : 'bg-[#F2F6FB] text-[#222D52]'}`}>
-                    <img src={c.photo} alt="" loading="lazy" decoding="async" className={`pointer-events-none absolute -end-10 -top-12 h-56 w-56 rounded-full object-cover transition-[opacity,transform] duration-500 ease-out ${on ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} />
+                  <div className={`group relative flex w-full flex-col overflow-hidden rounded-[24px] p-5 transition-[margin,background-color,box-shadow] duration-300 ease-out sm:min-h-[240px] sm:p-7 ${on ? 'bg-[#2F6BD8] text-white shadow-[0_28px_50px_-28px_rgb(47_107_216/0.75)] lg:-mt-12' : 'bg-[#F2F6FB] text-[#222D52]'}`}>
+                    <img src={c.photo} alt="" loading="lazy" decoding="async" className={`pointer-events-none absolute -end-10 -top-12 hidden h-56 w-56 rounded-full object-cover sm:block transition-[opacity,transform] duration-500 ease-out ${on ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} />
                     <span aria-hidden="true" className={`relative grid h-12 w-12 place-items-center rounded-full transition-colors duration-300 ${on ? 'bg-white/20 text-white ring-1 ring-white/40' : 'bg-white text-[#2F6BD8]'}`}><Icon name={f.icon} size={22} /></span>
-                    <h3 className="mt-auto pt-[100px] text-[21px] font-extrabold leading-tight">
+                    <h3 className="mt-auto pt-4 text-[19px] font-extrabold leading-tight sm:pt-[100px] sm:text-[21px]">
                       <Link to={f.to!} className="after:absolute after:inset-0 after:z-[1] after:rounded-[24px] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-4 focus-visible:after:outline-white">
                         {t(c.label)}
                         <span className="sr-only">. {t(c.line)}</span>

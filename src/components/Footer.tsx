@@ -39,18 +39,19 @@ function Footer() {
   return (
     <footer className="bg-white text-[#222D52] overflow-x-clip">
       <AppDownloadBanner />
-      <div className="wrap pt-16 md:pt-20 pb-14 grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
-        <div>
+      {/* phone: the logo across, then the link groups two to a row so the footer stays short */}
+      <div className="wrap pt-12 md:pt-20 pb-10 md:pb-14 grid grid-cols-2 gap-x-6 gap-y-10 lg:gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+        <div className="col-span-2 lg:col-span-1">
           <BrandLogo size="md" />
-          <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-gray-600">{t('footerTagline')}</p>
+          <p className="mt-4 md:mt-5 max-w-xs text-[15px] leading-relaxed text-gray-600">{t('footerTagline')}</p>
         </div>
         {columns.map((c) => (
           <nav key={c.title} aria-label={c.title}>
-            <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-[#2559B8] mb-5">{c.title}</h2>
-            <ul className="space-y-3.5 text-[15px] text-gray-700">
+            <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-[#2559B8] mb-3 md:mb-5">{c.title}</h2>
+            <ul className="space-y-1 md:space-y-2 text-[15px] text-gray-700">
               {c.links.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="hover:text-[#222D52] transition-colors">
+                  <Link to={l.to} className="inline-block py-1.5 hover:text-[#222D52] transition-colors">
                     {l.label}
                   </Link>
                 </li>

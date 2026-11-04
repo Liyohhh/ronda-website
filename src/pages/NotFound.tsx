@@ -13,8 +13,8 @@ function NotFound() {
         intro={<>{t('nf_text')} <span className="font-mono break-all" dir="ltr">{pathname}</span></>}>
         <div className="flex flex-wrap justify-center gap-3">
           <Link to="/" className="rounded-full bg-[#222D52] px-6 py-3 text-sm font-bold text-white hover:bg-[#18203D]">{t('nf_home')}</Link>
-          <Link to="/trails" className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-[#222D52]">{t('trails')}</Link>
-          <Link to="/help" className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-[#222D52]">{t('helpCentre')}</Link>
+          <Link to="/trails" className="rounded-full border border-[#222D52]/25 bg-white px-6 py-3 text-sm font-semibold text-[#222D52] hover:bg-[#F2F6FB]">{t('trails')}</Link>
+          <Link to="/help" className="rounded-full border border-[#222D52]/25 bg-white px-6 py-3 text-sm font-semibold text-[#222D52] hover:bg-[#F2F6FB]">{t('helpCentre')}</Link>
         </div>
       </PageHero>
     </SiteLayout>
