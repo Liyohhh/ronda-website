@@ -12,17 +12,26 @@ describe('EcrlCard', () => {
     expect(items).toHaveLength(20)
     expect(items[0]).toHaveTextContent('Kota Bharu')
     expect(items[19]).toHaveTextContent('Jalan Kastam')
-    expect(ECRL_STATIONS.filter((s) => s.phase === 2).map((s) => s.name)).toEqual(['Serendah Baru', 'Puncak Alam', 'Kapar', 'Jalan Kastam'])
+    expect(ECRL_STATIONS.filter((s) => s.phase === 2).map((s) => s.name)).toEqual(['Bandar Serendah', 'Puncak Alam', 'Kapar', 'Jalan Kastam'])
     // MRL's starting fares (19 Oct 2026): Bentong the nearest, Kota Bharu the farthest
     expect(within(card).getByText(/up to RM 125 \(Kota Bharu\)/)).toBeInTheDocument()
     expect(within(card).getByText('RM 24')).toBeInTheDocument()
-    expect(ECRL_STATIONS.find((s) => s.name === 'Kota SAS')).toMatchObject({ fareRm: 60, expressRm: 68, confirmed: true })
+    expect(ECRL_STATIONS.find((s) => s.name === 'KotaSAS')).toMatchObject({ fareRm: 60, expressRm: 68, confirmed: true })
+  })
+
+  it('has the stations in the order of the MRL sign at Terminal Bersepadu Gombak (4 Nov 2026)', () => {
+    expect(ECRL_STATIONS.map((s) => s.name)).toEqual([
+      'Kota Bharu', 'Pasir Puteh', 'Jerteh', 'Bandar Permaisuri', 'Kuala Terengganu', 'Dungun', 'Kemasik', 'Chukai',
+      'Cherating', 'Kuantan Port City', 'KotaSAS', 'Paya Besar', 'Maran', 'Temerloh', 'Bentong',
+      'Terminal Bersepadu Gombak', 'Bandar Serendah', 'Puncak Alam', 'Kapar', 'Jalan Kastam',
+    ])
   })
 
   it('names the interchanges and links every source', () => {
     renderWithLang(<EcrlCard />)
     expect(screen.getByText(/Change to LRT Kelana Jaya Line/)).toBeInTheDocument()
-    expect(screen.getByText(/Change to KTM Port Klang Line/)).toBeInTheDocument()
+    expect(screen.getByText(/Change to KTM Intercity/)).toBeInTheDocument()
+    expect(screen.getAllByText(/Change to KTM Port Klang Line/)).toHaveLength(2)
     for (const a of screen.getAllByRole('link')) expect(a.getAttribute('href')).toMatch(/^https:\/\//)
   })
 })

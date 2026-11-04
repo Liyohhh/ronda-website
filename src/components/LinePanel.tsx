@@ -292,7 +292,7 @@ function EcrlStations({ line, express }: { line: Line; express: boolean }) {
     <>
       <ol className="space-y-2">
         {ECRL_STATIONS.map((s, i) => {
-          const change = s.link ? LINES_BY_ID[s.link] : undefined
+          const changes = (s.links ?? []).map((id) => LINES_BY_ID[id])
           const solid = s.phase === 1
           const fare = express ? s.expressRm : s.fareRm
           return (
@@ -307,13 +307,13 @@ function EcrlStations({ line, express }: { line: Line; express: boolean }) {
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <span className={`text-[15px] font-bold ${solid ? 'text-[#222D52]' : 'text-[#5B6576]'}`}>{s.name}</span>
-                  {change && (
-                    <span className="inline-flex items-center gap-1 text-xs text-gray-600" title={`${t('ecrlChange')} ${change.name}`}>
+                  {changes.map((change) => (
+                    <span key={change.id} className="inline-flex items-center gap-1 text-xs text-gray-600" title={`${t('ecrlChange')} ${change.name}`}>
                       <span className="px-0.5 text-sm font-bold leading-none text-gray-500" aria-hidden="true">⇌</span>
                       <LineBadge line={change} size={18} decorative round />
                       <span className="sr-only">{t('ecrlChange')} {change.name}</span>
                     </span>
-                  )}
+                  ))}
                 </div>
                 {s.km !== undefined && <p className="text-[12px] text-[#5B6576]">{t('ecrlKmFrom').replace('{km}', String(s.km))}</p>}
               </div>
