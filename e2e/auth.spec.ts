@@ -45,7 +45,8 @@ test('sign up from the header: check-your-inbox screen, then send the email agai
   // still signed out until the link is opened
   await expect(page.getByRole('banner').getByRole('link', { name: 'Login' })).toHaveCount(0) // auth pages have their own slim bar
   await page.goto('/')
-  await expect(page.getByRole('banner').getByRole('link', { name: 'Login' })).toBeVisible()
+  // signed out: Sign Up shows in the header (on phones Login is inside the menu)
+  await expect(page.getByRole('banner').getByRole('link', { name: 'Sign Up' })).toBeVisible()
 })
 
 test('sign up: Supabase errors come back in plain words', async ({ page, backend }) => {
@@ -65,7 +66,14 @@ test('sign up: Supabase errors come back in plain words', async ({ page, backend
 
 test('sign in, see the name in the header, sign out', async ({ page, backend }) => {
   await page.goto('/')
-  await page.getByRole('banner').getByRole('link', { name: 'Login' }).click()
+  const siteMenu = page.getByRole('button', { name: 'Menu' })
+  if (await siteMenu.isVisible()) {
+    // phones: Login is in the full-screen menu
+    await siteMenu.click()
+    await page.getByRole('dialog', { name: 'Menu' }).getByRole('link', { name: 'Login' }).click()
+  } else {
+    await page.getByRole('banner').getByRole('link', { name: 'Login' }).click()
+  }
   await expect(page).toHaveURL(/\/login$/)
   await page.getByLabel('Email address').fill('tester@example.test')
   await page.getByLabel('Password', { exact: true }).fill('a-long-password-1')
@@ -76,7 +84,7 @@ test('sign in, see the name in the header, sign out', async ({ page, backend }) 
   expect(backend.calls.find((c) => c.path === '/auth/v1/token')?.body).toMatchObject({ email: 'tester@example.test', password: 'a-long-password-1' })
   await menu.click()
   await page.getByRole('button', { name: 'Sign out' }).click()
-  await expect(page.getByRole('banner').getByRole('link', { name: 'Login' })).toBeVisible()
+  await expect(page.getByRole('banner').getByRole('link', { name: 'Sign Up' })).toBeVisible() // signed out
   expect(backend.calls.some((c) => c.path === '/auth/v1/logout')).toBe(true)
   // signed out for real: the account page asks for a sign-in again
   await page.goto('/account')

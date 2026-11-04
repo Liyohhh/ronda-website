@@ -361,7 +361,7 @@ function Home() {
     <button
       onClick={() => handleSearch()}
       disabled={loading}
-      className="w-14 h-14 rounded-full bg-[#222D52] hover:bg-[#18203D] active:scale-95 transition text-white flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(47_107_216/0.4)] disabled:opacity-60"
+      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#222D52] hover:bg-[#18203D] active:scale-95 transition text-white flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(47_107_216/0.4)] disabled:opacity-60"
       aria-label={t('searchAria')}
     >
       {loading ? (
@@ -426,7 +426,8 @@ function Home() {
 
         {/* Search card: overlaps the bottom of the hero card */}
         <div className="wrap relative z-20 -mt-16 md:-mt-20">
-          <div id="plan" className="relative w-full bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.22)] ring-1 ring-gray-100 px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
+          {/* phone: tighter card, smaller tabs and fields, so the search does not take most of the screen (owner, 5 Nov 2026) */}
+          <div id="plan" className="relative w-full bg-white rounded-[24px] sm:rounded-[32px] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.22)] ring-1 ring-gray-100 px-3.5 sm:px-5 md:px-10 pt-3 sm:pt-5 pb-4 sm:pb-7 scroll-mt-24">
             {/* Tab switcher */}
             <div className="flex justify-center">
               <div className="flex bg-gray-100 rounded-full p-1">
@@ -434,7 +435,7 @@ function Home() {
                   type="button"
                   aria-pressed={tab === 'directions'}
                   onClick={() => setTab('directions')}
-                  className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
+                  className={`px-8 py-2 text-[15px] sm:px-10 sm:py-2.5 sm:text-base rounded-full font-semibold transition ${
                     tab === 'directions' ? 'bg-[#222D52] text-white shadow-[0_4px_12px_rgb(34_45_82/0.2)]' : 'text-gray-600 hover:text-[#222D52]'
                   }`}
                 >
@@ -444,7 +445,7 @@ function Home() {
                   type="button"
                   aria-pressed={tab === 'lines'}
                   onClick={() => setTab('lines')}
-                  className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
+                  className={`px-8 py-2 text-[15px] sm:px-10 sm:py-2.5 sm:text-base rounded-full font-semibold transition ${
                     tab === 'lines' ? 'bg-[#222D52] text-white shadow-[0_4px_12px_rgb(34_45_82/0.2)]' : 'text-gray-600 hover:text-[#222D52]'
                   }`}
                 >
@@ -454,7 +455,7 @@ function Home() {
             </div>
 
             {/* Search bar + suggestions dropdown */}
-            <div className="flex justify-center mt-4 relative">
+            <div className="flex justify-center mt-3 sm:mt-4 relative">
               <div
                 className="w-full relative"
                 onBlur={(e) => {
@@ -467,9 +468,9 @@ function Home() {
                 <div className={`bg-gray-50 rounded-3xl sm:rounded-full border border-gray-200 flex flex-wrap sm:flex-nowrap items-center ps-0 sm:ps-2.5 pe-2.5 ${tab === 'directions' ? 'sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]' : ''}`}>
                   {tab === 'directions' ? (
                     <>
-                      <div className="basis-full flex-1 flex items-center ps-5 pe-2.5 sm:pe-4 py-3 sm:py-4 border-b border-gray-100 sm:border-b-0 min-w-0">
+                      <div className="basis-full flex-1 flex items-center ps-5 pe-2.5 sm:pe-4 py-2 sm:py-4 border-b border-gray-100 sm:border-b-0 min-w-0">
                         <div className="flex-1">
-                          <div className="text-sm text-gray-600">{t('start')}</div>
+                          <div className="text-xs sm:text-sm text-gray-600">{t('start')}</div>
                           <input
                             type="text"
                             value={start}
@@ -508,15 +509,15 @@ function Home() {
                       <button
                         onClick={handleSwap}
                         disabled={!start.trim() && !end.trim()}
-                        className="ms-3 sm:ms-0 my-2 sm:my-0 w-12 h-12 rounded-full bg-[#222D52] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                        className="ms-3 sm:ms-0 my-1.5 sm:my-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#222D52] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                         aria-label={t('swapAria')}
                       >
                         <Icon name="swapVert" size={22} />
                       </button>
 
                       <div className="flex-1 flex items-center min-w-0">
-                        <div className="flex-1 min-w-0 ps-4 pe-3 py-3 sm:py-4">
-                          <div className="text-sm text-gray-600">{t('end')}</div>
+                        <div className="flex-1 min-w-0 ps-4 pe-3 py-2 sm:py-4">
+                          <div className="text-xs sm:text-sm text-gray-600">{t('end')}</div>
                           <input
                             type="text"
                             id="end-input"
@@ -546,7 +547,7 @@ function Home() {
                   ) : (
                     <div className="flex-1 flex items-center ps-5 pe-4 py-4">
                       <div className="flex-1">
-                        <div className="text-sm text-gray-600">{t('line')}</div>
+                        <div className="text-xs sm:text-sm text-gray-600">{t('line')}</div>
                         <input
                           type="text"
                           id="line-input"
@@ -608,7 +609,10 @@ function Home() {
 
                 {/* Form error (stop not picked from the list) */}
                 {locError && (
-                  <div className="mt-3 bg-amber-50 text-amber-900 text-sm rounded-lg px-4 py-3" role="status">{locError}</div>
+                  // blocked: one short red line that asks again when tapped (owner, 5 Nov 2026); other failures as before
+                  loc.status === 'error' && loc.reason === 'denied'
+                    ? <button type="button" onClick={locate} role="status" className="mt-3 block text-start text-sm font-semibold text-red-600 underline underline-offset-2">{t('nearBlockedTap')}</button>
+                    : <div className="mt-3 bg-amber-50 text-amber-900 text-sm rounded-lg px-4 py-3" role="status">{locError}</div>
                 )}
                 {formError && (
                   <div className="mt-3 bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{formError}</div>

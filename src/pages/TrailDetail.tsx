@@ -291,7 +291,7 @@ function TrailDetail() {
             })}
           </ol>
           <p className="mt-6 text-xs text-gray-500">
-            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="hover:underline">{t('placeInfoCredit')}</a>
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#222D52]">{t('placeInfoCredit')}</a>
           </p>
         </div>
       </div>

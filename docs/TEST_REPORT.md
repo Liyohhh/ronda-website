@@ -138,6 +138,24 @@
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
 
+## Run - 5 Nov 2026 (phone, round 3: header and menu, search size, location line)
+
+- Research: the phone versions of Booking.com, Airbnb, Citymapper, Moovit, Transit, MyRapid, GOV.UK and Grab all use
+  one slim top bar (logo, a menu button) and open the menu as a full-screen panel with grouped sections; none keep a
+  second row of menu names. Search is short (Moovit) or one "Start your search" box (Airbnb).
+- Phone header is now one row of 56 px: logo, Sign Up (or the account), and a menu button. The menu opens full screen
+  with Login / Sign Up, Hub, RONDA 300 and About as sections that open in place, Help, and the four languages.
+  Following a link closes it. Tablets keep their icons and get the same menu; desktop is unchanged.
+- RONDA 300 in the header now opens its menu (it used to jump to the RONDA 300 section on Home).
+- Home search card is tighter on phones (smaller tabs, fields, buttons and padding): 234 px tall at 412 px wide.
+- "Show the nearest train and bus" is a blue underlined link, so it reads as something to tap. When location is
+  blocked it is one red underlined line, "Location blocked. Tap to allow it.", that asks again when tapped (the
+  Start box's location button does the same). The longer help text was removed (owner).
+- Sweep for things that can be tapped but look like plain text, on 14 pages: the trail pages' OpenStreetMap source
+  line is now underlined; the rest are footer links, tabs or cards that already read as tappable.
+- Browser tests updated for the new phone header and RONDA 300 menu: 244 passed (6 skipped, phone and desktop);
+  unit tests 294 / 294.
+
 ## Run - 4 Nov 2026 (phone, round 2: owner's list from a real phone)
 
 - Trip results sheet: the same height while it searches and after (it used to grow when results came in); a handle

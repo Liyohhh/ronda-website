@@ -211,11 +211,14 @@ test.describe('Use my location as the start', () => {
     })
   })
 
-  test('location blocked: explains instead of doing nothing', async ({ page, backend, context }) => {
+  test('location blocked: one short line that asks again when tapped', async ({ page, backend, context }) => {
     void backend
     await context.clearPermissions()
     await page.goto('/')
     await page.getByRole('button', { name: 'Use my location' }).click()
-    await expect(page.getByRole('status').filter({ hasText: 'Location is blocked' })).toBeVisible()
+    const again = page.getByRole('status').filter({ hasText: 'Location blocked. Tap to allow it.' })
+    await expect(again).toBeVisible()
+    await again.click() // asks the browser again (still blocked here, so the line stays)
+    await expect(again).toBeVisible()
   })
 })
