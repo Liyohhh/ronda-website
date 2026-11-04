@@ -16,7 +16,7 @@
 - ECRL badge: no change. We already use MRL's official logo (owner, 29 Oct 2026); the dark train icon on the sign is
   a wayfinding icon, not the line logo.
 - Database: migration 20261104210000_ecrl_kotasas_name.sql (2 Explore Pahang trail places, "ECRL Kota SAS" to
-  "ECRL KotaSAS"). Written, NOT applied to production yet (waits for the owner's go).
+  "ECRL KotaSAS"). Applied to production 4 Nov with the owner's go; both rows checked.
 - Tests: unit tests 294 / 294 (new test: station order as on the sign); About page ECRL card checked in the browser.
 
 ## Run - 4 Nov 2026, evening (site online at ronda2go.com, not announced)
