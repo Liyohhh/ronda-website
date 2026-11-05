@@ -138,6 +138,16 @@
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
 
+## Run - 5 Nov 2026 (all route options shown; live bus card redesigned)
+
+- Trip results: every route option is listed, the slower ones after the best; the "More options" button is gone
+  (owner).
+- Live buses on a bus step: one card with a "Live" header and a row per bus: a bus icon, the big value (minutes, or
+  stops away), stops and distance under it, the wheelchair sign and the bus plate on the right; the nearest bus first
+  and stronger (owner). Checked on a phone screen with sample live data.
+- Browser tests 244 passed (6 skipped; chat and security-header tests re-run on their own after a full run on a busy
+  machine timed out on 3); unit tests 294 / 294.
+
 ## Run - 5 Nov 2026 (full phone audit: every page, role, state and language)
 
 - Checked at 412 px (Pixel 7 size), screen by screen while scrolling, 230 screens: 17 public pages; signed-in account

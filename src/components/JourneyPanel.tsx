@@ -101,7 +101,7 @@ type Props = {
   loading: boolean
   error: string
   options: TripOption[]
-  moreOptions?: TripOption[] // slower or less direct alternatives, collapsed
+  moreOptions?: TripOption[] // slower or less direct alternatives, listed after the main options
   notice?: ServiceNotice
   resident: Resident
   onResidentChange: (r: Resident) => void
@@ -561,7 +561,6 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   // least walking first by default (owner, 15 Oct 2026); the other orders are one tap away
   const [sort, setSort] = useState<SortKey>(readSort) // the order picked in Trip settings (least walking unless changed)
   const [detail, setDetail] = useState<TripOption | null>(null)
-  const [showMore, setShowMore] = useState(false)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(() => departAt ?? malaysiaNow())
   // phone: drag the sheet down by its handle to close it (it follows the finger, springs back if not far enough)
@@ -843,19 +842,8 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                 </li>
               )}
               {sorted.map(card)}
-              {sortedMore.length > 0 && (
-                <li>
-                  <button
-                    type="button"
-                    onClick={() => setShowMore(!showMore)}
-                    aria-expanded={showMore}
-                    className="w-full rounded-2xl border border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:border-[#222D52]/50 hover:text-[#222D52]"
-                  >
-                    {showMore ? t('hideMoreOptions') : t('moreOptions').replace('{n}', String(sortedMore.length))}
-                  </button>
-                </li>
-              )}
-              {showMore && sortedMore.map(card)}
+              {/* every option shown, the slower ones after the best (owner, 5 Nov 2026; they used to sit behind "More options") */}
+              {sortedMore.map(card)}
               {anyFare && <li className="px-1 text-[11px] text-gray-500">{t('fareNote')}</li>}
             </ul>
           )}
