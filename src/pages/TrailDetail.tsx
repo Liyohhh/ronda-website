@@ -1,3 +1,4 @@
+import { buttonVariants } from '@/components/ui/button'
 import { useEffect } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
@@ -131,7 +132,7 @@ function TrailDetail() {
               {start && inPlanner(start) && (
                 <Link
                   to={planHref(start)}
-                  className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#222D52] text-white text-sm font-semibold hover:bg-[#18203D] transition-colors"
+                  className={buttonVariants({ variant: 'default', size: 'sm' })}
                 >
                   <Icon name="locationOnOutline" size={16} />
                   {t('planToStart')}
@@ -274,7 +275,7 @@ function TrailDetail() {
                         {place.station && inPlanner(place.station) ? (
                           <Link
                             to={planHref(place.station)}
-                            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#222D52] text-white text-sm font-semibold hover:bg-[#18203D] transition-colors"
+                            className={buttonVariants({ variant: 'default', size: 'sm' })}
                           >
                             <Icon name="locationOnOutline" size={16} />
                             {t('planTripHere')}

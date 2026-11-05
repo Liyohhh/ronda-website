@@ -8,6 +8,8 @@ import BrandLogo from './BrandLogo'
 import LanguageMenu from './LanguageMenu'
 import MobileMenu from './MobileMenu'
 import Icon from './Icon'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 function Header() {
   const { t } = useLanguage()
@@ -160,7 +162,7 @@ function Header() {
               </Link>
               <Link
                 to="/register"
-                className="ms-1 h-9 px-4 sm:px-5 inline-flex items-center rounded-full bg-[#222D52] text-white font-bold whitespace-nowrap shadow-[0_6px_16px_-6px_rgb(34_45_82/0.45)] hover:bg-[#18203D] active:scale-95 transition"
+                className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'ms-1 sm:px-5')}
               >
                 {t('signUp')}
               </Link>

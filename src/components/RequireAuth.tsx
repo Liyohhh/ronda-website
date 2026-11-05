@@ -3,6 +3,8 @@ import { Link, Navigate, useLocation } from 'react-router-dom'
 import { hasRole, useAuth, type Role } from '../hooks/useSession'
 import { useLanguage } from '../hooks/useLanguage'
 import SiteLayout from './SiteLayout'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 // Page guard: signed out -> the login page (coming back here after signing in); signed in without the role ->
 // a "no access" page. Only hides pages: whatever data they show must also be protected in the database (RLS).
@@ -21,7 +23,7 @@ function RequireAuth({ role, children }: Props) {
         <div className="max-w-xl mx-auto px-4 sm:px-6 py-16 text-center">
           <h1 className="text-2xl font-bold text-[#222D52]">{t('notAllowedTitle')}</h1>
           <p className="mt-3 text-gray-600">{t('notAllowedBody')}</p>
-          <Link to="/" className="mt-6 inline-block rounded-full bg-[#222D52] px-6 py-2.5 text-sm font-semibold text-white">
+          <Link to="/" className={cn(buttonVariants({ variant: 'default', size: 'default' }), 'mt-6')}>
             {t('backToHome')}
           </Link>
         </div>

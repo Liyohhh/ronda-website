@@ -3,6 +3,8 @@ import Icon from './Icon'
 import { Accent, Eyebrow, Reveal } from './Motion'
 import { PROMOTIONS } from '../data/promotions'
 import { useLanguage } from '../hooks/useLanguage'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 // Home page: promotions (ads) as three arched cards in a row: a photo fills each card's round top, a round icon
 // sits on the photo's edge, then the label, the title and a button. The middle card (RONDA 300) is filled blue, a
@@ -24,7 +26,7 @@ function PromotionSection() {
           <p className="mt-5 max-w-3xl [text-wrap:balance] font-display text-[34px] md:text-[50px] leading-[1.1] font-semibold tracking-[-0.01em] text-[#222D52]"><Accent text={t('promoSubtitle')} /></p>
           <Link
             to="/advertise"
-            className="mt-6 inline-flex items-center gap-1.5 h-11 px-5 rounded-full border border-[#D3DCE7] bg-white text-sm font-semibold text-[#222D52] hover:bg-[#222D52] hover:text-white hover:border-[#222D52] transition-colors whitespace-nowrap"
+            className={cn(buttonVariants({ variant: 'outline', size: 'default' }), 'mt-6')}
           >
             {t('promoAdvertiseLink')}
             <Icon name="chevronRight" size={16} className="rtl:rotate-180" />

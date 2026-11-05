@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils'
+import { cardClass, cardHover } from '@/components/ui/card'
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
@@ -183,7 +185,7 @@ function About() {
               <li key={trail.slug} className="min-w-0">
                 <Link
                   to={`/trails/${trail.slug}`}
-                  className="flex gap-3 items-center bg-white border border-gray-200 rounded-2xl p-3 hover:border-[#222D52]/40 hover:shadow-sm transition"
+                  className={cn(cardClass, cardHover, 'flex items-center gap-3 p-3 sm:p-3')}
                 >
                   <span className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
                     <TrailCover trail={trail} />

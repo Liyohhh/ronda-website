@@ -1,3 +1,5 @@
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
@@ -240,7 +242,7 @@ function Advertise() {
                         ))}
                       </select>
                     </Field>
-                    <button type="submit" className="inline-flex items-center justify-center gap-1.5 h-12 w-full sm:w-auto px-7 rounded-full bg-[#2F6BD8] text-white font-semibold hover:bg-[#2559B8] transition-colors">
+                    <button type="submit" className={cn(buttonVariants({ variant: 'accent', size: 'lg' }), 'w-full sm:w-auto')}>
                       {t('adNext')}
                       <Icon name="chevronRight" size={18} className="rtl:rotate-180" />
                     </button>
@@ -274,11 +276,11 @@ function Advertise() {
                       {errors.consent && <p id="ad-consent-err" className="mt-1 text-xs text-red-700">{t('adErrConsent')}</p>}
                     </div>
                     <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
-                      <button type="button" onClick={() => { setErrors({}); setStep(1) }} className="inline-flex items-center justify-center gap-1.5 h-12 px-6 rounded-full border border-[#D3DCE7] bg-white text-[#222D52] font-semibold hover:bg-[#EAF1FB] transition-colors">
+                      <button type="button" onClick={() => { setErrors({}); setStep(1) }} className={buttonVariants({ variant: 'outline', size: 'lg' })}>
                         <Icon name="chevronLeft" size={18} className="rtl:rotate-180" />
                         {t('adBack')}
                       </button>
-                      <button type="submit" disabled={state === 'busy'} className="inline-flex items-center justify-center gap-1.5 h-12 px-7 rounded-full bg-[#2F6BD8] text-white font-semibold hover:bg-[#2559B8] disabled:opacity-60 transition-colors">
+                      <button type="submit" disabled={state === 'busy'} className={buttonVariants({ variant: 'accent', size: 'lg' })}>
                         {state === 'busy' ? t('adSending') : t('adSend')}
                         {state !== 'busy' && <Icon name="chevronRight" size={18} className="rtl:rotate-180" />}
                       </button>

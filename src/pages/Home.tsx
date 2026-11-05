@@ -402,7 +402,17 @@ function Home() {
           <div className="relative flex-1 px-6 sm:px-8 xl:px-16 pb-28 md:pb-32 pt-8 md:pt-10 flex flex-col justify-between gap-y-8">
             {/* the headline sits small in the top-left corner, so the skyline stays in view */}
             <div className="max-w-xl text-start">
-              <h1 className="rise-in [text-wrap:balance] font-display text-[30px] sm:text-[36px] md:text-[44px] lg:text-[52px] leading-[1.05] font-semibold tracking-[-0.02em] text-white [text-shadow:0_2px_16px_rgb(24_32_61/0.45)]">
+              {/* a small live chip over the headline: where the buses and trains are now (21st.dev-style hero badge) */}
+              <Link to="/live" className="rise-in mb-3 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 py-1 ps-2.5 pe-3 text-xs font-semibold text-white backdrop-blur-xl transition-colors hover:bg-white hover:text-[#222D52]">
+                <span className="relative flex h-2 w-2" aria-hidden="true">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70 motion-reduce:hidden" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                </span>
+                {t('liveMapTitle')}
+                <Icon name="chevronRight" size={14} className="rtl:rotate-180" />
+              </Link>
+              {/* the headline is revealed from below, like text rising out of a mask */}
+              <h1 className="reveal-up [text-wrap:balance] font-display text-[30px] sm:text-[36px] md:text-[44px] lg:text-[52px] leading-[1.05] font-semibold tracking-[-0.02em] text-white [text-shadow:0_2px_16px_rgb(24_32_61/0.45)]">
                 <Accent text={t('bannerTitle')} dark />
               </h1>
             </div>

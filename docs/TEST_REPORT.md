@@ -1,5 +1,32 @@
 # Test report
 
+## Run - 5 Nov 2026 (search: well-known places first, short forms in a row)
+
+- Why: the same searches in Google Maps, Moovit and our site (5 Nov). "pav" listed Pavilion Elite before Pavilion
+  Kuala Lumpur; "hosp kl" became "hospital kl" but never "hospital kuala lumpur", so Damai and Columbia Hospital bus
+  stops came before MRT Hospital Kuala Lumpur, and hospitals were left out of place search.
+- Database (migration 20261105120000_search_popularity_alias_loop.sql, applied to production 5 Nov with the owner's
+  go): new table search_importance, the number of Wikipedia articles about a place (all languages), from Wikidata
+  (CC0, checked 5 Nov) for the 225 places whose OpenStreetMap entry has a wikidata tag (217 with articles). Places:
+  better known first among equally good matches; hospitals included. Stations: more routes first among near-equal
+  matches. Short forms are written out again until nothing changes (at most 3 rounds). No website change.
+- Tests: tried first on production data and undone; then search smoke 24 / 24 and security smoke 24 / 24 on
+  production after applying; security advisors show nothing new.
+
+| # | Typed | Before | After | Result |
+|---|---|---|---|---|
+| 1 | pav (places) | Pavilion Elite, Pavilion Bukit Jalil, Pavilion Kuala Lumpur | Pavilion Kuala Lumpur, Pavilion Bukit Jalil, Pavilion Damansara Heights | Pass |
+| 2 | hosp kl (stations) | Damai Hospital, Columbia Hospital, MRT Hospital Kuala Lumpur | MRT Hospital Kuala Lumpur first | Pass |
+| 3 | hosp kl (places) | Surau Kuarters Hospital Kuala Lumpur | Hospital Kuala Lumpur first | Pass |
+| 4 | hospital (places) | a mosque, a surau, Mana Mana Hospitality | Hospital Sungai Buloh, Hospital Putrajaya, Hospital Tengku Ampuan Rahimah | Pass |
+| 5 | masjid (places) | Masjid, Masjid Jamek, Masjid UTM | Masjid, Masjid Negara, Masjid Jamek, Masjid Putra | Pass |
+| 6 | sunway (places) | Sunway Lagoon, Sunway Pyramid, Sunway 163 Mall | Sunway Pyramid, Sunway Lagoon, Sunway Velocity Mall | Pass |
+| 7 | kl sentral, klcc, kj10, mrrt mluri, bkt bintang, tbs | right station first | same, still first (KL Sentral: KTM/ETS now before ERL, more routes) | Pass |
+
+- Known, not fixed here: "batu caves" places are hotels and shops (the Batu Caves sight is not in our place list);
+  same-name duplicates in the list; Arabic station names (1 of 15,893).
+- Excel report: TC-PLN-020 (popularity) and TC-PLN-021 (short forms in a row) added in the database repo.
+
 ## Run - 4 Nov 2026, night (ECRL names and interchanges from MRL's sign at Gombak)
 
 - Why: the owner sent a photo of MRL's platform sign at Terminal Bersepadu Gombak. Checked against ecrl.com.my
@@ -137,6 +164,22 @@
   (trip panel) does not build yet; to re-run once that is finished.
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
+
+## Run - 5 Nov 2026 (design polish: shadcn/ui, one button and card, page change, home hero)
+
+- shadcn/ui set up (components.json, "@/" import path, cn helper, class-variance-authority, Radix Slot), so components
+  from shadcn/ui and 21st.dev can be added as code we own. New shared Button (variants: navy, blue, outline, white,
+  glass, ghost, link; sizes small, normal, large, icon) and Card (one radius, border, shadow, padding; a lifting
+  hover for cards you can tap).
+- The site had over 25 hand-written button styles in 6 heights. Moved to the shared Button: header Sign Up, Home
+  "See all trails" / "Nearby places" / "Advertise with us", 404 buttons, RONDA 300 search, trail "Plan a trip"
+  buttons, advertise form Next / Back / Send, admin "New alert", no-access page. Moved to the shared card: hub
+  places, help categories, About networks, partner dashboard tiles.
+- Page change: the new page fades and rises in under the header (the header stays still); footer links underline
+  smoothly on hover; no grey flash on tap on phones. All motion is off when the phone asks for reduced motion.
+- Home hero: a "Live map" chip with a pulsing dot over the headline (links to the live map), and the headline is
+  revealed from below. Checked on screen at phone and desktop size.
+- Browser tests 244 passed (6 skipped, phone and desktop); unit tests 294 / 294.
 
 ## Run - 5 Nov 2026 (all route options shown; live bus card redesigned)
 
