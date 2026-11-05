@@ -17,10 +17,12 @@ describe('FeatureGrid', () => {
     expect(new Set(FEATURES.map((f) => f.color)).size).toBe(FEATURES.length)
   })
 
-  it('10 tiles: 9 whole-card links and the languages button', () => {
+  it('10 tiles: 8 whole-card links, the languages button, and Saved trips as plain "Coming soon" (not built yet)', () => {
     renderWithLang(<FeatureGrid />)
     const grid = screen.getByTestId('feature-tiles')
-    expect(within(grid).getAllByRole('link')).toHaveLength(9)
+    expect(within(grid).getAllByRole('link')).toHaveLength(8)
+    expect(within(grid).queryByRole('link', { name: /Saved trips/ })).toBeNull()
+    expect(within(grid).getByText('Saved trips').closest('li')).toHaveTextContent('Coming soon')
     expect(within(grid).getByRole('link', { name: /^Trails\./ })).toHaveAttribute('href', '/trails')
     expect(within(grid).getByRole('link', { name: /^RONDA 300\./ })).toHaveAttribute('href', '/ronda-300')
     expect(within(grid).getByRole('link', { name: /Last-train alerts/ })).toHaveTextContent('Coming soon')

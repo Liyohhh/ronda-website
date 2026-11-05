@@ -83,9 +83,12 @@ function FeatureGrid() {
               const cls = 'group flex h-full w-full items-center gap-3 py-5 pe-3 text-start transition-colors hover:text-[#2559B8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2F6BD8]'
               return (
                 <li key={f.key}>
+                  {/* a link where there is a page, the language picker for languages, plain text for what is not built yet */}
                   {f.to
                     ? <Link to={f.to} className={cls}>{label}</Link>
-                    : <button type="button" className={cls} aria-haspopup="listbox" onClick={openLanguages}>{label}</button>}
+                    : f.key === 'feat_languages'
+                      ? <button type="button" className={cls} aria-haspopup="listbox" onClick={openLanguages}>{label}</button>
+                      : <div className="flex h-full w-full items-center gap-3 py-5 pe-3 text-start opacity-80">{label}</div>}
                 </li>
               )
             })}

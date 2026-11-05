@@ -33,10 +33,11 @@ const FEATURES: { title: TranslationKey; text: TranslationKey; icon: IconName; s
   { title: 'parkShowTitle', text: 'aboutParkingText', icon: 'directionsCar' },
 ]
 
+// "Use my location" and RONDA 300 are both live now, so the steps no longer carry "Coming soon" notes (5 Nov 2026)
 const STEPS: { title: TranslationKey; text: TranslationKey; soon?: TranslationKey }[] = [
-  { title: 'how1Title', text: 'how1Text', soon: 'how1Soon' },
+  { title: 'how1Title', text: 'how1Text' },
   { title: 'how2Title', text: 'how2Text' },
-  { title: 'how3Title', text: 'how3Text', soon: 'how3Soon' },
+  { title: 'how3Title', text: 'how3Text' },
 ]
 
 // Networks available now: official names with their line badges (ids from src/data/lines.ts)
@@ -125,7 +126,7 @@ function About() {
           <SectionTitle id="about-how">{t('howTitle')}</SectionTitle>
           <ol className="mt-6 grid gap-4 md:grid-cols-3">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="bg-white border border-gray-200 rounded-2xl p-5">
+              <li key={s.title} className={cardClass}>
                 <span className="w-9 h-9 rounded-full bg-[#222D52] text-white font-bold flex items-center justify-center">{i + 1}</span>
                 <h3 className="mt-3 font-semibold text-gray-900">{t(s.title)}</h3>
                 <p className="mt-1 text-sm text-gray-600">{t(s.text)}</p>

@@ -4,8 +4,9 @@ import { supabase } from '../services/supabase'
 import { useLanguage } from '../hooks/useLanguage'
 
 // Quick login buttons. Google, Apple and Facebook go through Supabase Auth (each must be enabled
-// in the Supabase dashboard). WeChat and QQ are not Supabase Auth providers, so they only show a
-// notice until a sign-in route for them is agreed.
+// in the Supabase dashboard). Only the ones switched on there are shown, so no button leads nowhere (owner,
+// 5 Nov 2026); with none on, nothing shows, not even the "or" line. WeChat and QQ are not Supabase Auth providers:
+// they stay hidden until a sign-in route for them is agreed.
 // Brand icons: simple-icons (CC0), Google's four-colour "G".
 
 type Social = {
@@ -104,7 +105,7 @@ async function enabledProviders(): Promise<Set<string> | null> {
   }
 }
 
-function SocialLogin() {
+function SocialLogin({ orLabel }: { orLabel: string }) {
   const { t } = useLanguage()
   const say = (key: 'socialSoon' | 'socialUnavailable' | 'socialFailed' | 'continueWith', name: string) =>
     t(key).replace('{name}', name)
@@ -144,10 +145,18 @@ function SocialLogin() {
     }
   }
 
+  const shown = SOCIALS.filter((s) => s.provider && enabled?.has(s.provider))
+  if (!shown.length) return null
+
   return (
     <div>
+      <div className="flex items-center gap-3 my-6" aria-hidden="true">
+        <div className="flex-1 h-px bg-[#222D52]/40" />
+        <span className="text-[#2559B8] text-xs uppercase tracking-[0.2em]">{orLabel}</span>
+        <div className="flex-1 h-px bg-[#222D52]/40" />
+      </div>
       <div className="flex gap-2 justify-center flex-wrap">
-        {SOCIALS.map((s) => (
+        {shown.map((s) => (
           <button
             key={s.id}
             type="button"

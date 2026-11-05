@@ -1,5 +1,23 @@
 # Test report
 
+## Run - 5 Nov 2026 (check for missing or non-working parts)
+
+- Checked: 22 pages and all 28 trail pages followed link by link (no dead pages), 182 outside links opened, the code
+  searched for unfinished parts, the live sign-in settings read.
+- Sign-in: only email works on the live site. Google, Apple and Facebook are off in Supabase; WeChat and QQ have no
+  sign-in route. Their 5 buttons only showed a notice. Now only switched-on ways show (none today, so the "or" line
+  and buttons are hidden); they come back by themselves when one is switched on in Supabase.
+- "Delete account": the server function behind it was never deployed, so the button would fail. The function's list
+  of a person's data was also out of date (only the assistant usage); it now also removes their live trip shares and
+  ad enquiries, and unlinks them from usage counts and alerts they wrote (17 / 17 function tests). Deploy waits for
+  the owner's approval.
+- "Saved trips" was listed as a feature but is not built on the website: now labelled Coming soon, no link.
+- About: "using your current location" and "nearby spots with RONDA 300" said Coming soon although both work; removed.
+- Data sources page: the React / Supabase / Tailwind credit linked to our private code repository (404 for
+  visitors); now each library's own page, plus shadcn/ui.
+- Outside links: Pexels and ecrl.com.my refuse automatic checks (open fine in a browser); nothing else broken.
+- Unit tests 302 / 302; browser tests 244 passed (6 skipped).
+
 ## Run - 5 Nov 2026 (search: well-known places first, short forms in a row)
 
 - Why: the same searches in Google Maps, Moovit and our site (5 Nov). "pav" listed Pavilion Elite before Pavilion

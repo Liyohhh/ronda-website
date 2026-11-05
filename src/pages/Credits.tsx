@@ -39,7 +39,12 @@ const SECTIONS: Section[] = [
       { name: 'Material Symbols and Material Icons (Google)', url: 'https://github.com/google/material-design-icons', licence: { name: 'Apache-2.0', url: 'https://www.apache.org/licenses/LICENSE-2.0' } },
       { name: 'Font Awesome Free 5.15.3 bus icons (as used by MyRapid)', url: 'https://fontawesome.com/', licence: { name: 'CC BY 4.0', url: 'https://creativecommons.org/licenses/by/4.0/' } },
       { name: 'Cupertino Icons (Flutter)', url: 'https://github.com/flutter/packages/tree/main/third_party/packages/cupertino_icons', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
-      { name: 'React, React Router, Supabase JS, Tailwind CSS', url: 'https://github.com/Liyohhh/ronda-website/blob/main/package.json', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
+      // each library's own page (the old link pointed at our repository, which is private)
+      { name: 'React', url: 'https://github.com/facebook/react', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
+      { name: 'React Router', url: 'https://github.com/remix-run/react-router', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
+      { name: 'Supabase JS', url: 'https://github.com/supabase/supabase-js', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
+      { name: 'Tailwind CSS', url: 'https://github.com/tailwindlabs/tailwindcss', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
+      { name: 'shadcn/ui, clsx, tailwind-merge, class-variance-authority, Radix Slot', url: 'https://github.com/shadcn-ui/ui', licence: { name: 'MIT', url: 'https://opensource.org/license/mit' } },
     ],
   },
 ]
