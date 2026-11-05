@@ -507,11 +507,11 @@ function LiveMap() {
             {/* phone: the two switches side by side, so the card covers less of the map */}
             <div className="mt-2 md:mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs md:block md:text-sm">
             <label className="flex items-center gap-2 text-white/85">
-              <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="accent-[#8AB4F8]" />
+              <input type="checkbox" checked={showOff} onChange={(e) => setShowOff(e.target.checked)} className="h-5 w-5 accent-[#8AB4F8]" />
               {t('liveShowOffTrip')}
             </label>
             <label className="flex items-center gap-2 text-white/85 md:mt-2">
-              <input type="checkbox" checked={showParking} onChange={(e) => setShowParking(e.target.checked)} className="accent-[#8AB4F8]" />
+              <input type="checkbox" checked={showParking} onChange={(e) => setShowParking(e.target.checked)} className="h-5 w-5 accent-[#8AB4F8]" />
               <span className="inline-flex h-4 w-4 items-center justify-center rounded-[3px] text-[10px] font-bold text-white" style={{ backgroundColor: PARK }} aria-hidden="true">P</span>
               {t('parkLayer')}
             </label>

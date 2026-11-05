@@ -138,6 +138,26 @@
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
 
+## Run - 5 Nov 2026 (full phone audit: every page, role, state and language)
+
+- Checked at 412 px (Pixel 7 size), screen by screen while scrolling, 230 screens: 17 public pages; signed-in account
+  page and its edit forms; the account menu; admin dashboard and partner dashboard; no-access page; trip suggestions,
+  results, steps and change time; Lines list and line panel; the menu; the assistant; RONDA 300 station view; hub
+  search; help search and answers; form errors (advertise, login, sign-up). English everywhere; Malay and Arabic on
+  the main pages, account, admin and partner. Each screen also checked automatically for sideways overflow,
+  overlapping text, controls off screen or too small, tiny text, blurred pictures and plain-looking links.
+- No sideways scrolling and nothing off screen on any page, in any language.
+- Fixed: the floating assistant button covered the Edit buttons on the account page; it no longer shows on the
+  account, admin and partner pages. Account section tabs were cut off in Malay; they now wrap. Bigger tap areas (same
+  look) for Edit / Change / Sign out / Add a picture / Delete account, Change time, the fare and payment switches, All
+  routes, the stops list, Back to top, the nearest-station link, the assistant's close, new chat and suggestion
+  buttons; larger live map checkboxes. The admin page title now uses the same title font as the other pages.
+- Malay: "Lines" and "Trails" were both "Laluan". Trails are now "Jejak" everywhere (menu, footer, trails page, trail
+  names, 46 texts, owner); "Laluan" stays for train and bus lines.
+- Not changed: the sign-in pages and footer still show the old RONDA word logo (the rename to Ronda2Go is a separate
+  job); map zoom buttons are the map library's own size.
+- Browser tests 244 passed (6 skipped, phone and desktop); unit tests 294 / 294.
+
 ## Run - 5 Nov 2026 (phone, round 3: header and menu, search size, location line)
 
 - Research: the phone versions of Booking.com, Airbnb, Citymapper, Moovit, Transit, MyRapid, GOV.UK and Grab all use

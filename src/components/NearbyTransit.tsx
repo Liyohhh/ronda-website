@@ -86,7 +86,7 @@ function NearbyTransit({ onPick }: { onPick: (p: Pick) => void }) {
         <span className="text-gray-500">{t('nearLocating')}</span>
       ) : (
         // a light blue, underlined link, so it reads as something to tap (owner, 5 Nov 2026)
-        <button type="button" onClick={locate} className="text-start font-semibold text-[#2559B8] underline underline-offset-2 hover:text-[#222D52]">{t('nearFind')}</button>
+        <button type="button" onClick={locate} className="-my-2 py-2.5 text-start font-semibold text-[#2559B8] underline underline-offset-2 hover:text-[#222D52]">{t('nearFind')}</button>
       )}
     </div>
   )

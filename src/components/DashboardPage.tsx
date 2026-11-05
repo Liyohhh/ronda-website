@@ -14,7 +14,7 @@ export type DashTile = { label: TranslationKey; text: TranslationKey; icon: Icon
 function DashboardPage({ title, intro, tiles, children }: { title: TranslationKey; intro: TranslationKey; tiles: DashTile[]; children?: ReactNode }) {
   const { t } = useLanguage()
   return (
-    <SiteLayout>
+    <SiteLayout chat={false}>
       <PageHero title={t(title)} intro={t(intro)} />
       <div className="wrap py-10">
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

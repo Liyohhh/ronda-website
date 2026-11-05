@@ -37,7 +37,7 @@ function Admin() {
   const sideLabel = 'px-3 text-[12px] font-bold uppercase tracking-[0.08em] text-[#8A93A2]'
 
   return (
-    <SiteLayout>
+    <SiteLayout chat={false}>
       <div className="bg-[#F5F7FA]">
         <div className="wrap gap-6 py-6 lg:grid lg:grid-cols-[230px_minmax(0,1fr)] lg:py-8">
           <aside className="hidden lg:block">
@@ -73,7 +73,7 @@ function Admin() {
           <div id="adm-top" className="min-w-0 scroll-mt-24">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <h1 className="text-[28px] font-extrabold leading-tight text-[#222D52] sm:text-[32px]">{greeting}{name && <>, <span className="text-[#2F6BD8]">{name}</span></>}</h1>
+                <h1 className="font-display text-[30px] font-semibold leading-tight tracking-[-0.01em] text-[#222D52] sm:text-[38px]">{greeting}{name && <>, <span className="text-[#2F6BD8]">{name}</span></>}</h1>
                 <p className="mt-1 text-[#5B6576]">{t('dash_adminIntro')}</p>
               </div>
               <span className="rounded-full border border-[#DEE5EE] bg-white px-4 py-2 text-[14px] font-semibold text-[#222D52]">{t('adm_last30')}</span>
