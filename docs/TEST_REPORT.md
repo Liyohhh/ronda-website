@@ -1,5 +1,13 @@
 # Test report
 
+## Run - 7 Nov 2026 (nightly route check sends trips a few at a time)
+
+- Why: the database sent all 56 main trips in one instant, with no second try: 34 of 56 failed on 5 Nov and 53 of 56 on
+  6 Nov, all HTTP 546 (Edge Function limit).
+- Database (migration 20261106210000_route_audit_paced.sql, applied with the owner's go): 6 trips a minute from 02:31 to
+  03:20 Malaysia time, resending 429, any 5xx and no answer; results read at 03:25.
+- Checked: jobs and functions in place, public role cannot run it. Not yet proven: first paced run is the coming night.
+
 ## Run - 6 Nov 2026, night (Lines page: full bus line list)
 
 - Website: the one Bus lines tile opens the line panel on its own Bus lines tab: every bus line as a card (code and both
