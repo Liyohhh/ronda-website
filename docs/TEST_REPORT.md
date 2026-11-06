@@ -1,5 +1,36 @@
 # Test report
 
+## Run - 6 Nov 2026, evening (search: area line for places, duplicates by name and distance)
+
+- Why: Google Maps shows where each place is ("Maluri, Kuala Lumpur"); our own places showed only their kind
+  ("Mall"), so branches of a chain looked the same. The website also dropped every repeat of a name, so only one
+  Starbucks could ever be listed.
+- Database (migration 20261106140000_place_areas.sql, applied to production 6 Nov with the owner's go): every named
+  suburb, neighbourhood, village, town and city in Malaysia from OpenStreetMap (10,261) and the boundaries of the
+  federal territories Kuala Lumpur (243 km2), Putrajaya (49 km2) and Labuan, loaded and refreshed monthly with the
+  places. Place search shows kind · area, city: the nearest suburb within 2 km, and the territory the place is in or
+  else the nearest town. A nearest-point rule alone called Mid Valley "Petaling Jaya", hence the boundaries.
+- First load: Overpass's main server first answered "at capacity" (502), as it did for the monthly places refresh on
+  28 Oct; the retry loaded 3 boundaries and 10,261 names.
+- Website (useSmartSearch.ts): a place is a repeat only with the same OpenStreetMap id or the same name within about
+  100 m; branches further apart are all listed. Unit tests 309 / 309. Live with the next website deploy.
+- Production: search, geocode and security smoke 58 / 58; 9 to 62 ms per search; security advisors: only the new
+  loader log table without public access (as osm_poi_loads).
+
+| # | Typed | Top place now | Result |
+|---|---|---|---|
+| 1 | pav | Pavilion Kuala Lumpur · Mall · Bukit Bintang, Kuala Lumpur | Pass |
+| 2 | mid valley | Mid Valley Megamall · Mall · Taman Bangsar Pertama, Kuala Lumpur | Pass |
+| 3 | sunway pyramid | Sunway Pyramid · Mall · Bandar Sunway, Subang Jaya | Pass |
+| 4 | the curve | The Curve · Mall · PJU 7, Petaling Jaya | Pass |
+| 5 | starbucks | three branches: SS 11, Subang Jaya / Seksyen 31, Subang Jaya / Bandar Rimbayu, Jenjarom | Pass |
+| 6 | putrajaya | Taman Botani Putrajaya · Park · Putrajaya | Pass |
+| 7 | ioi city mall | IOI City Mall · Mall · IOI Resort City, Bandar Baru Bangi (nearest town; Google says Putrajaya) | Known |
+
+- Known: names come from the nearest named point, so places near an edge can get the neighbouring suburb; mosques
+  show "Muslim" as their kind; without a map position chain branches are not ordered by distance.
+- Excel report: TC-PLN-026 added in the database repo.
+
 ## Run - 6 Nov 2026, later (search learns from picks)
 
 - Why: Google Maps and Moovit put first what people choose most; our order came only from names, Wikipedia

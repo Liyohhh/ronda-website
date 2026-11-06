@@ -4,7 +4,7 @@ vi.mock('../services/supabase', () => ({ supabase: {} }))
 
 const { routeEnds } = await import('./busRoutes')
 const { isRailCategory, stopIconKind } = await import('./stopIcon')
-const { looksLikeRouteCode, normaliseQuery } = await import('../hooks/useSmartSearch')
+const { looksLikeRouteCode, mergePlaces, normaliseQuery } = await import('../hooks/useSmartSearch')
 
 describe('routeEnds', () => {
   it.each([
@@ -42,4 +42,19 @@ describe('route code detection in search', () => {
   it.each(['T305', 't 305', 'kj 1', '300', 'SA02', 'T789a', 'T-352'])('%s looks like a route code', (q) => expect(looksLikeRouteCode(q)).toBe(true))
   it.each(['klcc', 'pasar seni', 'T30555', 'ab', 'kl sentral 2'])('%s does not', (q) => expect(looksLikeRouteCode(q)).toBe(false))
   it('normalises case and spacing', () => expect(normaliseQuery('  KL   Sentral ')).toBe('kl sentral'))
+})
+
+describe('places from our list and the geocoder, each once', () => {
+  const p = (name: string, lat: number, lon: number, osm: string) => ({ name, detail: '', lat, lon, kind: 'place', osm })
+  it('one building mapped twice, or found by both, is shown once (the first, better known)', () => {
+    const out = mergePlaces([p('Sunway Pyramid', 3.0726, 101.6067, 'way/1'), p('Sunway Pyramid', 3.0729, 101.6069, 'node/2')], [p('Sunway Pyramid', 3.0727, 101.6066, 'W1')])
+    expect(out.map((x) => x.osm)).toEqual(['way/1'])
+  })
+  it('branches of a chain further apart are all kept', () => {
+    const out = mergePlaces([p('Starbucks', 3.1300, 101.6700, 'node/1'), p('Starbucks', 3.1315, 101.6700, 'node/2')], [p('Starbucks', 3.1700, 101.6500, 'N3')])
+    expect(out).toHaveLength(3)
+  })
+  it('the same OpenStreetMap id is never shown twice', () => {
+    expect(mergePlaces([p('KLCC Park', 3.155, 101.714, 'way/9')], [p('Taman KLCC', 3.156, 101.714, 'way/9')])).toHaveLength(1)
+  })
 })
