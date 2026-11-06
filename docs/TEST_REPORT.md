@@ -9,8 +9,9 @@
   and buttons are hidden); they come back by themselves when one is switched on in Supabase.
 - "Delete account": the server function behind it was never deployed, so the button would fail. The function's list
   of a person's data was also out of date (only the assistant usage); it now also removes their live trip shares and
-  ad enquiries, and unlinks them from usage counts and alerts they wrote (17 / 17 function tests). Deploy waits for
-  the owner's approval.
+  ad enquiries, and unlinks them from usage counts and alerts they wrote (17 / 17 function tests). Deployed 6 Nov
+  (approved). Live check: it still refuses ronda2go.com ("origin not allowed") because the ALLOWED_ORIGINS secret does
+  not list it yet; the owner is adding it. Other websites are refused, as they should be.
 - "Saved trips" was listed as a feature but is not built on the website: now labelled Coming soon, no link.
 - About: "using your current location" and "nearby spots with RONDA 300" said Coming soon although both work; removed.
 - Data sources page: the React / Supabase / Tailwind credit linked to our private code repository (404 for
