@@ -1,5 +1,5 @@
 import LineBadge from './LineBadge'
-import { LINE_GROUPS, LINES_BY_ID, busLine, busLinesEntry, type Line } from '../data/lines'
+import { LINE_GROUPS, LINES_BY_ID, busLinesEntry, type Line } from '../data/lines'
 import { useLanguage } from '../hooks/useLanguage'
 
 // The line picker without typing: every rail line as a tile (official badge + short name), grouped, plus one tile
@@ -37,7 +37,7 @@ export function LineGrid({ onPick }: { onPick: (l: Line) => void }) {
         <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">{t('linesGroupBus')}</h3>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:grid-cols-4">
           <button type="button" onClick={() => onPick(busLinesEntry(t('busLinesTile')))} className={tileClass}>
-            <LineBadge line={busLine(null, 'BUS')} size={28} decorative />
+            <LineBadge line={busLinesEntry('BUS')} size={28} decorative />
             <span className="truncate">{t('busLinesTile')}</span>
           </button>
         </div>

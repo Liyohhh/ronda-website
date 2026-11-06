@@ -193,9 +193,10 @@ export function busLine(color?: string | null, name = 'Bus'): Line {
   return { id: 'bus', name, mode: 'BUS', color: c.toUpperCase(), textColor: '#FFFFFF', colorSource: color ? 'gtfs' : 'unverified', gtfs: { feedId: '', routeIds: [] } }
 }
 
-// The bus lines list, opened in the line panel like a line of its own (its tab in the strip, its own header)
+// The bus lines list, opened in the line panel like a line of its own (its tab in the strip, its own header).
+// Site navy, a colour no line uses: the fallback blue is too close to the ECRL's (owner, 7 Nov 2026).
 export const BUS_LINES_ID = 'bus-lines'
-export const busLinesEntry = (name: string): Line => ({ ...busLine(null, name), id: BUS_LINES_ID })
+export const busLinesEntry = (name: string): Line => ({ ...busLine('#222D52', name), id: BUS_LINES_ID })
 
 // Distinct rail lines serving a stop, in LINES order (for interchange stations)
 export function linesForStop(feedId: string, routeIds: string[] = []): Line[] {

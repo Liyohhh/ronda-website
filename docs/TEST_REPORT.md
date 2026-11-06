@@ -5,6 +5,8 @@
 - Website: the one Bus lines tile opens the line panel on its own Bus lines tab: every bus line as a card (code and both
   ends of the line, sorted by code) with a search box, typos allowed. A bus route opens in the same panel and its tab
   leads back to the list. The owner chose this after seeing a list with tabs and tiles in the dropdown.
+- Colour: Bus lines (tile, tab, panel header) now use the site navy #222D52, used by no line, because the bus blue
+  #2F6BD8 looked the same as the ECRL's #0065DE. Each bus route keeps its own colour.
 - Scrolling, cause found: the page fade-in added on the work branch kept a transform on the page's main area, so every
   fixed panel inside it (line panel and any other panel in main) was as tall as the whole page (5,489 px) and scrolled
   with it. The fade now leaves nothing behind. Measured on the local site with all 322 bus lines: panel height = screen
