@@ -9,6 +9,9 @@
   "jalan ampng" 787 ms are too slow (today's search takes 9 to 62 ms). Common words need a word index before this can
   go live.
 - Finds: "Jalan PJS 11/18" and 10 Jalan PJS 11/18; number 16 is not in OpenStreetMap. Not compared with Photon yet.
+- Word index added (20261107110000_place_index_words.sql, owner's go; 76,832 words, 206 MB in all, still hidden):
+  "jalan ampng" 45 ms, "jalan" 94 ms, "paviliom bukit jalil" 36 ms. Right result on 5 of 5 sample searches, and nearest
+  first for "starbucks" near KLCC. To fix: a road repeats once per stretch; "jalan" alone gives odd results.
 
 ## Run - 7 Nov 2026 (nightly route check sends trips a few at a time)
 
