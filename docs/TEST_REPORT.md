@@ -1,5 +1,23 @@
 # Test report
 
+## Run - 6 Nov 2026, evening (place data refresh tries again)
+
+- Why: the monthly places refresh of 28 Oct failed (Overpass answered "at capacity", HTTP 502) and nothing asked
+  again, so our places were last loaded on 14 Oct; the first load of area names on 6 Nov also needed a second try.
+- Database (migration 20261106170000_osm_load_retries.sql, applied to production 6 Nov with the owner's go): one job
+  every 20 minutes (osm-loads) replaces the four fixed monthly jobs. For places, area names and boundaries it reads
+  any answer that has arrived, writes off a question unanswered after 15 minutes, and asks again when the last good
+  load is 30 days old or more: at most once an hour and 8 times a day, every other try on a backup server
+  (overpass.kumi.systems). Each request now records which server was asked.
+- Tried first on production data and undone: as today, nothing to do; with places 40 days old it asked the main
+  server, read a failed area-name answer and logged it, and wrote off a boundary question with no answer; the next
+  run waited for the places answer.
+- Production: job active; run by hand at 03:17 UTC, "nothing to do" (places due 13 Nov, area names and boundaries
+  6 Dec).
+- Known: the three backup Overpass servers tried on 6 Nov (kumi.systems, private.coffee, mail.ru) did not answer a
+  small test query (two timed out after 60 s, one answered 504); the retries on the main server are what helps.
+- Excel report: TC-PLN-027 added in the database repo.
+
 ## Run - 6 Nov 2026, evening (search: area line for places, duplicates by name and distance)
 
 - Why: Google Maps shows where each place is ("Maluri, Kuala Lumpur"); our own places showed only their kind
