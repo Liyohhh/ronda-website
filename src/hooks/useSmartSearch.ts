@@ -29,7 +29,8 @@ export type StopResult = {
 // Looks like a bus route code: letters + digits, short ("T305", "kj 1", "300", "SA02")
 export const looksLikeRouteCode = (q: string) => /^[a-z]{0,5}[\s-]?\d{1,4}[a-z]?$/i.test(q.trim())
 
-export type PlaceResult = { name: string; detail: string; lat: number; lon: number; kind: string; osm: string }
+// matched: the other name the place was found by, when not its own name (search_pois: "Kuala Lumpur Tower", "kl tower")
+export type PlaceResult = { name: string; detail: string; lat: number; lon: number; kind: string; osm: string; matched?: string | null }
 
 const STOP_DELAY = 120 // ms, database search is fast
 const PLACE_DELAY = 300 // ms, the geocoder is a shared outside service

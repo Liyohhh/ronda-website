@@ -23,6 +23,20 @@ export function matchRank(name: string, query: string, fixed: string | null = nu
   return s >= 100 ? 2 : s > 0 ? 1 : 0
 }
 
+// A station or stop code typed on its own ("kj15", "KG 22", "KL1483") puts that station or stop above everything,
+// ahead of stops whose names only start with it ("(M) KJ154 Taman Sri Nanding")
+const CODE = /^[a-z]{1,4}\d{1,5}[a-z]?$/
+export function stopRank(s: StopResult, query: string, fixed: string | null = null): number {
+  const code = query.toLowerCase().replace(/[\s-]/g, '')
+  if (CODE.test(code) && (s.stop_code?.toLowerCase() === code || s.stop_id.toLowerCase() === code)) return 3
+  return matchRank(s.stop_name, query, fixed)
+}
+
+// a place found by another name (English, Chinese, a landmark name: "kl tower" finds Menara Kuala Lumpur) is scored
+// on that name too
+export const placeRank = (p: PlaceResult, query: string, fixed: string | null = null) =>
+  Math.max(matchRank(p.name, query, fixed), p.matched ? matchRank(p.matched, query, fixed) : 0)
+
 // the same bus stop listed more than once (both sides of the road, or once per route group): keep the first
 const near = (a: StopResult, b: StopResult) => Math.abs(a.stop_lat - b.stop_lat) < 0.003 && Math.abs(a.stop_lon - b.stop_lon) < 0.003
 const isBus = (s: StopResult) => /^BUS\b/.test(s.category)
@@ -45,10 +59,10 @@ function byRank<T>(list: T[], rank: (x: T) => number): T[] {
 // Then stations and places, each best match first; places come first when one of them matches better than any
 // station ("pavilion kl" -> the mall before bus stops that only look alike).
 export function buildItems(stops: StopResult[], places: PlaceResult[], routeStops: StopResult[] = [], query = '', fixed: string | null = null): SuggestionItem[] {
-  const rankedStops = byRank(dedupeStops(stops), (s) => matchRank(s.stop_name, query, fixed)).slice(0, MAX_STOPS)
-  const rankedPlaces = byRank(places, (p) => matchRank(p.name, query, fixed)).slice(0, MAX_PLACES)
-  const best = <T>(list: T[], name: (x: T) => string) => (list.length ? matchRank(name(list[0]), query, fixed) : -1)
-  const placeBest = best(rankedPlaces, (p) => p.name), stopBest = best(rankedStops, (s) => s.stop_name)
+  const rankedStops = byRank(dedupeStops(stops), (s) => stopRank(s, query, fixed)).slice(0, MAX_STOPS)
+  const rankedPlaces = byRank(places, (p) => placeRank(p, query, fixed)).slice(0, MAX_PLACES)
+  const placeBest = rankedPlaces.length ? placeRank(rankedPlaces[0], query, fixed) : -1
+  const stopBest = rankedStops.length ? stopRank(rankedStops[0], query, fixed) : -1
   // on a tie a train station stays first ("klcc"), a bus stop named after the place does not ("pavilion")
   const placesFirst = placeBest > stopBest || (placeBest === stopBest && placeBest > 0 && isBus(rankedStops[0]))
 

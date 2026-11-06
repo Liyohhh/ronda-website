@@ -1,5 +1,37 @@
 # Test report
 
+## Run - 6 Nov 2026 (search: station codes, landmark and other-language names, roads)
+
+- Why: 38 searches typed into ronda2go.com, Google Maps and Moovit (5 Nov). Score (2 = right place first, 1 = top 5):
+  Ronda2Go 68 / 76, Google Maps 67 / 76, Moovit 50 / 76. Our misses: "kj15" (LRT KL Sentral 3rd), "kl tower"
+  (the tower not listed), "jln ampang" and "jalan tun razak" (the road never shown).
+- Website (suggestions.ts): a station or stop code typed on its own ranks that station first, before stops whose
+  names only start with it; a place found by another name ranks on that name. Unit tests 302 / 302. Live with the
+  next website deploy.
+- Database (migration 20261105180000_search_pois_other_names.sql, applied to production 6 Nov with the owner's go):
+  place search also looks at the English, Malay, Chinese and Arabic names (new index), and a place named with a
+  landmark name counts as an exact match ("kl tower" -> Menara Kuala Lumpur). Tried first on production data and
+  undone; 6 to 16 ms per search, same as before.
+- Place search (geocode function version 5, deployed 6 Nov with the owner's go): a search that starts with a road
+  word (jalan, jln, lorong, lrg, persiaran ...) writes the short form out and puts the road itself first.
+- Tests on production: search, geocode and security smoke 56 / 56; geocode unit tests 16 / 16; security advisors
+  show nothing new.
+
+| # | Typed | Before | After | Result |
+|---|---|---|---|---|
+| 1 | kj15 | bus stops KJ154, KJ156, then LRT KL Sentral | LRT KL Sentral first (unit test; live after deploy) | Pass |
+| 2 | kl tower (places) | KL Tower Mini Zoo, a viewpoint, a car park | Menara Kuala Lumpur, then KL Tower Mini Zoo | Pass |
+| 3 | twin towers / klcc / 双峰塔 (places) | KLCC Park, a hostel | Menara Berkembar Petronas first | Pass |
+| 4 | 吉隆坡塔 (places) | nothing | Menara Kuala Lumpur | Pass |
+| 5 | jln ampang | LRT Ampang, LRT Ampang Park (no road) | Jalan Ampang first | Pass |
+| 6 | jalan tun razak | bus stops on the road | Jalan Tun Razak (Cheras, Kuala Lumpur) first | Pass |
+| 7 | lrg haji taib | - | Lorong Haji Taib first | Pass |
+| 8 | pav, hosp kl, masjid, sunway pyramid | right place first | same | Pass |
+
+- Known, not fixed: only 14 places have an Arabic name; "batu caves" places are still hotels and shops (the sight is
+  not in our own place list).
+- Excel report: TC-PLN-022, TC-PLN-023 and TC-PLN-024 added in the database repo.
+
 ## Run - 5 Nov 2026 (check for missing or non-working parts)
 
 - Checked: 22 pages and all 28 trail pages followed link by link (no dead pages), 182 outside links opened, the code
