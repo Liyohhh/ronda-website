@@ -1,5 +1,15 @@
 # Test report
 
+## Run - 7 Nov 2026 (own place search: hidden table, speed test)
+
+- Database (20261107090000_place_index.sql and 20261107100000_place_index_indexes.sql, applied with the owner's go): hidden
+  table place_index, 511,499 rows from the Geofabrik file of 6 Nov (182,743 roads, 178,295 addresses, 133,140 places,
+  17,321 areas), 172 MB with indexes; public roles cannot read it and nothing on the site uses it yet.
+- Speed: "pavilion" 1 ms, typo "paviliom bukit jalil" 63 ms and finds Pavilion Bukit Jalil; "jalan" 635 ms and
+  "jalan ampng" 787 ms are too slow (today's search takes 9 to 62 ms). Common words need a word index before this can
+  go live.
+- Finds: "Jalan PJS 11/18" and 10 Jalan PJS 11/18; number 16 is not in OpenStreetMap. Not compared with Photon yet.
+
 ## Run - 7 Nov 2026 (nightly route check sends trips a few at a time)
 
 - Why: the database sent all 56 main trips in one instant, with no second try: 34 of 56 failed on 5 Nov and 53 of 56 on
