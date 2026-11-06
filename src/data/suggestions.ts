@@ -1,8 +1,10 @@
 import type { PlaceResult, StopResult } from '../hooks/useSmartSearch'
 import { matchScore } from './smartMatch'
+import { placeRef, recordPick, stopRef } from '../services/searchPicks'
 
-// What the user can pick as Start / End
-export type Pick = { name: string; lat: number; lon: number }
+// What the user can pick as Start / End. ref: which station, stop or place it is ('stop:<feed>:<stop>',
+// 'place:way/123'), sent when picked so search learns what people choose (record_search_pick)
+export type Pick = { name: string; lat: number; lon: number; ref?: string }
 
 export type SuggestionItem =
   | { type: 'stop'; key: string; pick: Pick; stop: StopResult }
@@ -69,20 +71,20 @@ export function buildItems(stops: StopResult[], places: PlaceResult[], routeStop
   const stopItems: SuggestionItem[] = rankedStops.map((s) => ({
     type: 'stop',
     key: `s:${s.feed_id}:${s.stop_id}`,
-    pick: { name: s.stop_name, lat: s.stop_lat, lon: s.stop_lon },
+    pick: { name: s.stop_name, lat: s.stop_lat, lon: s.stop_lon, ref: stopRef(s.feed_id, s.stop_id) },
     stop: s,
   }))
   const placeItems: SuggestionItem[] = rankedPlaces.map((p) => ({
     type: 'place',
     key: `p:${p.osm || `${p.name}:${p.lat}:${p.lon}`}`,
-    pick: { name: p.name, lat: p.lat, lon: p.lon },
+    pick: { name: p.name, lat: p.lat, lon: p.lon, ref: placeRef(p.osm) },
     place: p,
   }))
   return [
     ...routeStops.map((s) => ({
       type: 'stop' as const,
       key: `r:${s.feed_id}:${s.route_code}:${s.stop_sequence}`,
-      pick: { name: s.stop_name, lat: s.stop_lat, lon: s.stop_lon },
+      pick: { name: s.stop_name, lat: s.stop_lat, lon: s.stop_lon, ref: stopRef(s.feed_id, s.stop_id) },
       stop: s,
     })),
     ...(placesFirst ? [...placeItems, ...stopItems] : [...stopItems, ...placeItems]),
@@ -104,7 +106,9 @@ export function loadRecent(): Pick[] {
   }
 }
 
+// also tells search what was picked (keyboard picks on Home and in the trip panel go through here)
 export function rememberRecent(pick: Pick) {
+  recordPick(pick.ref)
   try {
     const same = (p: Pick) => p.name === pick.name && Math.abs(p.lat - pick.lat) < 0.0005 && Math.abs(p.lon - pick.lon) < 0.0005
     const list = [{ name: pick.name, lat: pick.lat, lon: pick.lon }, ...loadRecent().filter((p) => !same(p))].slice(0, RECENT_MAX)

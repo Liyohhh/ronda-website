@@ -70,6 +70,11 @@ describe('buildItems', () => {
     const dbOrder = buildItems([stop('1', 'Menara KL', 'BUS 400')], [tower, place('KL Tower Mini Zoo', 'place')], [], 'kl tower', 'menara kl')
     expect(names(dbOrder)[0]).toBe('Menara Kuala Lumpur')
   })
+  it('each station, stop and place says which one it is, so a pick can be counted', () => {
+    const items = buildItems([stop('KJ15', 'LRT KL Sentral', 'LRT Kelana Jaya Line')],
+      [{ ...place('Pavilion Kuala Lumpur'), osm: 'way/28271276' }, { ...place('Jalan Ampang', 'place'), osm: 'W7' }], [], 'x')
+    expect(items.map((i) => i.pick.ref)).toEqual(['stop:rapid-rail-kl:KJ15', 'place:way/28271276', 'place:way/7'])
+  })
   it('a route code lists its stops first, in order', () => {
     const r = { ...stop('9', 'Terminal Maluri', 'BUS T352'), route_code: 'T352', stop_sequence: 1 }
     const items = buildItems([stop('2', 'MRT Maluri', 'MRT Kajang Line')], [], [r], 't352')

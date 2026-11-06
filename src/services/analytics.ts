@@ -11,7 +11,7 @@ export type EventName = 'app_open' | 'search' | 'plan_trip' | 'trip_open' | 'liv
 const DEVICE_KEY = 'ronda.device'
 const OPEN_KEY = 'ronda.opened'
 
-function optedOut(): boolean {
+export function optedOut(): boolean {
   const n = navigator as Navigator & { globalPrivacyControl?: boolean }
   return n.doNotTrack === '1' || n.globalPrivacyControl === true
 }

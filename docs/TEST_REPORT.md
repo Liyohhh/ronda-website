@@ -1,5 +1,28 @@
 # Test report
 
+## Run - 6 Nov 2026, later (search learns from picks)
+
+- Why: Google Maps and Moovit put first what people choose most; our order came only from names, Wikipedia
+  articles and routes.
+- Website: each station, stop and place in a suggestion list carries its id; picking one (click on any page, Enter
+  on Home and in the trip panel) sends it once per visit to record_search_pick. Nothing is sent when the browser
+  asks not to be tracked. Unit tests 306 / 306 (new: searchPicks.test.ts, pick ids in suggestions.test.ts). Live
+  with the next website deploy.
+- Database (migration 20261106100000_search_picks.sql, applied to production 6 Nov with the owner's go): one row
+  per item, day and person (salted hash of the address; no account, device, position or search text). Only real
+  stations, stops and our own places count, at most 30 picks a minute per person. Every night at 00:20 Malaysia
+  time the people per item over the last 90 days are counted and picks older than 120 days deleted; today's picks
+  count from tomorrow. Ranking: places by ln(1 + Wikipedia articles) + ln(1 + people), stations by ln(1 + routes) +
+  ln(1 + people), among equally good matches.
+- Tried first on production data and undone: one person picking twice = 1 row; fake and unknown items and picks
+  with no address kept nothing; "pav" unchanged until the nightly count, then 41 people moved Pavilion Elite first;
+  30 picks of LRT KL Sentral put it first for "kl sentral"; searches 7 to 25 ms.
+- Production after applying: search, geocode and security smoke 57 / 57; a real pick from outside recorded (1 row),
+  fake items ignored; nightly job active; security advisors list only the intended new items (record_search_pick
+  open to everyone, search_picks with no read access).
+- Not yet: the app does not send picks; places found only through the outside place search are not counted.
+- Excel report: TC-PLN-025 added in the database repo.
+
 ## Run - 6 Nov 2026 (search: station codes, landmark and other-language names, roads)
 
 - Why: 38 searches typed into ronda2go.com, Google Maps and Moovit (5 Nov). Score (2 = right place first, 1 = top 5):
