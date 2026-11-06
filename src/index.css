@@ -422,7 +422,8 @@ select::-ms-expand {
 
 /* Page change: the new page fades and rises in under the header (SiteLayout); taps do not flash grey on phones */
 @keyframes page-in { from { opacity: 0; transform: translateY(10px); } }
-.page-in { animation: page-in 280ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+/* backwards only: a transform kept after the fade would make <main> the box for every fixed panel inside it */
+.page-in { animation: page-in 280ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
 html { -webkit-tap-highlight-color: transparent; }
 /* links in text and the footer: the underline grows in on hover instead of popping */
 footer nav a { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 220ms ease-out, color 150ms; }

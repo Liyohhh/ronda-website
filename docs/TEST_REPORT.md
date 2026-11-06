@@ -1,5 +1,21 @@
 # Test report
 
+## Run - 6 Nov 2026, night (Lines page: full bus line list)
+
+- Website: the one Bus lines tile opens the line panel on its own Bus lines tab: every bus line as a card (code and both
+  ends of the line, sorted by code) with a search box, typos allowed. A bus route opens in the same panel and its tab
+  leads back to the list. The owner chose this after seeing a list with tabs and tiles in the dropdown.
+- Scrolling, cause found: the page fade-in added on the work branch kept a transform on the page's main area, so every
+  fixed panel inside it (line panel and any other panel in main) was as tall as the whole page (5,489 px) and scrolled
+  with it. The fade now leaves nothing behind. Measured on the local site with all 322 bus lines: panel height = screen
+  height at 1280 x 800 and 390 x 844, wheel over the panel moves the page 0 px. The page behind is also locked while the
+  line panel is open, and the panel and the tile dropdown no longer pass their scroll on.
+- Tests: e2e mocks now answer record_search_pick (added with the search picks; 14 trip and search tests failed on it
+  at desktop and phone size). Unit 306 / 306. e2e 244 passed, 6 skipped. Earlier runs had 2 slow timeouts (trails, chat) that
+  passed when run again. Lint clean on the project; the 401 errors npm run lint prints all come from
+  a leftover local working copy, not from the project.
+- Screenshots with real data at 1280 and 390 px. Not on the live site or the preview until pushed.
+
 ## Run - 6 Nov 2026, night (search: a type of place near me)
 
 - Why: Google Maps lists the nearest ATMs, mosques or pharmacies when you type just that word; we searched names

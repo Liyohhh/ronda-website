@@ -132,7 +132,6 @@ function Home() {
   const [line, setLine] = useState('')
   // Lines tab: dropdown open, keyboard-highlighted row, and the line shown in the side panel
   const [lineListOpen, setLineListOpen] = useState(false)
-  const [busHint, setBusHint] = useState(false) // "Bus routes" tile pressed: the box asks for a bus route
   const [lineHi, setLineHi] = useState(-1)
   const [pickedLine, setPickedLine] = useState<Line | null>(null)
   const busLines = useBusRoutes() // every bus route, searchable in the Lines tab
@@ -576,7 +575,7 @@ function Home() {
                           aria-activedescendant={lineListOpen && lineHi >= 0 ? `line-list-${lineHi}` : undefined}
                           autoComplete="off"
                           aria-label={t('line')}
-                          placeholder={busHint ? t('busSearchPh') : t('linePh')}
+                          placeholder={t('linePh')}
                           className="w-full text-lg outline-none"
                         />
                       </div>
@@ -602,15 +601,8 @@ function Home() {
 
                 {/* Lines tab: every line as a tile as soon as the box is pressed; typing filters them (rail + bus) */}
                 {tab === 'lines' && lineListOpen && line.trim() === '' && (
-                  <div id="line-panel" role="region" aria-label={t('allLinesLabel')} className="absolute inset-x-0 top-full z-30 mt-2 max-h-[70vh] overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
-                    <LineGrid
-                      buses={busLines}
-                      onPick={pickLine}
-                      onBus={() => {
-                        setBusHint(true)
-                        document.getElementById('line-input')?.focus()
-                      }}
-                    />
+                  <div id="line-panel" role="region" aria-label={t('allLinesLabel')} className="absolute inset-x-0 top-full z-30 mt-2 max-h-[70vh] overflow-y-auto overscroll-contain rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
+                    <LineGrid onPick={pickLine} />
                   </div>
                 )}
                 {tab === 'lines' && lineListOpen && line.trim() !== '' && (
@@ -663,6 +655,7 @@ function Home() {
       {pickedLine && (
         <LinePanel
           line={pickedLine}
+          buses={busLines}
           onClose={() => setPickedLine(null)}
           onPick={setPickedLine}
           onPlan={(st) => {

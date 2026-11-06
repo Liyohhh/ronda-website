@@ -119,19 +119,43 @@ test.describe('lines search', () => {
     await expect(page.getByRole('dialog')).toBeVisible()
   })
 
-  test('the Bus routes tile asks for a route; the box finds it however it is typed', async ({ page, backend }) => {
+  test('the Bus lines tile opens the line panel on its own tab; the page behind stays still', async ({ page, backend }) => {
     void backend
     await page.goto('/')
     await page.getByRole('button', { name: 'Lines', exact: true }).click()
-    const box = page.getByRole('combobox', { name: 'Line', exact: true })
-    await box.click()
-    await page.getByRole('region', { name: 'All lines' }).getByRole('button', { name: /Bus routes/ }).click()
-    await expect(box).toBeFocused()
-    await expect(box).toHaveAttribute('placeholder', 'Search a bus route, e.g. T410')
-    for (const typed of ['T352', 't 0352']) {
-      await box.fill(typed)
-      await expect(page.locator('#line-list').getByText('T352', { exact: true }).first()).toBeVisible()
+    await page.getByRole('combobox', { name: 'Line', exact: true }).click()
+    await page.getByRole('region', { name: 'All lines' }).getByRole('button', { name: 'Bus lines' }).click()
+    const panel = page.getByRole('dialog', { name: 'Bus lines' })
+    await expect(panel.getByRole('heading', { name: 'Bus lines' })).toBeVisible()
+    await expect(panel.getByText('3 lines')).toBeVisible()
+    await expect(panel.getByRole('button', { name: 'Bus lines', exact: true })).toHaveAttribute('aria-pressed', 'true')
+    await expect(panel.getByRole('button', { name: /T352/ })).toContainText('Pandan Perdana ~ Taman Muda')
+
+    // the panel is the height of the screen, not of the page behind it
+    await expect(panel.getByRole('heading', { name: 'Bus lines' })).toBeInViewport()
+    await page.waitForTimeout(800) // the page finishes the scroll that brought the tile into view
+    const before = await page.evaluate(() => window.scrollY)
+    await panel.getByRole('button', { name: /T352/ }).hover()
+    await page.mouse.wheel(0, 2000)
+    await page.waitForTimeout(200)
+    expect(await page.evaluate(() => window.scrollY)).toBe(before)
+
+    const search = panel.getByRole('searchbox', { name: 'Search for a line' })
+    for (const typed of ['T352', 't 0352', 'pandn']) {
+      await search.fill(typed)
+      await expect(panel.getByRole('button', { name: /T352/ })).toBeVisible()
+      await expect(panel.getByRole('button', { name: /T410/ })).toHaveCount(0)
     }
+    await panel.getByRole('button', { name: /T352/ }).click()
+    // the route opens in the same panel, and its tab leads back to the list
+    const route = page.getByRole('dialog').first()
+    await expect(route.getByRole('button', { name: 'Bus lines', exact: true })).toHaveAttribute('aria-pressed', 'true')
+    await route.getByRole('button', { name: 'Bus lines', exact: true }).click()
+    await expect(page.getByRole('dialog', { name: 'Bus lines' })).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('dialog')).toHaveCount(0)
+    await page.evaluate(() => window.scrollTo(0, 400))
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0)
   })
 
   test('the tiles close with Escape or a click elsewhere', async ({ page, backend }) => {
