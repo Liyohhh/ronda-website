@@ -66,7 +66,9 @@ export function buildItems(stops: StopResult[], places: PlaceResult[], routeStop
   const placeBest = rankedPlaces.length ? placeRank(rankedPlaces[0], query, fixed) : -1
   const stopBest = rankedStops.length ? stopRank(rankedStops[0], query, fixed) : -1
   // on a tie a train station stays first ("klcc"), a bus stop named after the place does not ("pavilion")
-  const placesFirst = placeBest > stopBest || (placeBest === stopBest && placeBest > 0 && isBus(rankedStops[0]))
+  // a type of place near you ("atm", "masjid": search_pois gives distances) puts the places first too
+  const placesFirst = placeBest > stopBest || (placeBest === stopBest && placeBest > 0 && isBus(rankedStops[0])) ||
+    rankedPlaces[0]?.distance_m != null
 
   const stopItems: SuggestionItem[] = rankedStops.map((s) => ({
     type: 'stop',

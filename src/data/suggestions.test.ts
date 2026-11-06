@@ -75,6 +75,11 @@ describe('buildItems', () => {
       [{ ...place('Pavilion Kuala Lumpur'), osm: 'way/28271276' }, { ...place('Jalan Ampang', 'place'), osm: 'W7' }], [], 'x')
     expect(items.map((i) => i.pick.ref)).toEqual(['stop:rapid-rail-kl:KJ15', 'place:way/28271276', 'place:way/7'])
   })
+  it('a type of place near you lists the nearest places first, in the database order, before a station named after it', () => {
+    const near = (name: string, d: number) => ({ ...place(name, 'mosque'), osm: `node/${d}`, matched: 'masjid', distance_m: d })
+    const items = buildItems([stop('KJ13', 'LRT Masjid Jamek', 'LRT Kelana Jaya Line')], [near('Surau Tarbiah', 670), near('Masjid Al-Imam Ash-Shafie', 1100)], [], 'masjid')
+    expect(names(items)).toEqual(['Surau Tarbiah', 'Masjid Al-Imam Ash-Shafie', 'LRT Masjid Jamek'])
+  })
   it('a route code lists its stops first, in order', () => {
     const r = { ...stop('9', 'Terminal Maluri', 'BUS T352'), route_code: 'T352', stop_sequence: 1 }
     const items = buildItems([stop('2', 'MRT Maluri', 'MRT Kajang Line')], [], [r], 't352')

@@ -1,5 +1,33 @@
 # Test report
 
+## Run - 6 Nov 2026, night (search: a type of place near me)
+
+- Why: Google Maps lists the nearest ATMs, mosques or pharmacies when you type just that word; we searched names
+  only, wherever they were.
+- Database (migration 20261106190000_search_categories.sql, applied to production 6 Nov with the owner's go): 84
+  words in English, Malay, Chinese and Arabic for hospital, clinic, ATM, bank, pharmacy, toilet, police, post office,
+  mosque/surau, church, temple, hotel, mall, supermarket, restaurant, food court, cafe/kopitiam, fast food, park and
+  museum (table search_categories, can grow without code). One of them typed on its own with a position gives the
+  nearest ones within 10 km, closest first, with distance and area; places with no name take the type's name
+  ("Toilet"). New column distance_m. Without a position, or for anything else, place search is as before.
+- Website: when places come with distances they are listed first, before a station named after the word ("masjid"
+  puts the nearest mosques before LRT Masjid Jamek). Unit tests 310 / 310. Live with the next website deploy.
+- The position is the map (live map), the hub (hub pages) or the other end of the trip (Home, trip panel). Home with
+  nothing chosen yet has no position, so it searches by name.
+- Production: search, geocode and security smoke 59 / 59; 10 to 57 ms per search.
+
+| # | Typed near MRT Maluri | Top results | Result |
+|---|---|---|---|
+| 1 | atm | CIMB · ATM · 260 m · Pudu Ulu / ATM · 340 m · Maluri / MEPS · 490 m | Pass |
+| 2 | masjid, مسجد | Surau Tarbiah · Mosque · 670 m / Masjid Al-Imam Ash-Shafie · 1.1 km | Pass |
+| 3 | 医院 | Sunway Medical Centre Velocity · Hospital · 820 m / Hospital Rehabilitasi Cheras · 2.1 km | Pass |
+| 4 | farmasi | Hai-O · Pharmacy · 1.3 km / Caring · 1.7 km | Pass |
+| 5 | hotel | MH Hotel & Residence · 270 m / Hotel Mezzo · 390 m | Pass |
+| 6 | pavilion, masjid negara | by name, as before | Pass |
+| 7 | masjid (no position) | by name, as before | Pass |
+
+- Excel report: TC-PLN-028 added in the database repo.
+
 ## Run - 6 Nov 2026, evening (place data refresh tries again)
 
 - Why: the monthly places refresh of 28 Oct failed (Overpass answered "at capacity", HTTP 502) and nothing asked
