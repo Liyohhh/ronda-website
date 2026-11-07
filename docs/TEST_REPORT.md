@@ -1,5 +1,23 @@
 # Test report
 
+## Run - 7 Nov 2026 (Google search: site name, logo, one address per page)
+
+- Why: a Google search for "Ronda2go" shows an unrelated Instagram account (@ronda2go) and not ronda2go.com. The domain
+  is 6 days old under this name, and the site gave Google no site name, no logo and no main address per page.
+- Checked live before the change: ronda2u.com and www.ronda2u.com redirect 301 to the same page on ronda2go.com (good);
+  http redirects to https (good); robots.txt lets Googlebot in and lists the sitemap (good). Problems: www.ronda2go.com
+  shows a second copy of the site with no redirect; no canonical link; no structured data; share picture given as a
+  relative address; any unknown address answers 200 like a real page; /services (hidden) listed in the sitemap.
+- Website: WebSite and Organization data (name Ronda2Go, logo, legal name Movinexa) in index.html; every page now
+  sets its own canonical link and og:url on https://ronda2go.com (src/components/SeoTags.tsx, src/lib/seo.ts); the
+  not-found page adds noindex; share picture and texts with full addresses and the nationwide text; /services left
+  out of the sitemap while services are hidden. No new visible text.
+- Checked (local): structured data reads as JSON; canonical on /, /trails/ (no trailing slash) and /about; noindex
+  only on the not-found page and gone after leaving it; one canonical link at a time; build writes 37 sitemap pages,
+  none /services; typecheck, lint and tests pass.
+- Owner to do (not in the code): redirect www.ronda2go.com to ronda2go.com in Cloudflare; Search Console steps;
+  own social accounts. Not proven yet: Google's result, which can take days to weeks.
+
 ## Run - 7 Nov 2026 (production outage: database disk full)
 
 - What happened: the database stopped at 12:24:39 Malaysia time with "No space left on device" and came back by itself

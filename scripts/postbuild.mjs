@@ -33,7 +33,8 @@ console.log(`trail-texts.json: ${Object.keys(JSON.parse(texts).en).length} texts
 // 3. sitemap (public pages only; trails from the database when reachable)
 const site = (env.SITE_URL ?? '').replace(/\/$/, '')
 if (site) {
-  const pages = ['/', '/trails', '/ronda-300', '/live', '/about', '/services', '/help', '/help/payments', '/help/general', '/help/policies', '/credits']
+  // /services is left out while the services are hidden (SERVICES_ENABLED in src/data/serviceOptions.ts)
+  const pages = ['/', '/trails', '/ronda-300', '/live', '/about', '/help', '/help/payments', '/help/general', '/help/policies', '/credits']
   try {
     const r = await fetch(`${env.VITE_SUPABASE_URL}/rest/v1/rpc/trails_data`, {
       method: 'POST',

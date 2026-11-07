@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import RequireAuth from './components/RequireAuth'
 import ScrollToTop from './components/ScrollToTop'
+import SeoTags from './components/SeoTags'
 import { SERVICES_ENABLED } from './data/serviceOptions'
 import { LanguageProvider } from './i18n/LanguageProvider'
 import { useLanguage } from './hooks/useLanguage'
@@ -42,6 +43,7 @@ function App() {
     <LanguageProvider>
       <BrowserRouter>
         <ScrollToTop />
+        <SeoTags />
         <Suspense fallback={<PageLoading />}>
         <Routes>
           <Route path="/" element={<Home />} />

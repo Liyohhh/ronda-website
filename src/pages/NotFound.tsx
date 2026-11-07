@@ -3,11 +3,13 @@ import SiteLayout from '../components/SiteLayout'
 import PageHero from '../components/PageHero'
 import { useLanguage } from '../hooks/useLanguage'
 import { buttonVariants } from '@/components/ui/button'
+import { useNoIndex } from '../lib/seo'
 
 // Any address the site doesn't know: say so, and offer the main ways back
 function NotFound() {
   const { t } = useLanguage()
   const { pathname } = useLocation()
+  useNoIndex()
   return (
     <SiteLayout>
       <PageHero eyebrow="404" title={t('nf_title')} center

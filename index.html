@@ -12,9 +12,41 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Ronda2Go" />
     <meta property="og:title" content="Ronda2Go · Let's Ronda" />
-    <meta property="og:description" content="Plan trips across Klang Valley trains and buses, with live buses and trains and fares." />
-    <meta property="og:image" content="/brand/icon-512.png" />
+    <meta property="og:description" content="Plan trips on all of Malaysia's public transport, trains and buses, in one place. Live buses and trains, fares and routes in English, Malay, Chinese and Arabic." />
+    <meta property="og:image" content="https://ronda2go.com/brand/icon-512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Ronda2Go logo" />
     <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Ronda2Go · Let's Ronda" />
+    <meta name="twitter:description" content="Plan trips on all of Malaysia's public transport, trains and buses, in one place." />
+    <meta name="twitter:image" content="https://ronda2go.com/brand/icon-512.png" />
+    <!-- tells Google the site's name (Ronda2Go) and logo; canonical and og:url are set per page by src/components/SeoTags.tsx -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://ronda2go.com/#website",
+            "name": "Ronda2Go",
+            "alternateName": ["Ronda 2 Go", "ronda2go.com"],
+            "url": "https://ronda2go.com/",
+            "inLanguage": ["en", "ms", "zh", "ar"],
+            "publisher": { "@id": "https://ronda2go.com/#organization" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://ronda2go.com/#organization",
+            "name": "Ronda2Go",
+            "legalName": "Movinexa",
+            "url": "https://ronda2go.com/",
+            "logo": "https://ronda2go.com/brand/icon-512.png",
+            "areaServed": { "@type": "Country", "name": "Malaysia" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
