@@ -4,7 +4,7 @@ import { Protocol } from 'pmtiles'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useLanguage } from '../hooks/useLanguage'
-import { mapConfig, softMapStyle } from '../services/mapStyle'
+import { drawAgainOnError, mapConfig, softMapStyle } from '../services/mapStyle'
 import type { RailStation } from '../hooks/useRailStations'
 import { KIND_COLOR, PLACE_KINDS, placeName, walkMinutes, type NearPlace } from '../services/places'
 import { PLACE_GLYPH } from '../data/placeIcons'
@@ -130,6 +130,7 @@ function Ronda300Map({
       locale: { 'CooperativeGesturesHandler.WindowsHelpText': tr('r3_mapCtrl'), 'CooperativeGesturesHandler.MacHelpText': tr('r3_mapCmd'), 'CooperativeGesturesHandler.MobileHelpText': tr('r3_mapTwo') },
     })
     mapRef.current = map
+    drawAgainOnError(map)
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
     const hover = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10 })
     const EMPTY: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] }

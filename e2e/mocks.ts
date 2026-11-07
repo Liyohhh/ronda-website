@@ -94,7 +94,8 @@ async function mockBackend(page: Page): Promise<Backend> {
   // blocked, so tests never depend on the internet. Registered first, so the routes below take precedence.
   await page.route((url) => url.hostname !== 'localhost' && url.hostname !== 'e2e.supabase.test', (r) =>
     r.request().resourceType() === 'image' ? r.fulfill({ contentType: 'image/png', body: PNG_1PX }) : r.abort())
-  // map tiles: a blank image, never the real tile server
+  // map tiles: a blank image, never the real tile server. This image does not decode, so every tile fails to load:
+  // the maps must still finish loading (see drawAgainOnError in src/services/mapStyle.ts)
   await page.route('https://tile.openstreetmap.org/**', (r) => r.fulfill({ contentType: 'image/png', body: PNG_1PX }))
   await page.route('https://e2e.supabase.test/**', async (route) => {
     const req = route.request()

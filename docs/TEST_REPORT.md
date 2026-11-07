@@ -1,5 +1,23 @@
 # Test report
 
+## Run - 8 Nov 2026 (CI: RONDA 300 phone test red on every merge since 4 Nov)
+
+- Why: on GitHub Actions the phone (Pixel 7) run of "RONDA 300: map with the places in view beside it..." failed on
+  every merge into main since 4 Nov (runs 41830654205, 41864491233, 42373371675, all 3 tries): the short description
+  of Petrosains never opened on the map. Passed on Windows and on the desktop run.
+- Cause: the map tile image used by the tests does not decode, so every tile fails. MapLibre sends 'load' only while
+  it draws a frame, and a failed tile does not ask for a new frame. On the slower CI machine the last tile failed after
+  the map had stopped moving, so 'load' never came: no description card, no photo pins, no place dots. Shown locally by
+  slowing the CPU 8 times: the map said it was loaded but 'load' never came, and the card was still missing after 30 s.
+  The same can happen to a user on a slow phone or a dropped connection, on the RONDA 300, trail and live maps.
+- Fix: each failed tile now asks the map for one more frame until 'load' has come (drawAgainOnError in
+  src/services/mapStyle.ts, used by Ronda300Map, TrailMap and LiveMap). The test is unchanged; the broken test image is
+  kept on purpose so every map test now goes through failed tiles.
+- Checked (local): CPU slowed 8 times, desktop and phone, 3 runs each: 6 of 6 pass (before: fails). Lint, typecheck,
+  308 unit tests pass; full e2e suite 243 passed, 1 flaky (/trails/heritage accessibility check on the phone, passed on its retry
+  and 70 of 70 when run alone).
+- Not proven yet: the CI run on the branch.
+
 ## Run - 7 Nov 2026 (Google search: site name, logo, one address per page)
 
 - Why: a Google search for "Ronda2go" shows an unrelated Instagram account (@ronda2go) and not ronda2go.com. The domain
