@@ -4,7 +4,7 @@ import { Protocol } from 'pmtiles'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useLanguage } from '../hooks/useLanguage'
-import { mapConfig, softMapStyle } from '../services/mapStyle'
+import { drawAgainOnError, mapConfig, softMapStyle } from '../services/mapStyle'
 import { loadTrailRoute, hasMap, midpoint, type TrailRoute } from '../services/trailRoute'
 import { LINES_BY_ID } from '../data/lines'
 import { placeBlurbKey, trailNameKey, type Place, type Trail } from '../data/trails'
@@ -64,6 +64,7 @@ function TrailMap({ trail, places }: { trail: Trail; places: Record<string, Plac
       attributionControl: { compact: true },
       cooperativeGestures: true, // the page scrolls past the map; two fingers / ctrl + scroll to zoom
     })
+    drawAgainOnError(map)
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
 
     const stops = route.stops.map((s) => [s.lon!, s.lat!] as [number, number])

@@ -18,7 +18,7 @@ import { useLocate } from '../hooks/useLocate'
 import { useSmartSearch, type Near } from '../hooks/useSmartSearch'
 import { buildItems, type Pick } from '../data/suggestions'
 import { supabase } from '../services/supabase'
-import { mapConfig, mapStyle } from '../services/mapStyle'
+import { drawAgainOnError, mapConfig, mapStyle } from '../services/mapStyle'
 import { ago, lateMinutes, liveVehicles, textOn, LIVE_POLL_MS, routeKey, stopArrivals, type Arrival, type BusStatus, type LiveBus, type LiveSource, type LiveTrain } from '../services/live'
 import type { TranslationKey } from '../i18n/translations'
 import { carParkName, loadCarParks, rm, type CarPark } from '../services/parking'
@@ -181,6 +181,7 @@ function LiveMap() {
       maxZoom: 19,
       attributionControl: { compact: true },
     })
+    drawAgainOnError(m)
     m.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right')
     let loaded = 0, failed = 0
     m.on('sourcedata', (e) => { if (e.tile) { loaded++; setTilesFailed(false) } })

@@ -1,5 +1,5 @@
 import { layers, namedFlavor } from '@protomaps/basemaps'
-import type { StyleSpecification } from 'maplibre-gl'
+import type { Map, StyleSpecification } from 'maplibre-gl'
 
 // The map behind every RONDA map: our own Malaysia map file (OpenStreetMap data, Protomaps basemap) stored as one
 // PMTiles file, so there is no per-view bill and the website and the apps look the same.
@@ -10,6 +10,16 @@ import type { StyleSpecification } from 'maplibre-gl'
 
 export const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
 const DEFAULT_ASSETS = 'https://protomaps.github.io/basemaps-assets'
+
+// MapLibre sends 'load' only while it draws a frame, and a map tile that fails to load does not ask for a new frame.
+// So when the last tile of the first view fails after the map has stopped moving (a slow phone, a dropped
+// connection), 'load' never comes and nothing drawn on top of the map appears. Each failure asks for one more frame
+// until 'load' has come.
+export function drawAgainOnError(map: Map) {
+  const again = () => map.triggerRepaint()
+  map.on('error', again)
+  map.once('load', () => map.off('error', again))
+}
 
 // basemap label language for the site language (Malay labels are the OSM default names)
 export const labelLang = (lang: string) => (lang === 'zh' ? 'zh-Hans' : lang === 'ar' ? 'ar' : lang === 'ms' ? 'ms' : 'en')
