@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils'
+import { cardClass, cardHover } from '@/components/ui/card'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import SiteLayout from './SiteLayout'
@@ -14,7 +16,7 @@ export type DashTile = { label: TranslationKey; text: TranslationKey; icon: Icon
 function DashboardPage({ title, intro, tiles, children }: { title: TranslationKey; intro: TranslationKey; tiles: DashTile[]; children?: ReactNode }) {
   const { t } = useLanguage()
   return (
-    <SiteLayout>
+    <SiteLayout chat={false}>
       <PageHero title={t(title)} intro={t(intro)} />
       <div className="wrap py-10">
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -34,7 +36,7 @@ function DashboardPage({ title, intro, tiles, children }: { title: TranslationKe
             return (
               <li key={d.label}>
                 {d.to ? (
-                  <Link to={d.to} className="block h-full rounded-[24px] border border-gray-200 bg-gray-50 p-6 hover:border-[#222D52]/40 hover:bg-white transition-colors">{body}</Link>
+                  <Link to={d.to} className={cn(cardClass, cardHover, 'block h-full')}>{body}</Link>
                 ) : (
                   <div className="h-full rounded-[24px] border border-dashed border-gray-300 bg-white p-6">{body}</div>
                 )}

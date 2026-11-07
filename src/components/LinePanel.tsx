@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import LineBadge from './LineBadge'
 import { useLanguage } from '../hooks/useLanguage'
-import { LINES, LINES_BY_ID, type Line } from '../data/lines'
+import { BUS_LINES_ID, LINES, LINES_BY_ID, busLinesEntry, matchLines, type Line } from '../data/lines'
+import { routeEnds } from '../data/busRoutes'
 import { ECRL_SOURCES, ECRL_STATIONS } from '../data/ecrl'
 import { supabase } from '../services/supabase'
 import Icon from './Icon'
@@ -24,18 +25,19 @@ const lum = (hex: string) => {
 const inkOn = (l: Line) => (1.05 / (lum(l.color) + 0.05) >= 4.5 ? '#FFFFFF' : '#222D52')
 
 // Right-side panel (bottom sheet on phones) with a line's stations in running order (public.line_stations).
-// Same look as the journey panel; the strip under the header switches between lines.
-function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () => void; onPlan: (s: Station) => void; onPick: (l: Line) => void }) {
+// Same look as the journey panel; the strip under the header switches between lines, and its last tab lists the bus lines.
+function LinePanel({ line, buses, onClose, onPlan, onPick }: { line: Line; buses: Line[]; onClose: () => void; onPlan: (s: Station) => void; onPick: (l: Line) => void }) {
   const { t, lang } = useLanguage()
   const [result, setResult] = useState<{ id: string; stations: Station[]; error: boolean } | null>(null)
   const strip = useRef<HTMLDivElement>(null)
 
   const ecrl = line.mode === 'ECRL'
+  const busList = line.id === BUS_LINES_ID
   const [express, setExpress] = useState(false) // ECRL: Transit or Express fares
   const ink = inkOn(line)
   const dark = ink !== '#FFFFFF' // navy words on a light line colour
   useEffect(() => {
-    if (ecrl) return // no feed yet: its stations come from src/data/ecrl.ts
+    if (ecrl || busList) return // no feed: the ECRL's stations come from src/data/ecrl.ts, the bus list from Home
     let cancelled = false
     supabase.rpc('line_stations', { p_feed: line.gtfs.feedId, p_routes: line.gtfs.routeIds }).then(({ data, error }) => {
       if (cancelled) return
@@ -45,7 +47,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
     return () => {
       cancelled = true
     }
-  }, [line, ecrl])
+  }, [line, ecrl, busList])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -53,9 +55,26 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
-  // keep the picked line visible in the strip
+  // the page behind stays still while the panel is open (the bar's width is kept, so nothing jumps)
   useEffect(() => {
-    strip.current?.querySelector('[aria-pressed="true"]')?.scrollIntoView({ block: 'nearest', inline: 'center' })
+    const root = document.documentElement
+    const { overflow, paddingInlineEnd } = root.style
+    const bar = window.innerWidth - root.clientWidth
+    root.style.overflow = 'hidden'
+    if (bar > 0) root.style.paddingInlineEnd = `${bar}px`
+    return () => {
+      root.style.overflow = overflow
+      root.style.paddingInlineEnd = paddingInlineEnd
+    }
+  }, [])
+
+  // keep the picked line visible in the strip: only the strip moves, never the panel or the page behind it
+  useEffect(() => {
+    const el = strip.current
+    const tab = el?.querySelector<HTMLElement>('[aria-pressed="true"]')
+    if (!el || !tab) return
+    const box = el.getBoundingClientRect(), r = tab.getBoundingClientRect()
+    el.scrollLeft += r.left + r.width / 2 - (box.left + box.width / 2)
   }, [line])
 
   // small arrows at the strip's ends show it slides (owner, 1 Nov 2026); an arrow with nowhere to go is hidden
@@ -92,7 +111,7 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
   )
 
   const current = result?.id === line.id ? result : null
-  const bus = line.mode === 'BUS'
+  const bus = line.mode === 'BUS' && !busList
   // car parks at a station (public.station_parking): the P button opens them under the station
   const [parkOpen, setParkOpen] = useState<string | null>(null)
   const parkKey = (s: Station) => (bus ? undefined : parkingStationKey(line.gtfs.feedId, s.stop_id))
@@ -131,7 +150,9 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
               <div className="min-w-0">
                 <h2 className="text-xl font-black leading-tight truncate">{line.name}</h2>
                 <p className="mt-0.5 text-sm">
-                  {ecrl
+                  {busList
+                    ? t('busLinesCount').replace('{n}', String(buses.length))
+                    : ecrl
                     ? t('lineStationCount').replace('{n}', String(ECRL_STATIONS.length))
                     : current && !current.error
                     ? bus
@@ -155,8 +176,8 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
           </div>
         </div>
 
-        {/* every rail line as a tab on white (the picked one underlined in its colour); a bus route opens on its own */}
-        <div hidden={bus} className="relative shrink-0 border-b border-[#E3E9F1] bg-white">
+        {/* every rail line as a tab on white (the picked one underlined in its colour), then the bus lines */}
+        <div className="relative shrink-0 border-b border-[#E3E9F1] bg-white">
         {stripArrow(-1)}
         {stripArrow(1)}
         <div ref={strip} onScroll={onStripScroll} className="flex gap-1 overflow-x-auto [scrollbar-width:none] px-3" role="group" aria-label={t('lines')}>
@@ -178,13 +199,25 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
               </button>
             )
           })}
+          <button
+            type="button"
+            onClick={() => !busList && onPick(busLinesEntry(t('busLinesTile')))}
+            aria-pressed={line.mode === 'BUS'}
+            className={`px-2.5 pt-3 pb-2.5 inline-flex items-center gap-2 text-sm whitespace-nowrap border-b-[3px] transition-colors ${
+              line.mode === 'BUS' ? 'border-[#222D52] font-extrabold text-[#222D52]' : 'border-transparent font-semibold text-[#5B6576] hover:text-[#222D52]'
+            }`}
+          >
+            <LineBadge line={busLinesEntry(t('busLinesTile'))} size={22} decorative round />
+            {t('busLinesTile')}
+          </button>
         </div>
         </div>
 
         {/* the stations fade in when the line changes */}
-        <div key={line.id} className="line-fade flex-1 overflow-y-auto p-4">
+        <div key={line.id} className="line-fade flex-1 overflow-y-auto overscroll-contain p-4">
+          {busList && <BusLines buses={buses} onPick={onPick} />}
           {ecrl && <EcrlStations line={line} express={express} />}
-          {!ecrl && !current && (
+          {!ecrl && !busList && !current && (
             <div className="flex justify-center py-16">
               <div className="w-8 h-8 border-2 border-[#222D52]/20 border-t-[#222D52] rounded-full animate-spin" aria-label={t('loading')} />
             </div>
@@ -249,6 +282,68 @@ function LinePanel({ line, onClose, onPlan, onPick }: { line: Line; onClose: () 
         </div>
       </div>
     </div>
+  )
+}
+
+// Every bus line as a card, by route code, with both ends of the line; the box finds one by code or place (typos allowed)
+function BusLines({ buses, onPick }: { buses: Line[]; onPick: (l: Line) => void }) {
+  const { t } = useLanguage()
+  const [q, setQ] = useState('')
+  const shown = useMemo(() => {
+    if (q.trim()) return matchLines(q, buses, Infinity).filter((l) => l.mode === 'BUS')
+    return [...buses].sort((a, b) => (a.code ?? a.name).localeCompare(b.code ?? b.name, undefined, { numeric: true }))
+  }, [q, buses])
+  if (buses.length === 0) {
+    return (
+      <div className="flex justify-center py-16">
+        <div className="w-8 h-8 border-2 border-[#222D52]/20 border-t-[#222D52] rounded-full animate-spin" aria-label={t('loading')} />
+      </div>
+    )
+  }
+  return (
+    <>
+      <div className="sticky -top-4 z-10 -mx-4 -mt-4 bg-[#F2F6FB] px-4 pb-2 pt-4">
+        <div className="relative">
+          <input
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            aria-label={t('lineSearchPh')}
+            placeholder={t('lineSearchPh')}
+            className="w-full rounded-full border border-gray-200 bg-white py-2.5 pe-10 ps-4 text-base outline-none focus:border-[#222D52]"
+          />
+          <Icon name="search" size={20} className="pointer-events-none absolute end-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
+        </div>
+      </div>
+      {shown.length === 0 ? (
+        <p className="px-1 py-3 text-sm text-gray-500">{t('lineNoMatch').replace('{q}', q.trim())}</p>
+      ) : (
+        <ul className="mt-1 space-y-2">
+          {shown.map((l) => {
+            const code = l.code ?? l.name
+            const ends = routeEnds(l.name)
+            const route = ends ? `${ends.from} ~ ${ends.to}` : l.name !== code ? l.name : ''
+            return (
+              <li key={l.id}>
+                <button
+                  type="button"
+                  onClick={() => onPick(l)}
+                  aria-label={route ? `${code} ${route}` : code}
+                  className="flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3 text-start transition-shadow hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222D52]"
+                >
+                  <LineBadge line={l} size={32} decorative round />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[15px] font-bold text-[#222D52]">{code}</span>
+                    {route && <span className="block truncate text-[12px] text-[#5B6576]">{route}</span>}
+                  </span>
+                  <Icon name="chevronRight" size={18} className="flex-shrink-0 text-gray-400 rtl:rotate-180" />
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </>
   )
 }
 

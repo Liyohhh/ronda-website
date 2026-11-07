@@ -4,6 +4,7 @@ import type { TranslationKey } from '../i18n/translations'
 import { LINES, hasFeed } from '../data/lines'
 import LineBadge from './LineBadge'
 import { loadAllAlerts, saveAlert, setAlertStatus, type AlertDraft, type AlertEffect, type AlertStatus, type PlannerRule, type ServiceAlert } from '../services/serviceAlerts'
+import { buttonVariants } from '@/components/ui/button'
 
 // /admin: operator service alerts. An admin copies a notice from the operator (e.g. MyRapid's alerts page), picks the
 // lines it affects, saves it as a draft, checks it, then publishes; riders see it on those lines' trips until it is
@@ -107,7 +108,7 @@ function ServiceAlertsAdmin() {
           <p className="mt-0.5 max-w-2xl text-[13px] text-[#5B6576]">{t('adminAlertsIntro')}</p>
         </div>
         {!editing && (
-          <button type="button" onClick={() => { setProblem(''); setEditing({ draft: empty() }) }} className="h-9 rounded-full bg-[#222D52] px-4 text-[13px] font-semibold text-white hover:bg-[#18203D]">
+          <button type="button" onClick={() => { setProblem(''); setEditing({ draft: empty() }) }} className={buttonVariants({ variant: 'default', size: 'sm' })}>
             {t('adminAlertNew')}
           </button>
         )}

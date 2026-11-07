@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
 import { NAV_MENUS, type NavMenu } from '../data/serviceOptions'
 import Icon from './Icon'
@@ -16,7 +16,6 @@ function ServiceNav({ className = '' }: { className?: string }) {
   const closeTimer = useRef<number | undefined>(undefined)
   // a tap gives focus and then a click: the focus has just opened the menu, so that click must not close it
   const openedAt = useRef(0)
-  const navigate = useNavigate()
 
   const open = (key: Key) => {
     window.clearTimeout(closeTimer.current)
@@ -47,13 +46,7 @@ function ServiceNav({ className = '' }: { className?: string }) {
               onMouseEnter={() => open(m.key)}
               onFocus={() => { openedAt.current = Date.now(); open(m.key) }}
               onClick={() => {
-                // RONDA 300: a click goes to its section on Home (hover / focus still opens the panel)
-                if (m.key === 'navRonda300') {
-                  window.clearTimeout(closeTimer.current)
-                  setActive(null)
-                  navigate('/#explore')
-                  return
-                }
+                // every menu name opens its panel, RONDA 300 too (it used to jump to its section on Home, owner 5 Nov 2026)
                 if (active === m.key && Date.now() - openedAt.current > 400) setActive(null)
                 else open(m.key)
               }}

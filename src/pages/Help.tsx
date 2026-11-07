@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils'
+import { cardClass, cardHover } from '@/components/ui/card'
 import { useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../hooks/useLanguage'
@@ -62,7 +64,7 @@ function Help() {
             <Link
               key={c.slug}
               to={`/help/${c.slug}`}
-              className="flex items-center gap-4 border border-gray-200 rounded-xl px-5 py-5 hover:border-[#222D52] hover:shadow-sm transition"
+              className={cn(cardClass, cardHover, 'flex items-center gap-4')}
             >
               <CategoryIcon icon={c.icon} />
               <span className="text-gray-800">{t(c.labelKey)}</span>

@@ -13,6 +13,8 @@ import { buildItems, type Pick } from '../data/suggestions'
 import { useSmartSearch } from '../hooks/useSmartSearch'
 import { useLanguage } from '../hooks/useLanguage'
 import { liftOnPhone } from '../services/liftOnPhone'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 const LIST_ID = 'r300-list'
 // where the map opens: KLCC to Bukit Bintang, close enough in for the places to show
@@ -91,7 +93,7 @@ function Ronda300() {
                       placeholder={t('r3_searchPh')}
                       className="min-w-0 flex-1 bg-transparent text-base outline-none"
                     />
-                    <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => (items.length ? pick(items[Math.max(hi, 0)].pick) : setOpen(true))} className="h-11 flex-shrink-0 rounded-full bg-[#222D52] px-6 text-sm font-extrabold text-white transition-colors hover:bg-[#18203D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2F6BD8]">
+                    <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => (items.length ? pick(items[Math.max(hi, 0)].pick) : setOpen(true))} className={cn(buttonVariants({ variant: 'default', size: 'default' }), 'flex-shrink-0 px-6')}>
                       {t('r3_searchBtn')}
                     </button>
                   </div>

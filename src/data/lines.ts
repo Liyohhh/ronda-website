@@ -159,8 +159,8 @@ function codeScore(typed: string, code: string) {
 
 // Lines matching a search, best first: a route code match wins, otherwise every typed word must fit some
 // word of the line (typos allowed, except in numbers). `extra` = bus routes from the database; rail lines
-// win ties, and the list stops at 40.
-export function matchLines(query: string, extra: Line[] = []): Line[] {
+// win ties, and the list stops at `limit` (40 for the dropdown).
+export function matchLines(query: string, extra: Line[] = [], limit = 40): Line[] {
   const typed = words(query)
   if (!typed.length) return []
   const all = [...LINES, ...extra]
@@ -180,18 +180,23 @@ export function matchLines(query: string, extra: Line[] = []): Line[] {
     }
     if (score !== Infinity) scored.push({ line: l, score })
   }
-  return scored.sort((a, b) => a.score - b.score || all.indexOf(a.line) - all.indexOf(b.line)).slice(0, 40).map((s) => s.line)
+  return scored.sort((a, b) => a.score - b.score || all.indexOf(a.line) - all.indexOf(b.line)).slice(0, limit).map((s) => s.line)
 }
 
 // Buses aren't in LINES (hundreds of routes). Their badge uses the route's own GTFS colour when the
 // operator publishes one (Rapid KL stage buses do), otherwise RONDA's lighter blue (MRT feeder buses, bus stops,
-// the "Bus routes" tile); white on it is 5:1.
+// the Bus lines tile); white on it is 5:1.
 export const BUS_FALLBACK_COLOR = '#2F6BD8'
 
 export function busLine(color?: string | null, name = 'Bus'): Line {
   const c = color ? (color.startsWith('#') ? color : `#${color}`) : BUS_FALLBACK_COLOR
   return { id: 'bus', name, mode: 'BUS', color: c.toUpperCase(), textColor: '#FFFFFF', colorSource: color ? 'gtfs' : 'unverified', gtfs: { feedId: '', routeIds: [] } }
 }
+
+// The bus lines list, opened in the line panel like a line of its own (its tab in the strip, its own header).
+// Site navy, a colour no line uses: the fallback blue is too close to the ECRL's (owner, 7 Nov 2026).
+export const BUS_LINES_ID = 'bus-lines'
+export const busLinesEntry = (name: string): Line => ({ ...busLine('#222D52', name), id: BUS_LINES_ID })
 
 // Distinct rail lines serving a stop, in LINES order (for interchange stations)
 export function linesForStop(feedId: string, routeIds: string[] = []): Line[] {

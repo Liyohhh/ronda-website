@@ -62,16 +62,8 @@ function AuthLayout({ promoTitle, promoText, title, children, footer, social = t
             <h2 className="font-display text-[30px] leading-tight font-semibold text-navy mb-6">{title}</h2>
             {children}
 
-            {social && (
-              <>
-                <div className="flex items-center gap-3 my-6" aria-hidden="true">
-                  <div className="flex-1 h-px bg-[#222D52]/40" />
-                  <span className="text-[#2559B8] text-xs uppercase tracking-[0.2em]">{t('orLabel')}</span>
-                  <div className="flex-1 h-px bg-[#222D52]/40" />
-                </div>
-                <SocialLogin />
-              </>
-            )}
+            {/* the "or" line and the quick sign-in buttons show only for the ways that are switched on */}
+            {social && <SocialLogin orLabel={t('orLabel')} />}
 
             <p className="text-center text-sm text-gray-500 mt-6">{footer}</p>
           </div>

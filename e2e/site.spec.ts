@@ -18,8 +18,15 @@ for (const path of PAGES) {
 test('language switch to Bahasa Melayu is remembered', async ({ page, backend }) => {
   void backend
   await page.goto('/')
-  await page.getByRole('button', { name: /^Language:/ }).first().click()
-  await page.getByRole('option', { name: /Melayu/ }).click()
+  const menu = page.getByRole('button', { name: 'Menu' })
+  if (await menu.isVisible()) {
+    // phones: the language is in the full-screen menu
+    await menu.click()
+    await page.getByRole('dialog', { name: 'Menu' }).getByRole('button', { name: 'Bahasa Melayu' }).click()
+  } else {
+    await page.getByRole('button', { name: /^Language:/ }).first().click()
+    await page.getByRole('option', { name: /Melayu/ }).click()
+  }
   await expect(page.locator('html')).toHaveAttribute('lang', 'ms')
   await page.reload()
   await expect(page.locator('html')).toHaveAttribute('lang', 'ms')

@@ -132,7 +132,6 @@ function Home() {
   const [line, setLine] = useState('')
   // Lines tab: dropdown open, keyboard-highlighted row, and the line shown in the side panel
   const [lineListOpen, setLineListOpen] = useState(false)
-  const [busHint, setBusHint] = useState(false) // "Bus routes" tile pressed: the box asks for a bus route
   const [lineHi, setLineHi] = useState(-1)
   const [pickedLine, setPickedLine] = useState<Line | null>(null)
   const busLines = useBusRoutes() // every bus route, searchable in the Lines tab
@@ -361,7 +360,7 @@ function Home() {
     <button
       onClick={() => handleSearch()}
       disabled={loading}
-      className="w-14 h-14 rounded-full bg-[#222D52] hover:bg-[#18203D] active:scale-95 transition text-white flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(47_107_216/0.4)] disabled:opacity-60"
+      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#222D52] hover:bg-[#18203D] active:scale-95 transition text-white flex items-center justify-center flex-shrink-0 shadow-[0_6px_16px_rgb(47_107_216/0.4)] disabled:opacity-60"
       aria-label={t('searchAria')}
     >
       {loading ? (
@@ -402,7 +401,17 @@ function Home() {
           <div className="relative flex-1 px-6 sm:px-8 xl:px-16 pb-28 md:pb-32 pt-8 md:pt-10 flex flex-col justify-between gap-y-8">
             {/* the headline sits small in the top-left corner, so the skyline stays in view */}
             <div className="max-w-xl text-start">
-              <h1 className="rise-in [text-wrap:balance] font-display text-[30px] sm:text-[36px] md:text-[44px] lg:text-[52px] leading-[1.05] font-semibold tracking-[-0.02em] text-white [text-shadow:0_2px_16px_rgb(24_32_61/0.45)]">
+              {/* a small live chip over the headline: where the buses and trains are now (21st.dev-style hero badge) */}
+              <Link to="/live" className="rise-in mb-3 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 py-1 ps-2.5 pe-3 text-xs font-semibold text-white backdrop-blur-xl transition-colors hover:bg-white hover:text-[#222D52]">
+                <span className="relative flex h-2 w-2" aria-hidden="true">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70 motion-reduce:hidden" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                </span>
+                {t('liveMapTitle')}
+                <Icon name="chevronRight" size={14} className="rtl:rotate-180" />
+              </Link>
+              {/* the headline is revealed from below, like text rising out of a mask */}
+              <h1 className="reveal-up [text-wrap:balance] font-display text-[30px] sm:text-[36px] md:text-[44px] lg:text-[52px] leading-[1.05] font-semibold tracking-[-0.02em] text-white [text-shadow:0_2px_16px_rgb(24_32_61/0.45)]">
                 <Accent text={t('bannerTitle')} dark />
               </h1>
             </div>
@@ -426,7 +435,8 @@ function Home() {
 
         {/* Search card: overlaps the bottom of the hero card */}
         <div className="wrap relative z-20 -mt-16 md:-mt-20">
-          <div id="plan" className="relative w-full bg-white rounded-[32px] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.22)] ring-1 ring-gray-100 px-5 md:px-10 pt-5 pb-7 scroll-mt-24">
+          {/* phone: tighter card, smaller tabs and fields, so the search does not take most of the screen (owner, 5 Nov 2026) */}
+          <div id="plan" className="relative w-full bg-white rounded-[24px] sm:rounded-[32px] shadow-[0_32px_64px_-12px_rgb(34_45_82/0.22)] ring-1 ring-gray-100 px-3.5 sm:px-5 md:px-10 pt-3 sm:pt-5 pb-4 sm:pb-7 scroll-mt-24">
             {/* Tab switcher */}
             <div className="flex justify-center">
               <div className="flex bg-gray-100 rounded-full p-1">
@@ -434,7 +444,7 @@ function Home() {
                   type="button"
                   aria-pressed={tab === 'directions'}
                   onClick={() => setTab('directions')}
-                  className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
+                  className={`px-8 py-2 text-[15px] sm:px-10 sm:py-2.5 sm:text-base rounded-full font-semibold transition ${
                     tab === 'directions' ? 'bg-[#222D52] text-white shadow-[0_4px_12px_rgb(34_45_82/0.2)]' : 'text-gray-600 hover:text-[#222D52]'
                   }`}
                 >
@@ -444,7 +454,7 @@ function Home() {
                   type="button"
                   aria-pressed={tab === 'lines'}
                   onClick={() => setTab('lines')}
-                  className={`px-10 py-2.5 rounded-full text-base font-semibold transition ${
+                  className={`px-8 py-2 text-[15px] sm:px-10 sm:py-2.5 sm:text-base rounded-full font-semibold transition ${
                     tab === 'lines' ? 'bg-[#222D52] text-white shadow-[0_4px_12px_rgb(34_45_82/0.2)]' : 'text-gray-600 hover:text-[#222D52]'
                   }`}
                 >
@@ -454,7 +464,7 @@ function Home() {
             </div>
 
             {/* Search bar + suggestions dropdown */}
-            <div className="flex justify-center mt-4 relative">
+            <div className="flex justify-center mt-3 sm:mt-4 relative">
               <div
                 className="w-full relative"
                 onBlur={(e) => {
@@ -467,9 +477,9 @@ function Home() {
                 <div className={`bg-gray-50 rounded-3xl sm:rounded-full border border-gray-200 flex flex-wrap sm:flex-nowrap items-center ps-0 sm:ps-2.5 pe-2.5 ${tab === 'directions' ? 'sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]' : ''}`}>
                   {tab === 'directions' ? (
                     <>
-                      <div className="basis-full flex-1 flex items-center ps-5 pe-2.5 sm:pe-4 py-3 sm:py-4 border-b border-gray-100 sm:border-b-0 min-w-0">
+                      <div className="basis-full flex-1 flex items-center ps-5 pe-2.5 sm:pe-4 py-2 sm:py-4 border-b border-gray-100 sm:border-b-0 min-w-0">
                         <div className="flex-1">
-                          <div className="text-sm text-gray-600">{t('start')}</div>
+                          <div className="text-xs sm:text-sm text-gray-600">{t('start')}</div>
                           <input
                             type="text"
                             value={start}
@@ -508,15 +518,15 @@ function Home() {
                       <button
                         onClick={handleSwap}
                         disabled={!start.trim() && !end.trim()}
-                        className="ms-3 sm:ms-0 my-2 sm:my-0 w-12 h-12 rounded-full bg-[#222D52] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
+                        className="ms-3 sm:ms-0 my-1.5 sm:my-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#222D52] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-60"
                         aria-label={t('swapAria')}
                       >
                         <Icon name="swapVert" size={22} />
                       </button>
 
                       <div className="flex-1 flex items-center min-w-0">
-                        <div className="flex-1 min-w-0 ps-4 pe-3 py-3 sm:py-4">
-                          <div className="text-sm text-gray-600">{t('end')}</div>
+                        <div className="flex-1 min-w-0 ps-4 pe-3 py-2 sm:py-4">
+                          <div className="text-xs sm:text-sm text-gray-600">{t('end')}</div>
                           <input
                             type="text"
                             id="end-input"
@@ -546,7 +556,7 @@ function Home() {
                   ) : (
                     <div className="flex-1 flex items-center ps-5 pe-4 py-4">
                       <div className="flex-1">
-                        <div className="text-sm text-gray-600">{t('line')}</div>
+                        <div className="text-xs sm:text-sm text-gray-600">{t('line')}</div>
                         <input
                           type="text"
                           id="line-input"
@@ -565,7 +575,7 @@ function Home() {
                           aria-activedescendant={lineListOpen && lineHi >= 0 ? `line-list-${lineHi}` : undefined}
                           autoComplete="off"
                           aria-label={t('line')}
-                          placeholder={busHint ? t('busSearchPh') : t('linePh')}
+                          placeholder={t('linePh')}
                           className="w-full text-lg outline-none"
                         />
                       </div>
@@ -591,15 +601,8 @@ function Home() {
 
                 {/* Lines tab: every line as a tile as soon as the box is pressed; typing filters them (rail + bus) */}
                 {tab === 'lines' && lineListOpen && line.trim() === '' && (
-                  <div id="line-panel" role="region" aria-label={t('allLinesLabel')} className="absolute inset-x-0 top-full z-30 mt-2 max-h-[70vh] overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
-                    <LineGrid
-                      buses={busLines}
-                      onPick={pickLine}
-                      onBus={() => {
-                        setBusHint(true)
-                        document.getElementById('line-input')?.focus()
-                      }}
-                    />
+                  <div id="line-panel" role="region" aria-label={t('allLinesLabel')} className="absolute inset-x-0 top-full z-30 mt-2 max-h-[70vh] overflow-y-auto overscroll-contain rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
+                    <LineGrid onPick={pickLine} />
                   </div>
                 )}
                 {tab === 'lines' && lineListOpen && line.trim() !== '' && (
@@ -608,7 +611,10 @@ function Home() {
 
                 {/* Form error (stop not picked from the list) */}
                 {locError && (
-                  <div className="mt-3 bg-amber-50 text-amber-900 text-sm rounded-lg px-4 py-3" role="status">{locError}</div>
+                  // blocked: one short red line that asks again when tapped (owner, 5 Nov 2026); other failures as before
+                  loc.status === 'error' && loc.reason === 'denied'
+                    ? <button type="button" onClick={locate} role="status" className="mt-3 block text-start text-sm font-semibold text-red-600 underline underline-offset-2">{t('nearBlockedTap')}</button>
+                    : <div className="mt-3 bg-amber-50 text-amber-900 text-sm rounded-lg px-4 py-3" role="status">{locError}</div>
                 )}
                 {formError && (
                   <div className="mt-3 bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{formError}</div>
@@ -649,6 +655,7 @@ function Home() {
       {pickedLine && (
         <LinePanel
           line={pickedLine}
+          buses={busLines}
           onClose={() => setPickedLine(null)}
           onPick={setPickedLine}
           onPlan={(st) => {

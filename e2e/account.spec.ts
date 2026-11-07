@@ -168,7 +168,7 @@ test('delete account: only after typing DELETE; then signed out and home', async
   await del.click()
   await expect(page).toHaveURL(/\/$/)
   expect(backend.calls.find((c) => c.path === '/functions/v1/delete-account')?.body).toEqual({ confirm: 'DELETE' })
-  await expect(page.getByRole('banner').getByRole('link', { name: 'Login' })).toBeVisible()
+  await expect(page.getByRole('banner').getByRole('link', { name: 'Sign Up' })).toBeVisible() // signed out
 })
 
 test('delete account: a failure says so and keeps the person signed in', async ({ page, backend }) => {

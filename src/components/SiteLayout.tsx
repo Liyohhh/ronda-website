@@ -1,4 +1,5 @@
 import { lazy, Suspense, type ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
 import { CHAT_ENABLED } from '../services/chat'
@@ -8,14 +9,17 @@ const ChatWidget = lazy(() => import('./ChatWidget'))
 
 // Page frame for the public site: header, the page's own content, then the footer (which opens with the app
 // download call to action), whatever the page adds above it.
-function SiteLayout({ children, subheader }: { children: ReactNode; subheader?: ReactNode }) {
+function SiteLayout({ children, subheader, chat = true }: { children: ReactNode; subheader?: ReactNode; chat?: boolean }) {
+  const { pathname } = useLocation()
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
       {subheader}
-      <main className="flex-1">{children}</main>
+      {/* a new page fades and rises in under the header, which stays still (keyed by address) */}
+      <main key={pathname} className="page-in flex-1">{children}</main>
       <Footer />
-      {CHAT_ENABLED && (
+      {/* chat=false: account and staff pages, where the floating launcher covered the controls on phones */}
+      {CHAT_ENABLED && chat && (
         <Suspense fallback={null}>
           {/* room under the footer so the chat launcher never covers its last line */}
           <div className="h-20 bg-white" aria-hidden="true" />

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { BUS_FALLBACK_COLOR, LINES, busLine, lineBadgeSvg, lineForRoute, linesForStop, matchLines, smartScore, type Line } from './lines'
+import { BUS_FALLBACK_COLOR, LINES, LINES_BY_ID, busLine, busLinesEntry, lineBadgeSvg, lineForRoute, linesForStop, matchLines, smartScore, type Line } from './lines'
 
 const bus = (code: string, name = `Route ${code}`): Line => ({ ...busLine('127A78', name), id: `bus-${code}`, code })
 const ids = (ls: Line[]) => ls.map((l) => l.id)
@@ -70,6 +70,12 @@ describe('matchLines', () => {
 })
 
 describe('busLine and badges', () => {
+  it('the bus lines list has a colour of its own, unlike any line', () => {
+    const colour = busLinesEntry('Bus lines').color
+    expect(colour).not.toBe(LINES_BY_ID.ecrl.color)
+    expect(LINES.map((l) => l.color)).not.toContain(colour)
+  })
+
   it('uses the GTFS colour when published, RONDA navy otherwise', () => {
     expect(busLine('127a78').color).toBe('#127A78')
     expect(busLine('#abcdef').color).toBe('#ABCDEF')

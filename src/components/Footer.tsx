@@ -81,7 +81,7 @@ function Footer() {
               window.scrollTo({ top: 0, behavior: 'smooth' })
               document.querySelector<HTMLElement>('header a')?.focus({ preventScroll: true })
             }}
-            className="self-start md:self-auto hover:text-[#222D52]"
+            className="self-start md:self-auto -my-2 py-2.5 hover:text-[#222D52]"
           >
             {t('backToTop')} ↑
           </button>

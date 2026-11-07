@@ -101,7 +101,7 @@ type Props = {
   loading: boolean
   error: string
   options: TripOption[]
-  moreOptions?: TripOption[] // slower or less direct alternatives, collapsed
+  moreOptions?: TripOption[] // slower or less direct alternatives, listed after the main options
   notice?: ServiceNotice
   resident: Resident
   onResidentChange: (r: Resident) => void
@@ -516,7 +516,7 @@ function RideStep({ leg, placeName, live }: { leg: Leg; placeName: (p: Place) =>
           type="button"
           onClick={() => setOpen(!open)}
           aria-expanded={open}
-          className="mt-2 inline-flex items-center gap-1 text-sm text-gray-600 hover:text-[#222D52]"
+          className="mt-1 inline-flex items-center gap-1 py-2 text-sm text-gray-600 hover:text-[#222D52]"
         >
           <Icon name="chevronRight" size={14} className={`transition-transform ${open ? 'rotate-90' : 'rtl:rotate-180'}`} />
           {(n === 1 ? t('rideOneStop') : t('rideStops').replace('{n}', String(n))).replace('{dur}', formatDuration(leg.duration_min, t))}
@@ -561,7 +561,6 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
   // least walking first by default (owner, 15 Oct 2026); the other orders are one tap away
   const [sort, setSort] = useState<SortKey>(readSort) // the order picked in Trip settings (least walking unless changed)
   const [detail, setDetail] = useState<TripOption | null>(null)
-  const [showMore, setShowMore] = useState(false)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(() => departAt ?? malaysiaNow())
   // phone: drag the sheet down by its handle to close it (it follows the finger, springs back if not far enough)
@@ -702,7 +701,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
         <div className="bg-[#222D52] text-white px-5 pt-7 pb-4 md:pt-6 md:pb-5">
           <div className="flex items-center justify-between mb-3 md:mb-4">
             {detail ? (
-              <button onClick={() => setDetail(null)} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/85 hover:text-white">
+              <button onClick={() => setDetail(null)} className="-my-2 inline-flex items-center gap-1.5 py-2.5 text-sm font-medium text-white/85 hover:text-white">
                 <Icon name="chevronLeft" size={18} className="rtl:rotate-180" />
                 {t('allRoutes')}
               </button>
@@ -735,7 +734,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
               type="button"
               onClick={() => (editing ? setEditing(false) : openEditor())}
               aria-expanded={editing}
-              className="rounded-full bg-white/10 hover:bg-white/20 px-3 py-0.5 text-xs font-semibold text-white"
+              className="rounded-full bg-white/10 hover:bg-white/20 px-3 py-2 text-xs font-semibold text-white"
             >
               {t('changeTime')}
             </button>
@@ -767,7 +766,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     type="button"
                     onClick={() => r !== resident && onResidentChange(r)}
                     aria-pressed={r === resident}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                    className={`px-3 py-2 rounded-full text-xs font-semibold transition-colors ${
                       r === resident ? 'bg-white text-[#222D52]' : 'text-white/80 hover:text-white'
                     }`}
                   >
@@ -786,7 +785,7 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                     onClick={() => p !== payment && onPaymentChange(p)}
                     aria-pressed={p === payment}
                     title={p === 'cashless' ? t('payCashlessHint') : undefined}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                    className={`px-3 py-2 rounded-full text-xs font-semibold transition-colors ${
                       p === payment ? 'bg-white text-[#222D52]' : 'text-white/80 hover:text-white'
                     }`}
                   >
@@ -843,19 +842,8 @@ function JourneyPanel({ open, from, to, loading, error, options, moreOptions = [
                 </li>
               )}
               {sorted.map(card)}
-              {sortedMore.length > 0 && (
-                <li>
-                  <button
-                    type="button"
-                    onClick={() => setShowMore(!showMore)}
-                    aria-expanded={showMore}
-                    className="w-full rounded-2xl border border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:border-[#222D52]/50 hover:text-[#222D52]"
-                  >
-                    {showMore ? t('hideMoreOptions') : t('moreOptions').replace('{n}', String(sortedMore.length))}
-                  </button>
-                </li>
-              )}
-              {showMore && sortedMore.map(card)}
+              {/* every option shown, the slower ones after the best (owner, 5 Nov 2026; they used to sit behind "More options") */}
+              {sortedMore.map(card)}
               {anyFare && <li className="px-1 text-[11px] text-gray-500">{t('fareNote')}</li>}
             </ul>
           )}

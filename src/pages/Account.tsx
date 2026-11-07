@@ -60,7 +60,7 @@ function Tile({ icon, label, value, action, children, wide = false }: { icon: Ic
   )
 }
 
-const linkBtn = 'shrink-0 text-sm font-semibold text-[#222D52] underline decoration-[#2F6BD8] underline-offset-4 hover:text-[#2559B8] disabled:opacity-60'
+const linkBtn = 'shrink-0 -my-2 py-2.5 text-sm font-semibold text-[#222D52] underline decoration-[#2F6BD8] underline-offset-4 hover:text-[#2559B8] disabled:opacity-60'
 const btn = 'inline-flex h-11 items-center justify-center rounded-full px-6 font-semibold transition disabled:opacity-60'
 const select = 'h-10 max-w-full rounded-lg border border-[#D3DCE7] bg-white px-3 text-[14px] font-semibold text-[#222D52] outline-none focus:border-[#2F6BD8] focus:ring-2 focus:ring-[#2F6BD8]/30'
 
@@ -181,7 +181,7 @@ function AccountForms({ user }: { user: User }) {
     : <span aria-hidden="true" className={`${size} ${text} grid shrink-0 place-items-center rounded-full bg-[#222D52] font-display text-[#8AB4F8]`}>{initials}</span>
 
   return (
-    <SiteLayout>
+    <SiteLayout chat={false}>
       <div className="bg-[#F2F6FB]">
         <div className="wrap grid gap-6 py-8 lg:grid-cols-[280px_minmax(0,1fr)]">
           <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
@@ -198,7 +198,7 @@ function AccountForms({ user }: { user: User }) {
             {/* the menu: a column on wide screens, a row above the cards on phones; each item jumps to its card */}
             <nav aria-label={t('acctMenu')} className="mt-3 rounded-2xl bg-white p-2">
               <p className="hidden px-3 pb-1 pt-2 text-[11px] font-bold uppercase tracking-[0.12em] text-[#5B6576] lg:block">{t('accountTitle')}</p>
-              <ul className="flex gap-1 overflow-x-auto [scrollbar-width:none] lg:flex-col">
+              <ul className="flex flex-wrap gap-1 lg:flex-col">
                 {SECTIONS.map(([id, icon, label]) => (
                   <li key={id} className="shrink-0">
                     <a
@@ -335,7 +335,7 @@ function AccountForms({ user }: { user: User }) {
                   </form>
                 </div>
               ) : (
-                <div className="flex flex-wrap items-baseline gap-x-2"><h2 id="delete-h"><button type="button" onClick={() => setEditing('delete')} className="font-semibold text-red-800 underline underline-offset-4">{t('accountDelete')}</button></h2><span>{t('acctDeleteHint')}</span></div>
+                <div className="flex flex-wrap items-baseline gap-x-2"><h2 id="delete-h"><button type="button" onClick={() => setEditing('delete')} className="-my-2 py-2.5 font-semibold text-red-800 underline underline-offset-4">{t('accountDelete')}</button></h2><span>{t('acctDeleteHint')}</span></div>
               )}
             </section>
           </div>

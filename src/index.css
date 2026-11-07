@@ -419,3 +419,17 @@ select {
 select::-ms-expand {
   display: none;
 }
+
+/* Page change: the new page fades and rises in under the header (SiteLayout); taps do not flash grey on phones */
+@keyframes page-in { from { opacity: 0; transform: translateY(10px); } }
+/* backwards only: a transform kept after the fade would make <main> the box for every fixed panel inside it */
+.page-in { animation: page-in 280ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+html { -webkit-tap-highlight-color: transparent; }
+/* links in text and the footer: the underline grows in on hover instead of popping */
+footer nav a { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 220ms ease-out, color 150ms; }
+footer nav a:hover { background-size: 100% 1px; }
+@media (prefers-reduced-motion: reduce) { .page-in { animation: none; } footer nav a { transition: none; } }
+/* Home headline: revealed from below as if rising out of a mask */
+@keyframes reveal-up { from { clip-path: inset(0 0 100% 0); transform: translateY(18px); opacity: 0.2; } to { clip-path: inset(0 0 -20% 0); transform: none; opacity: 1; } }
+.reveal-up { animation: reveal-up 900ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both; }
+@media (prefers-reduced-motion: reduce) { .reveal-up { animation: none; } }

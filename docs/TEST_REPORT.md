@@ -1,5 +1,250 @@
 # Test report
 
+## Run - 7 Nov 2026 (Google search: site name, logo, one address per page)
+
+- Why: a Google search for "Ronda2go" shows an unrelated Instagram account (@ronda2go) and not ronda2go.com. The domain
+  is 6 days old under this name, and the site gave Google no site name, no logo and no main address per page.
+- Checked live before the change: ronda2u.com and www.ronda2u.com redirect 301 to the same page on ronda2go.com (good);
+  http redirects to https (good); robots.txt lets Googlebot in and lists the sitemap (good). Problems: www.ronda2go.com
+  shows a second copy of the site with no redirect; no canonical link; no structured data; share picture given as a
+  relative address; any unknown address answers 200 like a real page; /services (hidden) listed in the sitemap.
+- Website: WebSite and Organization data (name Ronda2Go, logo, legal name Movinexa) in index.html; every page now
+  sets its own canonical link and og:url on https://ronda2go.com (src/components/SeoTags.tsx, src/lib/seo.ts); the
+  not-found page adds noindex; share picture and texts with full addresses and the nationwide text; /services left
+  out of the sitemap while services are hidden. No new visible text.
+- Checked (local): structured data reads as JSON; canonical on /, /trails/ (no trailing slash) and /about; noindex
+  only on the not-found page and gone after leaving it; one canonical link at a time; build writes 37 sitemap pages,
+  none /services; typecheck, lint and tests pass.
+- Owner to do (not in the code): redirect www.ronda2go.com to ronda2go.com in Cloudflare; Search Console steps;
+  own social accounts. Not proven yet: Google's result, which can take days to weeks.
+
+## Run - 7 Nov 2026 (production outage: database disk full)
+
+- What happened: the database stopped at 12:24:39 Malaysia time with "No space left on device" and came back by itself
+  at 12:29:29 (about 5 minutes). Search, trips and live buses failed in that time; the website itself stayed up.
+- During a full reload of the hidden place_index table (about 440,000 of 514,592 rows sent). Free disk space was not
+  checked first. Not proven as the only cause: database 974 MB and write-ahead log 832 MB after recovery, and disk size
+  and use are only visible in the dashboard. Why it recovered is also not known.
+- Checked after: search 200, trip planner 200, live buses 200; database not read-only.
+- Open: read disk size and use in the dashboard before any further load. Reloads are paused until then.
+
+## Run - 7 Nov 2026 (own place search: hidden table, speed test)
+
+- Database (20261107090000_place_index.sql and 20261107100000_place_index_indexes.sql, applied with the owner's go): hidden
+  table place_index, 511,499 rows from the Geofabrik file of 6 Nov (182,743 roads, 178,295 addresses, 133,140 places,
+  17,321 areas), 172 MB with indexes; public roles cannot read it and nothing on the site uses it yet.
+- Speed: "pavilion" 1 ms, typo "paviliom bukit jalil" 63 ms and finds Pavilion Bukit Jalil; "jalan" 635 ms and
+  "jalan ampng" 787 ms are too slow (today's search takes 9 to 62 ms). Common words need a word index before this can
+  go live.
+- Finds: "Jalan PJS 11/18" and 10 Jalan PJS 11/18; number 16 is not in OpenStreetMap. Not compared with Photon yet.
+- Word index added (20261107110000_place_index_words.sql, owner's go; 76,832 words, 206 MB in all, still hidden):
+  "jalan ampng" 45 ms, "jalan" 94 ms, "paviliom bukit jalil" 36 ms. Right result on 5 of 5 sample searches, and nearest
+  first for "starbucks" near KLCC. To fix: a road repeats once per stretch; "jalan" alone gives odd results.
+
+## Run - 7 Nov 2026 (nightly route check sends trips a few at a time)
+
+- Why: the database sent all 56 main trips in one instant, with no second try: 34 of 56 failed on 5 Nov and 53 of 56 on
+  6 Nov, all HTTP 546 (Edge Function limit).
+- Database (migration 20261106210000_route_audit_paced.sql, applied with the owner's go): 6 trips a minute from 02:31 to
+  03:20 Malaysia time, resending 429, any 5xx and no answer; results read at 03:25.
+- Checked: jobs and functions in place, public role cannot run it. Not yet proven: first paced run is the coming night.
+
+## Run - 6 Nov 2026, night (Lines page: full bus line list)
+
+- Website: the one Bus lines tile opens the line panel on its own Bus lines tab: every bus line as a card (code and both
+  ends of the line, sorted by code) with a search box, typos allowed. A bus route opens in the same panel and its tab
+  leads back to the list. The owner chose this after seeing a list with tabs and tiles in the dropdown.
+- Colour: Bus lines (tile, tab, panel header) now use the site navy #222D52, used by no line, because the bus blue
+  #2F6BD8 looked the same as the ECRL's #0065DE. Each bus route keeps its own colour.
+- Scrolling, cause found: the page fade-in added on the work branch kept a transform on the page's main area, so every
+  fixed panel inside it (line panel and any other panel in main) was as tall as the whole page (5,489 px) and scrolled
+  with it. The fade now leaves nothing behind. Measured on the local site with all 322 bus lines: panel height = screen
+  height at 1280 x 800 and 390 x 844, wheel over the panel moves the page 0 px. The page behind is also locked while the
+  line panel is open, and the panel and the tile dropdown no longer pass their scroll on.
+- Tests: e2e mocks now answer record_search_pick (added with the search picks; 14 trip and search tests failed on it
+  at desktop and phone size). Unit 306 / 306. e2e 244 passed, 6 skipped. Earlier runs had 2 slow timeouts (trails, chat) that
+  passed when run again. Lint clean on the project; the 401 errors npm run lint prints all come from
+  a leftover local working copy, not from the project.
+- Screenshots with real data at 1280 and 390 px. Not on the live site or the preview until pushed.
+
+## Run - 6 Nov 2026, night (search: a type of place near me)
+
+- Why: Google Maps lists the nearest ATMs, mosques or pharmacies when you type just that word; we searched names
+  only, wherever they were.
+- Database (migration 20261106190000_search_categories.sql, applied to production 6 Nov with the owner's go): 84
+  words in English, Malay, Chinese and Arabic for hospital, clinic, ATM, bank, pharmacy, toilet, police, post office,
+  mosque/surau, church, temple, hotel, mall, supermarket, restaurant, food court, cafe/kopitiam, fast food, park and
+  museum (table search_categories, can grow without code). One of them typed on its own with a position gives the
+  nearest ones within 10 km, closest first, with distance and area; places with no name take the type's name
+  ("Toilet"). New column distance_m. Without a position, or for anything else, place search is as before.
+- Website: when places come with distances they are listed first, before a station named after the word ("masjid"
+  puts the nearest mosques before LRT Masjid Jamek). Unit tests 310 / 310. Live with the next website deploy.
+- The position is the map (live map), the hub (hub pages) or the other end of the trip (Home, trip panel). Home with
+  nothing chosen yet has no position, so it searches by name.
+- Production: search, geocode and security smoke 59 / 59; 10 to 57 ms per search.
+
+| # | Typed near MRT Maluri | Top results | Result |
+|---|---|---|---|
+| 1 | atm | CIMB · ATM · 260 m · Pudu Ulu / ATM · 340 m · Maluri / MEPS · 490 m | Pass |
+| 2 | masjid, مسجد | Surau Tarbiah · Mosque · 670 m / Masjid Al-Imam Ash-Shafie · 1.1 km | Pass |
+| 3 | 医院 | Sunway Medical Centre Velocity · Hospital · 820 m / Hospital Rehabilitasi Cheras · 2.1 km | Pass |
+| 4 | farmasi | Hai-O · Pharmacy · 1.3 km / Caring · 1.7 km | Pass |
+| 5 | hotel | MH Hotel & Residence · 270 m / Hotel Mezzo · 390 m | Pass |
+| 6 | pavilion, masjid negara | by name, as before | Pass |
+| 7 | masjid (no position) | by name, as before | Pass |
+
+- Excel report: TC-PLN-028 added in the database repo.
+
+## Run - 6 Nov 2026, evening (place data refresh tries again)
+
+- Why: the monthly places refresh of 28 Oct failed (Overpass answered "at capacity", HTTP 502) and nothing asked
+  again, so our places were last loaded on 14 Oct; the first load of area names on 6 Nov also needed a second try.
+- Database (migration 20261106170000_osm_load_retries.sql, applied to production 6 Nov with the owner's go): one job
+  every 20 minutes (osm-loads) replaces the four fixed monthly jobs. For places, area names and boundaries it reads
+  any answer that has arrived, writes off a question unanswered after 15 minutes, and asks again when the last good
+  load is 30 days old or more: at most once an hour and 8 times a day, every other try on a backup server
+  (overpass.kumi.systems). Each request now records which server was asked.
+- Tried first on production data and undone: as today, nothing to do; with places 40 days old it asked the main
+  server, read a failed area-name answer and logged it, and wrote off a boundary question with no answer; the next
+  run waited for the places answer.
+- Production: job active; run by hand at 03:17 UTC, "nothing to do" (places due 13 Nov, area names and boundaries
+  6 Dec).
+- Known: the three backup Overpass servers tried on 6 Nov (kumi.systems, private.coffee, mail.ru) did not answer a
+  small test query (two timed out after 60 s, one answered 504); the retries on the main server are what helps.
+- Excel report: TC-PLN-027 added in the database repo.
+
+## Run - 6 Nov 2026, evening (search: area line for places, duplicates by name and distance)
+
+- Why: Google Maps shows where each place is ("Maluri, Kuala Lumpur"); our own places showed only their kind
+  ("Mall"), so branches of a chain looked the same. The website also dropped every repeat of a name, so only one
+  Starbucks could ever be listed.
+- Database (migration 20261106140000_place_areas.sql, applied to production 6 Nov with the owner's go): every named
+  suburb, neighbourhood, village, town and city in Malaysia from OpenStreetMap (10,261) and the boundaries of the
+  federal territories Kuala Lumpur (243 km2), Putrajaya (49 km2) and Labuan, loaded and refreshed monthly with the
+  places. Place search shows kind · area, city: the nearest suburb within 2 km, and the territory the place is in or
+  else the nearest town. A nearest-point rule alone called Mid Valley "Petaling Jaya", hence the boundaries.
+- First load: Overpass's main server first answered "at capacity" (502), as it did for the monthly places refresh on
+  28 Oct; the retry loaded 3 boundaries and 10,261 names.
+- Website (useSmartSearch.ts): a place is a repeat only with the same OpenStreetMap id or the same name within about
+  100 m; branches further apart are all listed. Unit tests 309 / 309. Live with the next website deploy.
+- Production: search, geocode and security smoke 58 / 58; 9 to 62 ms per search; security advisors: only the new
+  loader log table without public access (as osm_poi_loads).
+
+| # | Typed | Top place now | Result |
+|---|---|---|---|
+| 1 | pav | Pavilion Kuala Lumpur · Mall · Bukit Bintang, Kuala Lumpur | Pass |
+| 2 | mid valley | Mid Valley Megamall · Mall · Taman Bangsar Pertama, Kuala Lumpur | Pass |
+| 3 | sunway pyramid | Sunway Pyramid · Mall · Bandar Sunway, Subang Jaya | Pass |
+| 4 | the curve | The Curve · Mall · PJU 7, Petaling Jaya | Pass |
+| 5 | starbucks | three branches: SS 11, Subang Jaya / Seksyen 31, Subang Jaya / Bandar Rimbayu, Jenjarom | Pass |
+| 6 | putrajaya | Taman Botani Putrajaya · Park · Putrajaya | Pass |
+| 7 | ioi city mall | IOI City Mall · Mall · IOI Resort City, Bandar Baru Bangi (nearest town; Google says Putrajaya) | Known |
+
+- Known: names come from the nearest named point, so places near an edge can get the neighbouring suburb; mosques
+  show "Muslim" as their kind; without a map position chain branches are not ordered by distance.
+- Excel report: TC-PLN-026 added in the database repo.
+
+## Run - 6 Nov 2026, later (search learns from picks)
+
+- Why: Google Maps and Moovit put first what people choose most; our order came only from names, Wikipedia
+  articles and routes.
+- Website: each station, stop and place in a suggestion list carries its id; picking one (click on any page, Enter
+  on Home and in the trip panel) sends it once per visit to record_search_pick. Nothing is sent when the browser
+  asks not to be tracked. Unit tests 306 / 306 (new: searchPicks.test.ts, pick ids in suggestions.test.ts). Live
+  with the next website deploy.
+- Database (migration 20261106100000_search_picks.sql, applied to production 6 Nov with the owner's go): one row
+  per item, day and person (salted hash of the address; no account, device, position or search text). Only real
+  stations, stops and our own places count, at most 30 picks a minute per person. Every night at 00:20 Malaysia
+  time the people per item over the last 90 days are counted and picks older than 120 days deleted; today's picks
+  count from tomorrow. Ranking: places by ln(1 + Wikipedia articles) + ln(1 + people), stations by ln(1 + routes) +
+  ln(1 + people), among equally good matches.
+- Tried first on production data and undone: one person picking twice = 1 row; fake and unknown items and picks
+  with no address kept nothing; "pav" unchanged until the nightly count, then 41 people moved Pavilion Elite first;
+  30 picks of LRT KL Sentral put it first for "kl sentral"; searches 7 to 25 ms.
+- Production after applying: search, geocode and security smoke 57 / 57; a real pick from outside recorded (1 row),
+  fake items ignored; nightly job active; security advisors list only the intended new items (record_search_pick
+  open to everyone, search_picks with no read access).
+- Not yet: the app does not send picks; places found only through the outside place search are not counted.
+- Excel report: TC-PLN-025 added in the database repo.
+
+## Run - 6 Nov 2026 (search: station codes, landmark and other-language names, roads)
+
+- Why: 38 searches typed into ronda2go.com, Google Maps and Moovit (5 Nov). Score (2 = right place first, 1 = top 5):
+  Ronda2Go 68 / 76, Google Maps 67 / 76, Moovit 50 / 76. Our misses: "kj15" (LRT KL Sentral 3rd), "kl tower"
+  (the tower not listed), "jln ampang" and "jalan tun razak" (the road never shown).
+- Website (suggestions.ts): a station or stop code typed on its own ranks that station first, before stops whose
+  names only start with it; a place found by another name ranks on that name. Unit tests 302 / 302. Live with the
+  next website deploy.
+- Database (migration 20261105180000_search_pois_other_names.sql, applied to production 6 Nov with the owner's go):
+  place search also looks at the English, Malay, Chinese and Arabic names (new index), and a place named with a
+  landmark name counts as an exact match ("kl tower" -> Menara Kuala Lumpur). Tried first on production data and
+  undone; 6 to 16 ms per search, same as before.
+- Place search (geocode function version 5, deployed 6 Nov with the owner's go): a search that starts with a road
+  word (jalan, jln, lorong, lrg, persiaran ...) writes the short form out and puts the road itself first.
+- Tests on production: search, geocode and security smoke 56 / 56; geocode unit tests 16 / 16; security advisors
+  show nothing new.
+
+| # | Typed | Before | After | Result |
+|---|---|---|---|---|
+| 1 | kj15 | bus stops KJ154, KJ156, then LRT KL Sentral | LRT KL Sentral first (unit test; live after deploy) | Pass |
+| 2 | kl tower (places) | KL Tower Mini Zoo, a viewpoint, a car park | Menara Kuala Lumpur, then KL Tower Mini Zoo | Pass |
+| 3 | twin towers / klcc / 双峰塔 (places) | KLCC Park, a hostel | Menara Berkembar Petronas first | Pass |
+| 4 | 吉隆坡塔 (places) | nothing | Menara Kuala Lumpur | Pass |
+| 5 | jln ampang | LRT Ampang, LRT Ampang Park (no road) | Jalan Ampang first | Pass |
+| 6 | jalan tun razak | bus stops on the road | Jalan Tun Razak (Cheras, Kuala Lumpur) first | Pass |
+| 7 | lrg haji taib | - | Lorong Haji Taib first | Pass |
+| 8 | pav, hosp kl, masjid, sunway pyramid | right place first | same | Pass |
+
+- Known, not fixed: only 14 places have an Arabic name; "batu caves" places are still hotels and shops (the sight is
+  not in our own place list).
+- Excel report: TC-PLN-022, TC-PLN-023 and TC-PLN-024 added in the database repo.
+
+## Run - 5 Nov 2026 (check for missing or non-working parts)
+
+- Checked: 22 pages and all 28 trail pages followed link by link (no dead pages), 182 outside links opened, the code
+  searched for unfinished parts, the live sign-in settings read.
+- Sign-in: only email works on the live site. Google, Apple and Facebook are off in Supabase; WeChat and QQ have no
+  sign-in route. Their 5 buttons only showed a notice. Now only switched-on ways show (none today, so the "or" line
+  and buttons are hidden); they come back by themselves when one is switched on in Supabase.
+- "Delete account": the server function behind it was never deployed, so the button would fail. The function's list
+  of a person's data was also out of date (only the assistant usage); it now also removes their live trip shares and
+  ad enquiries, and unlinks them from usage counts and alerts they wrote (17 / 17 function tests). Deployed 6 Nov
+  (approved). Live check: it still refuses ronda2go.com ("origin not allowed") because the ALLOWED_ORIGINS secret does
+  not list it yet; the owner is adding it. Other websites are refused, as they should be.
+- "Saved trips" was listed as a feature but is not built on the website: now labelled Coming soon, no link.
+- About: "using your current location" and "nearby spots with RONDA 300" said Coming soon although both work; removed.
+- Data sources page: the React / Supabase / Tailwind credit linked to our private code repository (404 for
+  visitors); now each library's own page, plus shadcn/ui.
+- Outside links: Pexels and ecrl.com.my refuse automatic checks (open fine in a browser); nothing else broken.
+- Unit tests 302 / 302; browser tests 244 passed (6 skipped).
+
+## Run - 5 Nov 2026 (search: well-known places first, short forms in a row)
+
+- Why: the same searches in Google Maps, Moovit and our site (5 Nov). "pav" listed Pavilion Elite before Pavilion
+  Kuala Lumpur; "hosp kl" became "hospital kl" but never "hospital kuala lumpur", so Damai and Columbia Hospital bus
+  stops came before MRT Hospital Kuala Lumpur, and hospitals were left out of place search.
+- Database (migration 20261105120000_search_popularity_alias_loop.sql, applied to production 5 Nov with the owner's
+  go): new table search_importance, the number of Wikipedia articles about a place (all languages), from Wikidata
+  (CC0, checked 5 Nov) for the 225 places whose OpenStreetMap entry has a wikidata tag (217 with articles). Places:
+  better known first among equally good matches; hospitals included. Stations: more routes first among near-equal
+  matches. Short forms are written out again until nothing changes (at most 3 rounds). No website change.
+- Tests: tried first on production data and undone; then search smoke 24 / 24 and security smoke 24 / 24 on
+  production after applying; security advisors show nothing new.
+
+| # | Typed | Before | After | Result |
+|---|---|---|---|---|
+| 1 | pav (places) | Pavilion Elite, Pavilion Bukit Jalil, Pavilion Kuala Lumpur | Pavilion Kuala Lumpur, Pavilion Bukit Jalil, Pavilion Damansara Heights | Pass |
+| 2 | hosp kl (stations) | Damai Hospital, Columbia Hospital, MRT Hospital Kuala Lumpur | MRT Hospital Kuala Lumpur first | Pass |
+| 3 | hosp kl (places) | Surau Kuarters Hospital Kuala Lumpur | Hospital Kuala Lumpur first | Pass |
+| 4 | hospital (places) | a mosque, a surau, Mana Mana Hospitality | Hospital Sungai Buloh, Hospital Putrajaya, Hospital Tengku Ampuan Rahimah | Pass |
+| 5 | masjid (places) | Masjid, Masjid Jamek, Masjid UTM | Masjid, Masjid Negara, Masjid Jamek, Masjid Putra | Pass |
+| 6 | sunway (places) | Sunway Lagoon, Sunway Pyramid, Sunway 163 Mall | Sunway Pyramid, Sunway Lagoon, Sunway Velocity Mall | Pass |
+| 7 | kl sentral, klcc, kj10, mrrt mluri, bkt bintang, tbs | right station first | same, still first (KL Sentral: KTM/ETS now before ERL, more routes) | Pass |
+
+- Known, not fixed here: "batu caves" places are hotels and shops (the Batu Caves sight is not in our place list);
+  same-name duplicates in the list; Arabic station names (1 of 15,893).
+- Excel report: TC-PLN-020 (popularity) and TC-PLN-021 (short forms in a row) added in the database repo.
+
 ## Run - 4 Nov 2026, night (ECRL names and interchanges from MRL's sign at Gombak)
 
 - Why: the owner sent a photo of MRL's platform sign at Terminal Bersepadu Gombak. Checked against ecrl.com.my
@@ -137,6 +382,70 @@
   (trip panel) does not build yet; to re-run once that is finished.
 - Still open (before the public launch): limits on statistics and ad enquiry writes, trusted IP for rate limits,
   profile photo rules, complete account deletion, smaller hardening items.
+
+## Run - 5 Nov 2026 (design polish: shadcn/ui, one button and card, page change, home hero)
+
+- shadcn/ui set up (components.json, "@/" import path, cn helper, class-variance-authority, Radix Slot), so components
+  from shadcn/ui and 21st.dev can be added as code we own. New shared Button (variants: navy, blue, outline, white,
+  glass, ghost, link; sizes small, normal, large, icon) and Card (one radius, border, shadow, padding; a lifting
+  hover for cards you can tap).
+- The site had over 25 hand-written button styles in 6 heights. Moved to the shared Button: header Sign Up, Home
+  "See all trails" / "Nearby places" / "Advertise with us", 404 buttons, RONDA 300 search, trail "Plan a trip"
+  buttons, advertise form Next / Back / Send, admin "New alert", no-access page. Moved to the shared card: hub
+  places, help categories, About networks, partner dashboard tiles.
+- Page change: the new page fades and rises in under the header (the header stays still); footer links underline
+  smoothly on hover; no grey flash on tap on phones. All motion is off when the phone asks for reduced motion.
+- Home hero: a "Live map" chip with a pulsing dot over the headline (links to the live map), and the headline is
+  revealed from below. Checked on screen at phone and desktop size.
+- Browser tests 244 passed (6 skipped, phone and desktop); unit tests 294 / 294.
+
+## Run - 5 Nov 2026 (all route options shown; live bus card redesigned)
+
+- Trip results: every route option is listed, the slower ones after the best; the "More options" button is gone
+  (owner).
+- Live buses on a bus step: one card with a "Live" header and a row per bus: a bus icon, the big value (minutes, or
+  stops away), stops and distance under it, the wheelchair sign and the bus plate on the right; the nearest bus first
+  and stronger (owner). Checked on a phone screen with sample live data.
+- Browser tests 244 passed (6 skipped; chat and security-header tests re-run on their own after a full run on a busy
+  machine timed out on 3); unit tests 294 / 294.
+
+## Run - 5 Nov 2026 (full phone audit: every page, role, state and language)
+
+- Checked at 412 px (Pixel 7 size), screen by screen while scrolling, 230 screens: 17 public pages; signed-in account
+  page and its edit forms; the account menu; admin dashboard and partner dashboard; no-access page; trip suggestions,
+  results, steps and change time; Lines list and line panel; the menu; the assistant; RONDA 300 station view; hub
+  search; help search and answers; form errors (advertise, login, sign-up). English everywhere; Malay and Arabic on
+  the main pages, account, admin and partner. Each screen also checked automatically for sideways overflow,
+  overlapping text, controls off screen or too small, tiny text, blurred pictures and plain-looking links.
+- No sideways scrolling and nothing off screen on any page, in any language.
+- Fixed: the floating assistant button covered the Edit buttons on the account page; it no longer shows on the
+  account, admin and partner pages. Account section tabs were cut off in Malay; they now wrap. Bigger tap areas (same
+  look) for Edit / Change / Sign out / Add a picture / Delete account, Change time, the fare and payment switches, All
+  routes, the stops list, Back to top, the nearest-station link, the assistant's close, new chat and suggestion
+  buttons; larger live map checkboxes. The admin page title now uses the same title font as the other pages.
+- Malay: "Lines" and "Trails" were both "Laluan". Trails are now "Jejak" everywhere (menu, footer, trails page, trail
+  names, 46 texts, owner); "Laluan" stays for train and bus lines.
+- Not changed: the sign-in pages and footer still show the old RONDA word logo (the rename to Ronda2Go is a separate
+  job); map zoom buttons are the map library's own size.
+- Browser tests 244 passed (6 skipped, phone and desktop); unit tests 294 / 294.
+
+## Run - 5 Nov 2026 (phone, round 3: header and menu, search size, location line)
+
+- Research: the phone versions of Booking.com, Airbnb, Citymapper, Moovit, Transit, MyRapid, GOV.UK and Grab all use
+  one slim top bar (logo, a menu button) and open the menu as a full-screen panel with grouped sections; none keep a
+  second row of menu names. Search is short (Moovit) or one "Start your search" box (Airbnb).
+- Phone header is now one row of 56 px: logo, Sign Up (or the account), and a menu button. The menu opens full screen
+  with Login / Sign Up, Hub, RONDA 300 and About as sections that open in place, Help, and the four languages.
+  Following a link closes it. Tablets keep their icons and get the same menu; desktop is unchanged.
+- RONDA 300 in the header now opens its menu (it used to jump to the RONDA 300 section on Home).
+- Home search card is tighter on phones (smaller tabs, fields, buttons and padding): 234 px tall at 412 px wide.
+- "Show the nearest train and bus" is a blue underlined link, so it reads as something to tap. When location is
+  blocked it is one red underlined line, "Location blocked. Tap to allow it.", that asks again when tapped (the
+  Start box's location button does the same). The longer help text was removed (owner).
+- Sweep for things that can be tapped but look like plain text, on 14 pages: the trail pages' OpenStreetMap source
+  line is now underlined; the rest are footer links, tabs or cards that already read as tappable.
+- Browser tests updated for the new phone header and RONDA 300 menu: 244 passed (6 skipped, phone and desktop);
+  unit tests 294 / 294.
 
 ## Run - 4 Nov 2026 (phone, round 2: owner's list from a real phone)
 

@@ -8,6 +8,7 @@ import Icon from './Icon'
 import { isCategoryShown } from '../data/trails'
 import { Accent, Eyebrow, Reveal } from './Motion'
 import { RONDA300_MAP } from '../data/ronda300Link'
+import { buttonVariants } from '@/components/ui/button'
 
 // Home page "RONDA 300" trails: category pills, a swipeable row of trail cards, "See all trails", which opens
 // /trails with the same category picked, and "Nearby places", which opens the RONDA 300 map page
@@ -94,14 +95,14 @@ function TrailsSection() {
       <div className="mt-8 flex flex-wrap justify-center gap-3 px-4">
         <Link
           to={category === 'all' ? '/trails' : `/trails?category=${category}`}
-          className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-full bg-[#222D52] text-[15px] font-bold text-white shadow-[0_6px_16px_rgb(47_107_216/0.35)] hover:bg-[#18203D] active:scale-95 transition whitespace-nowrap"
+          className={buttonVariants({ variant: 'default', size: 'lg' })}
         >
           {t('seeAllTrails')}
           <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
         </Link>
         <Link
           to={RONDA300_MAP}
-          className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border-[1.5px] border-[#222D52] text-[15px] font-bold text-[#222D52] hover:bg-[#222D52] hover:text-white active:scale-95 transition whitespace-nowrap"
+          className={buttonVariants({ variant: 'outline', size: 'lg' })}
         >
           <Icon name="myLocation" size={18} />
           {t('r3_nearbyCta')}

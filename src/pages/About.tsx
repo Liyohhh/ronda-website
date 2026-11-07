@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils'
+import { cardClass, cardHover } from '@/components/ui/card'
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
@@ -31,10 +33,11 @@ const FEATURES: { title: TranslationKey; text: TranslationKey; icon: IconName; s
   { title: 'parkShowTitle', text: 'aboutParkingText', icon: 'directionsCar' },
 ]
 
+// "Use my location" and RONDA 300 are both live now, so the steps no longer carry "Coming soon" notes (5 Nov 2026)
 const STEPS: { title: TranslationKey; text: TranslationKey; soon?: TranslationKey }[] = [
-  { title: 'how1Title', text: 'how1Text', soon: 'how1Soon' },
+  { title: 'how1Title', text: 'how1Text' },
   { title: 'how2Title', text: 'how2Text' },
-  { title: 'how3Title', text: 'how3Text', soon: 'how3Soon' },
+  { title: 'how3Title', text: 'how3Text' },
 ]
 
 // Networks available now: official names with their line badges (ids from src/data/lines.ts)
@@ -123,7 +126,7 @@ function About() {
           <SectionTitle id="about-how">{t('howTitle')}</SectionTitle>
           <ol className="mt-6 grid gap-4 md:grid-cols-3">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="bg-white border border-gray-200 rounded-2xl p-5">
+              <li key={s.title} className={cardClass}>
                 <span className="w-9 h-9 rounded-full bg-[#222D52] text-white font-bold flex items-center justify-center">{i + 1}</span>
                 <h3 className="mt-3 font-semibold text-gray-900">{t(s.title)}</h3>
                 <p className="mt-1 text-sm text-gray-600">{t(s.text)}</p>
@@ -183,7 +186,7 @@ function About() {
               <li key={trail.slug} className="min-w-0">
                 <Link
                   to={`/trails/${trail.slug}`}
-                  className="flex gap-3 items-center bg-white border border-gray-200 rounded-2xl p-3 hover:border-[#222D52]/40 hover:shadow-sm transition"
+                  className={cn(cardClass, cardHover, 'flex items-center gap-3 p-3 sm:p-3')}
                 >
                   <span className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
                     <TrailCover trail={trail} />

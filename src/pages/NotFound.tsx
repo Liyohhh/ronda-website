@@ -2,19 +2,22 @@ import { Link, useLocation } from 'react-router-dom'
 import SiteLayout from '../components/SiteLayout'
 import PageHero from '../components/PageHero'
 import { useLanguage } from '../hooks/useLanguage'
+import { buttonVariants } from '@/components/ui/button'
+import { useNoIndex } from '../lib/seo'
 
 // Any address the site doesn't know: say so, and offer the main ways back
 function NotFound() {
   const { t } = useLanguage()
   const { pathname } = useLocation()
+  useNoIndex()
   return (
     <SiteLayout>
       <PageHero eyebrow="404" title={t('nf_title')} center
         intro={<>{t('nf_text')} <span className="font-mono break-all" dir="ltr">{pathname}</span></>}>
         <div className="flex flex-wrap justify-center gap-3">
-          <Link to="/" className="rounded-full bg-[#222D52] px-6 py-3 text-sm font-bold text-white hover:bg-[#18203D]">{t('nf_home')}</Link>
-          <Link to="/trails" className="rounded-full border border-[#222D52]/25 bg-white px-6 py-3 text-sm font-semibold text-[#222D52] hover:bg-[#F2F6FB]">{t('trails')}</Link>
-          <Link to="/help" className="rounded-full border border-[#222D52]/25 bg-white px-6 py-3 text-sm font-semibold text-[#222D52] hover:bg-[#F2F6FB]">{t('helpCentre')}</Link>
+          <Link to="/" className={buttonVariants({ variant: 'default', size: 'default' })}>{t('nf_home')}</Link>
+          <Link to="/trails" className={buttonVariants({ variant: 'outline', size: 'default' })}>{t('trails')}</Link>
+          <Link to="/help" className={buttonVariants({ variant: 'outline', size: 'default' })}>{t('helpCentre')}</Link>
         </div>
       </PageHero>
     </SiteLayout>

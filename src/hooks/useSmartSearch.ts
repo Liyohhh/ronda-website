@@ -29,7 +29,9 @@ export type StopResult = {
 // Looks like a bus route code: letters + digits, short ("T305", "kj 1", "300", "SA02")
 export const looksLikeRouteCode = (q: string) => /^[a-z]{0,5}[\s-]?\d{1,4}[a-z]?$/i.test(q.trim())
 
-export type PlaceResult = { name: string; detail: string; lat: number; lon: number; kind: string; osm: string }
+// matched: the other name the place was found by, when not its own name (search_pois: "Kuala Lumpur Tower", "kl tower")
+// distance_m: set when a type of place was searched near a position ("atm" -> the nearest ATMs, closest first)
+export type PlaceResult = { name: string; detail: string; lat: number; lon: number; kind: string; osm: string; matched?: string | null; distance_m?: number | null }
 
 const STOP_DELAY = 120 // ms, database search is fast
 const PLACE_DELAY = 300 // ms, the geocoder is a shared outside service
@@ -47,6 +49,21 @@ function remember<T>(cache: Map<string, T>, key: string, value: T) {
 }
 
 export const normaliseQuery = (q: string) => q.trim().toLowerCase().replace(/\s+/g, ' ')
+
+// Our own places first, then the geocoder's, each place once: the same OpenStreetMap id, or the same name within
+// about 100 m (one building mapped twice, or found by both). Branches of a chain further apart are all kept; their
+// area line tells them apart ("Starbucks · Bangsar", "Starbucks · Mont Kiara"). The first one kept is the better known.
+const NEAR = 0.001 // degrees, about 100 m
+export function mergePlaces(own: PlaceResult[], geo: PlaceResult[]): PlaceResult[] {
+  const kept: PlaceResult[] = []
+  for (const p of [...own, ...geo]) {
+    const name = p.name.toLowerCase()
+    const same = (k: PlaceResult) => (!!p.osm && k.osm === p.osm) ||
+      (k.name.toLowerCase() === name && Math.abs(k.lat - p.lat) < NEAR && Math.abs(k.lon - p.lon) < NEAR)
+    if (!kept.some(same)) kept.push(p)
+  }
+  return kept
+}
 
 export type Near = { lat: number; lon: number } | null
 
@@ -137,13 +154,7 @@ export function useSmartSearch(query: string, near: Near = null) {
         if (!cancelled) setPlaceRes([])
         return
       }
-      const seen = new Set<string>()
-      const merged = [...((own.data ?? []) as PlaceResult[]), ...((geo.data?.results ?? []) as PlaceResult[])].filter((p) => {
-        const k = p.osm || p.name.toLowerCase()
-        if (seen.has(k) || seen.has(p.name.toLowerCase())) return false
-        seen.add(k); seen.add(p.name.toLowerCase())
-        return true
-      })
+      const merged = mergePlaces((own.data ?? []) as PlaceResult[], (geo.data?.results ?? []) as PlaceResult[])
       remember(placeCache, placeKey, merged)
       // what people look for, and whether we had anything (results 0 = found nothing) for the admin dashboard
       void track('search', { query: key, results: merged.length + (stopCache.get(key)?.length ?? 0) })

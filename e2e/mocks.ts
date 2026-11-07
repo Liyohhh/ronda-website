@@ -113,6 +113,8 @@ async function mockBackend(page: Page): Promise<Backend> {
         if (q.includes('pavilion')) return json(route, SEARCH.pavilionBusStop)
         return json(route, q.includes('kj10') || q.includes('klcc') ? SEARCH.klcc : q.includes('pasar') ? SEARCH.pasarSeni : [])
       }
+      case '/rest/v1/rpc/record_search_pick': // counts what people pick; nothing comes back
+        return route.fulfill({ status: 204, body: '' })
       case '/rest/v1/rpc/search_fix': // the search as the database understood it, null when unchanged
         return json(route, ({ 'mrrt mluri': 'mrt maluri', 'pavilion kl': 'pavilion kuala lumpur' } as Record<string, string>)[String(body?.query ?? '').toLowerCase()] ?? null)
       case '/rest/v1/rpc/trails_data':

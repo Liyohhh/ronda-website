@@ -33,14 +33,15 @@ test('RONDA 300: map with the places in view beside it, RONDA picks with photos,
   await expect(panel.getByRole('link', { name: '© OpenStreetMap contributors' })).toBeVisible()
 })
 
-test('header: Hub, RONDA 300, About in that order (Services hidden for now); RONDA 300 goes to its section on Home', async ({ page, backend }) => {
+test('header: Hub, RONDA 300, About in that order (Services hidden for now); RONDA 300 opens its menu', async ({ page, backend }) => {
   void backend
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/about')
   const nav = page.getByRole('navigation', { name: 'Main' }).first()
   await expect(nav.getByRole('button')).toHaveText(['Hub', 'RONDA 300', 'About'])
+  await page.mouse.move(5, 600) // not hovering the menus
   await nav.getByRole('button', { name: 'RONDA 300' }).click()
-  await expect(page).toHaveURL(/\/#explore$/)
-  await expect(page.locator('#explore')).toBeInViewport()
-  await expect(nav.getByRole('button', { name: 'RONDA 300' })).toHaveAttribute('aria-expanded', 'false')
+  await expect(page).toHaveURL(/\/about$/) // stays on the page (it used to jump to Home)
+  await expect(nav.getByRole('button', { name: 'RONDA 300' })).toHaveAttribute('aria-expanded', 'true')
+  await expect(nav.getByRole('link', { name: /Places near a station/ })).toBeVisible()
 })

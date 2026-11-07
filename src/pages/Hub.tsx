@@ -1,3 +1,4 @@
+import { cardClass } from '@/components/ui/card'
 import { useEffect, useState, type KeyboardEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import SuggestionList from '../components/SuggestionList'
@@ -46,7 +47,7 @@ function Hub() {
           <h2 className="mt-10 text-lg font-semibold text-[#222D52]">{t('hubPopular')}</h2>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
             {data.destinations.map((d) => (
-              <li key={d.dest_slug} className="rounded-2xl border border-gray-200 bg-white p-5">
+              <li key={d.dest_slug} className={cardClass}>
                 <h2 className="font-semibold text-gray-900">{d.dest_name}</h2>
                 {d.duration_min !== null ? (
                   <p className="mt-1 text-sm text-gray-700">
@@ -94,7 +95,7 @@ function GoAnywhere({ hub }: { hub: HubT }) {
     else if (e.key === 'Escape') setOpen(false)
   }
   return (
-    <section aria-labelledby="hub-go" className="rounded-2xl border border-gray-200 bg-white p-5 md:p-6">
+    <section aria-labelledby="hub-go" className={cardClass}>
       <h2 id="hub-go" className="text-lg font-semibold text-[#222D52]">{t(airport ? 'hubLanded' : 'hubElsewhere')}</h2>
       <label htmlFor="hub-go-input" className="mt-1 block text-sm text-gray-600">{t('hubGoLabel')}</label>
       <div className="relative mt-3 max-w-xl">

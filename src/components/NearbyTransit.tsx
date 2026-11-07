@@ -74,26 +74,19 @@ function NearbyTransit({ onPick }: { onPick: (p: Pick) => void }) {
       ) : failed ? (
         <span className="text-gray-600">{t('nearError')}</span>
       ) : state.status === 'error' ? (
-        // blocked or not found: say why, offer to try again, and (blocked) how to turn location back on
-        <span className="flex flex-col gap-1.5 text-gray-600">
-          <span>{t(state.reason === 'denied' ? 'nearDenied' : 'nearUnavailable')}</span>
-          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <button type="button" onClick={locate} className="font-semibold text-[#222D52] hover:underline">{t('locTryAgain')}</button>
-            {state.reason === 'denied' && (
-              <details className="text-sm">
-                <summary className="cursor-pointer font-semibold text-[#222D52]">{t('locHowTitle')}</summary>
-                <ul className="mt-1 space-y-1 text-gray-600">
-                  <li>{t('locHowAndroid')}</li>
-                  <li>{t('locHowIphone')}</li>
-                </ul>
-              </details>
-            )}
-          </span>
-        </span>
+        // one short line that can be tapped to ask again (owner, 5 Nov 2026): red when blocked, plain when not found
+        <button
+          type="button"
+          onClick={locate}
+          className={`text-start underline underline-offset-2 ${state.reason === 'denied' ? 'font-semibold text-red-600' : 'text-gray-600'}`}
+        >
+          {t(state.reason === 'denied' ? 'nearBlockedTap' : 'nearUnavailable')}
+        </button>
       ) : state.status === 'locating' || state.status === 'found' ? (
         <span className="text-gray-500">{t('nearLocating')}</span>
       ) : (
-        <button type="button" onClick={locate} className="font-semibold text-[#222D52] hover:underline">{t('nearFind')}</button>
+        // a light blue, underlined link, so it reads as something to tap (owner, 5 Nov 2026)
+        <button type="button" onClick={locate} className="-my-2 py-2.5 text-start font-semibold text-[#2559B8] underline underline-offset-2 hover:text-[#222D52]">{t('nearFind')}</button>
       )}
     </div>
   )

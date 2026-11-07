@@ -53,6 +53,33 @@ describe('buildItems', () => {
     expect(items.filter((i) => i.type === 'stop')).toHaveLength(MAX_STOPS)
     expect(items.filter((i) => i.type === 'place')).toHaveLength(MAX_PLACES)
   })
+  it('a station code puts that station first, before stops whose names start with it', () => {
+    const items = buildItems([
+      stop('1', '(M) KJ154 Taman Sri Nanding', 'BUS T406'),
+      stop('KJ15', 'LRT KL Sentral', 'LRT Kelana Jaya Line'),
+      { ...stop('2', 'Taman Cuepacs (Utara)', 'BUS T411'), stop_code: 'KJ15' },
+    ], [], [], 'kj15')
+    expect(names(items).slice(0, 2)).toEqual(['LRT KL Sentral', 'Taman Cuepacs (Utara)'])
+    expect(names(buildItems([stop('1', 'Kg Cheras', 'BUS T305'), stop('KG22', 'MRT Maluri', 'MRT Kajang Line')], [], [], 'KG 22'))[0]).toBe('MRT Maluri')
+  })
+  it('a place found by another name ranks on that name ("kl tower" finds Menara Kuala Lumpur)', () => {
+    const tower = { ...place('Menara Kuala Lumpur', 'place'), matched: 'kl tower' }
+    const items = buildItems([stop('1', 'Menara KL', 'BUS 400')], [place('KL Tower Mini Zoo', 'place'), tower], [], 'kl tower', 'menara kl')
+    expect(names(items).slice(0, 2)).toEqual(['KL Tower Mini Zoo', 'Menara Kuala Lumpur'])
+    // the database's order (better known first) decides between two equally good names
+    const dbOrder = buildItems([stop('1', 'Menara KL', 'BUS 400')], [tower, place('KL Tower Mini Zoo', 'place')], [], 'kl tower', 'menara kl')
+    expect(names(dbOrder)[0]).toBe('Menara Kuala Lumpur')
+  })
+  it('each station, stop and place says which one it is, so a pick can be counted', () => {
+    const items = buildItems([stop('KJ15', 'LRT KL Sentral', 'LRT Kelana Jaya Line')],
+      [{ ...place('Pavilion Kuala Lumpur'), osm: 'way/28271276' }, { ...place('Jalan Ampang', 'place'), osm: 'W7' }], [], 'x')
+    expect(items.map((i) => i.pick.ref)).toEqual(['stop:rapid-rail-kl:KJ15', 'place:way/28271276', 'place:way/7'])
+  })
+  it('a type of place near you lists the nearest places first, in the database order, before a station named after it', () => {
+    const near = (name: string, d: number) => ({ ...place(name, 'mosque'), osm: `node/${d}`, matched: 'masjid', distance_m: d })
+    const items = buildItems([stop('KJ13', 'LRT Masjid Jamek', 'LRT Kelana Jaya Line')], [near('Surau Tarbiah', 670), near('Masjid Al-Imam Ash-Shafie', 1100)], [], 'masjid')
+    expect(names(items)).toEqual(['Surau Tarbiah', 'Masjid Al-Imam Ash-Shafie', 'LRT Masjid Jamek'])
+  })
   it('a route code lists its stops first, in order', () => {
     const r = { ...stop('9', 'Terminal Maluri', 'BUS T352'), route_code: 'T352', stop_sequence: 1 }
     const items = buildItems([stop('2', 'MRT Maluri', 'MRT Kajang Line')], [], [r], 't352')

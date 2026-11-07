@@ -5,6 +5,7 @@ import BusStopName from './BusStopName'
 import RouteChip from './RouteChip'
 import Icon from './Icon'
 import { busLine, linesForStop } from '../data/lines'
+import { recordPick } from '../services/searchPicks'
 import { stopIconKind, type StopIconKind } from '../data/stopIcon'
 import type { StopResult } from '../hooks/useSmartSearch'
 import type { Pick, SuggestionItem } from '../data/suggestions'
@@ -139,6 +140,7 @@ function SuggestionList({ id, items, query, loading, highlighted, onHover, onPic
                 onMouseEnter={() => onHover(i)}
                 onMouseDown={(e) => {
                   e.preventDefault() // keep focus in the input
+                  recordPick(it.pick.ref)
                   onPick(it.pick)
                 }}
                 className={`w-full ${px} ${compact ? 'py-1.5 gap-2.5' : 'py-2.5 gap-3'} flex items-center cursor-pointer ${i === highlighted ? 'bg-[#222D52]/[0.06]' : ''}`}
