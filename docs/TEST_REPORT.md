@@ -1,5 +1,15 @@
 # Test report
 
+## Run - 7 Nov 2026 (production outage: database disk full)
+
+- What happened: the database stopped at 12:24:39 Malaysia time with "No space left on device" and came back by itself
+  at 12:29:29 (about 5 minutes). Search, trips and live buses failed in that time; the website itself stayed up.
+- During a full reload of the hidden place_index table (about 440,000 of 514,592 rows sent). Free disk space was not
+  checked first. Not proven as the only cause: database 974 MB and write-ahead log 832 MB after recovery, and disk size
+  and use are only visible in the dashboard. Why it recovered is also not known.
+- Checked after: search 200, trip planner 200, live buses 200; database not read-only.
+- Open: read disk size and use in the dashboard before any further load. Reloads are paused until then.
+
 ## Run - 7 Nov 2026 (own place search: hidden table, speed test)
 
 - Database (20261107090000_place_index.sql and 20261107100000_place_index_indexes.sql, applied with the owner's go): hidden
