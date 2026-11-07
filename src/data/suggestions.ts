@@ -52,6 +52,9 @@ export function dedupeStops(stops: StopResult[]): StopResult[] {
   return kept
 }
 
+// a search that names a type of place, not a station ("pavilion mall", "hospital ampang", "hotel bukit bintang")
+const PLACE_TYPE = /(^|\s)(mall|shopping (mall|centre|center|complex)|hospital|klinik|clinic|hotel|mosque|temple|church|university|universiti|museum|muzium)(\s|$)/i
+
 // stable sort, best rank first (the database's order is kept within a rank)
 function byRank<T>(list: T[], rank: (x: T) => number): T[] {
   return list.map((x, i) => ({ x, i, r: rank(x) })).sort((a, b) => b.r - a.r || a.i - b.i).map((e) => e.x)
@@ -65,10 +68,12 @@ export function buildItems(stops: StopResult[], places: PlaceResult[], routeStop
   const rankedPlaces = byRank(places, (p) => placeRank(p, query, fixed)).slice(0, MAX_PLACES)
   const placeBest = rankedPlaces.length ? placeRank(rankedPlaces[0], query, fixed) : -1
   const stopBest = rankedStops.length ? stopRank(rankedStops[0], query, fixed) : -1
-  // on a tie a train station stays first ("klcc"), a bus stop named after the place does not ("pavilion")
-  // a type of place near you ("atm", "masjid": search_pois gives distances) puts the places first too
-  const placesFirst = placeBest > stopBest || (placeBest === stopBest && placeBest > 0 && isBus(rankedStops[0])) ||
-    rankedPlaces[0]?.distance_m != null
+  // on a tie a train station stays first ("klcc"), a bus stop named after the place does not ("pavilion", and
+  // "pavillion mall" where both only match loosely)
+  // a type of place near you ("atm", "masjid": search_pois gives distances) puts the places first too, and so does a
+  // search that ends in a type of place ("pavilion mall", "hospital ampang")
+  const placesFirst = placeBest > stopBest || (placeBest === stopBest && placeBest >= 0 && isBus(rankedStops[0])) ||
+    rankedPlaces[0]?.distance_m != null || (rankedPlaces.length > 0 && PLACE_TYPE.test(query.trim()))
 
   const stopItems: SuggestionItem[] = rankedStops.map((s) => ({
     type: 'stop',

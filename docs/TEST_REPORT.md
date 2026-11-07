@@ -1,5 +1,36 @@
 # Test report
 
+## Run - 8 Nov 2026 (destination search: "pavilion mall" shows Pavilion KL first)
+
+- Why: the owner found the End box gave "something else with pavilion" for "pavillion mall", while the Start box
+  worked. Cause: the End box searches near the Start point, and search_pois put every place within 15 km first, so a
+  nearby restaurant "Yunhai Pavilion" came before Pavilion Kuala Lumpur. "pavillion" (double l) and the word "mall"
+  (not in the mall's name) made it worse. Photon had the same fault (a "Pavilion" condo in Puchong first).
+- Database (20261107140000_search_well_known_first.sql): a doubled letter inside a word is also tried single
+  ("pavillion" -> "pavilion"); a trailing "mall" / "shopping centre" is optional; being near is now a bonus, so a
+  well-known place (Wikipedia articles, people's picks) can come before a nearby one with a weaker name.
+- Website (src/data/suggestions.ts): on a tie a bus stop named like the place gives way at every match level, and a
+  search ending in a type of place ("mall", "hospital", "hotel", ...) lists places before stations.
+- Own place index (20261107130000, 20261107150000; geocode Edge Function v9): all 514,592 places loaded; Chinese and
+  Arabic names searchable (吉隆坡, كوالا لمبور -> Kuala Lumpur); the geocoder answers from our index first, Photon only
+  when it finds nothing; second line like "Mall · Kuala Lumpur City Centre, Kuala Lumpur". Answers cached under "idx:".
+
+| # | Typed (End box, Start LRT Stadium Shah Alam) | Top result | Result |
+|---|---|---|---|
+| 1 | pavillion mall | Pavilion Kuala Lumpur · Mall · Bukit Bintang (browser, local) | Pass |
+| 2 | pavilion mall, pavilion, pavillion | Pavilion Kuala Lumpur, then Bukit Jalil, Damansara Heights (database) | Pass |
+| 3 | starbucks (near Shah Alam) | three nearest branches, Subang Jaya (database) | Pass |
+| 4 | sunway pyramid, mid valley, ioi city mall | the mall first (database) | Pass |
+| 5 | klcc | LRT KLCC stays before places (unit test) | Pass |
+| 6 | 吉隆坡, ملقا | Kuala Lumpur, Melaka state first (database) | Pass |
+
+- Own index against Photon's cached answers (643 searches): same place 218, different pick 322 (of a sample of 40
+  most were the same place a little apart or a better pick, some worse: "kuala" -> Kuala Krai, "asia pas"), only ours
+  93, only Photon 5, both empty 5. Before: 94 found nothing.
+- Checked: all 309 unit tests pass, typecheck and lint pass; live geocode answers from the index (osm "way/..." ids).
+- Not proven yet: the website change is local until merged into main; geocode cache for older searches refills over
+  30 days.
+
 ## Run - 7 Nov 2026 (Google search: site name, logo, one address per page)
 
 - Why: a Google search for "Ronda2go" shows an unrelated Instagram account (@ronda2go) and not ronda2go.com. The domain

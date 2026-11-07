@@ -46,6 +46,12 @@ describe('buildItems', () => {
     expect(buildItems([stop('1', 'Pavilion Bukit Jalil', 'BUS T580')], [place('Pavilion Kuala Lumpur')], [], 'pavilion')[0].type).toBe('place')
     expect(buildItems([stop('KJ10', 'LRT KLCC', 'LRT Kelana Jaya Line')], [place('KLCC Park', 'place')], [], 'klcc')[0].type).toBe('stop')
   })
+  it('a misspelt mall search, or one naming a type of place, lists the places first', () => {
+    const stops = [stop('1', 'Pavilion Bukit Jalil', 'BUS T580'), stop('KG16', 'MRT Pusat Bandar Damansara', 'MRT Kajang Line')]
+    expect(buildItems(stops, [place('Pavilion Kuala Lumpur')], [], 'pavillion mall')[0].pick.name).toBe('Pavilion Kuala Lumpur')
+    expect(buildItems([stop('KJ10', 'LRT KLCC', 'LRT Kelana Jaya Line')], [place('Suria KLCC')], [], 'klcc mall')[0].type).toBe('place')
+    expect(buildItems([stop('KJ10', 'LRT KLCC', 'LRT Kelana Jaya Line')], [place('KLCC Park', 'place')], [], 'klcc')[0].type).toBe('stop')
+  })
   it('shows up to 10 stations and 8 places', () => {
     const stops = Array.from({ length: 20 }, (_, i) => stop(String(i), `Stop ${i}`, 'BUS 1', 3 + i, 101))
     const places = Array.from({ length: 12 }, (_, i) => place(`Place ${i}`))
