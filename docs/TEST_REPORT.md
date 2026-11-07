@@ -15,8 +15,14 @@
 - Checked (local): structured data reads as JSON; canonical on /, /trails/ (no trailing slash) and /about; noindex
   only on the not-found page and gone after leaving it; one canonical link at a time; build writes 37 sitemap pages,
   none /services; typecheck, lint and tests pass.
-- Owner to do (not in the code): redirect www.ronda2go.com to ronda2go.com in Cloudflare; Search Console steps;
-  own social accounts. Not proven yet: Google's result, which can take days to weeks.
+- Live (PR Liyohhh/ronda-website#5 merged into main, c336bbb): structured data on the live page; canonical and og:url
+  https://ronda2go.com/trails on /trails/; noindex on an unknown address; 37 sitemap pages, none /services; full share
+  picture address. www.ronda2go.com/trails now redirects 301 to ronda2go.com/trails (Cloudflare rule, owner).
+- Search Console: sitemap live test "URL is available to Google"; Google had not read the sitemap yet ("Couldn't fetch",
+  no last read). Browser tests on the PR were still running at merge (lint, types, unit tests, build passed).
+- Seen, not changed: the Cloudflare Web Analytics script is blocked by the site's CSP (script-src 'self').
+- Owner to do: request indexing for /, /trails and /about; own social accounts. Not proven yet: Google's result, which
+  can take days to weeks.
 
 ## Run - 7 Nov 2026 (production outage: database disk full)
 
