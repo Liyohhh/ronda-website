@@ -13,14 +13,17 @@ export function buildCsp(env) {
   // no map file (local only): plain OpenStreetMap tiles
   const osmTiles = map ? null : 'https://tile.openstreetmap.org'
   const list = (...xs) => xs.filter(Boolean).join(' ')
+  // Cloudflare Web Analytics (switched on for the Pages project; no cookies): its script and where it reports
+  const cfScript = 'https://static.cloudflareinsights.com'
+  const cfReport = 'https://cloudflareinsights.com'
   return [
     `default-src 'self'`,
-    `script-src ${list("'self'", turnstile)}`,
+    `script-src ${list("'self'", turnstile, cfScript)}`,
     // React and MapLibre set style attributes
     `style-src 'self' 'unsafe-inline'`,
     `img-src ${list("'self'", 'data:', 'blob:', supabase, 'https://upload.wikimedia.org', 'https://live.staticflickr.com', osmTiles)}`,
     `font-src 'self' data:`,
-    `connect-src ${list("'self'", supabase, supabase && supabase.replace(/^https:/, 'wss:'), map, assets, osmTiles)}`,
+    `connect-src ${list("'self'", cfReport, supabase, supabase && supabase.replace(/^https:/, 'wss:'), map, assets, osmTiles)}`,
     `worker-src 'self' blob:`,
     `child-src 'self' blob:`,
     `frame-src ${turnstile ?? "'none'"}`,
