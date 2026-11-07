@@ -1,5 +1,27 @@
 # Test report
 
+## Run - 8 Nov 2026 (station photos: owner photos in, unclear photos out)
+
+- Why: owner wants only clear station photos, where the station name, code, direction and platform can be read.
+- Added (owner's own photos, 7 Nov 2026): MRT Maluri KG22 platform sign "Kwasa Damansara, Platform 2", shown for rides
+  from Maluri towards Kwasa Damansara (src/data/platformPhotos.ts); KL Monorail Bukit Bintang MR6 station sign
+  (src/data/stationPhotos.ts). Files in public/stations. docs/PHOTO_SOURCES.md regenerated. No new visible text.
+- Database (file only, not applied): supabase/migrations/20261108090000_platform_maluri.sql adds Maluri KG22, towards
+  Kwasa Damansara, Platform 2, from the owner's sign photo. Direction checked in the live database (KG22 direction 1 =
+  to Kwasa Damansara).
+- Review of all 145 current photos (131 station, 14 platform): 48 clear, 97 unclear. Owner said remove them
+  (8 Nov 2026): 97 removed. Now 37 station photos (36 clear + Bukit Bintang) and 13 platform photos (12 clear +
+  Maluri). Removed file public/stations/KG04-kwasa-damansara-platforms.jpg (no station name on it). A station with
+  no clear photo now shows none.
+- Owner's second Maluri photo (platform view with train display) kept in docs/station-photos-pending, not shown:
+  one photo per direction.
+- Held back: owner photo of an LRT platform with a red LED board ("10:25 ... frequency"); the picture does not name the
+  station. Kept in docs/station-photos-pending until the owner says which station it is.
+- Checked (local): trip MRT Maluri to MRT Pasar Seni at 9:50 AM shows the new Maluri sign photo under the ride
+  "Towards Kwasa Damansara". After removal (local): lookup gives the owner photo for MR6 and for Maluri towards
+  Kwasa Damansara, none for Kajang KTM and Kwasa Damansara (removed); typecheck, lint and 309 unit tests pass.
+  Platform number for Maluri shows only after the database file is applied.
+
 ## Run - 8 Nov 2026 (destination search: "pavilion mall" shows Pavilion KL first)
 
 - Why: the owner found the End box gave "something else with pavilion" for "pavillion mall", while the Start box
