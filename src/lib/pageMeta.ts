@@ -27,9 +27,9 @@ const PAGES: Record<string, PageMeta> = {
       '18,000+ places to eat, see and shop within 300 m (about a 5-minute walk) of a station, each with a link to plan your trip there.',
   },
   '/live': {
-    title: 'Live Bus & Train Arrivals in Malaysia – Ronda2Go',
+    title: 'Live Bus Map: Real-Time Bus Positions in Malaysia – Ronda2Go',
     description:
-      'Real-time positions and arrival times for buses and trains across Malaysia. See where your ride is right now.',
+      'See where buses are right now on a live map. Search a route, station or place and plan your trip across Malaysia.',
   },
   '/about': {
     title: "About Ronda2Go – Malaysia's Public Transport App",
